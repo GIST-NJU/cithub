@@ -1,4 +1,4 @@
-# cithub前端
+# 前端
 
 ## 前端技术栈
 
@@ -65,7 +65,7 @@ src
 
 其中，Vue Argon的文档参见[Overview | Vue Argon Dashboard @ Creative Tim (creative-tim.com)](https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/)
 
-# cithub后端
+# 后端
 
 ## 后端技术栈
 
