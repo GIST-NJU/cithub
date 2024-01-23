@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cithub-common" />
+        <module name="cithub-gateway" />
+        <module name="cithub-User" />
+        <module name="cithub-repo" />
+        <module name="renren-fast" />
+        <module name="cithub-Repo" />
+        <module name="cithub-ServicesManager" />
+        <module name="cithub-guitools" />
+        <module name="tools" />
+        <module name="renren-generator" />
+        <module name="cithub-CrowdSource" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cithub-CrowdSource" options="-parameters" />
+      <module name="cithub-Repo" options="-parameters" />
+      <module name="cithub-ServicesManager" options="-parameters" />
+      <module name="cithub-User" options="-parameters" />
+      <module name="cithub-gateway" options="-parameters" />
+      <module name="cithub-guitools" options="-parameters" />
+      <module name="cithub-repo" options="-parameters" />
+      <module name="renren-fast" options="-parameters" />
+      <module name="renren-generator" options="-parameters" />
+      <module name="tools" options="-parameters" />
+    </option>
+  </component>
+</project>

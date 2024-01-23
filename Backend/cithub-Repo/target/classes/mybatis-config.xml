@@ -1,0 +1,6 @@
+<plugins>
+    <plugin interceptor="com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor">
+        <property name="@page" value="com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor"/>
+        <property name="page:dbType" value="mysql"/>
+    </plugin>
+</plugins>
