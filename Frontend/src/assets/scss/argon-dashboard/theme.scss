@@ -1,11 +1,11 @@
 /*!
 
 =========================================================
-* Argon Dashboard 2 Pro - v2.0.0
+* Argon Dashboard 2 - v2.0.4
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-pro
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (site.license)
 
 * Coded by www.creative-tim.com
@@ -55,6 +55,9 @@
 @import "tilt";
 @import "tooltips";
 @import "typography";
+
+// Dark Mode
+@import "dark-version";
 
 // Plugins
 @import "plugins/free/plugins";

@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/cithub-repo
+#    url: jdbc:mysql://210.28.135.32:9100/cithub-repo
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: cithub-repo
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+#        server-addr: 210.28.135.32:8848
+
+
+
+server:
+  port: 9002

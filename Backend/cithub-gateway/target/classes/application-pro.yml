@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: cithub-gateway
+  cloud:
+    nacos:
+      discovery:
+#        server-addr: 127.0.0.1:8848
+         server-addr: 210.28.135.32:8848
+
+        #网关的路由规则，怎么转发请求的？
+    gateway:
+      routes:
+        #        每一个路由的唯一ID
+        - id: cithub-tools
+          #          转发给哪个微服务？这里转发给cithub-guitools，这个名字是nacos注册中心里的名字（这种写法参考 https://blog.csdn.net/weixin_43852058/article/details/110682367）
+          uri: lb://cithub-tools
+          #          匹配到什么的时候转发过去？就是匹配规则
+          predicates:
+            - Path=/api/tools/**
+          filters:
+            #           重写匹配到的路径，比如上面匹配到了 /api/tools/listallprojects/...   这个路径
+            #            那就改写为：/tools/listallprojects/...
+            #            -改写规则如下：https://blog.csdn.net/weixin_43199379/article/details/107768203
+            #			RewritePath= 匹配串, 输出串
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        #            - 其中，?<segment>是一个分组，.*表示匹配任意字符0次或多次后将匹配到的字符串放入到该分组中，这里guitools/listallprojects/...放入分组中
+        #           ，后面的$\{segment}，提取分组中的文本，在此处显示，再拼接前面的/就得到了/guitools/listallprojects/...
+        - id: cithub-repo
+          uri: lb://cithub-repo
+          predicates:
+            - Path=/api/repo/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: cithub-users
+          uri: lb://cithub-users
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+
+
+#   网关的端口是9088，以后所有的请求都这个端口
+#	比如前端请求https://localhost:9088/api/guitools/projects/list
+#   经过网关匹配与重写，会变为：https://localhost:9088/guitools/projects/list
+server:
+  port: 9088
