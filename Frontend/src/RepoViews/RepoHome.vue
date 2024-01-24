@@ -186,8 +186,6 @@ let paginationObj = reactive({
 
 const chart = ref();
 let echartsOptions = reactive({
-
-
     xAxis: {
         type: 'category',
         data: [],
@@ -236,6 +234,11 @@ let echartsOptions = reactive({
         axisPointer: { type: 'cross' }
     }
 })
+
+// function methd(){}
+
+// const methd =()=>{}
+
 
 const initChart = () => {
     // 对于每一个年份，统计该年份内有多少篇papers，作为series的data

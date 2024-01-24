@@ -35,6 +35,8 @@ import BenchmarkHome from '../BenchmarkViews/BenchmarkHome.vue'
 // User
 import UserRouterView from '../UserViews/UserRouterView.vue'
 import UserHome from '../UserViews/UserHome.vue'
+
+
 const routes = [
   {
     path: "/",
@@ -101,7 +103,7 @@ const routes = [
     ]
   },
 
-  // Algorithm
+  // Tools
   {
     path: '/tools',
     component: ToolsRouterView,
