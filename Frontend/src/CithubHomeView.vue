@@ -23,21 +23,21 @@
 				<div class="box alt container">
 					<section class="feature left">
 						<a  class="image icon solid fa-university" @click="jumpToRepo" style="cursor:pointer">
-                            <img src="./assets/images/repository.jpg" alt="" /></a>
+                            <img src="/images/repository.jpg" alt="" /></a>
 						<div class="content">
 							<h3>Repository</h3>
 							<p>A web application that provides a full coverage of publications in the literature of combinatorial interaction testing.</p>
 						</div>
 					</section>
 					<section class="feature right">
-						<a class="image icon solid fa-code" @click="jumpToTools" style="cursor:pointer"><img src="./assets/images/algorithm.jpg" alt="" /></a>
+						<a class="image icon solid fa-code" @click="jumpToTools" style="cursor:pointer"><img src="/images/algorithm.jpg" alt="" /></a>
 						<div class="content">
 							<h3>Tools</h3>
 							<p>A series of web services that implement automated test suite (covering array) generation, optimisation, and fault diagnosis activities.</p>
 						</div>
 					</section>
 					<section class="feature left">
-						<a class="image icon solid fa-stream" @click="jumpToBenchmark" style="cursor:pointer"><img src="./assets/images/benchmark.jpg" alt="" /></a>
+						<a class="image icon solid fa-stream" @click="jumpToBenchmark" style="cursor:pointer"><img src="/images/benchmark.jpg" alt="" /></a>
 						<div class="content">
 							<h3>Benchmark</h3>
 							<p>A collection of real-world test models and evaluation results for comparing combinatorial interaction testing algorithms.</p>
@@ -126,6 +126,8 @@ const jumpToUser =(value)=>{
 </script>
 
 
-<style scoped>
+<style src="../public/CithubIndex.css" scoped>
+/* 不能使用下面的写法，这样会污染其他视图的样式，一个大坑！ */
+/* @import  url(/CithubIndex.css) */
 
 </style>

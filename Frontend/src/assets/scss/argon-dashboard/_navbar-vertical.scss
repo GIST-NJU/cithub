@@ -2,8 +2,6 @@
 // Vertical navbar + Sidenav
 //
 
-@use "sass:math";
-
 .navbar-vertical {
   .navbar-brand > img,
   .navbar-brand-img {
@@ -29,7 +27,7 @@
         border: none;
 
         .dropdown-menu {
-          margin-left: $dropdown-item-padding-x * 0.5;
+          margin-left: $dropdown-item-padding-x / 2;
         }
       }
       .icon {
@@ -85,7 +83,8 @@
             min-height: 100%;
             padding-left: 0;
             padding-right: 0; // Target IE 10 & 11
-            @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            @media all and (-ms-high-contrast: none),
+              (-ms-high-contrast: active) {
               min-height: none;
               height: 100%;
             }
@@ -100,8 +99,8 @@
           }
           // Navbar navigation
           .navbar-nav .nav-link {
-            padding-top: $navbar-vertical-nav-link-padding-y;
-            padding-bottom: $navbar-vertical-nav-link-padding-y;
+            padding-top: $navbar-vertical-nav-link-padding-y !important;
+            padding-bottom: $navbar-vertical-nav-link-padding-y !important;
             margin: 0 $navbar-vertical-nav-link-padding-x;
 
             .nav-link-text,
@@ -152,8 +151,8 @@
           }
           // Second level
           .navbar-nav .nav .nav-link {
-            padding-top: calc($navbar-vertical-nav-link-padding-y / 1.5);
-            padding-bottom: calc($navbar-vertical-nav-link-padding-y / 1.5);
+            padding-top: $navbar-vertical-nav-link-padding-y / 1.5;
+            padding-bottom: $navbar-vertical-nav-link-padding-y / 1.5;
             padding-left: 15px;
 
             > span.sidenav-normal {
@@ -171,7 +170,11 @@
   @each $color, $value in $theme-colors {
     &[data-color="#{$color}"] {
       .navbar-nav > .nav-item > .nav-link.active {
-        @include gradient-directional(nth(#{$value}, 1) 0%, nth(#{$value}, -1) 100%, $deg: 310deg);
+        @include gradient-directional(
+          nth(#{$value}, 1) 0%,
+          nth(#{$value}, -1) 100%,
+          $deg: 310deg
+        );
 
         .icon i,
         .nav-link-text {
@@ -277,7 +280,7 @@
     }
 
     .sidenav {
-      &.fixed-start+.main-content {
+      &.fixed-start + .main-content {
         margin-left: 0 !important;
       }
     }
@@ -319,7 +322,8 @@
 }
 
 .navbar-main {
-  transition: box-shadow $transition-base-time ease-in, background-color $transition-base-time ease-in;
+  transition: box-shadow $transition-base-time ease-in,
+    background-color $transition-base-time ease-in;
 
   &.fixed-top {
     width: calc(100% - (#{$navbar-vertical-open-width} + #{$spacer * 1.5} * 3));
@@ -338,11 +342,11 @@
       font-variant: normal;
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
-      font-family: 'Font Awesome 5 Free';
+      font-family: "Font Awesome 5 Free";
       font-weight: 700;
       content: "\f107";
       margin-left: auto;
-      color: rgba($dark-gradient-state,0.5);
+      color: rgba($dark-gradient-state, 0.5);
       @include transition($transition-base);
     }
     // Expanded
@@ -366,9 +370,9 @@
               position: relative;
               background-color: transparent;
               box-shadow: none;
-              color: rgba($dark-gradient-state,0.5);
+              color: rgba($dark-gradient-state, 0.5);
               margin-left: $navbar-vertical-collapse-margin-left;
-              
+
               &.active {
                 color: $dark-gradient-state;
               }
@@ -442,7 +446,7 @@
             .nav-item {
               .nav-link {
                 color: $white;
-                opacity: .8;
+                opacity: 0.8;
               }
               &.active {
                 .nav-link.active {

@@ -2,7 +2,6 @@
   position: relative;
 
   > .form-control,
-  > .form-control-plaintext,
   > .form-select {
     height: $form-floating-height;
     line-height: $form-floating-line-height;
@@ -20,8 +19,8 @@
     @include transition($form-floating-transition);
   }
 
-  > .form-control,
-  > .form-control-plaintext {
+  // stylelint-disable no-duplicate-selectors
+  > .form-control {
     padding: $form-floating-padding-y $form-floating-padding-x;
 
     &::placeholder {
@@ -47,7 +46,6 @@
 
   > .form-control:focus,
   > .form-control:not(:placeholder-shown),
-  > .form-control-plaintext,
   > .form-select {
     ~ label {
       opacity: $form-floating-label-opacity;
@@ -61,10 +59,5 @@
       transform: $form-floating-label-transform;
     }
   }
-
-  > .form-control-plaintext {
-    ~ label {
-      border-width: $input-border-width 0; // Required to properly position label text - as explained above
-    }
-  }
+  // stylelint-enable no-duplicate-selectors
 }
