@@ -255,26 +255,6 @@
       }
     }
   }
-
-
-  .dropdown {
-    .dropdown-menu {
-      &:before {
-        color: $dark-version-card-bg-color;
-      }
-
-      .dropdown-item {
-        &:hover,
-        &:focus {
-          background-color: $dark-version-bg-color !important;
-        }
-        i,
-        .material-icons {
-          color: $white;
-        }
-      }
-    }
-  }
 }
 
 body.dark-version {

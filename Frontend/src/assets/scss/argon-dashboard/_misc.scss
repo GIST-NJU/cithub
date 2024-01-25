@@ -1,9 +1,3 @@
-// update <html> tag border
-
-html {
-  border: none !important;
-}
-
 // Blur effect
 
 .blur {
@@ -78,11 +72,6 @@ html {
     background-size: $gradient-animation-bg-size !important;
     animation: $device-wrapper-animation;
   }
-}
-
-hr {
-  border-top: none;
-  height: 1px;
 }
 
 // Vertical Line
