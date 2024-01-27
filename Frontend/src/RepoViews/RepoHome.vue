@@ -465,15 +465,17 @@ const listAllPapers = () => {
         method: 'POST',
         data: paginationObj
     }).then((res) => {
-        // console.log(res)
+        // console.log("listAllPapers",res)
         PaperInfoStore.paperinfos.length = 0
         PaperInfoStore.searchKeyWords = ''
         PaperInfoStore.paperinfos.push(...res.listEntityPage.records)
 
         paginationObj.total = res.listEntityPage.total
+        // console.log("paginationObj.total",paginationObj.total)
+
         PaperInfoStore.total = paginationObj.total
 
-        // console.log(paginationObj)
+        // console.log("paginationObj.total",paginationObj.total)
 
     }).catch((error) => {
         console.log("错误是", error)

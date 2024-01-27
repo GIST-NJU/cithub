@@ -35,6 +35,8 @@ import BenchmarkHome from '../BenchmarkViews/BenchmarkHome.vue'
 // User
 import UserRouterView from '../UserViews/UserRouterView.vue'
 import UserHome from '../UserViews/UserHome.vue'
+import UserLogin from '../UserViews/UserLogin.vue'
+import UserRegister from '../UserViews/UserRegister.vue'
 
 
 const routes = [
@@ -151,11 +153,16 @@ const routes = [
     meta: { title: 'User' },
     children: [
       {
-        // LLMModellingHome
-        path: "home",
-        name: 'userHome',
-        component: UserHome,
-        meta: { title: 'User' }
+        path: "login",
+        name: 'UserLogin',
+        component: UserLogin,
+        meta: { title: 'UserLogin' }
+      },
+      {
+        path: "register",
+        name: 'UserRegister',
+        component: UserRegister,
+        meta: { title: 'UserRegister' }
       },
       
     ]

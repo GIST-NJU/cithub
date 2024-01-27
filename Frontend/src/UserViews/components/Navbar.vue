@@ -1,34 +1,121 @@
-
 <template>
-   <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><span class="opacity-5 text-white">CitHub</span></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Repository</li>
-          </ol>
-        </nav>
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-          </div>
-          <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign In</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+  <!-- Navbar -->
+  <nav
+    class="navbar navbar-expand-lg top-0 z-index-3 position-absolute mt-4"
+    :class="isBlur ? isBlur : 'shadow-none my-2 navbar-transparent w-100'"
+  >
+    <div class="container ps-2 pe-0">
+      <router-link
+        class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
+        :class="darkMode ? 'text-black' : 'text-white'"
+        to="/"
+        >Argon Dashboard 2</router-link
+      >
+      <button
+        class="shadow-none navbar-toggler ms-2"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navigation"
+        aria-controls="navigation"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="mt-2 navbar-toggler-icon">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </span>
+      </button>
+      <div class="collapse navbar-collapse" id="navigation">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <router-link
+              class="nav-link d-flex align-items-center me-2 active"
+              aria-current="page"
+              to="/dashboard-default"
+            >
+              <i
+                class="fa fa-chart-pie opacity-6 me-1"
+                aria-hidden="true"
+                :class="isBlur ? 'text-dark' : 'text-white'"
+              ></i>
+              Dashboard
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link me-2" to="/profile">
+              <i
+                class="fa fa-user opacity-6 me-1"
+                aria-hidden="true"
+                :class="isBlur ? 'text-dark' : 'text-white'"
+              ></i>
+              Profile
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link me-2" to="/signup">
+              <i
+                class="fas fa-user-circle opacity-6 me-1"
+                aria-hidden="true"
+                :class="isBlur ? 'text-dark' : 'text-white'"
+              ></i>
+              Sign Up
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link me-2" to="/signin">
+              <i
+                class="fas fa-key opacity-6 me-1"
+                aria-hidden="true"
+                :class="isBlur ? 'text-dark' : 'text-white'"
+              ></i>
+              Sign In
+            </router-link>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-lg-block d-none">
+          <li class="nav-item">
+            <a
+              href="https://www.creative-tim.com/product/vue-argon-dashboard"
+              class="btn btn-sm mb-0 me-1"
+              :class="isBtn"
+              >Free download</a
+            >
+          </li>
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
+  <!-- End Navbar -->
 </template>
 
-<script lang="ts" setup>
+<script>
+import downArrWhite from "@/assets/img/down-arrow-white.svg";
+import downArrBlack from "@/assets/img/down-arrow-dark.svg";
 
+export default {
+  name: "navbar",
+  data() {
+    return {
+      downArrWhite,
+      downArrBlack
+    };
+  },
+  props: {
+    btnBackground: String,
+    isBlur: String,
+    isBtn: { type: String, default: "bg-gradient-light" },
+    darkMode: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    darkModes() {
+      return {
+        "text-dark": this.darkMode
+      };
+    }
+  }
+};
 </script>
-
-
-<style scoped>
-
-</style>

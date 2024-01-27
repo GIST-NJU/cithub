@@ -16,12 +16,12 @@
                 <li class="nav-item">
                   <a href="https://gist.nju.edu.cn/" class="nav-link text-muted" target="_blank">Gist Group, Department of Computer Science and Technology, NanJing University</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="https://gist.nju.edu.cn/" class="nav-link text-muted" target="_blank">About Us</a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                   <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
-                </li>
+                </li> -->
               </ul>
             </div>
           </div>
@@ -29,7 +29,7 @@
       </footer>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 
 </script>
 

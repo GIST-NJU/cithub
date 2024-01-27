@@ -93,10 +93,12 @@
 </template>
 
 <script  setup>
-import { useRouter  } from 'vue-router';
+
 import { useModuleStore } from './store/module';
-const moduleStore=useModuleStore()
+import { useRouter  } from 'vue-router';
 const router=useRouter()
+
+const moduleStore=useModuleStore()
 const jumpToRepo =()=>{
     moduleStore.CurrentModule='Repository'
     router.push({
@@ -119,9 +121,16 @@ const jumpToBenchmark =()=>{
 
 const jumpToUser =(value)=>{
     // console.log("value是",value)
-    router.push({
-        path:'/user/home'
+if(value=='login')
+{
+	router.push({
+        name:'UserLogin'
     })
+}
+if(value=='register')
+{router.push({
+        name:'UserRegister'
+    })}
 }
 </script>
 
