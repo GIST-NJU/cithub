@@ -29,9 +29,6 @@ public class UsersController {
     private UsersService usersService;
 
 
-
-
-
     /**
      * 列表
      */
@@ -89,7 +86,7 @@ public class UsersController {
         QueryWrapper<UsersEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("usertoken", userToken);
         UsersEntity usersEntity = usersService.getOne(queryWrapper);
-        return R.ok().put("userid", usersEntity.getUserid()).put("account", usersEntity.getAccount()).put("useremail", usersEntity.getUseremail()).put("usertype", usersEntity.getUsertype());
+        return R.ok().put("institution",usersEntity.getInstitution()).put("name",usersEntity.getName()).put("userToken",usersEntity.getUsertoken()).put("userid", usersEntity.getUserid()).put("account", usersEntity.getAccount()).put("email", usersEntity.getUseremail()).put("usertype", usersEntity.getUsertype());
     }
 
     @RequestMapping("/RegisterUser")
@@ -113,8 +110,8 @@ public class UsersController {
     }
 
     @RequestMapping("/CheckUnique")
-    public R checkUnique(@RequestBody Map<String, String> account) {
-//        System.out.println("接收到的用户名是:"+username.get("username"));
+    public R checkUnique(@RequestBody Map<String, Object> account) {
+//        System.out.println("接收到的用户名是:"+account);
         QueryWrapper<UsersEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", account.get("account"));
         if (usersService.getOne(queryWrapper) == null) {
@@ -139,12 +136,11 @@ public class UsersController {
 //        密码正确，再去检查token是否有效
             try {
 //                验证token是否有错误
-
                 JWTUtils.verifyAndgetToken(usersEntityChecker.getUsertoken());
 //                若无异常抛出，则说明token无错误
 //                返回登录成功的status与token
                 System.out.println("token正确，登录");
-                return R.ok().put("status", "LoginSuccess!").put("token", usersEntityChecker.getUsertoken());
+                return R.ok().put("status", "LoginSuccess!").put("token", usersEntityChecker.getUsertoken()).put("userid", usersEntityChecker.getUserid()).put("account", usersEntityChecker.getAccount()).put("useremail", usersEntityChecker.getUseremail()).put("usertype", usersEntityChecker.getUsertype()).put("name", usersEntityChecker.getName()).put("institution", usersEntityChecker.getInstitution());
 
             } catch (Exception e) {
                 System.out.println("token错误，更新token");
@@ -154,6 +150,8 @@ public class UsersController {
                 mapforToken.put("userid", usersEntityChecker.getUserid().toString());
                 mapforToken.put("email", usersEntityChecker.getUseremail());
                 mapforToken.put("usertype", usersEntityChecker.getUsertype());
+                mapforToken.put("name", usersEntityChecker.getName());
+                mapforToken.put("institution", usersEntityChecker.getInstitution());
 
                 UpdateWrapper<UsersEntity> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.eq("userid", usersEntityChecker.getUserid());
@@ -161,7 +159,7 @@ public class UsersController {
                 updateWrapper.set("usertoken", token);
                 usersService.update(updateWrapper);
 //              然后返回登录成功的status 与 新token
-                return R.ok().put("status", "LoginSuccess!").put("token", token);
+                return R.ok().put("status", "LoginSuccess!").put("token", token).put("userid", usersEntityChecker.getUserid()).put("account", usersEntityChecker.getAccount()).put("useremail", usersEntityChecker.getUseremail()).put("usertype", usersEntityChecker.getUsertype()).put("name", usersEntityChecker.getName()).put("institution", usersEntityChecker.getInstitution());
             }
 
         }
@@ -173,15 +171,15 @@ public class UsersController {
     public R VerifyToken(@RequestParam String tokenForVerify) {
         try {
             JWTUtils.verifyAndgetToken(tokenForVerify);
-            return R.ok().put("verifstatus","success");
+            return R.ok().put("verifstatus", "success");
         } catch (Exception e) {
-            return R.ok().put("verifstatus","failed");
+            return R.ok().put("verifstatus", "failed");
         }
     }
 
     @RequestMapping("/testNewCithub")
     public R testNewCithub() {
-     return R.ok().put("success!","success");
+        return R.ok().put("success!", "success");
     }
 
 }

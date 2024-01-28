@@ -98,6 +98,7 @@ import { useProjectsStore } from '../store/projectsStore'
 import { useRouter } from 'vue-router';
 import { useCurrentProject } from '../store/currentProject';
 import { ElNotification } from 'element-plus'
+import { CheckLoginStatus, getUserInfoByToken } from '../common'
 
 const router = useRouter();
 const currentProjectStore = useCurrentProject()
@@ -281,9 +282,36 @@ const chunkedArray = computed(() => {
     return result;
 });
 
-onMounted(() => {
+onMounted(async () => {
+    // 先检查用户是否登录
+    let obj = await CheckLoginStatus()
+    if (obj.loginStatus) {
 
-    listAllProjectsByUserID()
+        // 若用户已登录，则获取用户信息！
+        let userobj = await getUserInfoByToken(obj.token)
+        userStore.userID = userobj.userid
+        userStore.account = userobj.account
+        userStore.userToken = userobj.userToken
+        userStore.usertype = userobj.usertype
+        userStore.name = userobj.name
+        userStore.email = userobj.email
+        userStore.institution = userobj.institution
+
+        // 若用户已登录则正常运行
+        listAllProjectsByUserID()
+
+
+    }
+    else {
+        // 若用户未登录则跳转到登录页面
+        router.push(
+            {
+                name: 'UserLogin'
+            }
+        )
+    }
+
+
 })
 </script>
 
