@@ -2,10 +2,13 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("UserStore", {
     state: () => {
         return {
-            UserID:1,
-            UserName: 'xjt',
+            userID:'',
+            account: '',
             userToken: '',
             usertype:'',
+            name:'',
+            email:'',
+            institution:'',
 
         }
     },

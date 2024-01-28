@@ -22,7 +22,12 @@
           <li class="nav-item d-flex align-items-center">
             <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
               <i class="fa fa-user me-sm-1"></i>
-              <span class="d-sm-inline d-none">{{userStore.UserName}}</span>
+              <span class="d-sm-inline d-none">{{ userStore.name }} </span>
+            </a>
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
+              <span @click="SignOut" class="d-sm-inline d-none"> / Sign Out</span>
             </a>
           </li>
         </ul>
@@ -32,12 +37,12 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import { useUserStore } from '../store/userStore';
-const moduleStore=useModuleStore()
-const userStore=useUserStore()
+const moduleStore = useModuleStore()
+const userStore = useUserStore()
 
 const isHovered = ref(false);
 const router = useRouter();
@@ -45,7 +50,14 @@ const router = useRouter();
 const jumpToCithub = () => {
   router.push({ name: 'Cithub' });
 }
-onMounted(()=>{
+const SignOut = () => {
+
+  localStorage.setItem("userToken", '')
+  router.push({
+    path:'/'
+  })
+}
+onMounted(() => {
   console.log(moduleStore.CurrentModule)
 })
 </script>
@@ -61,6 +73,5 @@ onMounted(()=>{
   color: white;
   opacity: 1;
 }
-
 </style>
 
