@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : localhost:3306
- Source Schema         : cithub-repo
+ Source Schema         : cithub
 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 24/01/2024 17:35:52
+ Date: 28/01/2024 20:52:11
 */
 
 SET NAMES utf8mb4;
@@ -1965,6 +1965,25 @@ CREATE TABLE `configuration`  (
 -- ----------------------------
 INSERT INTO `configuration` VALUES ('lastTimeStamp', '2021-01-10');
 INSERT INTO `configuration` VALUES ('lastUpdateDate', 'May 2023');
+
+-- ----------------------------
+-- Table structure for coveringarrays
+-- ----------------------------
+DROP TABLE IF EXISTS `coveringarrays`;
+CREATE TABLE `coveringarrays`  (
+  `CoveringArrayID` int(0) NOT NULL AUTO_INCREMENT,
+  `CoveringArrayName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `CoveringArrayDescriptions` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ModelID` int(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`CoveringArrayID`) USING BTREE,
+  INDEX `ModelID`(`ModelID`) USING BTREE,
+  CONSTRAINT `ModelID` FOREIGN KEY (`ModelID`) REFERENCES `models` (`ModelID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of coveringarrays
+-- ----------------------------
+INSERT INTO `coveringarrays` VALUES (10, 'c1', NULL, 1);
 
 -- ----------------------------
 -- Table structure for list
@@ -3971,6 +3990,49 @@ INSERT INTO `list_ct` VALUES (10884, 'Fri, 21 Jan 2022 16:48:15 +0100', 2019, 'a
 INSERT INTO `list_ct` VALUES (10885, 'Fri, 17 Mar 2023 08:34:48 +0100', 2022, 'inproceedings', 'Chuan Luo , Qiyuan Zhao , Shaowei Cai , Hongyu Zhang , Chunming Hu', 'SamplingCA: effective and efficient sampling-based pairwise testing for highly configurable software systems', NULL, NULL, 'SIGSOFT', 'SIGSOFT', '', '', '1185--1197', NULL, '10.1145/3540250.3549155', 'Combinatorial Testing', 'Combinatorial interaction testing (CIT) is an effective paradigm for testing highly configurable systems, and its goal is to generate a t-wise covering array (CA) as a test suite, where t is the strength of testing. It is recognized that pairwise testing (i.e., CIT with t=2) is the most common CIT technique, and has high fault detection capability in practice. The problem of pairwise CA generation (PCAG), which is a core problem in pairwise testing, aims at generating a pairwise CA (i.e., 2-wise CA) of minimum size, subject to hard constraints. The PCAG problem is a hard combinatorial optimization problem, which urgently requires practical methods for generating pairwise CAs (PCAs) of small sizes. However, existing PCAG algorithms suffer from the severe scalability issue; that is, when solving large-scale PCAG instances, existing state-of-the-art PCAG algorithms usually cost a fairly long time to generate large PCAs, which would make the testing of highly configurable systems both ineffective and inefficient. In this paper, we propose a novel and effective sampling-based approach dubbed SamplingCA for solving the PCAG problem. SamplingCA first utilizes sampling techniques to obtain a small test suite that covers valid pairwise tuples as many as possible, and then adds a few more test cases into the test suite to ensure that all valid pairwise tuples are covered. Extensive experiments on 125 public PCAG instances show that our approach can generate much smaller PCAs than its state-of-the-art competitors, indicating the effectiveness of SamplingCA. Also, our experiments show that SamplingCA runs one to two orders of magnitude faster than its competitors, demonstrating the efficiency of SamplingCA. Our results confirm that SamplingCA is able to address the scalability issue and considerably pushes forward the state of the art in PCAG solving.');
 
 -- ----------------------------
+-- Table structure for models
+-- ----------------------------
+DROP TABLE IF EXISTS `models`;
+CREATE TABLE `models`  (
+  `ModelID` int(0) NOT NULL AUTO_INCREMENT,
+  `ModelName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ModelDescriptions` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ModelContent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ProjectID` int(0) NULL DEFAULT NULL,
+  `CreatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `LastUpdatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`ModelID`) USING BTREE,
+  INDEX `ProjectID`(`ProjectID`) USING BTREE,
+  CONSTRAINT `ProjectID` FOREIGN KEY (`ProjectID`) REFERENCES `projects` (`ProjectID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of models
+-- ----------------------------
+INSERT INTO `models` VALUES (1, '撒领导小组检测卡', 'test', 'testcont阿斯顿撒旦', 1, '2024-01-22 21:23:20', '2024-01-22 21:49:42');
+INSERT INTO `models` VALUES (2, 'm2', 'test', 'testcont', 1, '2024-01-22 21:23:21', '2024-01-22 21:23:21');
+
+-- ----------------------------
+-- Table structure for projects
+-- ----------------------------
+DROP TABLE IF EXISTS `projects`;
+CREATE TABLE `projects`  (
+  `ProjectID` int(0) NOT NULL AUTO_INCREMENT,
+  `ProjectName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ProjectDescriptions` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `UserID` int(0) NULL DEFAULT NULL,
+  `CreatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `LastUpdatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`ProjectID`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of projects
+-- ----------------------------
+INSERT INTO `projects` VALUES (1, '阿萨德卡萨丁考虑考虑', 'This is a project used f123123', 1, '2024-01-22 19:02:03', '2024-01-25 21:49:27');
+INSERT INTO `projects` VALUES (3, 'test3', '3', 1, '2024-01-22 18:40:59', '2024-01-22 18:40:59');
+
+-- ----------------------------
 -- Table structure for rank_author_archive
 -- ----------------------------
 DROP TABLE IF EXISTS `rank_author_archive`;
@@ -5919,6 +5981,53 @@ INSERT INTO `scholar` VALUES (895, 'Mohammad Reza Keyvanpour', 'Islamic Azad Uni
 INSERT INTO `scholar` VALUES (896, 'Brenda Acevedo-Juarez', 'Universidad de Guadalajara', 'Academia', 'Mexico', '', '');
 
 -- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`  (
+  `userid` int(0) NOT NULL AUTO_INCREMENT,
+  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `useremail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `usertype` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `usertoken` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `institution` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`userid`, `account`) USING BTREE,
+  UNIQUE INDEX `username`(`account`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 143 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (112, 'xjt', 'qweasdas', '112', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (113, 'xjt123', '1223564154@qq.com', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (114, '123', '123', '1223564154@qq.com', 'ADMIN', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpbnN0aXR1dGlvbiI6IuWNl-S6rOWkp-WtpiIsIm5hbWUiOiLlkJHlgaXlm74iLCJ1c2VydHlwZSI6IkFETUlOIiwiZXhwIjoxNzA2NTE4Mjk5LCJ1c2VyaWQiOiIxMTQiLCJhY2NvdW50IjoiMTIzIiwiZW1haWwiOiIxMjIzNTY0MTU0QHFxLmNvbSJ9.M2xgnXVHVXCm04kj2-gDNuGCX-kJm5psl182w2INVB0', '向健图', '南京大学');
+INSERT INTO `users` VALUES (118, 'xjt1233', 'XIANG521', '1223564154@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (120, 'xjt12331', '123', '1223564154@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (121, 'xjt12334', 'xiang521', '1223564154@QQ.COM', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (122, '4按时5但', 'xiang521', '1223564154@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (124, '4按时5但1', 'xiang521', '1223564154@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (125, 'askljdas', 'xiang521', '1233@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (126, '123asasd', 'asd', 'asd@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (127, '123ass', 'asd', 'qq@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (128, 'asdasdaz', 'xiang521', '12@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (129, 'asdad', '123', 'asd@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (130, 'asdasdaz1', 'asdas', '123@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (131, '12311', 'asd', '123@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (132, 'xjt1', '123', '123@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (133, 'xjt123123', '123', '123@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (134, 'xjtsax', '123', '1@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (135, 'xjtxzc123', '123', '123@qq.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (136, 'gist', '123456', NULL, 'ADMIN', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6IkFETUlOIiwiZXhwIjoxNzA1NzU0MTIzLCJ1c2VyaWQiOiIxMzYiLCJlbWFpbCI6bnVsbCwidXNlcm5hbWUiOiJnaXN0In0.EZQT-nhsAi-32bIr-ST4kAKu9sHKwUmEnbVQzY_rUSo', NULL, NULL);
+INSERT INTO `users` VALUES (137, 'test1', '123', '1@qq.com', NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6bnVsbCwiZXhwIjoxNjc3MjIwNTA3LCJ1c2VyaWQiOiIxMzciLCJlbWFpbCI6IjFAcXEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0MSJ9.RmLS43L6dRP5jNzdghGzgtprTAMODk2MK1_QmLN08Zk', NULL, NULL);
+INSERT INTO `users` VALUES (138, 'royxu', '19721220', 'Jiax.Xu@outlook.com', NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6bnVsbCwiZXhwIjoxNjg0NTYzOTU0LCJ1c2VyaWQiOiIxMzgiLCJlbWFpbCI6IkppYXguWHVAb3V0bG9vay5jb20iLCJ1c2VybmFtZSI6InJveXh1In0.b0tESnvgpqIdjpDQ_HQeMRHGwM8SZxKSdsLLUJtSb2o', NULL, NULL);
+INSERT INTO `users` VALUES (139, 'xujiax', '19721220', 'xujiax@hotmail.com', NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6bnVsbCwiZXhwIjoxNjg0MjE5MjgyLCJ1c2VyaWQiOiIxMzkiLCJlbWFpbCI6Inh1amlheEBob3RtYWlsLmNvbSIsInVzZXJuYW1lIjoieHVqaWF4In0.zFc4SBdYyNSYG7ECujDU01SPjLA0Sq_AvZNY_xAea6k', NULL, NULL);
+INSERT INTO `users` VALUES (140, 'cuichenhui', 'cchdsg*8', '1023093283@qq.com', NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6bnVsbCwiZXhwIjoxNjg0ODEwNzM5LCJ1c2VyaWQiOiIxNDAiLCJlbWFpbCI6IjEwMjMwOTMyODNAcXEuY29tIiwidXNlcm5hbWUiOiJjdWljaGVuaHVpIn0.8jEnF0l_5t8n7O6c85bIf-AOjn75zOikv5SIGSlVnSs', NULL, NULL);
+INSERT INTO `users` VALUES (141, 'ee', 'ee', 'Jiax.a@outlook.com', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (142, 'kuma', '123456', 'wayneddw@qq.com', NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VydHlwZSI6bnVsbCwiZXhwIjoxNjg0OTE5MDQ1LCJ1c2VyaWQiOiIxNDIiLCJlbWFpbCI6IndheW5lZGR3QHFxLmNvbSIsInVzZXJuYW1lIjoia3VtYSJ9.jriJlB4kFft-Ss3kCaUN2gW-2vhDmPVWo2VFMIZ-6Oc', NULL, NULL);
+
+-- ----------------------------
 -- Table structure for venue
 -- ----------------------------
 DROP TABLE IF EXISTS `venue`;
@@ -5962,30 +6071,24 @@ INSERT INTO `venue` VALUES (26, 'International Conference on Software Quality, R
 -- View structure for count_annual
 -- ----------------------------
 DROP VIEW IF EXISTS `count_annual`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_annual` AS select `list_ct`.`year` AS `year`,count(0) AS `num` from `list_ct` group by `list_ct`.`year`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_annual` AS select 1 AS `year`,1 AS `num`;
 
 -- ----------------------------
 -- View structure for count_country
 -- ----------------------------
 DROP VIEW IF EXISTS `count_country`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_country` AS select `s`.`country` AS `country`,count(0) AS `count`,`c`.`code` AS `code` from (`scholar` `s` left join `code` `c` on((`s`.`country` = `c`.`country`))) group by `s`.`country`,`c`.`code`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_country` AS select 1 AS `country`,1 AS `count`,1 AS `code`;
 
 -- ----------------------------
 -- View structure for count_cumulative
 -- ----------------------------
 DROP VIEW IF EXISTS `count_cumulative`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_cumulative` AS select `a`.`year` AS `year`,`a`.`num` AS `num`,sum(`b`.`num`) AS `count` from (`count_annual` `a` join `count_annual` `b`) where (`b`.`year` <= `a`.`year`) group by `a`.`year`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_cumulative` AS select 1 AS `year`,1 AS `num`,1 AS `count`;
 
 -- ----------------------------
 -- View structure for count_field
 -- ----------------------------
 DROP VIEW IF EXISTS `count_field`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_field` AS select `list_ct`.`field` AS `field`,count(0) AS `count` from `list_ct` group by `list_ct`.`field`;
-
--- ----------------------------
--- View structure for temp_other
--- ----------------------------
-DROP VIEW IF EXISTS `temp_other`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `temp_other` AS select `list_ct`.`year` AS `year`,count(0) AS `other` from `list_ct` where (`list_ct`.`field` = 'other') group by `list_ct`.`year`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `count_field` AS select 1 AS `field`,1 AS `count`;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -1,52 +1,39 @@
+1.28日更新：
+
+- 上传了新的数据库sql文件，具体参见`数据库`部分。
+- 将后端所有模块合并到一起，现在只需要运行BackendApplication即可启动后端。
+- 完成User模块的前后端，现在需要先登录才可以访问Repo和Tools。
+
 # Dependencies+运行办法
 
 ## 数据库
 
 1. 首先安装Mysql 8.0.28
-2. 然后创建数据库`cithub-repo`，并设置自己的root密码。
-3. 导入sql文件`cithub-repo.sql`
+2. 然后创建数据库`cithub`，并设置自己的root密码。
+3. 导入sql文件`cithub.sql`
 
 ## 后端
 
 1. 首先需要安装JDK8
    下载地址：https://www.oracle.com/java/technologies/downloads/#java8-windows
-
 2. 配置Java环境变量
    参考：https://zhuanlan.zhihu.com/p/153500777
-
 3. 安装Maven 3.8.1
    参考：https://blog.csdn.net/affluent6/article/details/118404802
-
 4. 右键Backend文件夹，选择open folder as idea project
-
 5. 设置 Maven自动下载所需依赖
    参考：https://blog.csdn.net/fittec/article/details/118942425
    如遇Maven下载太慢或下载失败，考虑添加Maven仓库镜像。
    如自动下载依赖失败，手动点击Maven图标，然后reload project。
    ![image-20240124165421971](image-20240124165421971.png)
-
 6. 所有依赖下载完成后，到application-dev.yml处更改自己的mysql username，password和url。
+11. 在idea运行src/main/java/BackendApplication，点击函数名左边的绿色箭头即可运行。
 
-7. 安装Nacos 2.1.1
-   下载地址：https://github.com/alibaba/[nacos](https://so.csdn.net/so/search?q=nacos&spm=1001.2101.3001.7020)/releases
-
-8. 安装完毕后，cd 到 nacos安装目录的bin目录下
-
-9. 打开cmd，输入`startup.cmd -m standalone`
-
-10. 看到cmd输出`INFO Nacos started successfully in stand alone mode. use embedded storage`即表示nacos启动成功
-
-11. 在idea运行每个模块的src/main/java/CithubXXXXApplication，点击函数名左边的绿色箭头即可运行。
-
-    注意：不要忘记启动Gateway模块
-
-12. idea在控制台输出`Started CithubXXXXXApplication in XXX seconds `即表示该模块启动成功。
-
-
+12. idea在控制台输出`Started BackendApplication in XXX seconds `即表示该模块启动成功。
 
 后端依赖查看：
 
-进入`Backend`目录的pom.xml，然后按住ctrl键点击cithub-common，即可查看所有依赖。
+进入`Backend`目录的pom.xml，即可查看所有依赖。
 
 
 
@@ -113,7 +100,7 @@ vue-argon-dashboard-2@3.0.0 C:\Project\Cithub_New\cithub\Frontend
 
 # 后端项目结构
 
-![image-20240124172528890](image-20240124172528890.png)
+![image-20240128205820675](image-20240128205820675.png)
 
 # other notes
 
