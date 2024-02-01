@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 28/01/2024 20:52:11
+ Date: 01/02/2024 21:36:19
 */
 
 SET NAMES utf8mb4;
@@ -3997,20 +3997,24 @@ CREATE TABLE `models`  (
   `ModelID` int(0) NOT NULL AUTO_INCREMENT,
   `ModelName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `ModelDescriptions` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `ModelContent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `ParamsValues` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `ProjectID` int(0) NULL DEFAULT NULL,
   `CreatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   `LastUpdatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `Cons` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Strength` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`ModelID`) USING BTREE,
   INDEX `ProjectID`(`ProjectID`) USING BTREE,
   CONSTRAINT `ProjectID` FOREIGN KEY (`ProjectID`) REFERENCES `projects` (`ProjectID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of models
 -- ----------------------------
-INSERT INTO `models` VALUES (1, '撒领导小组检测卡', 'test', 'testcont阿斯顿撒旦', 1, '2024-01-22 21:23:20', '2024-01-22 21:49:42');
-INSERT INTO `models` VALUES (2, 'm2', 'test', 'testcont', 1, '2024-01-22 21:23:21', '2024-01-22 21:23:21');
+INSERT INTO `models` VALUES (1, '撒领导小组检测卡', 'test', '[{\"Parameter\":\"这是我新添加的参数\",\"Value\":\"v1,v2,v3,v4,v5,v6\",\"row_index\":0},{\"Parameter\":\"这是我新添加的参数二号\",\"Value\":\"1,2,3,4,5,6,7,8,9,10,11\",\"row_index\":1}]', 1, '2024-01-22 21:23:20', '2024-02-01 12:49:59', '[{\"Constrain_1\":[{\"Parameter\":\"这是我新添加的参数二号\",\"Value\":\"5\"},{\"Parameter\":\"这是我新添加的参数\",\"Value\":\"v4\"},{\"Parameter\":\"Parameter_2\",\"Value\":\"V3_3\"}]}]', 2);
+INSERT INTO `models` VALUES (6, '123sadg', '阿斯顿撒让他让他', '[{\"Parameter\":\"sad\",\"Value\":\"sad,asd,asdxcz,sfd\",\"row_index\":0},{\"Parameter\":\"asdsa\",\"Value\":\"sdfs,sdf,gdyth,sad\",\"row_index\":1}]', 1, '2024-02-01 21:05:44', '2024-02-01 13:06:24', '[{\"Constrain_1\":[{\"Parameter\":\"sad\",\"Value\":\"sad\"},{\"Parameter\":\"asdsa\",\"Value\":\"gdyth\"},{\"Parameter\":\"sad\",\"Value\":\"sfd\"}]}]', 2);
+INSERT INTO `models` VALUES (8, '啊实打实', '阿萨德许昌规范化', '[{\"Parameter\":\"\",\"Value\":\"\",\"row_index\":0},{\"Parameter\":\"\",\"Value\":\"\",\"row_index\":1},{\"Parameter\":\"\",\"Value\":\"\",\"row_index\":2}]', 1, '2024-02-01 21:15:31', '2024-02-01 13:24:01', '', 1);
+INSERT INTO `models` VALUES (9, '12省得到时候13', '水电费水电费让他', '', 1, '2024-02-01 20:55:14', '2024-02-01 20:55:14', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for projects
@@ -4024,13 +4028,14 @@ CREATE TABLE `projects`  (
   `CreatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   `LastUpdatedTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`ProjectID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of projects
 -- ----------------------------
-INSERT INTO `projects` VALUES (1, '阿萨德卡萨丁考虑考虑', 'This is a project used f123123', 1, '2024-01-22 19:02:03', '2024-01-25 21:49:27');
-INSERT INTO `projects` VALUES (3, 'test3', '3', 1, '2024-01-22 18:40:59', '2024-01-22 18:40:59');
+INSERT INTO `projects` VALUES (1, '测试Project', '测试Project Description  123', 1, '2024-01-22 19:02:03', '2024-01-29 22:39:16');
+INSERT INTO `projects` VALUES (2, '测试Project', 'sadsdasda', 1, '2024-01-29 22:13:15', '2024-01-29 22:39:51');
+INSERT INTO `projects` VALUES (3, '测试Project', '12sadsad12', 1, '2024-01-29 22:13:17', '2024-01-29 22:39:27');
 
 -- ----------------------------
 -- Table structure for rank_author_archive
@@ -5995,14 +6000,14 @@ CREATE TABLE `users`  (
   `institution` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`userid`, `account`) USING BTREE,
   UNIQUE INDEX `username`(`account`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 143 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1234 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
+INSERT INTO `users` VALUES (1, '123', '123', '1223564154@qq.com', 'ADMIN', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpbnN0aXR1dGlvbiI6IuWNl-S6rOWkp-WtpiIsIm5hbWUiOiLlkJHlgaXlm74iLCJ1c2VydHlwZSI6IkFETUlOIiwiZXhwIjoxNzA2ODY1NzAwLCJ1c2VyaWQiOiIxIiwiYWNjb3VudCI6IjEyMyIsImVtYWlsIjoiMTIyMzU2NDE1NEBxcS5jb20ifQ.9rNzBNWdDXji-dLHD7b0bReH-ObNCfJ7eYr2El37p4E', '向健图', '南京大学');
 INSERT INTO `users` VALUES (112, 'xjt', 'qweasdas', '112', NULL, NULL, NULL, NULL);
 INSERT INTO `users` VALUES (113, 'xjt123', '1223564154@qq.com', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `users` VALUES (114, '123', '123', '1223564154@qq.com', 'ADMIN', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpbnN0aXR1dGlvbiI6IuWNl-S6rOWkp-WtpiIsIm5hbWUiOiLlkJHlgaXlm74iLCJ1c2VydHlwZSI6IkFETUlOIiwiZXhwIjoxNzA2NTE4Mjk5LCJ1c2VyaWQiOiIxMTQiLCJhY2NvdW50IjoiMTIzIiwiZW1haWwiOiIxMjIzNTY0MTU0QHFxLmNvbSJ9.M2xgnXVHVXCm04kj2-gDNuGCX-kJm5psl182w2INVB0', '向健图', '南京大学');
 INSERT INTO `users` VALUES (118, 'xjt1233', 'XIANG521', '1223564154@qq.com', NULL, NULL, NULL, NULL);
 INSERT INTO `users` VALUES (120, 'xjt12331', '123', '1223564154@qq.com', NULL, NULL, NULL, NULL);
 INSERT INTO `users` VALUES (121, 'xjt12334', 'xiang521', '1223564154@QQ.COM', NULL, NULL, NULL, NULL);

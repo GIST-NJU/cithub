@@ -8,7 +8,10 @@ import com.gist.cithub.backend.Tools.service.ProjectsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +30,7 @@ public class ProjectsController {
     /**
      * 列表
      */
-    @RequestMapping(value="/list")
+    @RequestMapping(value = "/list")
     public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = projectsService.queryPage(params);
 
@@ -64,7 +67,7 @@ public class ProjectsController {
 //    }
 
 
-    @RequestMapping(value="/listProjectByUserID",method = RequestMethod.POST)
+    @RequestMapping(value = "/listProjectByUserID", method = RequestMethod.POST)
     public R listProjectByUserID(@RequestBody Map<String, Object> info) {
 //        System.out.println("info是" + info);
         Integer userID = (Integer) info.get("userID");
@@ -74,7 +77,7 @@ public class ProjectsController {
 
     }
 
-    @RequestMapping(value="/updateProject",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateProject", method = RequestMethod.POST)
     public R updatePaper(@RequestBody ProjectsEntity projectsEntity) {
 //        System.out.println(listEntity.toString());
         Boolean updateFlag = projectsService.updateById(projectsEntity);
@@ -83,15 +86,34 @@ public class ProjectsController {
 
     }
 
-    @RequestMapping(value="/DeleteByProjectID",method = RequestMethod.POST)
-    public R deletePaper(@RequestBody Map<String,Object> info) {
+    @RequestMapping(value = "/DeleteByProjectID", method = RequestMethod.POST)
+    public R DeleteByProjectID(@RequestBody Map<String, Object> info) {
 //        System.out.println(info);
 //        System.out.println(info.get("projectid"));
-        QueryWrapper<ProjectsEntity> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("ProjectID",info.get("projectid"));
-        Boolean deleteFlag=projectsService.remove(queryWrapper);
+        QueryWrapper<ProjectsEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ProjectID", info.get("projectid"));
+        Boolean deleteFlag = projectsService.remove(queryWrapper);
         if (deleteFlag) return R.ok().put("DeleteStatus", "success!");
         else return R.ok().put("DeleteStatus", "failed!");
+    }
+
+    @RequestMapping(value = "/NewProject", method = RequestMethod.POST)
+    public R NewProject(@RequestBody Map<String, Object> info) {
+        System.out.println(info);
+        ProjectsEntity projectsEntity=new ProjectsEntity();
+        projectsEntity.setProjectname((String) info.get("projectname"));
+        projectsEntity.setProjectdescriptions((String) info.get("projectdescriptions"));
+        projectsEntity.setUserid((Integer) info.get("userid"));
+//        将时间戳转为Date类型
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        LocalDateTime createTime=LocalDateTime.parse((String)info.get("createdtime"),formatter);
+        LocalDateTime lastUpdateTime=LocalDateTime.parse((String)info.get("lastupdatedtime"),formatter);
+
+        projectsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+        projectsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+        Boolean flag=projectsService.save(projectsEntity);
+        if (flag) return R.ok().put("NewStatus", "success!");
+        else return R.ok().put("NewStatus", "failed!");
     }
 
     /**

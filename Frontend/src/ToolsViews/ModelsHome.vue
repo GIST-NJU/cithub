@@ -1,5 +1,5 @@
 <template>
-    {{ route.query.projectid }}
+    <!-- route.query.projectid :{{ route.query.projectid }} -->
     <div class="min-height-300 bg-success position-absolute w-100"></div>
     <SideNav></SideNav>
     <main class="main-content position-relative border-radius-lg ">
@@ -23,7 +23,13 @@
                             <div v-for="(chunk, index) in chunkedArray" :key="index" class="row"
                                 style="margin: 0 0 0 20px;">
                                 <div class="col" v-for="(model, colIndex) in chunk" :key="colIndex">
-                                    <div class="rounded-border">
+
+                                    <ModelCard style="margin:5px 5px 5px 5px" :classIcon="getRandomIcon()" :model="model">
+                                    </ModelCard>
+
+
+
+                                    <!-- <div class="rounded-border">
                                         <div><span>Model Name:</span>{{ model.modelname }}</div>
                                         <div><span>Model Des:</span> {{ model.modeldescriptions }}</div>
                                         <div><span>Model Content:</span> {{ model.modelcontent }}</div>
@@ -47,12 +53,7 @@
                                             <el-form-item label="Model Content:">
                                                 <el-input autosize type="textarea" v-model="dialogform.modelcontent" />
                                             </el-form-item>
-                                            <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
-                                                    <el-select v-model="form.region" placeholder="Please select a zone">
-                                                        <el-option label="Zone No.1" value="shanghai" />
-                                                        <el-option label="Zone No.2" value="beijing" />
-                                                    </el-select>
-                                                </el-form-item> -->
+
                                         </el-form>
                                         <template #footer>
                                             <span class="dialog-footer">
@@ -62,7 +63,10 @@
                                                 </el-button>
                                             </span>
                                         </template>
-                                    </el-dialog>
+                                    </el-dialog> -->
+
+
+
                                 </div>
                             </div>
 
@@ -82,7 +86,7 @@
 </template>
 
 <script  setup>
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter} from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { request } from '../request';
 import Foot from '../ComponentCommon/Foot.vue';
@@ -91,20 +95,23 @@ import SideNav from './components/SideNav.vue'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
-import { useRouter } from 'vue-router';
 import { useModelsStore } from '../store/modelsStore'
 import { useCurrentProject } from '../store/currentProject';
 import { ElNotification } from 'element-plus'
 
+import ModelCard from './components/ModelCard.vue'
+
+
 const route = useRoute()
+const router = useRouter()
 const modelStore = useModelsStore()
 const projectsStore = useProjectsStore()
 const currentProjectStore = useCurrentProject()
 const modelLists = reactive([]);
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
-const dateObject_created=ref()
-const dateObject_lastupdated=ref()
+const dateObject_created = ref()
+const dateObject_lastupdated = ref()
 const listAllModelsByProjectID = async () => {
     // console.log("route.query.projectid", route.query.projectid)
     try {
@@ -150,7 +157,7 @@ const listAllModelsByProjectID = async () => {
     // console.log("CALists", CALists)
 };
 
-const itemsPerRow = ref(1);
+const itemsPerRow = ref(3);
 const chunkedArray = computed(() => {
     const result = [];
     for (let i = 0; i < modelStore.modelsList.length; i += itemsPerRow.value) {
@@ -177,10 +184,6 @@ const showdialog = (model) => {
     dialogform.modeldescriptions = model.modeldescriptions
     dialogform.modelcontent = model.modelcontent
     dialogform.createdtime = model.createdtime
-
-
-
-
 
 
 }
@@ -226,9 +229,26 @@ const confirmUpdateModel = () => {
     })
 
 }
+
+const iconsArray = [
+    'text-white fas fa-landmark',
+    'text-white fas fa-kiwi-bird',
+    'text-white fas fa-laptop-code',
+    'text-white fas fa-laugh-wink',
+]; // 替换为你的图标数组
+
+const getRandomIcon = () => {
+    const randomIndex = Math.floor(Math.random() * iconsArray.length);
+    return iconsArray[randomIndex];
+};
+
+
+
 onMounted(() => {
     listAllModelsByProjectID()
 })
+
+
 </script>
 
 

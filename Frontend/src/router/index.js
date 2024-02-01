@@ -27,6 +27,8 @@ import ChartsDisplay from '../RepoViews/ChartsDisplay.vue'
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
+import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
+import ModelsGeneration from '../ToolsViews/ModelsGeneration.vue'
 
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
@@ -119,16 +121,31 @@ const routes = [
         meta: { title: 'Tools' }
       },
       {
-        // ToolsHome
+        // modelsHome
         path: "models",
         name: 'modelsHome',
         component: ModelsHome,
         meta: { title: 'Models' }
       },
-      
+      {
+        // modelsDetails
+        path: "modelsDetails",
+        name: 'modelsDetails',
+        component: ModelsDetails,
+        meta: { title: 'ModelsDetails' }
+      },
+      {
+        // modelsGeneration
+        path: "modelsGeneration",
+        name: 'modelsGeneration',
+        component: ModelsGeneration,
+        meta: { title: 'modelsGeneration' }
+      },
+
+
     ]
   },
-// Benchmark
+  // Benchmark
   {
     path: '/benchmark',
     component: BenchmarkRouterView,
@@ -141,7 +158,7 @@ const routes = [
         component: BenchmarkHome,
         meta: { title: 'Benchmark' }
       },
-      
+
     ]
   },
 
@@ -164,10 +181,10 @@ const routes = [
         component: UserRegister,
         meta: { title: 'UserRegister' }
       },
-      
+
     ]
   },
-  
+
 
 
 ];

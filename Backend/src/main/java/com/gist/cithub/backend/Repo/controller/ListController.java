@@ -53,7 +53,7 @@ public class ListController {
 
     @Operation(summary = "列出所有文献")
     @RequestMapping(value = "/listAllpapers", method = RequestMethod.POST)
-    public R listAllpapers( @RequestBody Map<String, Object> pageinfo) {
+    public R listAllpapers(@RequestBody Map<String, Object> pageinfo) {
 /*
 pagenum当前是第几页
 pagesize每页有几项
@@ -325,6 +325,36 @@ pagesize每页有几项
 //        queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
         queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
         return R.ok().put("countEachField", listService.listMaps(queryWrapper));
+    }
+
+    @Operation(summary = "统计每个Field每年的文献数量")
+    @RequestMapping(value = "/countFieldEachYear", method = RequestMethod.POST)
+    public R countFieldeachYear(@Parameter(description = "要统计文献种类对应info.info") @RequestBody Map<String, Object> info) {
+        System.out.println("info是" + info);
+        String typeOfPaper = (String) info.get("info");
+
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("Projects", typeOfPaper);
+        queryWrapper.lt("year", 2023);// 添加年份小于2023的条件
+        queryWrapper.ne("field", "application");
+        queryWrapper.select("field", "year", "COUNT(*) AS RecordCount");
+        queryWrapper.groupBy("field", "year");
+
+        List<Map<String, Object>> result = listService.listMaps(queryWrapper);
+        return R.ok().put("countFieldEachYear", result);
+    }
+
+    @Operation(summary = "找到论文数前十的机构")
+    @RequestMapping(value = "/topInstitutions", method = RequestMethod.POST)
+    public R findTopOrganizations() {
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("institution", "COUNT(*) AS paperCount");
+        queryWrapper.groupBy("institution");
+        queryWrapper.orderByDesc("paperCount");
+        queryWrapper.last("LIMIT 10");
+
+        List<Map<String, Object>> result = listService.listMaps(queryWrapper);
+        return R.ok().put("topInstitutions", result);
     }
 
 

@@ -6,9 +6,11 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.gist.cithub.backend.Tools.entity.ModelsEntity" id="modelsMap">
         <result property="modelid" column="modelid"/>
+        <result property="strength" column="strength"/>
         <result property="modelname" column="modelname"/>
         <result property="modeldescriptions" column="modeldescriptions"/>
-        <result property="modelcontent" column="modelcontent"/>
+        <result property="paramsvalues" column="paramsvalues"/>
+        <result property="cons" column="cons"/>
         <result property="projectid" column="projectid"/>
         <result property="createdtime" column="createdtime"/>
         <result property="lastupdatedtime" column="lastupdatedtime"/>

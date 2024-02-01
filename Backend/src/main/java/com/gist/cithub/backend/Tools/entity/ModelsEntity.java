@@ -35,11 +35,13 @@ public class ModelsEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private String modelcontent;
+	private String paramsvalues;
+	private String cons;
 	/**
 	 * 
 	 */
 	private Integer projectid;
+	private Integer Strength;
 
 	private Date createdtime;
 

@@ -105,7 +105,7 @@ const CategoryArray_1 = reactive([
 const CategoryArray_2 = reactive([
     { "category": "Relative Proportion of Field", "des": "The relative proportions of each combinatorial testing research field for each year." },
 
-    { "category": "Number of Institutions", "des": "The number of new institutions that contribute to combinatorial testing community for each year." },
+    { "category": "Top Institutions", "des": "The number of new institutions that contribute to combinatorial testing community for each year." },
 
 ])
 const CategoryArray_3 = reactive([
