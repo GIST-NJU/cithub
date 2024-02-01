@@ -1,3 +1,9 @@
+2.1日更新：
+
+- 上传了新的数据库`cithub.sql`文件，请重新导入以更新数据库。
+- Tools增加GUI创建Model，保存Model，修改Model。
+- 【范佳林】Repo更新Charts：Chart_FIELD_COUNT_EACH_YEAR、Chart_TOP_INSTITUTIONS
+
 1.28日更新：
 
 - 上传了新的数据库sql文件，具体参见`数据库`部分。
