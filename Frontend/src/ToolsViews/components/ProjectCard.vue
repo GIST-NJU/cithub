@@ -3,6 +3,38 @@
     <!-- <div class="card-header pb-0 px-3">
       <h6 class="mb-0">Billing Information</h6>
     </div> -->
+
+    <div style="width:100%;margin-bottom: 5px;text-align: center;">
+      <div style="margin-right: 3%;margin-top:5px;float: right;">
+        <ArgonButton full-width color="success" variant="gradient" @click="showdialogNew">
+          <span class="ni ni-fat-add ni-lg me-1" />
+          New Project
+        </ArgonButton>
+      </div>
+      <!-- new Project -->
+      <el-dialog v-model="dialogFormVisibleNew" title="New Project">
+        <el-form :model="dialogformNew">
+
+          <el-form-item label="Project Name:">
+            <el-input v-model="dialogformNew.projectname" />
+          </el-form-item>
+          <el-form-item label="Project Description:">
+            <el-input autosize type="textarea" v-model="dialogformNew.projectdescriptions" />
+          </el-form-item>
+
+
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
+            <el-button type="primary" @click="confirmNewProject">
+              Confirm
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+
     <div v-for="(chunk, index) in props.chunkedArray" :key="index" class="row" style="margin: 0 0 0 20px;">
 
       <div class="col" v-for="(project, colIndex) in chunk" :key="colIndex">
@@ -28,10 +60,10 @@
               </div>
               <div class="ms-auto text-end">
                 <a class="btn btn-link text-dark px-3 mb-0" @click="enterProject(project)">
-                  <i class="fas fa-book-open text-success me-2" aria-hidden="true"></i>Enter
+                  <i class="fas fa-book-open text-success me-2" aria-hidden="true"></i>Project Details
                 </a>
                 <a class="btn btn-link text-dark px-3 mb-0" @click="showdialogUpdate(project, index)">
-                  <i class="fas fa-pencil-alt text-primary me-2" aria-hidden="true"></i>Edit
+                  <i class="fas fa-pencil-alt text-primary me-2" aria-hidden="true"></i>Edit Project
                 </a>
 
                 <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
@@ -53,34 +85,7 @@
       </div>
 
     </div>
-    <div style="margin:10px 10px 10px 10px;">
-      <ArgonButton full-width color="success" variant="gradient" @click="showdialogNew">
-        <span class="ni ni-fat-add ni-lg me-1" />
-        New Project
-      </ArgonButton>
-    </div>
-    <!-- new Project -->
-    <el-dialog v-model="dialogFormVisibleNew" title="New Project">
-      <el-form :model="dialogformNew">
 
-        <el-form-item label="Project Name:">
-          <el-input v-model="dialogformNew.projectname" />
-        </el-form-item>
-        <el-form-item label="Project Description:">
-          <el-input autosize type="textarea" v-model="dialogformNew.projectdescriptions" />
-        </el-form-item>
-
-
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
-          <el-button type="primary" @click="confirmNewProject">
-            Confirm
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
 
     <!-- Update Project -->
     <el-dialog v-model="dialogFormVisibleUpdate" title="Update Project">
@@ -145,8 +150,6 @@ const dialogformNew = reactive({
   lastupdatedtime: '',
   createdtime: '',
   userid: userStore.userID
-
-
 })
 const showdialogNew = () => {
 

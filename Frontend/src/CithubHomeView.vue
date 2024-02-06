@@ -129,7 +129,7 @@ const jumpToRepo = () => {
 const jumpToTools = () => {
 	moduleStore.CurrentModule = 'Tools'
 	router.push({
-		path: '/tools/home'
+		path: '/tools/ProjectsHome'
 	})
 }
 const jumpToBenchmark = () => {

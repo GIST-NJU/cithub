@@ -1,7 +1,7 @@
 package com.gist.cithub.backend.Tools.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.gist.cithub.backend.Tools.entity.CoveringarraysEntity;
+import com.gist.cithub.backend.Tools.entity.TestSuitesEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,6 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2022-08-28 17:02:35
  */
 @Mapper
-public interface CoveringarraysDao extends BaseMapper<CoveringarraysEntity> {
+public interface TestSuitesDao extends BaseMapper<TestSuitesEntity> {
 	
 }

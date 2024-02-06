@@ -112,6 +112,25 @@ public class ModelsController {
         }
     }
 
+    @RequestMapping(value = "/NewModel", method = RequestMethod.POST)
+    public R NewProject(@RequestBody Map<String, Object> info) {
+//        System.out.println(info);
+        ModelsEntity modelsEntity = new ModelsEntity();
+        modelsEntity.setModelname((String) info.get("modelname"));
+        modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
+        modelsEntity.setProjectid(Integer.parseInt((String) info.get("projectID")) );
+//        将时间戳转为Date类型
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
+        LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+
+        modelsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+        modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+        Boolean flag = modelsService.save(modelsEntity);
+        if (flag) return R.ok().put("NewStatus", "success!");
+        else return R.ok().put("NewStatus", "failed!");
+    }
+
     /**
      * 信息
      */

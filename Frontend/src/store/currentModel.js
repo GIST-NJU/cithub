@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-export const useModelsStore = defineStore("ModelsStore", {
+export const useCurrentModel = defineStore("CurrentModel", {
     state: () => {
         return {
-            modelsList:[], //该projects下的所有models
-
+            currentModel: {}
+            
         }
     },
     actions: {

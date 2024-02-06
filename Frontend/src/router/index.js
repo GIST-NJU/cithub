@@ -25,10 +25,11 @@ import ChartsDisplay from '../RepoViews/ChartsDisplay.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
+import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
-import ModelsGeneration from '../ToolsViews/ModelsGeneration.vue'
+import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
 
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
@@ -115,10 +116,17 @@ const routes = [
     children: [
       {
         // ToolsHome
-        path: "home",
-        name: 'algorithmHome',
+        path: "ToolsHome",
+        name: 'ToolsHome',
         component: ToolsHome,
-        meta: { title: 'Tools' }
+        meta: { title: 'ToolsHome' }
+      },
+      {
+        // ProjectsHome
+        path: "ProjectsHome",
+        name: 'ProjectsHome',
+        component: ProjectsHome,
+        meta: { title: 'ProjectsHome' }
       },
       {
         // modelsHome
@@ -136,10 +144,10 @@ const routes = [
       },
       {
         // modelsGeneration
-        path: "modelsGeneration",
-        name: 'modelsGeneration',
-        component: ModelsGeneration,
-        meta: { title: 'modelsGeneration' }
+        path: "TestSuitesHome",
+        name: 'TestSuitesHome',
+        component: TestSuitesHome,
+        meta: { title: 'TestSuitesHome' }
       },
 
 

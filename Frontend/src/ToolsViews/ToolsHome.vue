@@ -10,14 +10,14 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4">
+                        <h3 style="margin: 20px 0px 0px 40px;">Tools Categories</h3>
+                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Cithub Provides a variety of tools of Combinatorial Testing.</p>
+
                         <div class="card-header pb-0">
-                            <h3>Projects List</h3>
-                            <p class="text-muted text-sm mb-0">{{ projectsStore.projectList.length }} Projects
-                                found</p>
+
                         </div>
-                     
-  
-                        <ProjectCard :chunkedArray="chunkedArray"></ProjectCard>
+
+
 
                     </div>
                 </div>
@@ -66,118 +66,8 @@ const CALists = reactive([]);
 const projectList = reactive([]);
 const projectsStore = useProjectsStore()
 
-// testAPI通过userID查询该User下所有的projects
-// 又遍历每一个project，得到每一个project对应的多个models
-// 又遍历每一个model，得到每一个model生成的CA
- const listAllProjectsByUserID = async () => {
-    try {
-        // 获取用户当前所有的projects
-        const projectsRes = await request({
-            method: "POST",
-            url: '/tools/projects/listProjectByUserID',
-            data: {
-                userID: userStore.userID
-            }
-        });
-        // PaperInfoStore.paperinfos.push(...res.res.records)
-        projectList.length = 0
-        projectsStore.projectList.length=0
-        projectList.splice(0, projectList.length, ...projectsRes.projectList);
-        // projectsStore.projectList.length=0
-        // projectsStore.projectList.push(projectList)
-        projectsStore.projectList = projectList
-        // console.log(" projectsStore.projectList", projectsStore.projectList)
-        // 将ISO 8601格式的时间戳转换为Date对象
 
 
-        for (let i = 0; i < projectsStore.projectList.length; i++) {
-
-            const timestamp_created = projectsStore.projectList[i].createdtime
-            const timestamp_lastupdated = projectsStore.projectList[i].lastupdatedtime
-            const dateObject_created = new Date(timestamp_created);
-            const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-            // 获取可读的时间字符串
-            projectsStore.projectList[i].createdtimeFormat = dateObject_created.toLocaleString();
-            projectsStore.projectList[i].lastupdatedtimeFormat = dateObject_lastupdated.toLocaleString();
-        }
-
-        // if (projectList.length !== 0) {
-        //     // console.log("projectList", projectList);
-        //     // console.log("获取每个projectid对应的model");
-
-        //     // 对projectList中每个project，获取该project下的所有model
-        //     modelLists.length = 0
-        //     for (const project of projectList) {
-        //         const modelsRes = await request({
-        //             method: "POST",
-        //             url: '/tools/models/listModelsByProjectID',
-        //             data: {
-        //                 projectid: project.projectid,
-
-        //             }
-        //         });
-
-        //         modelLists.push(modelsRes.models);
-        //     }
-        // }
-
-        // // console.log("modelLists", modelLists);
-
-        // if (modelLists.length !== 0) {
-        //     // 对于每一个model，获取它所有的CA
-        //     // console.log("对每一个model获取它的CA");
-        //     CALists.length = 0
-        //     for (const models of modelLists) {
-        //         for (const model of models) {
-        //             const caRes = await request({
-        //                 method: "POST",
-        //                 url: '/tools/coveringarrays/listCAsByModelID',
-        //                 data: {
-        //                     modelid: model.modelid
-        //                 }
-        //             });
-
-        //             // console.log("对每一个model获取它的CA!!", caRes);
-        //             if (caRes.CAs.length != 0) CALists.push(caRes)
-        //         }
-        //     }
-        // }
-
-
-
-
-    } catch (error) {
-        console.error("发生错误", error);
-    }
-    // console.log("projectList", projectList)
-    // console.log("modelLists", modelLists)
-    // console.log("CALists", CALists)
-};
-
-// const enterProject = (project) => {
-//     currentProjectStore.createdtime = project.createdtime
-//     currentProjectStore.lastupdatedtime = project.lastupdatedtime
-//     currentProjectStore.projectdescriptions = project.projectdescriptions
-//     currentProjectStore.projectid = project.projectid
-//     currentProjectStore.projectname = project.projectname
-//     currentProjectStore.userid = project.userid
-//     router.push({
-//         path: '/tools/models',
-//         query: {
-//             projectid: project.projectid,
-//             projectname: project.projectname
-//         }
-//     })
-// }
-const itemsPerRow = ref(1);
-const chunkedArray = computed(() => {
-    const result = [];
-    for (let i = 0; i < projectsStore.projectList.length; i += itemsPerRow.value) {
-        result.push(projectsStore.projectList.slice(i, i + itemsPerRow.value));
-    }
-    return result;
-});
 
 onMounted(async () => {
     // 先检查用户是否登录
@@ -213,6 +103,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

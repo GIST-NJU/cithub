@@ -31,7 +31,6 @@
 
                                 <div class="tb-container" ref="tbContainerRef">
                                     <h3 style="margin:0;text-align:center;">Model Content</h3>
-                                    <hr class="my-3 horizontal dark" />
 
                                     <p style="text-align:left;color:#ccc;">Note:
                                     </p>
@@ -143,7 +142,7 @@
                                         Add Constraint</argon-button>
                                     <p style="margin:10px 0px 10px 0px">Current Constraints set: </p>
                                     <!-- 约束预览 -->
-                                    <el-input v-model="consPreview" autosize type="textarea"
+                                    <el-input disabled v-model="consPreview" autosize type="textarea"
                                         placeholder="All the constraints will be showed right here" />
                                     <argon-button style="margin:10px 0px 10px 0px" color="danger" size="sm" full-width
                                         @click="clearCons">
@@ -166,7 +165,8 @@
 
 
                                     <!-- 模型预览 -->
-                                    <el-input v-model="modelPreview" autosize type="textarea" placeholder="Please input" />
+                                    <el-input disabled v-model="modelPreview" autosize type="textarea"
+                                        placeholder="Please input" />
 
                                     <!-- 单元格内容编辑框 -->
                                     <div v-show="showEditInput" id="editInput" @mouseleave="showEditInput = false">
@@ -180,9 +180,16 @@
                                 </div>
                             </div>
 
-
                             <hr class="horizontal dark" />
-                            <argon-button color="primary" class="ms-auto" @click="SaveModel">Save Model</argon-button>
+                            <div style="width:100%;margin-bottom: 5px;text-align: center;">
+                                <argon-button style="margin:5px 5px 5px 5px;float: right" color="success" class="ms-auto"
+                                    @click="Generation">Generated test suites</argon-button>
+                                <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary" class="ms-auto"
+                                    @click="SaveModel">Save Model</argon-button>
+
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -204,15 +211,15 @@ import ArgonInput from '../ComponentCommon/ArgonInput.vue';
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import { request } from '../request';
 import { onMounted, reactive, ref, computed, defineProps, watch, onUnmounted, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
-import { method } from 'lodash';
+import { useRoute, useRouter } from 'vue-router';
+import { useCurrentModel } from '../store/currentModel'
+
+
 import { ElNotification } from 'element-plus';
-import { json } from 'body-parser';
-import { cs } from 'element-plus/es/locale';
-import { async } from 'q';
+
 const route = useRoute()
-
-
+const router = useRouter()
+const currentModel = useCurrentModel()
 const tbContainerRef = ref(null);
 const strength = ref(0)
 const StrengthOptions = [
@@ -241,7 +248,6 @@ const StrengthOptions = [
         label: '6',
     },
 ]
-const tableData = ref([]);
 const model = reactive({})
 const columnList = ref([
     { prop: "Parameter", label: 'Parameter' },
@@ -250,7 +256,7 @@ const columnList = ref([
 ]);
 
 
-
+const tableData = ref([]);
 // 对 tableData 的数据做处理，转成被constraintsTableData
 const constraintsTableData = ref()
 const maxValueDomain = ref(0)
@@ -297,9 +303,27 @@ const toggleCellHighlight = (row, column) => {
     }
     // console.log("highlightedCells", highlightedCells.value)
 };
-watch(tableData.value, (newTableData, oldTableData) => {
-    // 处理tableData变化的逻辑
 
+const newParam = () => {
+    if (tableData.value.length === 0) {
+        const obj = {};
+        columnList.value.forEach(p => (obj[p.prop] = ''));
+        tableData.value.push(obj);
+    } else {
+        let lastData = tableData.value[tableData.value.length - 1];
+        const idx = lastData.row_index + 1;
+
+        let obj = {};
+        columnList.value.forEach(p => (obj[p.prop] = ''));
+        obj.row_index = idx;  // Add row_index property for the new parameter
+        tableData.value.splice(idx, 0, obj);
+        // console.log("tableData.value",tableData.value)
+    }
+}
+
+watch(tableData, (newTableData, oldTableData) => {
+    // 处理tableData变化的逻辑
+    // console.log("观察器已触发。newTableData:", newTableData);
     let tempArray = []
     let param_count = 0
     for (let i = 0, len = newTableData.length; i < len; i++) {
@@ -345,32 +369,12 @@ watch(tableData.value, (newTableData, oldTableData) => {
 
 
 
-});
+}, { deep: true });
 
 
-
-
-
-
-
-const newParam = () => {
-    if (tableData.value.length === 0) {
-        const obj = {};
-        columnList.value.forEach(p => (obj[p.prop] = ''));
-        tableData.value.push(obj);
-    } else {
-        let lastData = tableData.value[tableData.value.length - 1];
-        const idx = lastData.row_index + 1;
-
-        let obj = {};
-        columnList.value.forEach(p => (obj[p.prop] = ''));
-        obj.row_index = idx;  // Add row_index property for the new parameter
-        tableData.value.splice(idx, 0, obj);
-    }
-}
 
 const deleteParam = () => {
-// 这里需要debug！
+    // 这里需要debug！
     showMenu.value = false;
     curTarget.value.rowIdx !== null && tableData.value.splice(curTarget.value.rowIdx, 1);
 
@@ -605,12 +609,17 @@ const SaveModel = async () => {
                         modeldescriptions: model.modeldescriptions,
                         strength: strength.value,
                         ParametersAndValues: JSON.stringify(tableData.value),
-                        
                         lastupdatedtime: currentDate
                     }
                 })
 
                 if (SaveModelContentRes.SaveModelStatus == 'success') {
+                    currentModel.currentModel.modelid = route.query.modelid
+                    currentModel.currentModel.modelname = model.modelname
+                    currentModel.currentModel.modeldescriptions = model.modeldescriptions
+                    currentModel.currentModel.strength = strength.value
+                    currentModel.currentModel.ParametersAndValues = JSON.stringify(tableData.value)
+                    currentModel.currentModel.lastupdatedtime = currentDate
                     ElNotification({
                         title: 'Save Success!',
                         type: 'success',
@@ -624,8 +633,7 @@ const SaveModel = async () => {
                 }
             }
             // 如果有约束
-            else
-            {
+            else {
                 const SaveModelContentRes = await request({
                     url: '/tools/models/SaveModel',
                     method: 'POST',
@@ -641,6 +649,13 @@ const SaveModel = async () => {
                 })
 
                 if (SaveModelContentRes.SaveModelStatus == 'success') {
+                    currentModel.currentModel.modelid = route.query.modelid
+                    currentModel.currentModel.modelname = model.modelname
+                    currentModel.currentModel.modeldescriptions = model.modeldescriptions
+                    currentModel.currentModel.strength = strength.value
+                    currentModel.currentModel.ParametersAndValues = JSON.stringify(tableData.value)
+                    currentModel.currentModel.Cons = JSON.stringify(consArray.value)
+                    currentModel.currentModel.lastupdatedtime = currentDate
                     ElNotification({
                         title: 'Save Success!',
                         type: 'success',
@@ -801,9 +816,16 @@ watch(strength, (newStrength, oldStrength) => {
     // 将模型数据显示在Model Preview区域
     modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
 
-});
+}, { deep: true });
 
 
+const Generation = () => {
+    router.push({
+        path: '/tools/TestSuitesHome',
+        query:
+            { modelid: route.query.modelid }
+    })
+}
 
 onMounted(async () => {
 
