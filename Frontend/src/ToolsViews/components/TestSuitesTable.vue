@@ -125,7 +125,6 @@ import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../../store/testSuitesStore'
 import toolsInfo from "../../ComponentCommon/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
-import { objectPick } from '@vueuse/shared';
 
 const currentModel = useCurrentModel()
 const testSuitesStore = useTestSuitesStore()
