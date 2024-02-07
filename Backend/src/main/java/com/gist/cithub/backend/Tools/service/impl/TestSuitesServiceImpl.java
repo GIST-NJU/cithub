@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("coveringarraysService")
+@Service("TestSuitesService")
 public class TestSuitesServiceImpl extends ServiceImpl<TestSuitesDao, TestSuitesEntity> implements TestSuitesService {
 
     @Override

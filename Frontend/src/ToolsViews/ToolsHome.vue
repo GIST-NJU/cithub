@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4">
-                        <h3 style="margin: 20px 0px 0px 40px;">Tools Categories</h3>
+                        <h3 style="margin: 20px 0px 0px 40px;">Tools</h3>
                         <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Cithub Provides a variety of tools of
                             Combinatorial Testing for using.</p>
                         <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools available now.</p>
@@ -130,7 +130,6 @@ import { useProjectsStore } from '../store/projectsStore'
 import { ElNotification } from 'element-plus'
 import { CheckLoginStatus, getUserInfoByToken } from '../common'
 import { useRouter } from 'vue-router';
-
 const router = useRouter();
 const userStore = useUserStore()
 

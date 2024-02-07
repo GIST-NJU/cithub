@@ -30,6 +30,7 @@ import ToolsHome from '../ToolsViews/ToolsHome.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
+import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
@@ -143,11 +144,18 @@ const routes = [
         meta: { title: 'ModelsDetails' }
       },
       {
-        // modelsGeneration
+        // TestSuitesHome
         path: "TestSuitesHome",
         name: 'TestSuitesHome',
         component: TestSuitesHome,
         meta: { title: 'TestSuitesHome' }
+      },
+      {
+        // TestSuiteDetails
+        path: "TestSuiteDetails",
+        name: 'TestSuiteDetails',
+        component: TestSuiteDetails,
+        meta: { title: 'TestSuiteDetails' }
       },
 
 

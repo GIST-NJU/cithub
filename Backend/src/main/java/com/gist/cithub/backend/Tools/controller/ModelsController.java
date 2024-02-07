@@ -40,7 +40,7 @@ public class ModelsController {
 
     @RequestMapping("/listModelsByProjectID")
     public R listModelsByProjectID(@RequestBody Map<String, Object> info) {
-        Integer projectid = Integer.parseInt((String) info.get("projectid"));
+        Integer projectid = (Integer) info.get("projectid");
         List<ModelsEntity> modelsList = modelsService.listModelsByProjectId(projectid);
 //        System.out.println(modelsList);
         return R.ok().put("models", modelsList);

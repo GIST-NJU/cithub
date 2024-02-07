@@ -15,8 +15,8 @@
                             <p class="text-muted text-sm mb-0">{{ projectsStore.projectList.length }} Projects
                                 found</p>
                         </div>
-                     
-  
+
+
                         <ProjectCard :chunkedArray="chunkedArray"></ProjectCard>
 
                     </div>
@@ -69,7 +69,7 @@ const projectsStore = useProjectsStore()
 // testAPI通过userID查询该User下所有的projects
 // 又遍历每一个project，得到每一个project对应的多个models
 // 又遍历每一个model，得到每一个model生成的CA
- const listAllProjectsByUserID = async () => {
+const listAllProjectsByUserID = async () => {
     try {
         // 获取用户当前所有的projects
         const projectsRes = await request({
@@ -81,7 +81,7 @@ const projectsStore = useProjectsStore()
         });
         // PaperInfoStore.paperinfos.push(...res.res.records)
         projectList.length = 0
-        projectsStore.projectList.length=0
+        projectsStore.projectList.length = 0
         projectList.splice(0, projectList.length, ...projectsRes.projectList);
         // projectsStore.projectList.length=0
         // projectsStore.projectList.push(projectList)
@@ -150,9 +150,7 @@ const projectsStore = useProjectsStore()
     } catch (error) {
         console.error("发生错误", error);
     }
-    // console.log("projectList", projectList)
-    // console.log("modelLists", modelLists)
-    // console.log("CALists", CALists)
+
 };
 
 // const enterProject = (project) => {
@@ -197,7 +195,11 @@ onMounted(async () => {
         // 若用户已登录则正常运行
         // 列出该用户的所有project
         listAllProjectsByUserID()
-
+        ElNotification({
+            title: 'Choose a Project.',
+            message: 'Choose a project to continue.',
+            type: 'success',
+        })
 
     }
     else {
@@ -213,6 +215,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

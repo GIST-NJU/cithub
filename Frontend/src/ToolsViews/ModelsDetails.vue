@@ -23,7 +23,7 @@
 
                             <div class="col-md-10">
                                 <h4> Model Description</h4>
-                                <argon-input type="email" v-model="model.modeldescriptions" />
+                                <argon-input type="text" v-model="model.modeldescriptions" />
                             </div>
                             <hr class="my-3 horizontal dark" />
 
@@ -815,6 +815,8 @@ watch(strength, (newStrength, oldStrength) => {
 
     // 将模型数据显示在Model Preview区域
     modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+
 
 }, { deep: true });
 

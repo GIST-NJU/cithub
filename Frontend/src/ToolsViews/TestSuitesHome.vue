@@ -23,7 +23,7 @@
                         </div>
                         <!-- <div style="margin: 30px 0px 0px 10px;">
                         </div> -->
-                        <div class="card-body px-0 pt-0 pb-2">
+                        <div class="card-header">
                             <TestSuitesTable :testSuitesResArray="testSuitesStore.testSuitesList"></TestSuitesTable>
 
                         </div>
@@ -188,6 +188,8 @@ const loadModel = () => {
 
     // 将模型数据显示在Model Preview区域
     modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+
 
 }
 

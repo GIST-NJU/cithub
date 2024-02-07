@@ -59,7 +59,10 @@
                             </div> -->
 
                             <!-- 换成Table显示 -->
-                            <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                            <div class="card-header">
+                                <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                            </div>
+
                         </div>
 
                     </div>
@@ -103,48 +106,70 @@ const dialogFormVisible = ref(false)
 const dateObject_created = ref()
 const dateObject_lastupdated = ref()
 const listAllModelsByProjectID = async () => {
-    // console.log("route.query.projectid", route.query.projectid)
-    try {
+    if (currentProjectStore.projectid) {
+        try {
 
 
-        const modelsRes = await request({
-            method: "POST",
-            url: '/tools/models/listModelsByProjectID',
-            data: {
-                projectid: route.query.projectid
+            const modelsRes = await request({
+                method: "POST",
+                url: '/tools/models/listModelsByProjectID',
+                data: {
+                    projectid: currentProjectStore.projectid
+                }
+            });
+
+            // modelLists.push(modelsRes.models);
+            // modelLists.length = 0
+            // console.log("modelsRes",modelsRes)
+            modelStore.modelsList = modelsRes.models
+            // console.log("modelStore.modelsList", modelStore.modelsList)
+
+
+
+
+            for (let i = 0; i < modelStore.modelsList.length; i++) {
+
+                const timestamp_created = modelStore.modelsList[i].createdtime
+                const timestamp_lastupdated = modelStore.modelsList[i].lastupdatedtime
+                const dateObject_created = new Date(timestamp_created);
+                const dateObject_lastupdated = new Date(timestamp_lastupdated);
+
+                // 获取可读的时间字符串
+                modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
+                modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
             }
-        });
-
-        // modelLists.push(modelsRes.models);
-        // modelLists.length = 0
-        // console.log("modelsRes",modelsRes)
-        modelStore.modelsList = modelsRes.models
-        // console.log("modelStore.modelsList", modelStore.modelsList)
 
 
+            ElNotification({
+                title: 'Choose a Model',
+                message: 'Please choose a model to continue.',
+                type: 'info',
+            })
 
-
-        for (let i = 0; i < modelStore.modelsList.length; i++) {
-
-            const timestamp_created = modelStore.modelsList[i].createdtime
-            const timestamp_lastupdated = modelStore.modelsList[i].lastupdatedtime
-            const dateObject_created = new Date(timestamp_created);
-            const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-            // 获取可读的时间字符串
-            modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
-            modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
+        } catch (error) {
+            console.error("发生错误", error);
+            ElNotification({
+                title: 'Need to Choose a Project first',
+                message: 'Please choose a Project to continue.',
+                type: 'error',
+            })
+            router.push({
+                name: 'ProjectsHome'
+            })
         }
 
-
-
-
-    } catch (error) {
-        console.error("发生错误", error);
     }
-    // console.log("projectList", projectList)
-    // console.log("modelLists", modelLists)
-    // console.log("CALists", CALists)
+    else {
+        ElNotification({
+            title: 'Need to Choose a Project first',
+            message: 'Please choose a Project to continue.',
+            type: 'error',
+        })
+        router.push({
+            name: 'ProjectsHome'
+        })
+    }
+
 };
 
 const itemsPerRow = ref(3);
