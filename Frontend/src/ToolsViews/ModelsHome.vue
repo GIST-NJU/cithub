@@ -1,5 +1,4 @@
 <template>
-    <!-- route.query.projectid :{{ route.query.projectid }} -->
     <div class="min-height-300 bg-success position-absolute w-100"></div>
     <SideNav></SideNav>
     <main class="main-content position-relative border-radius-lg ">
@@ -37,6 +36,58 @@
                                 </el-form-item>
 
                             </el-form>
+                            <hr class="my-3 horizontal white" />
+
+                            <p>Cithub currently support 3 methodes of modelling to create CIT model</p>
+                            <p>Please choose one of the following modelling method to<ArgonBadge style="margin-left:3px"
+                                    floating='true' color="success"> New Model</ArgonBadge>
+                                .</p>
+
+                            <div style="display:flex;flex-direction: row;justify-content: space-around;">
+                                <div v-bind:class="{ 'selected-category': selectedModellingType === 'Manual' }"
+                                    class="category" @click="chooseModellingType('Manual')">
+                                    <el-card class="box-card" style="height: 100%;">
+                                        <template #header>
+                                            <div class="card-header" style="padding: 0px 0px 0px 0px;">
+                                                <h6>Manual Modelling</h6>
+                                            </div>
+                                        </template>
+                                        <div class="categoryDes">Modelling by provided user-friendly GUI interface to create
+                                            Cithub Format model.
+                                        </div>
+                                    </el-card>
+                                </div>
+                                <div v-bind:class="{ 'selected-category': selectedModellingType === 'Imported' }"
+                                    class="category" @click="chooseModellingType('Imported')">
+                                    <el-card class="box-card" style="height: 100%;">
+                                        <template #header>
+                                            <div class="card-header" style="padding: 0px 0px 0px 0px;">
+                                                <h6>Import Existed Model</h6>
+                                            </div>
+                                        </template>
+                                        <div class="categoryDes">Modelling by transfering existed models of
+                                            ACTS/CASA/PICT/CtWedge format to Cithub Format model.
+                                        </div>
+                                    </el-card>
+                                </div>
+                                <div v-bind:class="{ 'selected-category': selectedModellingType === 'LLM' }"
+                                    class="category" @click="chooseModellingType('LLM')">
+                                    <el-card class="box-card" style="height: 100%;">
+                                        <template #header>
+                                            <div class="card-header" style="padding: 0px 0px 0px 0px;">
+                                                <h6>LLM Modelling</h6>
+
+                                            </div>
+                                        </template>
+                                        <div class="categoryDes">Modelling by large language model to assist you to extract
+                                            CIT model from SUT corpus.
+                                        </div>
+                                    </el-card>
+                                </div>
+                            </div>
+
+
+
                             <template #footer>
                                 <span class="dialog-footer">
                                     <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
@@ -84,6 +135,7 @@ import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
+import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
@@ -109,7 +161,6 @@ const listAllModelsByProjectID = async () => {
     if (currentProjectStore.projectid) {
         try {
 
-
             const modelsRes = await request({
                 method: "POST",
                 url: '/tools/models/listModelsByProjectID',
@@ -118,11 +169,9 @@ const listAllModelsByProjectID = async () => {
                 }
             });
 
-            // modelLists.push(modelsRes.models);
-            // modelLists.length = 0
-            // console.log("modelsRes",modelsRes)
+
             modelStore.modelsList = modelsRes.models
-            // console.log("modelStore.modelsList", modelStore.modelsList)
+
 
 
 
@@ -137,6 +186,16 @@ const listAllModelsByProjectID = async () => {
                 // 获取可读的时间字符串
                 modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
                 modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
+
+                // 统计每个Model下拥有的TestSuites的数量
+                const testSuitesRes = await request({
+                    method: "POST",
+                    url: '/tools/testSuites/listTestSuitesByModelID',
+                    data: {
+                        modelid: modelStore.modelsList[i].modelid
+                    }
+                });
+                modelStore.modelsList[i].NumOfTestSuites = testSuitesRes.TestSuites.length
             }
 
 
@@ -180,20 +239,11 @@ const chunkedArray = computed(() => {
     }
     return result;
 });
-const dialogform = reactive({
-    modelid: '',
-    modelname: '',
-    modeldescriptions: '',
-    modelcontent: '',
-    lastupdatedtime: '',
-    createdtime: ''
-
-
-})
 const dialogFormVisibleNew = ref(false)
 const dialogformNewModel = reactive({
     modelname: '',
     modeldescriptions: '',
+    modeltype: '',
     lastupdatedtime: '',
     createdtime: '',
     projectID: route.query.projectid
@@ -205,46 +255,59 @@ const showdialogNew = () => {
 }
 
 const confirmNewModel = async () => {
-    // 获取当前时刻的Date对象
-    const currentDate = new Date();
-    dialogformNewModel.lastupdatedtime = currentDate
-    dialogformNewModel.createdtime = currentDate
-    try {
-        const res = await request({
-            url: '/tools/models/NewModel',
-            method: 'POST',
-            data: dialogformNewModel
+    if (dialogformNewModel.modeltype == '') {
+        ElNotification({
+            title: 'New Model Error!',
+            message: 'Please choose one of the modelling method.',
+            type: 'error',
+        })
+    }
+    else {
+        // 获取当前时刻的Date对象
+        const currentDate = new Date();
+        dialogformNewModel.lastupdatedtime = currentDate
+        dialogformNewModel.createdtime = currentDate
+        try {
+            const res = await request({
+                url: '/tools/models/NewModel',
+                method: 'POST',
+                data: dialogformNewModel
 
-        });
-        if (res.NewStatus == 'success!') {
+            });
+            if (res.NewStatus == 'success!') {
 
-            ReloadModels()
+                ReloadModels()
 
-            ElNotification({
-                title: 'New Model Success!',
-                message: 'please check the results',
-                type: 'success',
-            })
-            dialogFormVisibleNew.value = false
+                ElNotification({
+                    title: 'New Model Success!',
+                    message: 'please check the results',
+                    type: 'success',
+                })
+                dialogFormVisibleNew.value = false
 
+            }
+            else {
+                ElNotification({
+                    title: 'New Model Error!',
+                    message: 'please check the results',
+                    type: 'error',
+                })
+            }
         }
-        else {
+        catch (error) {
             ElNotification({
                 title: 'New Model Error!',
                 message: 'please check the results',
                 type: 'error',
             })
         }
-    }
-    catch (error) {
-        ElNotification({
-            title: 'New Model Error!',
-            message: 'please check the results',
-            type: 'error',
-        })
+
     }
 
 }
+
+
+
 
 const ReloadModels = async () => {
 
@@ -271,6 +334,16 @@ const ReloadModels = async () => {
             // 获取可读的时间字符串
             modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
             modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
+
+            // 统计每个Model下拥有的TestSuites的数量
+            const testSuitesRes = await request({
+                method: "POST",
+                url: '/tools/testSuites/listTestSuitesByModelID',
+                data: {
+                    modelid: modelStore.modelsList[i].modelid
+                }
+            });
+            modelStore.modelsList[i].NumOfTestSuites = testSuitesRes.TestSuites.length
         }
 
 
@@ -281,59 +354,6 @@ const ReloadModels = async () => {
     }
 
 }
-// const showdialog = (model) => {
-//     // console.log(model)
-//     dialogFormVisible.value = true
-//     dialogform.modelid = model.modelid
-//     dialogform.modelname = model.modelname
-//     dialogform.modeldescriptions = model.modeldescriptions
-//     dialogform.modelcontent = model.modelcontent
-//     dialogform.createdtime = model.createdtime
-
-
-// }
-
-// const confirmUpdateModel = () => {
-//     // console.log(dialogform)
-//     // 获取当前时刻的Date对象
-//     const currentDate = new Date();
-
-//     // 将Date对象转换为ISO 8601标准的时间戳字符串
-//     const currentISO8601Timestamp = currentDate.toISOString();
-
-//     dialogform.lastupdatedtime = currentISO8601Timestamp
-//     // console.log(dialogform)
-
-//     request({
-//         url: '/tools/models/updateModel',
-//         method: 'POST',
-//         data: dialogform
-//     }).then((res) => {
-//         if (res.UpdateStatus == 'success!') {
-//             ElNotification({
-//                 title: 'Update Success!',
-//                 message: 'please check the results',
-//                 type: 'success',
-//             })
-//             console.log(res)
-//             // dialogform.modelid = model.modelid
-//             // dialogform.modelname = model.modelname
-//             // dialogform.modeldescriptions = model.modeldescriptions
-//             // dialogform.modelcontent = model.modelcontent
-//             // dialogform.createdtime = model.createdtime
-
-//             dialogFormVisible.value = false
-//         }
-//     }).catch((error) => {
-//         console.log(error)
-//         ElNotification({
-//             title: 'Update Error!',
-//             message: 'please check the results',
-//             type: 'Error',
-//         })
-//     })
-
-// }
 
 const iconsArray = [
     'text-white fas fa-landmark',
@@ -347,6 +367,11 @@ const getRandomIcon = () => {
     return iconsArray[randomIndex];
 };
 
+const selectedModellingType = ref(null);
+const chooseModellingType = (type) => {
+    selectedModellingType.value = type;
+    dialogformNewModel.modeltype = type
+}
 
 
 onMounted(() => {
@@ -358,17 +383,27 @@ onMounted(() => {
 
 
 <style scoped>
-.rounded-border {
-    border: 1px solid #2dce89;
-    border-radius: 20px;
-    padding: 15px;
-    transition: transform 0.3s ease;
-    /* 添加过渡效果 */
-    /* 可根据需要调整内边距 */
-}
-
 .rounded-border:hover {
     transform: scale(1.05);
     /* 鼠标划过时放大 5% */
+}
+
+.category {
+    flex: 1;
+    margin: 5px;
+    transition: transform 0.3s ease;
+    /* 添加过渡效果 */
+}
+
+.category:hover {
+    transform: scale(1.1);
+    /* 划过时放大 */
+    cursor: pointer;
+}
+
+.selected-category {
+    border: 2px solid #2dce89;
+    /* 你可以根据需要修改颜色和宽度 */
+    box-shadow: 0 0 10px #2dce89;
 }
 </style>

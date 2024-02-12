@@ -40,10 +40,27 @@ public class ModelsController {
 
     @RequestMapping("/listModelsByProjectID")
     public R listModelsByProjectID(@RequestBody Map<String, Object> info) {
-        Integer projectid = (Integer) info.get("projectid");
-        List<ModelsEntity> modelsList = modelsService.listModelsByProjectId(projectid);
-//        System.out.println(modelsList);
-        return R.ok().put("models", modelsList);
+        Object projectid = info.get("projectid");
+        if (projectid instanceof Integer) {
+            List<ModelsEntity> modelsList = modelsService.listModelsByProjectId((Integer) projectid);
+            return R.ok().put("models", modelsList);
+        } else if (projectid instanceof String) {
+            // 如果是字符串，尝试将其转换为整数
+            try {
+                List<ModelsEntity> modelsList = modelsService.listModelsByProjectId(Integer.parseInt((String) projectid));
+                return R.ok().put("models", modelsList);
+            } catch (NumberFormatException e) {
+                // 处理转换失败的情况，例如记录日志或抛出异常
+                e.printStackTrace();
+                return R.ok().put("msg", "error");
+
+            }
+        } else {
+            // 处理其他类型的情况，例如记录日志或抛出异常
+            System.err.println("Unsupported type for strength: " + projectid.getClass());
+            return R.ok().put("msg", "error");
+        }
+
     }
 
     @RequestMapping("/updateModel")
@@ -113,12 +130,21 @@ public class ModelsController {
     }
 
     @RequestMapping(value = "/NewModel", method = RequestMethod.POST)
-    public R NewProject(@RequestBody Map<String, Object> info) {
+    public R NewModel(@RequestBody Map<String, Object> info) {
 //        System.out.println(info);
         ModelsEntity modelsEntity = new ModelsEntity();
         modelsEntity.setModelname((String) info.get("modelname"));
         modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
-        modelsEntity.setProjectid(Integer.parseInt((String) info.get("projectID")) );
+        modelsEntity.setModeltype((String) info.get("modeltype"));
+
+        Object projectid = info.get("projectID");
+        if (projectid instanceof String) {
+            modelsEntity.setProjectid(Integer.parseInt((String) projectid));
+        } else if (projectid instanceof Integer) {
+            modelsEntity.setProjectid((Integer) projectid);
+        }
+
+
 //        将时间戳转为Date类型
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);

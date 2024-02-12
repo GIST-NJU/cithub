@@ -39,10 +39,17 @@ public class TestSuitesController {
 
     @RequestMapping("/listTestSuitesByModelID")
     public R listTestSuitesByModelID(@RequestBody Map<String, Object> info) {
-//        System.out.println("listCAsByModelID");
-        Integer modelid = Integer.parseInt((String) info.get("modelid"));
-        List<TestSuitesEntity> TestSuites = testSuitesService.listTestSuitesByModelID(modelid);
-        return R.ok().put("TestSuites", TestSuites);
+        Object modelid = info.get("modelid");
+        if (modelid instanceof String) {
+            List<TestSuitesEntity> TestSuites = testSuitesService.listTestSuitesByModelID((Integer.parseInt((String) info.get("modelid"))));
+            return R.ok().put("TestSuites", TestSuites);
+        } else if (modelid instanceof Integer) {
+            List<TestSuitesEntity> TestSuites = testSuitesService.listTestSuitesByModelID((Integer) info.get("modelid"));
+            return R.ok().put("TestSuites", TestSuites);
+        }
+        return R.ok().put("TestSuites","failed");
+
+
     }
 
     @RequestMapping(value = "/NewTestSuites", method = RequestMethod.POST)
@@ -67,6 +74,30 @@ public class TestSuitesController {
         if (flag) return R.ok().put("NewStatus", "success!");
         else return R.ok().put("NewStatus", "failed!");
     }
+
+    @RequestMapping(value = "/reduction/NewTestSuites", method = RequestMethod.POST)
+    public R ReductionNewTestSuites(@RequestBody Map<String, Object> info) {
+//        System.out.println(info);
+        TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
+        testSuitesEntity.setTestsuitesname((String) info.get("testsuitesname"));
+        testSuitesEntity.setTestsuitesdescriptions((String) info.get("testsuitesdescriptions"));
+        testSuitesEntity.setModelid(Integer.parseInt((String) info.get("modelid")));
+        testSuitesEntity.setTestsuitescontents((String) info.get("testsuitescontents"));
+        testSuitesEntity.setTime((Integer) info.get("time"));
+        testSuitesEntity.setSize((Integer) info.get("size"));
+        testSuitesEntity.setAlgorithm((String) info.get("algorithm"));
+//        将时间戳转为Date类型
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
+        LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+
+        testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+        testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+        Boolean flag = testSuitesService.save(testSuitesEntity);
+        if (flag) return R.ok().put("NewStatus", "success!");
+        else return R.ok().put("NewStatus", "failed!");
+    }
+
 
     @RequestMapping(value = "/DeleteByTestSuitesID", method = RequestMethod.POST)
     public R DeleteByTestSuitesID(@RequestBody Map<String, Object> info) {

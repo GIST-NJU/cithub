@@ -32,6 +32,7 @@ public class ModelsEntity implements Serializable {
 	 * 
 	 */
 	private String modeldescriptions;
+	private String modeltype;
 	/**
 	 * 
 	 */

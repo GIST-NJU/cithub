@@ -13,18 +13,19 @@
                         <h3 style="margin: 20px 0px 0px 40px;">Tools</h3>
                         <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Cithub Provides a variety of tools of
                             Combinatorial Testing for using.</p>
-                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools available now.</p>
+                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools
+                            available now.</p>
                         <div class="row" style="margin:10px 0px 0px 20px">
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'Generation'"
+                            <div class="col-lg-3 col-md-6 col-12" >
+                                <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }" :value="'Generation'"
                                     :percentage="toolsArrayGeneration.length + ' tools included '"
                                     :iconClass="'ni ni-world'" :iconBackground="'bg-gradient-success'" directionReverse
                                     @click="showGenerationFlag = !showGenerationFlag">
                                 </CategoryCard>
                             </div>
 
-                            <div class="col-lg-5 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'FormatConversion'"
+                            <div class="col-lg-5 col-md-6 col-12" >
+                                <CategoryCard class="category"  :class="{ 'borderGlow': showFormatConversionFlag }" :value="'FormatConversion'"
                                     :percentage="toolsArrayFormatConversion.length + ' tools included'"
                                     :iconClass="'ni ni-paper-diploma'" :iconBackground="'bg-gradient-danger'"
                                     directionReverse @click="showFormatConversionFlag = !showFormatConversionFlag">
@@ -32,28 +33,28 @@
                             </div>
 
                             <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'Evaluation'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showEvaluationFlag }" :value="'Evaluation'"
                                     :percentage="toolsArrayEvaluation.length + ' tools included'" :iconClass="'ni ni-cart'"
                                     :iconBackground="'bg-gradient-info'" directionReverse
                                     @click="showEvaluationFlag = !showEvaluationFlag">
                                 </CategoryCard>
                             </div>
                             <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'Prioritisation'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showPrioritisationFlag }" :value="'Prioritisation'"
                                     :percentage="toolsArrayPrioritisation.length + ' tools included'"
                                     :iconClass="'ni ni-umbrella-13'" :iconBackground="'bg-gradient-warning'"
                                     directionReverse @click="showPrioritisationFlag = !showPrioritisationFlag">
                                 </CategoryCard>
                             </div>
                             <div class="col-lg-5 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'SelectionReduction'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showSelectionReductionFlag }" :value="'SelectionReduction'"
                                     :percentage="toolsArraySelectionReduction.length + ' tools included'"
                                     :iconClass="'ni ni-zoom-split-in'" :iconBackground="'bg-gradient-primary'"
                                     directionReverse @click="showSelectionReductionFlag = !showSelectionReductionFlag">
                                 </CategoryCard>
                             </div>
                             <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :value="'Other'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showOtherFlag }" :value="'Other'"
                                     :percentage="toolsArrayOther.length + ' tools included'" :iconClass="'ni ni-sound-wave'"
                                     :iconBackground="'bg-gradient-secondary'" directionReverse
                                     @click="showOtherFlag = !showOtherFlag">
@@ -65,25 +66,25 @@
 
                         <div v-auto-animate class="card-header pb-0">
                             <!-- Generation -->
-                            <ToolsInfoCard v-if="showGenerationFlag" :toolType="'Generation'"
+                            <ToolsInfoCard v-if="showGenerationFlag" :toolType="'Generation'" :color="'success'"
                                 :toolsArray="toolsArrayGeneration"></ToolsInfoCard>
                             <!-- FormatConversion -->
-                            <ToolsInfoCard v-if="showFormatConversionFlag" :toolType="'FormatConversion'"
+                            <ToolsInfoCard v-if="showFormatConversionFlag" :toolType="'FormatConversion'" :color="'danger'"
                                 :toolsArray="toolsArrayFormatConversion">
                             </ToolsInfoCard>
                             <!-- Evaluation -->
-                            <ToolsInfoCard v-if="showEvaluationFlag" :toolType="'Evaluation'"
+                            <ToolsInfoCard v-if="showEvaluationFlag" :toolType="'Evaluation'" :color="'info'"
                                 :toolsArray="toolsArrayEvaluation"></ToolsInfoCard>
                             <!-- Prioritisation -->
-                            <ToolsInfoCard v-if="showPrioritisationFlag" :toolType="'Prioritisation'"
+                            <ToolsInfoCard v-if="showPrioritisationFlag" :toolType="'Prioritisation'" :color="'warning'"
                                 :toolsArray="toolsArrayPrioritisation">
                             </ToolsInfoCard>
                             <!-- SelectionReduction -->
-                            <ToolsInfoCard v-if="showSelectionReductionFlag" :toolType="'SelectionReduction'"
+                            <ToolsInfoCard v-if="showSelectionReductionFlag" :toolType="'SelectionReduction'" :color="'primary'"
                                 :toolsArray="toolsArraySelectionReduction">
                             </ToolsInfoCard>
                             <!-- Other -->
-                            <ToolsInfoCard v-if="showOtherFlag" :toolType="'Other'" :toolsArray="toolsArrayOther">
+                            <ToolsInfoCard v-if="showOtherFlag" :toolType="'Other'" :color="'secondary'" :toolsArray="toolsArrayOther"> 
                             </ToolsInfoCard>
 
                         </div>
@@ -149,6 +150,13 @@ const showPrioritisationFlag = ref(false)
 const showSelectionReductionFlag = ref(false)
 const showOtherFlag = ref(false)
 
+const generationRef = ref(null);
+const formatConversionRef = ref(null);
+const EvaluationRef = ref(null);
+const PrioritisationRef = ref(null);
+const SelectionReductionRef = ref(null);
+const OtherRef = ref(null);
+
 const LoadToolsInfo = () => {
     for (const tool of toolsInfo.RECORDS) {
         switch (tool.type) {
@@ -173,7 +181,11 @@ const LoadToolsInfo = () => {
         }
     }
 }
+const selectedDivIndex = ref(null);
 
+const handleDivClick = (index) => {
+    selectedDivIndex.value = index;
+};
 onMounted(async () => {
     // 先检查用户是否登录
     let obj = await CheckLoginStatus()
@@ -198,9 +210,21 @@ onMounted(async () => {
             }
         )
     }
+    const addClickHandler = (ref, flag) => {
+        ref.value.addEventListener('click', () => {
+            flag.value = !flag.value;
+        });
+    };
 
-
+    addClickHandler(generationRef, showGenerationFlag);
+    addClickHandler(formatConversionRef, showFormatConversionFlag);
+    addClickHandler(EvaluationRef, showEvaluationFlag);
+    addClickHandler(PrioritisationRef, showPrioritisationFlag);    
+    addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
+    addClickHandler(OtherRef, showOtherFlag);
 })
+
+
 </script>
 
 <style scoped>
@@ -213,5 +237,12 @@ onMounted(async () => {
     transform: scale(1.09);
     /* 划过时放大 */
     cursor: pointer;
+}
+
+.borderGlow {
+    border: 2px solid #2dce89;
+    /* 设置边框样式，这里使用蓝色边框作为示例 */
+    box-shadow: 0 0 10px #2dce89;
+    /* 设置阴影效果，使边框发光 */
 }
 </style>

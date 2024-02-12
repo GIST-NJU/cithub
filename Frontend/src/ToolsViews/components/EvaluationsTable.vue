@@ -1,10 +1,10 @@
 <template>
   <div class="card">
     <div class="card-header pb-0">
-      <h5>{{ evaluationStore.EvaluationList.length }} evaluations found.</h5>
+      <h5>{{ evaluationStore.EvaluationList.length }} Evaluations found.</h5>
     </div>
     <div style="width:100%;margin-bottom: 5px;text-align: center;">
-      <ArgonButton style="float: right;margin-right: 3%;" color="primary" variant="gradient" @click="showdialogNew">
+      <ArgonButton style="float: right;margin-right: 3%;" color="success" variant="gradient" @click="showdialogNew">
         <span class="ni ni-fat-add ni-lg me-1" />
         Generate New Evaluation
       </ArgonButton>
@@ -12,7 +12,6 @@
     <!-- New Evaluation -->
     <el-dialog v-model="dialogFormVisibleNew" title="New Evaluation">
       <el-form :model="dialogformNewEvaluation">
-
         <el-form-item label="Evaluation Name:">
           <el-input v-model="dialogformNewEvaluation.evaluationname" />
         </el-form-item>
@@ -41,7 +40,7 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Test Suites</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Evaluation</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                 <ArgonBadge>Algorithm</ArgonBadge>
               </th>
@@ -89,7 +88,7 @@
               </td>
 
 
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <!-- "Details" 按钮 -->
                 <a class="btn btn-link text-dark px-3 mb-0" @click="showContentFlag[index] = !showContentFlag[index]">
                   <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Details
@@ -97,7 +96,7 @@
 
                 <!-- 删除按钮 -->
                 <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
-                  @confirm="confirmDelete(index)">
+                  @confirm="confirmDelete(evaluation)">
                   <template #reference>
                     <a class="btn btn-link text-danger text-gradient px-3 mb-0">
                       <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete
@@ -109,11 +108,11 @@
             </tr>
 
             <!-- 显示 Evaluation Result 的行 -->
-            <tr v-for="(evaluation, index) in evaluationStore.EvaluationList" :key="`content-${index}`">
-              <td colspan="6" v-auto-animate>
-                <div v-if="showContentFlag[index]">
+            <tr  v-auto-animate v-for="(evaluation, index) in evaluationStore.EvaluationList" :key="`content-${index}`">
+              <td v-if="showContentFlag[index]" colspan="6">
+                <div >
                   <h6>Evaluation Result of `{{ evaluation.evaluationname }}` </h6>
-                  <el-input disabled v-model="evaluation.evaluationcontents" autosize type="textarea"
+                  <el-input disabled v-model="evaluation.EvaluationResultPreview" autosize type="textarea"
                     placeholder="Please input" />
                 </div>
               </td>
@@ -158,7 +157,7 @@ const listAllEvaluationByTestSuitesID = async () => {
       }
     });
 
-    console.log("EvaluationRes.evaluations", EvaluationRes.evaluations)
+    // console.log("EvaluationRes.evaluations", EvaluationRes.evaluations)
     evaluationStore.EvaluationList = EvaluationRes.evaluations
 
 
@@ -169,9 +168,13 @@ const listAllEvaluationByTestSuitesID = async () => {
       const dateObject_created = new Date(timestamp_created);
       const dateObject_lastupdated = new Date(timestamp_lastupdated);
 
+
       // 获取可读的时间字符串
       evaluationStore.EvaluationList[i].createdtimeFortmat = dateObject_created.toLocaleString();
       evaluationStore.EvaluationList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
+
+
+      evaluationStore.EvaluationList[i].EvaluationResultPreview=JSON.stringify(JSON.parse(evaluationStore.EvaluationList[i].evaluationcontents),null,6)
     }
 
 
@@ -201,10 +204,28 @@ const showdialogNew = () => {
 }
 
 const confirmNewEvaluation = async () => {
+
   // 获取当前时刻的Date对象
   const currentDate = new Date();
   dialogformNewEvaluation.lastupdatedtime = currentDate
   dialogformNewEvaluation.createdtime = currentDate
+
+  // 构造发送给evaluation的data对象
+  let evaluationObj = {}
+  let ParametersAndValues = JSON.parse(currentModel.currentModel.paramsvalues)
+  let tempArray = []
+  let param_count = 0
+  for (let i = 0, len = ParametersAndValues.length; i < len; i++) {
+    if (ParametersAndValues[i].Value != '') { tempArray.push(ParametersAndValues[i].Value.split(',').length) }
+    if (ParametersAndValues[i].Parameter != '') { param_count = param_count + 1 }
+  }
+
+
+  evaluationObj.strength = currentModel.currentModel.strength
+  evaluationObj.parameter = param_count
+  evaluationObj.values = JSON.stringify(tempArray)
+  evaluationObj.testsuite = JSON.parse(currentTestSuite.currentTestSuites.testsuitescontents).testsuite
+  evaluationObj = JSON.stringify(evaluationObj).replace(/"/g, '')
 
   // 发送请求，对  test suites 得到 evalution
   for (const tool of AlgorithmOptions) {
@@ -218,36 +239,30 @@ const confirmNewEvaluation = async () => {
           headers: {
             'Content-Type': 'text/plain'
           },
-          // 这里data要处理一下，要生成Cithub 的 Evaluation接受的格式
-          data: 
+          data: evaluationObj
         })
-        // console.log("TestSuitesRes",TestSuitesRes)
-        // console.log("JSON.stringify(TestSuitesRes)",JSON.stringify(TestSuitesRes))
-        // console.log("TestSuitesRes size", TestSuitesRes.size)
-        // console.log("TestSuitesRes", TestSuitesRes.testsuite)
-        // console.log("TestSuitesRes time", TestSuitesRes.time)
+        console.log("currentTestSuite.currentTestSuites", currentTestSuite.currentTestSuites)
+        console.log("EvaluationRes", EvaluationRes)
 
-        const newTestSuitesRes = await request({
-          url: "/tools/testSuites/NewTestSuites",
+        const newEvaluationRes = await request({
+          url: "/tools/evaluation/NewEvaluation",
           method: "POST",
           data:
           {
-            testsuitesname: dialogformNewEvaluation.testsuitesname,
-            testsuitesdescriptions: dialogformNewEvaluation.testsuitesdescriptions,
+            evaluationname: dialogformNewEvaluation.evaluationname,
+            evaluationdescriptions: dialogformNewEvaluation.evaluationdescriptions,
             lastupdatedtime: dialogformNewEvaluation.lastupdatedtime,
             createdtime: dialogformNewEvaluation.createdtime,
-            modelid: dialogformNewEvaluation.modelid,
-            testsuitescontents: JSON.stringify(TestSuitesRes),
-            time: TestSuitesRes.time,
-            size: TestSuitesRes.size,
+            testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+            EvaluationContents: JSON.stringify(EvaluationRes),
+            time: EvaluationRes.time,
             algorithm: AlgorithmChosed.value
           }
         })
-        // console.log("newTestSuitesRes", newTestSuitesRes)
+        console.log("newEvaluationRes", newEvaluationRes)
 
-        if (newTestSuitesRes.NewStatus == 'success!') {
-
-          listAllTestSuitesByModelID()
+        if (newEvaluationRes.NewStatus == 'success!') {
+          listAllEvaluationByTestSuitesID()
           ElNotification({
             title: 'Save Success!',
             type: 'success',
@@ -277,17 +292,17 @@ const confirmNewEvaluation = async () => {
   }
 
 }
-const confirmDelete = (testSuites) => {
-  // console.log("testSuites", testSuites)
+const confirmDelete = (evaluation) => {
+  console.log("evaluation", evaluation)
   request({
-    url: '/tools/testSuites/DeleteByTestSuitesID',
+    url: '/tools/evaluation/DeleteByEvaluationID',
     method: 'POST',
     data: {
-      testsuitesid: testSuites.testsuitesid
+      evaluationid: evaluation.evaluationid
     }
   }).then((res) => {
     if (res.DeleteStatus == 'success!') {
-      listAllTestSuitesByModelID()
+      listAllEvaluationByTestSuitesID()
       // 实时更新页面数据
       ElNotification({
         title: 'Delete Success!',
@@ -305,6 +320,8 @@ const confirmDelete = (testSuites) => {
     })
   })
 }
+
+
 const AlgorithmChosed = ref('')
 const AlgorithmOptions = reactive([])
 const listAllEvaluationAlgorithm = () => {

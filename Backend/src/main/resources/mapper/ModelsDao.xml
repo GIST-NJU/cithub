@@ -9,6 +9,7 @@
         <result property="strength" column="strength"/>
         <result property="modelname" column="modelname"/>
         <result property="modeldescriptions" column="modeldescriptions"/>
+        <result property="modeltype" column="modeltype"/>
         <result property="paramsvalues" column="paramsvalues"/>
         <result property="cons" column="cons"/>
         <result property="projectid" column="projectid"/>

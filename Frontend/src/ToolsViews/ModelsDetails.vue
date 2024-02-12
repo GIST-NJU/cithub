@@ -618,7 +618,7 @@ const SaveModel = async () => {
                     currentModel.currentModel.modelname = model.modelname
                     currentModel.currentModel.modeldescriptions = model.modeldescriptions
                     currentModel.currentModel.strength = strength.value
-                    currentModel.currentModel.ParametersAndValues = JSON.stringify(tableData.value)
+                    currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
                     currentModel.currentModel.lastupdatedtime = currentDate
                     ElNotification({
                         title: 'Save Success!',
@@ -653,8 +653,8 @@ const SaveModel = async () => {
                     currentModel.currentModel.modelname = model.modelname
                     currentModel.currentModel.modeldescriptions = model.modeldescriptions
                     currentModel.currentModel.strength = strength.value
-                    currentModel.currentModel.ParametersAndValues = JSON.stringify(tableData.value)
-                    currentModel.currentModel.Cons = JSON.stringify(consArray.value)
+                    currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
+                    currentModel.currentModel.cons = JSON.stringify(consArray.value)
                     currentModel.currentModel.lastupdatedtime = currentDate
                     ElNotification({
                         title: 'Save Success!',
@@ -820,8 +820,85 @@ watch(strength, (newStrength, oldStrength) => {
 
 }, { deep: true });
 
+// 将model转成 cithub格式的model
+const loadCithubModel = (model) => {
+    // 解析参数和参数取值的Json字符串
+    const parsedData = JSON.parse(model.paramsvalues)
+    // 移除 row_index 属性
+    const tableDataTmp = parsedData.map(item => {
+        const { row_index, ...rest } = item;
+        return rest;
+    });
 
+    // 加载约束table
+    let tempArray = []
+    let param_count = 0
+    for (let i = 0, len = tableDataTmp.length; i < len; i++) {
+        if (tableDataTmp[i].Value != '') { tempArray.push(tableDataTmp[i].Value.split(',').length) }
+        if (tableDataTmp[i].Parameter != '') { param_count = param_count + 1 }
+
+    }
+    let modelObject = {
+        system: "",
+        strength: '',
+        parameter: '',
+        values: '',
+        constraints: []
+
+    }
+    // 统计模型基本数据
+    modelObject.system = model.modelname
+    modelObject.strength = model.strength
+    modelObject.parameter = param_count
+    modelObject.values = JSON.stringify(tempArray)
+
+
+    // 对 tableData 的数据做处理，转成被constraintsTableData
+    let tempArrayCons = []
+    for (let i = 0, len = tableDataTmp.length; i < len; i++) {
+        let tempObj = {}
+        tempObj.Parameter = tableDataTmp[i].Parameter
+        tempObj.valueArray = tableDataTmp[i].Value.split(',').map((value, index) => ({
+            [`Value${index + 1}`]: value
+        }));
+        tempObj.ValueDomain = tempObj.valueArray.length
+        tempArrayCons.push(tempObj)
+
+    }
+
+
+    let consArray = JSON.parse(model.cons)
+    // 对每个约束进行处理，将其转换成 '参数索引'/'取值索引' 的形式
+    let consArrayToAPI = []
+    for (const constraint of consArray) {
+        let consArrayTemp = []
+        // 遍历元素中的键值对
+        for (const key in constraint) {
+            if (Object.hasOwnProperty.call(constraint, key)) {
+                const elements = constraint[key];
+                // elements 是一个数组，包含了多个键值对
+                for (const element of elements) {
+                    // 在这里访问 Parameter 和 Value
+                    const parameter = element.Parameter;
+                    const value = element.Value;
+
+                    // 这里可以使用 parameter 和 value 进行其他操作
+                    // console.log(`Key: ${key}, Parameter: ${parameter}, Value: ${value}`);
+                    let constempObj = findPosition(parameter, value, tableDataTmp)
+                    let consString = `\'${constempObj.parameterIndex}/${constempObj.valueIndex}\'`
+                    consArrayTemp.push(consString)
+                }
+            }
+            consArrayToAPI.push(consArrayTemp)
+        }
+    }
+    modelObject.constraints = consArrayToAPI
+
+    // 将模型数据转换成cithub格式
+    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+}
 const Generation = () => {
+    loadCithubModel(currentModel.currentModel)
     router.push({
         path: '/tools/TestSuitesHome',
         query:

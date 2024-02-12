@@ -100,49 +100,17 @@ const listAllProjectsByUserID = async () => {
             // 获取可读的时间字符串
             projectsStore.projectList[i].createdtimeFormat = dateObject_created.toLocaleString();
             projectsStore.projectList[i].lastupdatedtimeFormat = dateObject_lastupdated.toLocaleString();
+
+            // 对每个Project 获得该Project对应的model数量
+            const CountModelNum = await request({
+                method: "POST",
+                url: '/tools/models/listModelsByProjectID',
+                data: {
+                    projectid: projectsStore.projectList[i].projectid
+                }
+            });
+            projectsStore.projectList[i].NumOfModels=CountModelNum.models.length
         }
-
-        // if (projectList.length !== 0) {
-        //     // console.log("projectList", projectList);
-        //     // console.log("获取每个projectid对应的model");
-
-        //     // 对projectList中每个project，获取该project下的所有model
-        //     modelLists.length = 0
-        //     for (const project of projectList) {
-        //         const modelsRes = await request({
-        //             method: "POST",
-        //             url: '/tools/models/listModelsByProjectID',
-        //             data: {
-        //                 projectid: project.projectid,
-
-        //             }
-        //         });
-
-        //         modelLists.push(modelsRes.models);
-        //     }
-        // }
-
-        // // console.log("modelLists", modelLists);
-
-        // if (modelLists.length !== 0) {
-        //     // 对于每一个model，获取它所有的CA
-        //     // console.log("对每一个model获取它的CA");
-        //     CALists.length = 0
-        //     for (const models of modelLists) {
-        //         for (const model of models) {
-        //             const caRes = await request({
-        //                 method: "POST",
-        //                 url: '/tools/coveringarrays/listCAsByModelID',
-        //                 data: {
-        //                     modelid: model.modelid
-        //                 }
-        //             });
-
-        //             // console.log("对每一个model获取它的CA!!", caRes);
-        //             if (caRes.CAs.length != 0) CALists.push(caRes)
-        //         }
-        //     }
-        // }
 
 
 

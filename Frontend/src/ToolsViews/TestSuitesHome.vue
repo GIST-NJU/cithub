@@ -12,17 +12,42 @@
                 <div class="col-12">
                     <div class="card mb-4">
                         <div class="card-header pb-0">
-                            <!-- 模型预览 -->
-                            <h3>Model</h3>
-                            <el-input disabled v-model="modelPreview" autosize type="textarea" placeholder="Please input" />
-<!-- 
+                            <div class="card-header pb-0">
+                                <ArgonBadge type="lg" :class="{ 'borderGlow': !AbstractModelPreviewFlag }" variant="gradient"
+                                    color="primary" @click="AbstractModelPreviewFlag = !AbstractModelPreviewFlag"> Abstract
+                                    Model Prview
+                                </ArgonBadge>
 
-                            <h3>Test suites List</h3>
-                            <p class="text-muted text-sm mb-0"> test suites
-                                found in Model </p> -->
+                                <ArgonBadge style="margin-left:10px" type="lg" :class="{ 'borderGlow': !CithubModelPreviewFlag }" variant="gradient"
+                                    color="info" @click="CithubModelPreviewFlag = !CithubModelPreviewFlag"> Cithub Model
+                                    Prview
+                                </ArgonBadge>
+                            </div>
+                            <div v-auto-animate class="card-header pb-0">
+                                <!-- 抽象模型预览 -->
+                                <div v-if="!AbstractModelPreviewFlag">
+                                    <h4>Abstract Model</h4>
+                                    <hr class="my-3 horizontal white" />
+                                    <h5>Parameters and Values</h5>
+                                    <el-input disabled v-model="AbstractModelParamsValuesPreview" autosize type="textarea"
+                                        placeholder="Please input" />
+                                    <hr class="my-3 horizontal white" />
+                                    <h5>Constraints</h5>
+                                    <el-input disabled v-model="AbstractModelConstraintsPreview" autosize type="textarea"
+                                        placeholder="Please input" />
+                                </div>
+                                <!-- Cithub模型预览 -->
+                                <div v-if="!CithubModelPreviewFlag">
+                                    <h4>Cithub Model</h4>
+                                    <hr class="my-3 horizontal white" />
+                                    <el-input disabled v-model="currentModel.currentModel.modelCithub" autosize
+                                        type="textarea" placeholder="Please input" />
+                                </div>
+
+
+                            </div>
                         </div>
-                        <!-- <div style="margin: 30px 0px 0px 10px;">
-                        </div> -->
+
                         <div class="card-header">
                             <TestSuitesTable :testSuitesResArray="testSuitesStore.testSuitesList"></TestSuitesTable>
 
@@ -47,14 +72,18 @@ import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import TestSuitesTable from './components/TestSuitesTable.vue'
+import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { useModelsStore } from '../store/modelsStore'
 import { useCurrentProject } from '../store/currentProject';
+import { useCurrentModel } from '../store/currentModel'
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 const testSuitesStore = useTestSuitesStore()
+const currentModel = useCurrentModel()
+
 const route = useRoute()
 const modelPreview = ref('')
 const maxValueDomain = ref(0)
@@ -194,10 +223,21 @@ const loadModel = () => {
 }
 
 
-
+const AbstractModelPreviewFlag = ref(true)
+const AbstractModelParamsValuesPreview = ref('')
+const AbstractModelConstraintsPreview = ref('')
+const CithubModelPreviewFlag = ref(true)
 
 onMounted(() => {
 
+    const parsedData = JSON.parse(currentModel.currentModel.paramsvalues)
+    // 移除 row_index 属性
+    const tableDataTmp = parsedData.map(item => {
+        const { row_index, ...rest } = item;
+        return rest;
+    });
+    AbstractModelParamsValuesPreview.value = JSON.stringify(tableDataTmp, null, 6)
+    AbstractModelConstraintsPreview.value = JSON.stringify(JSON.parse(currentModel.currentModel.cons), null, 6)
     // 加载模型到预览区域
     listModelInfoByModelID()
     // 加载所有ca
@@ -205,4 +245,11 @@ onMounted(() => {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.borderGlow {
+    border: 2px solid #2dce89;
+    /* 设置边框样式，这里使用蓝色边框作为示例 */
+    box-shadow: 0 0 10px #2dce89;
+    /* 设置阴影效果，使边框发光 */
+}
+</style>

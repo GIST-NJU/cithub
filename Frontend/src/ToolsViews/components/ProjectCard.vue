@@ -50,6 +50,10 @@
                   <span class="text-dark font-weight-bold ms-sm-2">{{ project.projectdescriptions }}</span>
                 </span>
                 <span class="mb-2 text-xs">
+                  Num of Models:
+                  <span class="text-dark font-weight-bold ms-sm-2">{{ project.NumOfModels }}</span>
+                </span>
+                <span class="mb-2 text-xs">
                   Last updated time :
                   <span class="text-dark ms-sm-2 font-weight-bold">{{ project.lastupdatedtimeFormat }}</span>
                 </span>

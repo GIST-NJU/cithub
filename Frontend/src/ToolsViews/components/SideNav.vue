@@ -53,7 +53,7 @@
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-bag-17 text-warning text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">TestSuites Generation</span>
+                        <span class="nav-link-text ms-1 p">Generation</span>
                     </a>
                 </li>
                 <li class="nav-item" @click="jumpToInstitutions" style=" cursor:pointer;">
@@ -64,7 +64,7 @@
 
                             <i class="ni ni-atom  text-dark text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">TestSuites Evaluation</span>
+                        <span class="nav-link-text ms-1 p">Evaluation</span>
                     </a>
                 </li>
                 <li class="nav-item" @click="jumpToVenue" style=" cursor:pointer;">
@@ -75,7 +75,7 @@
 
                             <i class="ni ni-building text-info text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">TestSuites Prioritisation</span>
+                        <span class="nav-link-text ms-1 p">Prioritisation</span>
                     </a>
                 </li>
 
@@ -87,11 +87,11 @@
 
                             <i class="ni ni-chart-pie-35 text-success text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">TestSuites SelectionReduction</span>
+                        <span class="nav-link-text ms-1 p">Reduction</span>
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link " href="../repository/rank.html">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -99,7 +99,7 @@
                         </div>
                         <span class="nav-link-text ms-1 p">Rank</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </aside>

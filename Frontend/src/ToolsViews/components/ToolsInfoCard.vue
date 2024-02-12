@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header pb-0 px-3">
-      <h5 class="mb-0">{{ props.toolType }}</h5>
+      <ArgonBadge :color="color" variant="gradient" size="lg" ><h5 class="mb-0 text-dark">{{ props.toolType }}</h5></ArgonBadge>
     </div>
     <div class="card-body pt-4 p-3">
       <ul class="list-group">
@@ -9,7 +9,7 @@
         <li v-for="(tool, index) in props.toolsArray" :key="index"
           class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
           <div class="d-flex flex-column">
-            <h6 class="mb-3 text">{{ tool.title }}</h6>
+            <h6 class="mb-3 text ">{{ tool.title }}</h6>
             <span class="mb-2 text-xs">
               Description:
               <span class="text-dark font-weight-bold ms-sm-2">{{ tool.description }}</span>
@@ -71,7 +71,8 @@ const showFormat = (toolId) => {
 
 const props = defineProps({
   toolType: String,
-  toolsArray: Array
+  toolsArray: Array,
+  color:String,
 
 })
 </script>

@@ -8,13 +8,15 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Model </th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Strength</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created time
+              <th class=" text-secondary text-xxs font-weight-bolder opacity-7">Model </th>
+              <th class=" text-secondary text-xxs font-weight-bolder opacity-7">Type </th>
+              <th class=" text-secondary text-xxs font-weight-bolder opacity-7 ">Strength</th>
+              <th class=" text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Num of TestSuites</th>
+              <th class="text-center  text-secondary text-xxs  opacity-7">Created time
               </th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Last Updated
+              <th class="text-center  text-secondary text-xxs  opacity-7">Last Updated
                 time</th>
-              <th class="text-secondary opacity-7">Operation</th>
+              <th class="text-secondary opacity-7 text-center">Operation</th>
             </tr>
           </thead>
           <tbody>
@@ -30,7 +32,13 @@
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0">{{ model.strength }}</p>
+                <p class="text-xs font-weight-bold mb-0 text-center">{{ model.modeltype }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0 text-center">{{ model.strength }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0 text-center">{{ model.NumOfTestSuites }}</p>
               </td>
               <td class="align-middle text-center text-sm">
                 <!-- <span class="badge badge-sm bg-gradient-success">Online</span> -->
@@ -40,12 +48,12 @@
               <td class="align-middle text-center">
                 <p class="text-xs font-weight-bold mb-0">{{ model.lastupdatedtimeFortmat }}</p>
               </td>
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <a class="btn btn-link text-dark px-3 mb-0" @click="EnterModels(model)">
                   <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Model Details
                 </a>
 
-                <a class="btn btn-link text-dark px-3 mb-0" @click="Generation(model)">
+                <a v-if="model.modeltype != 'LLM'" class="btn btn-link text-dark px-3 mb-0" @click="Generation(model)">
                   <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>Generated Test Suites
                 </a>
 
@@ -87,28 +95,54 @@ const modelStore = useModelsStore()
 const currentModel = useCurrentModel()
 const EnterModels = (model) => {
   // 记录下当前的model
-  currentModel.currentModel={}
+  currentModel.currentModel = {}
   currentModel.currentModel = model
-  // 将model转成Cithub格式的model,并添加到currentModel中
-  loadModel(model)
-  router.push({
-    path: '/tools/modelsDetails',
-    query:
-      { modelid: model.modelid }
-  })
+  switch (model.modeltype) {
+    case "Manual":
+      // 将model转成Cithub格式的model,并添加到currentModel中
+      if (currentModel.currentModel.paramsvalues != null) { loadModel(model) }
+      router.push({
+        path: '/tools/modelsDetails',
+        query:
+          { modelid: model.modelid }
+      })
+      break;
+
+    case "LLM":
+      console.log("LLM")
+      break;
+
+    case "Imported":
+      console.log("Imported")
+      break;
+
+  }
+
+
+
 }
 
 const Generation = (model) => {
   // 记录下当前的model
-  currentModel.currentModel={}
+  currentModel.currentModel = {}
   currentModel.currentModel = model
-  // 将model转成Cithub格式的model,并添加到currentModel中
-  loadModel(model)
-  router.push({
-    path: '/tools/TestSuitesHome',
-    query:
-      { modelid: model.modelid }
-  })
+  if (currentModel.currentModel.paramsvalues != null) {
+    // 将model转成Cithub格式的model,并添加到currentModel中
+    loadModel(model)
+    router.push({
+      path: '/tools/TestSuitesHome',
+      query:
+        { modelid: model.modelid }
+    })
+  }
+  else {
+    ElNotification({
+      title: 'Enter Generation Error!',
+      message: 'Please create a model first!',
+      type: 'error',
+    })
+  }
+
 }
 // 返回parameterName在tableData中的索引
 // value在该parameterName中的索引
