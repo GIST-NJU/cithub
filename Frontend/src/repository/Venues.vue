@@ -2,13 +2,10 @@
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
     <SideNav></SideNav>
     <main class="main-content position-relative border-radius-lg ">
-        <!-- Navbar -->
         <Navbar></Navbar>
-        <!-- End Navbar -->
 
 
         <div class="container-fluid py-4">
-
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4">
