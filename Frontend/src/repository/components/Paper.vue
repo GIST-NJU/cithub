@@ -1,8 +1,12 @@
 
 <template>
   <tr>
+    <!-- TODO: Add index number of each paper -->
+    <td class="align-top">
+      <p class="ps-3">1</p>
+    </td>
     <td>
-      <div class="d-flex px-3 py-3">
+      <div class="d-flex ps-2">
         <div class="d-flex flex-column justify-content-center">
           <p class="mb-0">
             {{ props.item.author }}<br>
@@ -11,13 +15,14 @@
           </p>
         </div>
       </div>
-    </td>
-    <td class="align-bottom text-end">
-      <span @click="BibTexFlag = !BibTexFlag">BibTex </span>
-      <span @click="AbsFlag = !AbsFlag"> | Abstract | </span>
-      <span @click="doiFlag = !doiFlag"> DOI&nbsp;&nbsp;&nbsp;&nbsp; </span>
+      <div class="align-bottom text-end">
+        <span @click="BibTexFlag = !BibTexFlag">BibTex </span>
+        <span @click="AbsFlag = !AbsFlag"> | Abstract | </span>
+        <span @click="doiFlag = !doiFlag"> DOI&nbsp;&nbsp;&nbsp;&nbsp; </span>
+      </div>
     </td>
   </tr>
+
   <div v-auto-animate style="margin-bottom:3px;margin-left: 8px;">
     <div class="bibtex" v-if="BibTexFlag">
       <div>{{ '@' + props.item.type + '{' + props.item.author + ':' + props.item.year + '.' + props.item.id + ',\n' }}
@@ -36,6 +41,7 @@
       <div>{{}}</div>
     </div>
   </div>
+
   <div v-auto-animate style="margin-bottom:3px">
     <div class="bibtex" v-if="AbsFlag">
       <div>{{ item.paperabstract }}</div>
@@ -62,17 +68,13 @@ let doiFlag = ref(false)
 
 <style scoped>
 .bibtex {
-
   margin-top: 3px;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 12px;
-
 
   height: auto;
   padding: 15px;
   white-space: pre-wrap;
   position: relative;
-
-
 }
 </style>

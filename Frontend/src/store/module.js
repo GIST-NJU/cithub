@@ -3,7 +3,6 @@ export const useModuleStore = defineStore("ModuleStore", {
     state: () => {
         return {
             CurrentModule: ''
-            
         }
     },
     actions: {
@@ -11,6 +10,5 @@ export const useModuleStore = defineStore("ModuleStore", {
     },
     getters: {
     
-
     }
 })
