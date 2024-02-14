@@ -113,7 +113,13 @@ const EnterModels = (model) => {
       break;
 
     case "Imported":
-      console.log("Imported")
+      // 将model转成Cithub格式的model,并添加到currentModel中
+      if (currentModel.currentModel.paramsvalues != null) { loadModel(model) }
+      router.push({
+        path: '/tools/modelsDetails',
+        query:
+          { modelid: model.modelid }
+      })
       break;
 
   }
@@ -188,7 +194,7 @@ const loadModel = (model) => {
 
   }
   // 统计模型基本数据
-  modelObject.system = model.modelname
+  if (model.modelname) { modelObject.system = model.modelname }
   modelObject.strength = model.strength
   modelObject.parameter = param_count
   modelObject.values = JSON.stringify(tempArray)

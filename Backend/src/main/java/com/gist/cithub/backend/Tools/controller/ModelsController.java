@@ -85,8 +85,8 @@ public class ModelsController {
 
     @RequestMapping(value = "/SaveModel", method = RequestMethod.POST)
     public R SaveModel(@RequestBody Map<String, Object> info) {
-//        System.out.println(info);
-//        System.out.println(info.get("ParametersAndValues"));
+        System.out.println(info);
+        System.out.println(info.get("ParametersAndValues"));
 //        System.out.println(info.get("modelid"));
         QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("ModelID", info.get("modelid"));
@@ -131,7 +131,7 @@ public class ModelsController {
 
     @RequestMapping(value = "/NewModel", method = RequestMethod.POST)
     public R NewModel(@RequestBody Map<String, Object> info) {
-//        System.out.println(info);
+        System.out.println(info);
         ModelsEntity modelsEntity = new ModelsEntity();
         modelsEntity.setModelname((String) info.get("modelname"));
         modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
@@ -152,6 +152,16 @@ public class ModelsController {
 
         modelsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
         modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+
+
+        Object strength = info.get("strength");
+        if (strength instanceof String) {
+            modelsEntity.setStrength(Integer.parseInt((String) strength));
+        } else if (strength instanceof Integer) {
+            modelsEntity.setStrength((Integer) strength);
+        }
+        modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
+        modelsEntity.setCons((String) info.get("Cons"));
         Boolean flag = modelsService.save(modelsEntity);
         if (flag) return R.ok().put("NewStatus", "success!");
         else return R.ok().put("NewStatus", "failed!");

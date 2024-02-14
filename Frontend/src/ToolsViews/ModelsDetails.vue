@@ -724,6 +724,7 @@ const listModelInfoByModelID = async () => {
 const loadModel = () => {
     // 解析参数和参数取值的Json字符串
     const parsedData = JSON.parse(model.paramsvalues)
+
     // 移除 row_index 属性
     const tableDataTmp = parsedData.map(item => {
         const { row_index, ...rest } = item;
@@ -742,6 +743,8 @@ const loadModel = () => {
 
     }
     // 统计模型基本数据
+
+    if (model.modelname) { modelObject.system = model.modelname }
     modelObject.system = model.modelname
     // modelObject.strength = strength.value
     modelObject.parameter = param_count

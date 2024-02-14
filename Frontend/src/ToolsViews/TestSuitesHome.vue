@@ -156,7 +156,9 @@ const loadModel = () => {
 
     }
     // 统计模型基本数据
-    modelObject.system = model.modelname
+
+    if (model.modelname) { modelObject.system = model.modelname }
+    
     modelObject.strength = model.strength
     modelObject.parameter = param_count
     modelObject.values = JSON.stringify(tempArray)
