@@ -10,79 +10,108 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4">
-                        <div class="card-header pb-0">
-                            <h3>Projects List</h3>
-                            <p class="text-muted text-sm mb-0">{{ projectsStore.projectList.length }} Projects
-                                found</p>
-                        </div>
-                        <div style="margin: 60px 0px 0px 20px;">
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-2">
+                        <h3 style="margin: 20px 0px 0px 40px;">Tools</h3>
+                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Cithub Provides a variety of tools of
+                            Combinatorial Testing for using.</p>
+                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools
+                            available now.</p>
+                        <div class="row" style="margin:10px 0px 0px 20px">
+                            <div class="col-lg-3 col-md-6 col-12" >
+                                <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }" :value="'Generation'"
+                                    :percentage="toolsArrayGeneration.length + ' tools included '"
+                                    :iconClass="'ni ni-world'" :iconBackground="'bg-gradient-success'" directionReverse
+                                    @click="showGenerationFlag = !showGenerationFlag">
+                                </CategoryCard>
+                            </div>
 
-                            <!-- <el-descriptions :title="project.projectname" direction="vertical" size="default">
-                                <el-descriptions-item label="Description">{{ project.projectdescriptions
-                                }}</el-descriptions-item>
-                                <el-descriptions-item label="Last Updated time">{{ project.lastupdatedtime
-                                }}</el-descriptions-item>
-                                <el-descriptions-item label="Created time" :span="2">{{ project.createdtime
-                                }}</el-descriptions-item>
+                            <div class="col-lg-5 col-md-6 col-12" >
+                                <CategoryCard class="category"  :class="{ 'borderGlow': showFormatConversionFlag }" :value="'FormatConversion'"
+                                    :percentage="toolsArrayFormatConversion.length + ' tools included'"
+                                    :iconClass="'ni ni-paper-diploma'" :iconBackground="'bg-gradient-danger'"
+                                    directionReverse @click="showFormatConversionFlag = !showFormatConversionFlag">
+                                </CategoryCard>
+                            </div>
 
-
-                            </el-descriptions> -->
-
-                            <div v-for="(chunk, index) in chunkedArray" :key="index" class="row"
-                                style="margin: 0 0 0 20px;">
-                                <div class="col" v-for="(project, colIndex) in chunk" :key="colIndex">
-                                    <div class="rounded-border">
-                                        <div><span>Project Name:</span>{{ project.projectname }}</div>
-                                        <div><span>Project Des:</span> {{ project.projectdescriptions }}</div>
-                                        <div><span>Last updated time :</span>{{ project.lastupdatedtimeFormat }}</div>
-                                        <div><span>Created time :</span>{{ project.createdtimeFormat }}</div>
-                                        <el-button @click="enterProject(project)">Enter</el-button>
-                                        <el-button @click="showdialog(project)">Update</el-button>
-                                        <el-button>Delete</el-button>
-                                    </div>
-                                </div>
-                                <el-dialog v-model="dialogFormVisible" title="Update Project">
-                                    <el-form :model="dialogform">
-                                        <el-form-item label="Project ID:">
-                                            <el-input disabled v-model="dialogform.projectid" />
-                                        </el-form-item>
-                                        <el-form-item label="Project Name:">
-                                            <el-input v-model="dialogform.projectname" />
-                                        </el-form-item>
-                                        <el-form-item label="Project Description:">
-                                            <el-input autosize type="textarea" v-model="dialogform.projectdescriptions" />
-                                        </el-form-item>
-
-                                        <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
-                                                    <el-select v-model="form.region" placeholder="Please select a zone">
-                                                        <el-option label="Zone No.1" value="shanghai" />
-                                                        <el-option label="Zone No.2" value="beijing" />
-                                                    </el-select>
-                                                </el-form-item> -->
-                                    </el-form>
-                                    <template #footer>
-                                        <span class="dialog-footer">
-                                            <el-button @click="dialogFormVisible = false">Cancel</el-button>
-                                            <el-button type="primary" @click="confirmUpdateProject">
-                                                Confirm
-                                            </el-button>
-                                        </span>
-                                    </template>
-                                </el-dialog>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showEvaluationFlag }" :value="'Evaluation'"
+                                    :percentage="toolsArrayEvaluation.length + ' tools included'" :iconClass="'ni ni-cart'"
+                                    :iconBackground="'bg-gradient-info'" directionReverse
+                                    @click="showEvaluationFlag = !showEvaluationFlag">
+                                </CategoryCard>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showPrioritisationFlag }" :value="'Prioritisation'"
+                                    :percentage="toolsArrayPrioritisation.length + ' tools included'"
+                                    :iconClass="'ni ni-umbrella-13'" :iconBackground="'bg-gradient-warning'"
+                                    directionReverse @click="showPrioritisationFlag = !showPrioritisationFlag">
+                                </CategoryCard>
+                            </div>
+                            <div class="col-lg-5 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showSelectionReductionFlag }" :value="'SelectionReduction'"
+                                    :percentage="toolsArraySelectionReduction.length + ' tools included'"
+                                    :iconClass="'ni ni-zoom-split-in'" :iconBackground="'bg-gradient-primary'"
+                                    directionReverse @click="showSelectionReductionFlag = !showSelectionReductionFlag">
+                                </CategoryCard>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showOtherFlag }" :value="'Other'"
+                                    :percentage="toolsArrayOther.length + ' tools included'" :iconClass="'ni ni-sound-wave'"
+                                    :iconBackground="'bg-gradient-secondary'" directionReverse
+                                    @click="showOtherFlag = !showOtherFlag">
+                                </CategoryCard>
                             </div>
 
                         </div>
+
+
+                        <div v-auto-animate class="card-header pb-0">
+                            <!-- Generation -->
+                            <ToolsInfoCard v-if="showGenerationFlag" :toolType="'Generation'" :color="'success'"
+                                :toolsArray="toolsArrayGeneration"></ToolsInfoCard>
+                            <!-- FormatConversion -->
+                            <ToolsInfoCard v-if="showFormatConversionFlag" :toolType="'FormatConversion'" :color="'danger'"
+                                :toolsArray="toolsArrayFormatConversion">
+                            </ToolsInfoCard>
+                            <!-- Evaluation -->
+                            <ToolsInfoCard v-if="showEvaluationFlag" :toolType="'Evaluation'" :color="'info'"
+                                :toolsArray="toolsArrayEvaluation"></ToolsInfoCard>
+                            <!-- Prioritisation -->
+                            <ToolsInfoCard v-if="showPrioritisationFlag" :toolType="'Prioritisation'" :color="'warning'"
+                                :toolsArray="toolsArrayPrioritisation">
+                            </ToolsInfoCard>
+                            <!-- SelectionReduction -->
+                            <ToolsInfoCard v-if="showSelectionReductionFlag" :toolType="'SelectionReduction'" :color="'primary'"
+                                :toolsArray="toolsArraySelectionReduction">
+                            </ToolsInfoCard>
+                            <!-- Other -->
+                            <ToolsInfoCard v-if="showOtherFlag" :toolType="'Other'" :color="'secondary'" :toolsArray="toolsArrayOther"> 
+                            </ToolsInfoCard>
+
+                        </div>
+
+
 
                     </div>
                 </div>
             </div>
 
 
-
             <Foot></Foot>
         </div>
+        <!-- <div class="py-4 container-fluid">
+            <div class=" row">
+                <div class="col-12">
+                    <authors-table />
+                </div>
+            </div>
+            <div class="mt-4 row">
+                <div class="col-12">
+                    <projects-table />
+                </div>
+            </div>
+           
+        </div> -->
+        <!-- <ProjectCard></ProjectCard> -->
     </main>
 </template>
 
@@ -92,196 +121,71 @@ import { request } from '../request';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
+import ToolsInfoCard from './components/ToolsInfoCard.vue'
+import CategoryCard from './components/CategoryCard.vue'
+import toolsInfo from "../ComponentCommon/tools_info.json"
+import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
-import { useRouter } from 'vue-router';
-import { useCurrentProject } from '../store/currentProject';
 import { ElNotification } from 'element-plus'
 import { CheckLoginStatus, getUserInfoByToken } from '../common'
-
+import { useRouter } from 'vue-router';
 const router = useRouter();
-const currentProjectStore = useCurrentProject()
 const userStore = useUserStore()
-const projectList = reactive([]);
-const modelLists = reactive([]);
-const CALists = reactive([]);
-const projectsStore = useProjectsStore()
-const dialogTableVisible = ref(false)
-const dialogFormVisible = ref(false)
-const dialogform = reactive({
-    projectid: '',
-    projectname: '',
-    projectdescriptions: '',
-    lastupdatedtime: '',
-    createdtime: ''
 
 
-})
 
-const showdialog = (project) => {
-    // console.log(model)
-    dialogFormVisible.value = true
-    dialogform.projectid = project.projectid
-    dialogform.projectname = project.projectname
-    dialogform.projectdescriptions = project.projectdescriptions
-    dialogform.createdtime = project.createdtime
+const toolsArrayGeneration = reactive([]);
+const toolsArrayFormatConversion = reactive([]);
+const toolsArrayEvaluation = reactive([]);
+const toolsArrayPrioritisation = reactive([]);
+const toolsArraySelectionReduction = reactive([]);
+const toolsArrayOther = reactive([])
 
-}
+const showGenerationFlag = ref(false)
+const showFormatConversionFlag = ref(false)
+const showEvaluationFlag = ref(false)
+const showPrioritisationFlag = ref(false)
+const showSelectionReductionFlag = ref(false)
+const showOtherFlag = ref(false)
 
-const confirmUpdateProject = () => {
-    // console.log(dialogform)
-    // 获取当前时刻的Date对象
-    const currentDate = new Date();
+const generationRef = ref(null);
+const formatConversionRef = ref(null);
+const EvaluationRef = ref(null);
+const PrioritisationRef = ref(null);
+const SelectionReductionRef = ref(null);
+const OtherRef = ref(null);
 
-    // 将Date对象转换为ISO 8601标准的时间戳字符串
-    const currentISO8601Timestamp = currentDate.toISOString();
-
-    dialogform.lastupdatedtime = currentISO8601Timestamp
-    // console.log(dialogform)
-
-    request({
-        url: '/tools/projects/updateProject',
-        method: 'POST',
-        data: dialogform
-    }).then((res) => {
-        if (res.UpdateStatus == 'success!') {
-            ElNotification({
-                title: 'Update Success!',
-                message: 'please check the results',
-                type: 'success',
-            })
-            // console.log(res)
-            // dialogform.modelid = model.modelid
-            // dialogform.modelname = model.modelname
-            // dialogform.modeldescriptions = model.modeldescriptions
-            // dialogform.modelcontent = model.modelcontent
-            // dialogform.createdtime = model.createdtime
-
-            dialogFormVisible.value = false
+const LoadToolsInfo = () => {
+    for (const tool of toolsInfo.RECORDS) {
+        switch (tool.type) {
+            case 'Generation':
+                toolsArrayGeneration.push(tool);
+                break;
+            case 'FormatConversion':
+                toolsArrayFormatConversion.push(tool);
+                break;
+            case 'Evaluation':
+                toolsArrayEvaluation.push(tool);
+                break;
+            case 'Prioritisation':
+                toolsArrayPrioritisation.push(tool);
+                break;
+            case 'SelectionReduction':
+                toolsArraySelectionReduction.push(tool);
+                break;
+            default:
+                toolsArrayOther.push(tool)
+                break;
         }
-    }).catch((error) => {
-        // console.log(error)
-        ElNotification({
-            title: 'Update Error!',
-            message: 'please check the results',
-            type: 'Error',
-        })
-    })
-
-}
-// testAPI通过userID查询该User下所有的projects
-// 又遍历每一个project，得到每一个project对应的多个models
-// 又遍历每一个model，得到每一个model生成的CA
-const listAllProjectsByUserID = async () => {
-    try {
-        // 获取用户当前所有的projects
-        const projectsRes = await request({
-            method: "POST",
-            url: '/tools/projects/listProjectByUserID',
-            data: {
-                userID: userStore.UserID
-            }
-        });
-        // PaperInfoStore.paperinfos.push(...res.res.records)
-        projectList.length = 0
-        projectList.splice(0, projectList.length, ...projectsRes.projectList);
-        // projectsStore.projectList.length=0
-        // projectsStore.projectList.push(projectList)
-        projectsStore.projectList = projectList
-        // console.log(" projectsStore.projectList", projectsStore.projectList)
-        // 将ISO 8601格式的时间戳转换为Date对象
-
-
-        for (let i = 0; i < projectsStore.projectList.length; i++) {
-
-            const timestamp_created = projectsStore.projectList[i].createdtime
-            const timestamp_lastupdated = projectsStore.projectList[i].lastupdatedtime
-            const dateObject_created = new Date(timestamp_created);
-            const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-            // 获取可读的时间字符串
-            projectsStore.projectList[i].createdtimeFormat = dateObject_created.toLocaleString();
-            projectsStore.projectList[i].lastupdatedtimeFormat = dateObject_lastupdated.toLocaleString();
-        }
-
-        // if (projectList.length !== 0) {
-        //     // console.log("projectList", projectList);
-        //     // console.log("获取每个projectid对应的model");
-
-        //     // 对projectList中每个project，获取该project下的所有model
-        //     modelLists.length = 0
-        //     for (const project of projectList) {
-        //         const modelsRes = await request({
-        //             method: "POST",
-        //             url: '/tools/models/listModelsByProjectID',
-        //             data: {
-        //                 projectid: project.projectid,
-
-        //             }
-        //         });
-
-        //         modelLists.push(modelsRes.models);
-        //     }
-        // }
-
-        // // console.log("modelLists", modelLists);
-
-        // if (modelLists.length !== 0) {
-        //     // 对于每一个model，获取它所有的CA
-        //     // console.log("对每一个model获取它的CA");
-        //     CALists.length = 0
-        //     for (const models of modelLists) {
-        //         for (const model of models) {
-        //             const caRes = await request({
-        //                 method: "POST",
-        //                 url: '/tools/coveringarrays/listCAsByModelID',
-        //                 data: {
-        //                     modelid: model.modelid
-        //                 }
-        //             });
-
-        //             // console.log("对每一个model获取它的CA!!", caRes);
-        //             if (caRes.CAs.length != 0) CALists.push(caRes)
-        //         }
-        //     }
-        // }
-
-
-
-
-    } catch (error) {
-        console.error("发生错误", error);
     }
-    // console.log("projectList", projectList)
-    // console.log("modelLists", modelLists)
-    // console.log("CALists", CALists)
+}
+const selectedDivIndex = ref(null);
+
+const handleDivClick = (index) => {
+    selectedDivIndex.value = index;
 };
-
-const enterProject = (project) => {
-    currentProjectStore.createdtime = project.createdtime
-    currentProjectStore.lastupdatedtime = project.lastupdatedtime
-    currentProjectStore.projectdescriptions = project.projectdescriptions
-    currentProjectStore.projectid = project.projectid
-    currentProjectStore.projectname = project.projectname
-    currentProjectStore.userid = project.userid
-    router.push({
-        path: '/tools/models',
-        query: {
-            projectid: project.projectid,
-            projectname: project.projectname
-        }
-    })
-}
-const itemsPerRow = ref(2);
-const chunkedArray = computed(() => {
-    const result = [];
-    for (let i = 0; i < projectsStore.projectList.length; i += itemsPerRow.value) {
-        result.push(projectsStore.projectList.slice(i, i + itemsPerRow.value));
-    }
-    return result;
-});
-
 onMounted(async () => {
     // 先检查用户是否登录
     let obj = await CheckLoginStatus()
@@ -296,11 +200,7 @@ onMounted(async () => {
         userStore.name = userobj.name
         userStore.email = userobj.email
         userStore.institution = userobj.institution
-
-        // 若用户已登录则正常运行
-        listAllProjectsByUserID()
-
-
+        LoadToolsInfo()
     }
     else {
         // 若用户未登录则跳转到登录页面
@@ -310,23 +210,39 @@ onMounted(async () => {
             }
         )
     }
+    const addClickHandler = (ref, flag) => {
+        ref.value.addEventListener('click', () => {
+            flag.value = !flag.value;
+        });
+    };
 
-
+    addClickHandler(generationRef, showGenerationFlag);
+    addClickHandler(formatConversionRef, showFormatConversionFlag);
+    addClickHandler(EvaluationRef, showEvaluationFlag);
+    addClickHandler(PrioritisationRef, showPrioritisationFlag);    
+    addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
+    addClickHandler(OtherRef, showOtherFlag);
 })
+
+
 </script>
 
 <style scoped>
-.rounded-border {
-    border: 1px solid #2dce89;
-    border-radius: 20px;
-    padding: 15px;
+.category {
     transition: transform 0.3s ease;
     /* 添加过渡效果 */
-    /* 可根据需要调整内边距 */
 }
 
-.rounded-border:hover {
-    transform: scale(1.05);
-    /* 鼠标划过时放大 5% */
+.category:hover {
+    transform: scale(1.09);
+    /* 划过时放大 */
+    cursor: pointer;
+}
+
+.borderGlow {
+    border: 2px solid #2dce89;
+    /* 设置边框样式，这里使用蓝色边框作为示例 */
+    box-shadow: 0 0 10px #2dce89;
+    /* 设置阴影效果，使边框发光 */
 }
 </style>

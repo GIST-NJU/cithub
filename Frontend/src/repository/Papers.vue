@@ -13,11 +13,7 @@
             <div class="card-header pb-0">
               <h3>Complete Paper List</h3>
               <p class="text-muted mb-0"><span class="badge bg-success">{{ PaperInfoStore.total }}</span> papers found</p>
-              <!--p v-if="PaperInfoStore.searchKeyWords != ''" class="text-muted text-sm mb-0">Looking for
-                <argon-badge variant="gradient" color="primary" style="margin: 5px">
-                  {{ PaperInfoStore.searchKeyWords }}
-                </argon-badge>
-              </p-->
+
             </div>
 
             <div class="card-body ps-1">

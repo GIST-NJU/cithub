@@ -8,52 +8,52 @@
             <div class="navbar-brand m-0">
                 <img src="../../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
 
-                <span class="ms-1 font-weight-bold text-lg">CitHub Repositoy</span>
+                <span class="ms-1 font-weight-bold text-lg">CitHub Tools</span>
             </div>
         </div>
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
 
-                <li class="nav-item" @click="jumpToHome" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToToolsHome" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
                         @mouseout="handleMouseOutHome">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">生成</span>
+                        <span class="nav-link-text ms-1 p">Tools Home</span>
                     </a>
                 </li>
 
-                <li class="nav-item" @click="jumpToPapers" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToProjects" style=" cursor:pointer;">
                     <a :class="['nav-link', isActivePapers ? 'active' : '']" @mouseover="handleMouseOverPapers"
                         @mouseout="handleMouseOutPapers">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-success text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Papers</span>
+                        <span class="nav-link-text ms-1 p">Projects</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToCategory" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToModels" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveCategory ? 'active' : '']" @mouseover="handleMouseOverCategory"
                         @mouseout="handleMouseOutCategory">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-credit-card text-danger text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Category</span>
+                        <span class="nav-link-text ms-1 p">Models</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToScholars" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToTestSuitesGeneration" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
                         @mouseout="handleMouseOutScholars">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-bag-17 text-warning text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Scholars</span>
+                        <span class="nav-link-text ms-1 p">Generation</span>
                     </a>
                 </li>
                 <li class="nav-item" @click="jumpToInstitutions" style=" cursor:pointer;">
@@ -64,7 +64,7 @@
 
                             <i class="ni ni-atom  text-dark text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Institutions</span>
+                        <span class="nav-link-text ms-1 p">Evaluation</span>
                     </a>
                 </li>
                 <li class="nav-item" @click="jumpToVenue" style=" cursor:pointer;">
@@ -75,7 +75,7 @@
 
                             <i class="ni ni-building text-info text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Venue</span>
+                        <span class="nav-link-text ms-1 p">Prioritisation</span>
                     </a>
                 </li>
 
@@ -87,11 +87,11 @@
 
                             <i class="ni ni-chart-pie-35 text-success text-lg opacity-10" aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Charts</span>
+                        <span class="nav-link-text ms-1 p">Reduction</span>
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link " href="../repository/rank.html">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -99,7 +99,7 @@
                         </div>
                         <span class="nav-link-text ms-1 p">Rank</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </aside>
@@ -108,8 +108,13 @@
 <script  setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-const router = useRouter();
+import { useCurrentModel } from '../../store/currentModel'
+import { useCurrentProject } from '../../store/currentProject';
+import { ElNotification } from 'element-plus'
 
+const router = useRouter();
+const currentProjectStore = useCurrentProject()
+const currentModel = useCurrentModel()
 
 const isActiveHome = ref(false)
 const isActivePapers = ref(false)
@@ -121,21 +126,51 @@ const isActiveCharts = ref(false)
 
 
 
-const jumpToHome = () => {
-    router.push({ name: 'RepoHome' })
+const jumpToToolsHome = () => {
+    router.push({ name: 'ToolsHome' })
 }
 
-const jumpToPapers = () => {
-    // console.log("123")
-    router.push({ name: 'Papers' })
+const jumpToProjects = () => {
+    router.push({ name: 'ProjectsHome' })
 
 }
-const jumpToScholars = () => {
-    router.push({ name: 'Scholars' })
+const jumpToModels = () => {
+    console.log("currentProjectStore.projectid", currentProjectStore.projectid)
+    if (currentProjectStore.projectid) {
+        router.push({ name: 'modelsHome' })
+    }
+
+    else {
+        ElNotification({
+            title: 'Need to Choose a Project first',
+            message: 'Please choose a Project to continue.',
+            type: 'error',
+        })
+        router.push({
+            name: 'ProjectsHome'
+        })
+    }
 
 }
-const jumpToInstitutions = () => {
-    router.push({ name: 'Institutions' })
+const jumpToTestSuitesGeneration = () => {
+    if (currentModel.currentModel.modelid) {
+        router.push({
+            path: '/tools/TestSuitesHome',
+            query: {
+                modelid: currentModel.currentModel.modelid
+            }
+        })
+    }
+    else {
+        ElNotification({
+            title: 'Need to Choose a Model first',
+            message: 'Please choose a Model to continue.',
+            type: 'error',
+        })
+        router.push({ name: 'modelsHome' })
+    }
+
+
 
 }
 

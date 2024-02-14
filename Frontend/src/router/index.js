@@ -13,8 +13,12 @@ import ChartsDisplay from '../repository/ChartsDisplay.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
+import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
+import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
+import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
+import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
@@ -93,18 +97,47 @@ const routes = [
     children: [
       {
         // ToolsHome
-        path: "home",
-        name: 'algorithmHome',
+        path: "ToolsHome",
+        name: 'ToolsHome',
         component: ToolsHome,
-        meta: { title: 'Tools' }
+        meta: { title: 'ToolsHome' }
       },
       {
-        // ToolsHome
+        // ProjectsHome
+        path: "ProjectsHome",
+        name: 'ProjectsHome',
+        component: ProjectsHome,
+        meta: { title: 'ProjectsHome' }
+      },
+      {
+        // modelsHome
         path: "models",
         name: 'modelsHome',
         component: ModelsHome,
         meta: { title: 'Models' }
       },
+      {
+        // modelsDetails
+        path: "modelsDetails",
+        name: 'modelsDetails',
+        component: ModelsDetails,
+        meta: { title: 'ModelsDetails' }
+      },
+      {
+        // TestSuitesHome
+        path: "TestSuitesHome",
+        name: 'TestSuitesHome',
+        component: TestSuitesHome,
+        meta: { title: 'TestSuitesHome' }
+      },
+      {
+        // TestSuiteDetails
+        path: "TestSuiteDetails",
+        name: 'TestSuiteDetails',
+        component: TestSuiteDetails,
+        meta: { title: 'TestSuiteDetails' }
+      },
+
 
     ]
   },

@@ -123,13 +123,13 @@ const moduleStore = useModuleStore()
 const jumpToRepo = () => {
 	moduleStore.CurrentModule = 'Repository'
 	router.push({
-		path: '/repo/home'
+		name: 'Repository_Home'
 	})
 }
 const jumpToTools = () => {
 	moduleStore.CurrentModule = 'Tools'
 	router.push({
-		path: '/tools/home'
+		path: '/tools/ToolsHome'
 	})
 }
 const jumpToBenchmark = () => {

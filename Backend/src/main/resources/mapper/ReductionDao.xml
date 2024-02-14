@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gist.cithub.backend.Tools.dao.ReductionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gist.cithub.backend.Tools.entity.ReductionEntity" id="ReductionMap">
+        <result property="reductionid" column="reductionid"/>
+        <result property="reductionname" column="reductionname"/>
+        <result property="reductiondescriptions" column="reductiondescriptions"/>
+        <result property="reductioncontents" column="reductioncontents"/>
+        <result property="testsuitesid" column="testsuitesid"/>
+        <result property="time" column="time"/>
+        <result property="size" column="size"/>
+        <result property="createdtime" column="createdtime"/>
+        <result property="lastupdatedtime" column="lastupdatedtime"/>
+        <result property="algorithm" column="algorithm"/>
+    </resultMap>
+
+
+</mapper>
