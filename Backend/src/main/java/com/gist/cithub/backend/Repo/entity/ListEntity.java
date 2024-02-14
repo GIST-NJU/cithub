@@ -2,7 +2,7 @@ package com.gist.cithub.backend.Repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,7 +14,6 @@ import java.io.Serializable;
  * @email 1223564154@qq.com
  * @date 2022-09-08 21:44:17
  */
-@Schema(description = "文献库 数据传输对象")
 @Data
 @TableName("list")
 public class ListEntity implements Serializable {
