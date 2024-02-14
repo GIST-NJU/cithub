@@ -1,27 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import Dashboard from "../views/Dashboard.vue";
-// import Tables from "../views/Tables.vue";
-// import Billing from "../views/Billing.vue";
-// import VirtualReality from "../views/VirtualReality.vue";
-// import RTL from "../views/Rtl.vue";
-// import Profile from "../views/Profile.vue";
-// import Signup from "../views/Signup.vue";
-// import Signin from "../views/Signin.vue";
-
 import Cithub from '../CithubHomeView.vue'
 
-// Repo
-import RepoRouterView from '../RepoViews/RepoRouterView.vue'
-import PaperHome from '../RepoViews/PaperHome.vue'
-import RepoHome from '../RepoViews/RepoHome.vue'
-import InstitutionsHome from '../RepoViews/InstitutionsHome.vue'
-import Scholars from '../RepoViews/ScholarsHome.vue'
-import Category from '../RepoViews/CategoryHome.vue'
-import Venue from '../RepoViews/VenueHome.vue'
-import Charts from '../RepoViews/ChartsHome.vue'
-import ChartsDisplay from '../RepoViews/ChartsDisplay.vue'
-
-
+// Repository
+import Repository_Router from '../repository/RepositoryRouter.vue'
+import Repository_Home from '../repository/Home.vue'
+import Repository_Papers from '../repository/Papers.vue'
+import Repository_Scholars from '../repository/Scholars.vue'
+import Repository_Fields from '../repository/Fields.vue'
+import Repository_Venues from '../repository/Venues.vue'
+import Repository_Statistics from '../repository/Statistics.vue'
+import ChartsDisplay from '../repository/ChartsDisplay.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
@@ -50,55 +38,47 @@ const routes = [
     component: Cithub,
     meta: { title: 'Cithub' }
   },
-
-  // Repo
+  // Repository
   {
-    path: '/repo',
-    component: RepoRouterView,
-    meta: { title: 'Repository' },
+    path: '/repository',
+    component: Repository_Router,
+    meta: { title: 'Router' },
     children: [
       {
-        // RepoHome
         path: "home",
-        name: 'RepoHome',
-        component: RepoHome,
-        meta: { title: 'Repository' }
+        name: 'Repository_Home',
+        component: Repository_Home,
+        meta: { title: 'Home' }
       },
       {
-        path: "Papers",
-        name: "Papers",
-        component: PaperHome,
+        path: "papers",
+        name: "Repository_Papers",
+        component: Repository_Papers,
         meta: { title: 'Papers' }
       },
       {
-        path: "Institutions",
-        name: "Institutions",
-        component: InstitutionsHome,
-        meta: { title: 'Institutions' }
-      },
-      {
-        path: "Scholars",
-        name: "Scholars",
-        component: Scholars,
+        path: "scholars",
+        name: "Repository_Scholars",
+        component: Repository_Scholars,
         meta: { title: 'Scholars' }
       },
       {
-        path: "Category",
-        name: "Category",
-        component: Category,
-        meta: { title: 'Category' }
+        path: "fields",
+        name: "Repository_Fields",
+        component: Repository_Fields,
+        meta: { title: 'Fields' }
       },
       {
-        path: "Venue",
-        name: "Venue",
-        component: Venue,
+        path: "venues",
+        name: "Repository_Venues",
+        component: Repository_Venues,
         meta: { title: 'Venue' }
       },
       {
-        path: "Charts",
-        name: "Charts",
-        component: Charts,
-        meta: { title: 'Charts' }
+        path: "statistics",
+        name: "Repository_Statistics",
+        component: Repository_Statistics,
+        meta: { title: 'Statistics' }
       },
       {
         path: "ChartsDisplay",
