@@ -12,7 +12,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import ArgonDashboard from "./argon-dashboard";
-
+import bootstrap from 'bootstrap'
 
 
 const pinia = createPinia()

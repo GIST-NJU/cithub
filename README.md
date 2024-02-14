@@ -1,8 +1,48 @@
+2-14更新：
+
+1. 上传了新的数据库`cithub.sql`文件（2024-2-14），已整合老师添加的两个表`repository_list`和`repository_scholar`
+
+2. 更新到JDK17
+
+3. 更新Backend到SpringBoot3，Pom.xml中的依赖冲突已解决。
+
+4. 更新了组合测试工具系统 tools
+
+   - 由于校外无法访问服务器上的组合测试工具docker容器，需要在本地run docker image才能调试
+
+   - 具体各类工具的端口如下：
+     - Generation工具都是  http://localhost:8300
+       (需逐一单独调试每个Generation工具)
+     - Format Reader:
+       - CASA Format Reader http://localhost:8313
+       - PICT Format  reader http://localhost:8312
+       - CtWedge Format reader http://localhost:8311
+       - ACTS FORMAT reader http://localhost:8310
+     - Test Plan Conversion:
+       - Junit  http://localhost:8303
+       - NL plan http://localhost:8302
+     - Evaluation:
+       - Coverage Checker http://localhost:8301
+     - Prioritization:
+       - SortArray http://localhost:8304
+     - SelectionReduction:
+       - MiniArray http://localhost:8305
+
+5. 进行中：
+
+   - https://github.com/orgs/GIST-NJU/projects/5/views/2 中的事项
+
+   - 工具系统的LLM建模部分
+
+---
+
 2.1日更新：
 
 - 上传了新的数据库`cithub.sql`文件，请重新导入以更新数据库。
 - Tools增加GUI创建Model，保存Model，修改Model。
 - 【范佳林】Repo更新Charts：Chart_FIELD_COUNT_EACH_YEAR、Chart_TOP_INSTITUTIONS
+
+---
 
 1.28日更新：
 
