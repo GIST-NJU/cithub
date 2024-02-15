@@ -93,8 +93,9 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
+import pinia from '../store/store';
 const router = useRouter();
-const PaperInfoStore = usePaperInfoStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
 
 const CategoryArray_1 = reactive([
     { "category": "Number of Publication", "des": "The annual and cumulative number of combinatorial testing publications." },

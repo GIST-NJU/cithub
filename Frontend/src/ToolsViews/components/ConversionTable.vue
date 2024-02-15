@@ -11,11 +11,11 @@
     </div>
     <!-- New Test Plan -->
     <el-dialog v-model="dialogFormVisibleNew" title="Convert TestSuite into:">
-      <el-form :model="dialogformNewConversion">
+      <el-form :model="dialogformNewConversion" label-position="right" label-width="140px">
         <el-form-item label="Conversion Name:">
           <el-input v-model="dialogformNewConversion.conversionname" />
         </el-form-item>
-        <el-form-item label="Conversion Description:">
+        <el-form-item label="Conversion Desc:">
           <el-input autosize type="textarea" v-model="dialogformNewConversion.conversiondescriptions" />
         </el-form-item>
         <el-form-item label="Test Plan:">

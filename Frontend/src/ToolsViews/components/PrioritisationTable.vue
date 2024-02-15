@@ -11,14 +11,14 @@
     </div>
     <!-- New Prioritisation -->
     <el-dialog v-model="dialogFormVisibleNew" title="Convert TestSuite into:">
-      <el-form :model="dialogformNewPrioritisation">
+      <el-form :model="dialogformNewPrioritisation" label-position="right" label-width="160px">
         <el-form-item label="Prioritisation Name:">
           <el-input v-model="dialogformNewPrioritisation.prioritisationname" />
         </el-form-item>
-        <el-form-item label="Prioritisation Description:">
+        <el-form-item label="Prioritisation Desc:">
           <el-input autosize type="textarea" v-model="dialogformNewPrioritisation.prioritisationdescriptions" />
         </el-form-item>
-        <el-form-item label="Prioritisation Algorithm:">
+        <el-form-item label="Algorithm:">
           <el-select v-model="AlgorithmChosed" class="m-2"
             placeholder="Select a test plan for converting test suite into." clearable>
             <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label" :value="item.value" />

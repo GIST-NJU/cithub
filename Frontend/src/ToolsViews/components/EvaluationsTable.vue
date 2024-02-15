@@ -11,11 +11,11 @@
     </div>
     <!-- New Evaluation -->
     <el-dialog v-model="dialogFormVisibleNew" title="New Evaluation">
-      <el-form :model="dialogformNewEvaluation">
+      <el-form :model="dialogformNewEvaluation" label-position="right" label-width="150px">
         <el-form-item label="Evaluation Name:">
           <el-input v-model="dialogformNewEvaluation.evaluationname" />
         </el-form-item>
-        <el-form-item label="Evaluation Description:">
+        <el-form-item label="Evaluation Desc:">
           <el-input autosize type="textarea" v-model="dialogformNewEvaluation.evaluationdescriptions" />
         </el-form-item>
         <el-form-item label="Algorithm: ">

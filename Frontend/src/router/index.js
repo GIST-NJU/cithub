@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Cithub from '../CithubHomeView.vue'
+import { usePaperInfoStore } from '../store/paperinfoStore'
+import { useAuthorStore } from '../store/authorStore'
+import { useInstitutionStore } from '../store/institutionStore'
+import { useVenueStore } from '../store/venueStore'
+import { useUserStore } from '../store/userStore';
+import { useModuleStore } from '../store/module';
 
 // Repository
 import Repository_Router from '../repository/RepositoryRouter.vue'
@@ -17,6 +23,7 @@ import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
+import LLMModelDetails from '../ToolsViews/LLMModelDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
 import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
@@ -124,6 +131,13 @@ const routes = [
         meta: { title: 'ModelsDetails' }
       },
       {
+        // LLMModelDetails
+        path: "LLMModelDetails",
+        name: 'LLMModelDetails',
+        component: LLMModelDetails,
+        meta: { title: 'LLMModelDetails' }
+      },
+      {
         // TestSuitesHome
         path: "TestSuitesHome",
         name: 'TestSuitesHome',
@@ -192,6 +206,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+
+  const userStore = useUserStore()
+  const moduleStore = useModuleStore()
+  const PaperInfoStore = usePaperInfoStore()
+  const AuthorStore = useAuthorStore()
+  const InstitutionStore = useInstitutionStore()
+  const VenueStore = useVenueStore()
+
   window.document.title = to.meta.title
   next()
 })

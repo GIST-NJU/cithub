@@ -16,7 +16,7 @@
 
     <!-- New test suites -->
     <el-dialog v-model="dialogFormVisibleNew" title="New Test Suite">
-      <el-form :model="dialogformNewTestSuites">
+      <el-form :model="dialogformNewTestSuites" label-position="right" label-width="170px">
 
         <el-form-item label="Test Suite Name:">
           <el-input v-model="dialogformNewTestSuites.testsuitesname" />

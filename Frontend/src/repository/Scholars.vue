@@ -10,7 +10,8 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h3>Scholars</h3>
-              <p class="text-muted mb-0"><span class="badge bg-success">{{ AuthorStore.authorsArray.length }}</span> scholars across <span class="badge bg-success">XXX</span> institutions found</p>
+              <p class="text-muted mb-0"><span class="badge bg-success">{{ AuthorStore.authorsArray.length }}</span>
+                scholars across <span class="badge bg-success">XXX</span> institutions found</p>
             </div>
             <div style="margin: 60px 0px 0px 20px;">
               <h6> Scholars Name</h6>
@@ -45,11 +46,12 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
-
+import pinia from '../store/store';
 import { useAuthorStore } from '../store/authorStore'
-const AuthorStore = useAuthorStore()
+import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+const AuthorStore = useAuthorStore(pinia)
 const router = useRouter();
-const PaperInfoStore = usePaperInfoStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
 
 const itemsPerRow = ref(5);
 
@@ -94,7 +96,24 @@ const searchByAuthor = (authorname) => {
   })
 
 }
-
+let paginationObj = reactive({
+  pagesize: 30,
+  total: 0,
+  pagercount: 15,
+  pagenum: 1,
+  searchkeywords: "",
+  typerofPapers: "Combinatorial Testing",
+})
+onMounted(() => {
+  // 获取所有paper
+  listAllPapers(paginationObj)
+  // 获取所有scholars
+  listAllScholars()
+  // 获取所有institutions
+  listAllInstitutions()
+  // 获取所有Venue
+  listallVenue()
+})
 </script>
 
 

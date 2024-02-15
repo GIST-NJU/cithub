@@ -35,10 +35,16 @@
                 <p class="text-xs font-weight-bold mb-0 text-center">{{ model.modeltype }}</p>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0 text-center">{{ model.strength }}</p>
+                <p v-if="model.modeltype != 'LLM'" class="text-xs font-weight-bold mb-0 text-center">{{ model.strength }}
+                </p>
+                <p v-if="model.modeltype == 'LLM'" class="text-xs font-weight-bold mb-0 text-center">\
+                </p>
+
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0 text-center">{{ model.NumOfTestSuites }}</p>
+                <p v-if="model.modeltype != 'LLM'" class="text-xs font-weight-bold mb-0 text-center">{{
+                  model.NumOfTestSuites }}</p>
+                <p v-if="model.modeltype == 'LLM'" class="text-xs font-weight-bold mb-0 text-center">\</p>
               </td>
               <td class="align-middle text-center text-sm">
                 <!-- <span class="badge badge-sm bg-gradient-success">Online</span> -->
@@ -109,7 +115,11 @@ const EnterModels = (model) => {
       break;
 
     case "LLM":
-      console.log("LLM")
+      router.push({
+        path: '/tools/LLMModelDetails',
+        query:
+          { modelid: model.modelid }
+      })
       break;
 
     case "Imported":
@@ -321,5 +331,4 @@ const ReloadModels = async () => {
 .cardTR:hover {
   transform: scale(1.015);
   cursor: pointer;
-}
-</style>
+}</style>

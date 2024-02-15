@@ -13,7 +13,7 @@
       </div>
       <!-- new Project -->
       <el-dialog v-model="dialogFormVisibleNew" title="New Project">
-        <el-form :model="dialogformNew">
+        <el-form :model="dialogformNew" label-position="right" label-width="150px">
 
           <el-form-item label="Project Name:">
             <el-input v-model="dialogformNew.projectname" />
@@ -93,7 +93,7 @@
 
     <!-- Update Project -->
     <el-dialog v-model="dialogFormVisibleUpdate" title="Update Project">
-      <el-form :model="dialogformUpdate">
+      <el-form :model="dialogformUpdate" label-position="left" label-width="150px">
         <el-form-item label="Project ID:">
           <el-input disabled v-model="dialogformUpdate.projectid" />
         </el-form-item>

@@ -162,6 +162,13 @@ public class ModelsController {
         }
         modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
         modelsEntity.setCons((String) info.get("Cons"));
+
+        modelsEntity.setApikey((String) info.get("apikey"));
+        modelsEntity.setSemantics((String) info.get("semantics"));
+        modelsEntity.setSemanticstype((String) info.get("semanticsType"));
+        modelsEntity.setLlmmodel((String) info.get("LLMmodel"));
+        modelsEntity.setBaseurl((String) info.get("baseUrl"));
+
         Boolean flag = modelsService.save(modelsEntity);
         if (flag) return R.ok().put("NewStatus", "success!");
         else return R.ok().put("NewStatus", "failed!");

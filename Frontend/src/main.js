@@ -15,6 +15,7 @@ import ArgonDashboard from "./argon-dashboard";
 import bootstrap from 'bootstrap'
 
 
+
 const pinia = createPinia()
 const appInstance = createApp(App);
 appInstance.use(ElementPlus)

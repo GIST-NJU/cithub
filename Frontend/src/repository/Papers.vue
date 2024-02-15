@@ -20,7 +20,7 @@
               <div class="table-responsive">
                 <table class="table mb-0">
                   <tbody>
-                    <Paper v-for="(item) in PaperInfoStore.paperinfos" :item="item" :userInfo="userInfo"
+                    <Paper v-for="(item,index) in PaperInfoStore.paperinfos" :key="index" :item="item" :index="index" :userInfo="userInfo"
                       @DeleteCard="DeleteCard"></Paper>
                   </tbody>
                 </table>
@@ -41,7 +41,7 @@
       <div v-if="PaperInfoStore.paperinfos.length != 0 && paginationActive == true"
         style="display:flex;justify-content: center;">
         <div>
-          <el-pagination v-model:page-size="paginationObj.pagesize" v-model:pager-count="paginationObj.pagecount"
+          <el-pagination v-model:page-size="paginationObj.pagesize" v-model:pager-count="paginationObj.pagecount" 
             layout="prev, pager, next, jumper" :total="paginationObj.total" @current-change="handleCurrentPageChange" />
         </div>
 
@@ -68,10 +68,12 @@ import { request } from '../request'
 import { useRoute } from 'vue-router'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
-const PaperInfoStore = usePaperInfoStore()
+import pinia from '../store/store';
+import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+const PaperInfoStore = usePaperInfoStore(pinia)
 
 import { useModuleStore } from '../store/module';
-const moduleStore = useModuleStore()
+const moduleStore = useModuleStore(pinia)
 
 // 接收参数
 const route = useRoute()
@@ -81,7 +83,7 @@ const route = useRoute()
 let paginationObj = reactive({
   pagesize: 30,
   total: PaperInfoStore.total,
-  pagecount: 15,
+  pagecount: 8,
   pagenum: 1,
   searchkeywords: "",
   typerofPapers: "Combinatorial Testing",
@@ -97,26 +99,7 @@ const handleMouseOutPagiantion = () => { isPageActive.value = false }
 
 let countAllPapers = ref(0)
 
-const listAllPapers = () => {
-  // 获取所有文章的数据
-  request({
-    url: '/repo/list/listAllpapers',
-    method: 'POST',
-    data: paginationObj
-  }).then((res) => {
-    // console.log(res)
-    // PaperInfoStore.paperinfos.length = 0
-    // PaperInfoStore.paperinfos.push(...res.listEntityPage.records)
 
-    countAllPapers.value = res.listEntityPage.total
-    // PaperInfoStore.total = paginationObj.total
-
-    // console.log(paginationObj)
-
-  }).catch((error) => {
-    console.log("错误是", error)
-  })
-}
 
 onMounted(() => {
   moduleStore.CurrentModule = 'Complete Paper List'
@@ -129,9 +112,15 @@ onMounted(() => {
     // console.log("关闭分页")
     paginationActive.value = false
   }
+    // 获取所有paper
+    listAllPapers(paginationObj)
+    // 获取所有scholars
+    listAllScholars()
+    // 获取所有institutions
+    listAllInstitutions()
+    // 获取所有Venue
+    listallVenue()
 
-  // console.log("route.query.paginationActive", route.query.paginationActive)
-  // console.log("paginationActive.value", paginationActive.value)
 })
 
 const handleCurrentPageChange = (val) => {

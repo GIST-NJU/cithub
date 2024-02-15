@@ -11,14 +11,14 @@
     </div>
     <!-- New Reduction -->
     <el-dialog v-model="dialogFormVisibleNew" title="New Reduction into:">
-      <el-form :model="dialogformNewReduction">
+      <el-form :model="dialogformNewReduction" label-position="right" label-width="140px">
         <el-form-item label="Reduction Name:">
           <el-input v-model="dialogformNewReduction.Reductionname" />
         </el-form-item>
-        <el-form-item label="Reduction Description:">
+        <el-form-item label="Reduction Desc:">
           <el-input autosize type="textarea" v-model="dialogformNewReduction.Reductiondescriptions" />
         </el-form-item>
-        <el-form-item label="Reduction:">
+        <el-form-item label="Algorithm:">
           <el-select v-model="AlgorithmChosed" class="m-2"
             placeholder="Select a test plan for converting test suite into." clearable>
             <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label" :value="item.value" />
