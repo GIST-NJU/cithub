@@ -26,7 +26,7 @@
                             </ArgonButton>
                         </div>
                         <el-dialog v-model="dialogFormVisibleNew" title="New Model">
-                            <el-form :model="dialogformNewModel">
+                            <el-form :model="dialogformNewModel" label-position="right" label-width="150px">
 
                                 <el-form-item label="Model Name:">
                                     <el-input v-model="dialogformNewModel.modelname" />
@@ -89,7 +89,9 @@
                                 </div>
                             </div>
                             <div v-auto-animate>
-                                <el-form v-if="dialogformNewModel.modeltype == 'Imported'" :label-position="'right'">
+                                <!-- Imported model convert into cithub model -->
+                                <el-form v-if="dialogformNewModel.modeltype == 'Imported'" label-position="right"
+                                    label-width="150px">
                                     <el-form-item label="Import Model Type: ">
                                         <el-select v-model="ImportModelTypeChosed" class="m-2"
                                             placeholder="Select an tool for import related type of model">
@@ -212,6 +214,48 @@ Model Phone&#Parameters:&#Boolean emailViewer;&#Range textLines [25 .. 30];&#Enu
                                         </el-form-item>
                                     </div>
                                 </el-form>
+
+
+                                <!-- LLM Modelling -->
+                                <el-form v-if="dialogformNewModel.modeltype == 'LLM'" label-position="right"
+                                    label-width="130px">
+                                    <el-form-item label="OpenAI API Key:">
+                                        <el-input v-model="LLMModellingForm.apikey" type="password" clearable
+                                            placeholder="eg: sk-gKzhAQLE1Fh777i0KgOi15NQQGInPH7JK82OVBeCitHubApi">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="Base URL:">
+                                        <el-input v-model="LLMModellingForm.baseUrl" type="textarea" clearable
+                                            placeholder="(Optional) if you use a proxy, please input baseurl of it here.">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="LLM Model:">
+                                        <el-select v-model="LLMModellingForm.LLMmodel" class="m-2" clearable
+                                            placeholder="Select an LLM for extracting CIT model.">
+                                            <el-option v-for="item in LLMmodelOptions" :key="item.value" :label="item.label"
+                                                :value="item.value" />
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="SUT Description:">
+                                        <el-input v-model="LLMModellingForm.semanticsType" type="textarea" clearable
+                                            :autosize="{ minRows: 5 }" placeholder="A short description for your SUT corpus.
+For example, for the SUT corpus in the following Input Box, the description of it is:
+`
+The withdrawal case study of a ATM application.
+`">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="SUT Corpus:">
+                                        <el-input v-model="LLMModellingForm.semantics" type="textarea" clearable
+                                            :autosize="{ minRows: 15 }" placeholder="Note:                                           
+1.Cithub will extract parameters, values and constraints from the corpus of SUT you provided ending with a abstract CIT model.
+2.Any form of corpus is available, you could provide it look like this:
+`
+A withdrawal transaction asks the customer to choose an account type to withdraw from savings-account or checking-account, and to choose an amount from a menu of possible amounts. The system verifies that it has sufficient money on hand to satisfy the request before sending the transaction to the bank. If not, the customer is informed and asked to enter different amount. If the transaction is approved by the bank, the appropriate amount of cash is dispensed by the machine before it issues a receipt. The dispensing of cash is also recorded in the ATM’s log. A withdrawal transaction can be cancelled by the customer by pressing the Cancel key any time prior to choosing the amount. The customer cannot withdraw amount greater than 10000 from his savings account in a single transaction.`
+">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
 
 
@@ -271,6 +315,7 @@ import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { useModelsStore } from '../store/modelsStore'
 import { useCurrentProject } from '../store/currentProject';
+import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
 import toolsInfo from "../ComponentCommon/tools_info.json";
@@ -284,7 +329,8 @@ const router = useRouter()
 const modelStore = useModelsStore()
 const projectsStore = useProjectsStore()
 const currentProjectStore = useCurrentProject()
-const currentModel=useCurrentModel()
+const currentModel = useCurrentModel()
+const llmFormStore = useLLMmodellingStore()
 const modelLists = reactive([]);
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
@@ -292,7 +338,13 @@ const dateObject_created = ref()
 const dateObject_lastupdated = ref()
 
 const ModelConversionForm = reactive({})
-
+const LLMModellingForm = reactive({
+    apikey: 'sk-gKzhAQLE1Fh777i0KgOi15NQQGInPH7JK82OVBeMIPzGopgd',
+    semantics: 'A withdrawal transaction asks the customer to choose an account type to withdraw from savings-account or checking-account, and to choose an amount from a menu of possible amounts. The system verifies that it has sufficient money on hand to satisfy the request before sending the transaction to the bank. If not, the customer is informed and asked to enter different amount. If the transaction is approved by the bank, the appropriate amount of cash is dispensed by the machine before it issues a receipt. The dispensing of cash is also recorded in the ATM’s log. A withdrawal transaction can be cancelled by the customer by pressing the Cancel key any time prior to choosing the amount. The customer cannot withdraw amount greater than 10000 from his savings account in a single transaction.',
+    semanticsType: 'The withdrawal feature case study of ATM application',
+    LLMmodel: 'gpt-3.5-turbo-0125',
+    baseUrl: 'https://api.openai-proxy.org',
+})
 
 const StrengthOptions = [
     {
@@ -319,6 +371,24 @@ const StrengthOptions = [
         value: '6',
         label: '6',
     },
+]
+const LLMmodelOptions = [
+    {
+        value: 'gpt-3.5-turbo-instruct',
+        label: 'gpt-3.5-turbo-instruct'
+    },
+    {
+        value: 'gpt-3.5-turbo-0125',
+        label: 'gpt-3.5-turbo-0125'
+    },
+    {
+        value: 'gpt-4',
+        label: 'gpt-4'
+    },
+    {
+        value: 'gpt-4-32k',
+        label: 'gpt-4-32k'
+    }
 ]
 const listAllModelsByProjectID = async () => {
     if (currentProjectStore.projectid) {
@@ -361,7 +431,7 @@ const listAllModelsByProjectID = async () => {
             ElNotification({
                 title: 'Choose a Model',
                 message: 'Please choose a model to continue.',
-                type: 'info',
+                type: 'success',
             })
 
         } catch (error) {
@@ -752,8 +822,8 @@ const confirmNewModel = async () => {
                         }
 
                         catch (err) {
-                            
-                            console.log("err",err)
+
+                            console.log("err", err)
                             ElNotification({
                                 title: 'New Model Failed!',
                                 message: 'check your inputs!',
@@ -1071,6 +1141,67 @@ const confirmNewModel = async () => {
                 }
                 break;
             case 'LLM':
+
+                if (LLMModellingForm.apikey == '' || LLMModellingForm.semantics == '' || LLMModellingForm.semanticsType == '' || LLMModellingForm.LLMmodel == '') {
+                    ElNotification({
+                        title: 'New LLM Model Error!',
+                        message: 'some of your Inputs are empty!',
+                        type: 'error',
+                    })
+
+                }
+                else {
+
+                    const NewModelRes = await request({
+                        url: '/tools/models/NewModel',
+                        method: 'POST',
+                        data: {
+                            projectID: dialogformNewModel.projectID,
+                            modelname: dialogformNewModel.modelname,
+                            modeldescriptions: dialogformNewModel.modeldescriptions,
+                            modeltype: dialogformNewModel.modeltype,
+                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                            createdtime: dialogformNewModel.createdtime,
+
+                            strength: ModelConversionForm.strength,
+
+                            apikey: LLMModellingForm.apikey,
+                            semantics: LLMModellingForm.semantics,
+                            semanticsType: LLMModellingForm.semanticsType,
+                            LLMmodel: LLMModellingForm.LLMmodel,
+                            baseUrl: LLMModellingForm.baseUrl,
+                        }
+                    })
+                    if (NewModelRes.NewStatus == 'success!') {
+                        ElNotification({
+                            title: 'New LLM Model Success!',
+                            type: 'success',
+                        })
+                        dialogFormVisibleNew.value = false
+                        ReloadModels()
+                        currentModel.currentModel.modelid = route.query.modelid
+                        currentModel.currentModel.modelname = dialogformNewModel.modelname
+                        currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
+                        currentModel.currentModel.strength = ''
+                        currentModel.currentModel.paramsvalues = ''
+                        currentModel.currentModel.cons = ''
+                        currentModel.currentModel.lastupdatedtime = currentDate
+
+                        llmFormStore.llmForm = LLMModellingForm
+
+
+                    }
+                    else {
+                        ElNotification({
+                            title: 'New LLM Model Failed!',
+                            type: 'error',
+                        })
+                    }
+
+
+              
+                }
+
                 break;
 
 

@@ -71,11 +71,11 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
-
+import pinia from '../store/store';
 const router = useRouter();
-const PaperInfoStore = usePaperInfoStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
 
-const VenueStore = useVenueStore()
+const VenueStore = useVenueStore(pinia)
 const itemsPerRow = ref(6);
 const itemsPerRowBook = ref(2);
 const itemsPerRowPhd = ref(2);
@@ -200,7 +200,6 @@ const searchByVenues = (venue) => {
 }
 
 onMounted(() => {
-  // console.log(InstitutionStore.InstitutionArray.length)
 })
 </script>
 

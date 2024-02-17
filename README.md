@@ -1,3 +1,8 @@
+2-18更新：
+
+- 工具系统的LLM建模部分完成。
+- https://github.com/orgs/GIST-NJU/projects/5/views/2?pane=issue&itemId=53079804 除new change外完成。
+
 2-14更新：
 
 1. 上传了新的数据库`cithub.sql`文件（2024-2-14），已整合老师添加的两个表`repository_list`和`repository_scholar`

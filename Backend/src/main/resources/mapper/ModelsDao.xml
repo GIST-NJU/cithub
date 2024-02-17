@@ -15,6 +15,11 @@
         <result property="projectid" column="projectid"/>
         <result property="createdtime" column="createdtime"/>
         <result property="lastupdatedtime" column="lastupdatedtime"/>
+        <result property="baseurl" column="baseurl"/>
+        <result property="llmmodel" column="llmmodel"/>
+        <result property="semantics" column="semantics"/>
+        <result property="semanticstype" column="semanticstype"/>
+        <result property="apikey" column="apikey"/>
     </resultMap>
 
 

@@ -48,4 +48,10 @@ public class ModelsEntity implements Serializable {
 
 	private Date lastupdatedtime;
 
+	private String apikey;
+	private String semanticstype;
+	private String semantics;
+	private String llmmodel;
+	private String baseurl;
+
 }

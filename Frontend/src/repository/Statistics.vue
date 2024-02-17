@@ -98,8 +98,9 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
+import pinia from '../store/store';
 const router = useRouter();
-const PaperInfoStore = usePaperInfoStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
 
 // 1. number of publication
 const ChartNumber = ref()

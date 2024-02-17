@@ -3,7 +3,7 @@
   <tr>
     <!-- TODO: Add index number of each paper -->
     <td class="align-top">
-      <p class="ps-3">1</p>
+      <p class="ps-3">{{ props.index+1}}</p>
     </td>
     <td>
       <div class="d-flex ps-2">
@@ -16,23 +16,30 @@
         </div>
       </div>
       <div class="align-bottom text-end">
-        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-          aria-controls="collapseExample">
-          1
-        </a>
-        <span @click="BibTexFlag = !BibTexFlag">BibTex </span>
+
+
+        <span class="btn btn-success" data-bs-toggle="collapse" :href="'#Bibtex' + props.item.id" role="button"
+          aria-expanded="false" :aria-controls="'Bibtex' + props.item.id">BibTex </span>
+
+        <span style="margin-left: 3px;" class="btn btn-primary" data-bs-toggle="collapse" :href="'#Abstract' + props.item.id" role="button"
+          aria-expanded="false" :aria-controls="'Abstract' + props.item.id"> Abstract</span>
+
+        <span style="margin-left: 3px;" class="btn btn-info" data-bs-toggle="collapse" :href="'#doi' + props.item.id" role="button"
+          aria-expanded="false" :aria-controls="'doi' + props.item.id">doi </span>
+        <!-- <span @click="BibTexFlag = !BibTexFlag">BibTex </span>
         <span @click="AbsFlag = !AbsFlag"> | Abstract | </span>
-        <span @click="doiFlag = !doiFlag"> DOI&nbsp;&nbsp;&nbsp;&nbsp; </span>
+        <span @click="doiFlag = !doiFlag"> DOI&nbsp;&nbsp;&nbsp;&nbsp; </span> -->
+
       </div>
     </td>
   </tr>
 
 
 
-  <tr class="collapse" id="collapseExample">
+  <tr class="collapse" :id="'Bibtex' + props.item.id" >
     <td colspan="2">
-      <div  style="width: 100%; margin-bottom: 3px; margin-left: 8px;">
-        <div class="bibtex" >
+      <div style="width: 100%; margin-bottom: 3px; margin-left: 8px;">
+        <div class="bibtex">
           <div>{{ '@' + props.item.type + '{' + props.item.author + ':' + props.item.year + '.' + props.item.id + ',\n' }}
           </div>
           <div>{{ ' author={' + props.item.author + '},\n' }}</div>
@@ -52,36 +59,30 @@
     </td>
   </tr>
 
-
-
-
-
-  <tr>
+  <tr class="collapse" :id="'Abstract' + props.item.id">
     <td colspan="2">
-      <div v-auto-animate style="margin-bottom: 3px;">
-        <div class="bibtex" v-if="AbsFlag">
-          {{ item.paperabstract }}
-        </div>
+      <div class="bibtex">
+        {{ item.paperabstract }}
       </div>
     </td>
   </tr>
 
-  <tr>
+  <tr class="collapse" :id="'doi' + props.item.id">
     <td colspan="2">
-      <div v-auto-animate style="margin-bottom: 3px;">
-        <div class="bibtex" v-if="doiFlag">
-          <div>{{ item.doi }}</div>
-
-        </div>
+      <div class="bibtex">
+        <div>{{ item.doi }}</div>
       </div>
     </td>
   </tr>
+
+  
 </template>
 
 <script setup>
 import { defineProps, reactive, ref } from 'vue'
 const props = defineProps({
   item: Object,
+  index: Number,
 })
 
 let BibTexFlag = ref(false)
