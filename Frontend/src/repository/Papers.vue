@@ -12,7 +12,6 @@
             <div class="card-header pb-0">
               <h3>Complete Paper List</h3>
               <p class="text-muted mb-0"><span class="badge bg-success">{{ PaperInfoStore.total }}</span> papers found</p>
-
             </div>
 
             <div class="card-body ps-1">
@@ -29,6 +28,7 @@
           </div>
         </div>
       </div>
+
       <div style="width:100%;height: 100%;"
         v-if="PaperInfoStore.paperinfos.length == 0 && paginationObj.searchkeywords != ''">
         <el-result style="width:100%;height: 100%;" icon="warning" :title="'No Papers Found.'"
@@ -59,7 +59,8 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import { Search } from '@element-plus/icons-vue'
 import { ElLoading } from 'element-plus'
-import Paper from './components/Paper.vue';
+import Paper from './components/PaperElement.vue';
+import PaperInfo from './components/PaperInformation.vue';
 import SideNav from './components/SideNav.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import Foot from '../ComponentCommon/Foot.vue';
