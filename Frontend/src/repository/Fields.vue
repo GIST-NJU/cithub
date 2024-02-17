@@ -6,88 +6,46 @@
 
     <div class="container-fluid py-4">
       <div class="row">
+        <!-- Research Fields -->
         <div class="col-12">
-          <div class="card mb-4" style="height:100%">
-            <h3 style="margin: 20px 0px 0px 40px;">Research Topics</h3>
+          <div class="card mb-4">
             <div class="card-header pb-0">
-              <div style="display:flex;flex-direction: row;;">
-                <div v-for="(category, index) in CategoryArray_1" class="category"
-                  @click=selectCategory(category.category)>
-                  <el-card class="box-card" style="height: 100%;">
-                    <template #header>
-                      <div class="card-header" style="padding: 10px 0px 0px 10px;">
-                        <h5>{{ category.category }}</h5>
-                      </div>
-                    </template>
-                    <div class="categoryDes">{{ category.des }}
-                    </div>
-                  </el-card>
-                </div>
-              </div>
-              <div style="display:flex;flex-direction: row;;">
-                <div v-for="(category, index) in CategoryArray_2" class="category"
-                  @click=selectCategory(category.category)>
-                  <el-card class="box-card" style="height: 100%;">
-                    <template #header>
-                      <div class="card-header" style="padding: 10px 0px 0px 10px;">
-                        <h5>{{ category.category }}</h5>
-                      </div>
-                    </template>
-                    <div class="categoryDes">{{ category.des }}
-                    </div>
-                  </el-card>
-                </div>
-              </div>
-
-              <div style="display:flex;flex-direction: row;;">
-                <div v-for="(category, index) in CategoryArray_3" class="category"
-                  @click=selectCategory(category.category)>
-                  <el-card class="box-card" style="height: 100%;">
-                    <template #header>
-                      <div class="card-header" style="padding: 10px 0px 0px 10px;">
-                        <h5>{{ category.category }}</h5>
-                      </div>
-                    </template>
-                    <div class="categoryDes">{{ category.des }}
-                    </div>
-                  </el-card>
-                </div>
-
-
-                <div class="category">
-
-                </div>
-
-
-                <div class="category">
-
-                </div>
-              </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              <h3>Research Fields</h3>
+              <p class="text-muted">Each paper is classified into one of the following research fileds, according to its primary contribution.</p>
             </div>
-
-
-            <div style="height: 500px;"></div>
+            <div class="card-body">
+              <div class="row">
+                <div v-for="(each, index) in FiledsInfo" class="col-lg-3 col-sm-6 col-xs-12 card-fields">
+                  <div class="card mb-4">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ each.name }}</h5>
+                      <p class="card-text">{{ each.description }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
+        
+        <!-- Topics -->
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h3>Topics</h3>
+              <p class="text-muted">Each paper is assgined a number of tags that are relevant to its research topics.
+              </p>
+            </div>
+            <div class="card-body">
+              <dl class="row">
+                <dt class="col-sm-1">Topics 1</dt>
+                <dd class="col-sm-11">Description ...</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div> <!-- end row -->
       <Foot></Foot>
-
     </div>
   </main>
 </template>
@@ -103,25 +61,37 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
+import { useModuleStore } from '../store/module';
 const router = useRouter();
+const moduleStore = useModuleStore()
 const PaperInfoStore = usePaperInfoStore()
 
-const CategoryArray_1 = reactive([
-  { "category": "Model", "des": "Studies on identifying parameters, values, and the interrelations of parameters of software under test. It is the fundamental activity of combinatorial testing." },
-  { "category": "Generation", "des": "Studies on generating as small test suites as possible. It is the most popular field in combinatorial testing. The many proposed techniques consist of mathematical methods, greedy methods, and search based methods." },
-  { "category": "Optimization", "des": "Studies on improving the test suite by prioritization, minimization and selection techniques." },
 
-])
-const CategoryArray_2 = reactive([
-
-  { "category": "Fault Diagnosis", "des": "Studies on locating the concrete failure causing interactions." },
-  { "category": "Evaluation", "des": "Studies on measuring the effectiveness of CT and comparing CT with other testing methods." },
-  { "category": "Application", "des": "Studies on applying, improving, and popularizing CT and its procedures in real world." },
-
-])
-const CategoryArray_3 = reactive([
-
-  { "category": "Other", "des": "Studies that do not belong to any of the above categories." }
+const FiledsInfo = reactive([
+  { 
+    "name": "Model", 
+    "description": "Studies on identifying parameters, values, constraints, and potential interrelations of software system under test." 
+  },
+  { 
+    "name": "Generation", 
+    "description": "Studies on generating as small test suites as possible. Typicall methods include mathematical methods, greedy methods, and search based methods." 
+  },
+  { 
+    "name": "Optimization",
+    "description": "Studies on improving the test suite by prioritization, minimization and selection techniques." 
+  },
+  {
+    "name": "Fault Diagnosis", 
+    "description": "Studies on locating the concrete failure causing interactions." 
+  },
+  { 
+    "name": "Evaluation", 
+    "description": "Studies on measuring the effectiveness of CIT and comparing CIT with other testing methods."
+  },
+  { 
+    "name": "Application", 
+    "description": "Studies on applying, improving, and popularizing CT and its procedures in real world." 
+  }
 ])
 
 let searchObj = reactive({
@@ -154,44 +124,19 @@ const selectCategory = (category) => {
     query: {
       paginationActive: '关闭'
     }
-
   })
-
-
 }
 
+onMounted(async () => {
+  moduleStore.CurrentModule = 'Fields'
+})
 </script>
 
 
 
 <style scoped>
-.col span {
-  transition: font-size 0.3s ease;
-  /* 添加过渡效果 */
-}
-
-.col:hover span {
-  font-size: calc(15px + 5px);
-  /* 这里使用 calc 计算新的 font-size，16px 为默认值 */
-  cursor: pointer;
-  color: rgb(94, 114, 228);
-  text-decoration: underline;
-}
-
-.category {
-  flex: 1;
-  margin: 10px;
-  transition: transform 0.3s ease;
-  /* 添加过渡效果 */
-}
-
-.category:hover {
-  transform: scale(1.1);
-  /* 划过时放大 */
+.card-fields:hover {
+  transform: scale(1.03);
   cursor: pointer;
 }
-
-
-.categoryDes {
-  font-size: larger;
-}</style>
+</style>

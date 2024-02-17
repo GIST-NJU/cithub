@@ -102,7 +102,7 @@
         <div class="col-lg-8 mb-lg-0 mb-4">
           <div class="card z-index-2 h-100">
             <div class="card-header pt-3 bg-transparent">
-              <h5>Cumulative Nunmber of Publications</h5>
+              <h5>Cumulative Number of Publications</h5>
               <p class="text-muted">From 1985 to 2024</p>
             </div>
             <div class="card-body">
@@ -315,7 +315,7 @@ let echartsOptions = reactive({
     axisLabel: {
       showMaxLabel: true,
       interval: 0,
-      rotate: 50,
+      rotate: 45,
     }
   },
   yAxis: {

@@ -112,7 +112,6 @@ let echartsOptions_NUMBER_OF_PUBLICATION = reactive({
                 show: true,
                 fontSize: 14,
                 position: 'outside',
-
             },
             lineStyle: {
                 color: '#f53636' // 设置折线图的颜色
@@ -122,7 +121,6 @@ let echartsOptions_NUMBER_OF_PUBLICATION = reactive({
             data: [],
             type: 'bar',
             itemStyle: { color: '#2dce89' }
-
         }
     ],
     tooltip: { // 设置触发方式为 item，即在数据项上触发
