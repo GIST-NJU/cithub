@@ -1,3 +1,11 @@
+const systemContent = () => `
+Input space modeling is an research area of Combinatorial Testing and you are an expert in input space modeling of Combinatorial Testing and can help me to identify the parameters and all their possible values and all possible constraints.
+Followings are the definitions of parameters, values and constraints:
+parameters: parameters are the factors like user inputs/attributes/conditions/choices/button and etc in the corpus I give you that may influence its behavior.
+values: values are the possible settings/states/inputs/options that a parameter can take. Each parameter has a set of values.
+constraints: constraints are restrictions or limitations on the values that certain parameters can take or on the combinations of values for multiple parameters.
+`
+
 const prompt_P = (semanticsType, semantics) => `
   Let's identify parameters.
   Your task is to perform the following steps to identify parameters:
@@ -110,9 +118,9 @@ const prompt_V_Enumerated_Boundary = (semanticsType, param) => `
 Now you know the parameter \`${param}\` is identified from the previous ${semanticsType} and the value type of \`${param}\` is Enumerated.
 However not all the values of \`${param}\` are explicitly specified in it.
 Your task is based on all the information known so far to determine if the value domain of \`${param}\` has any explicit boundaries or not.
-'''
+`
 
-prompt_V_ConvertToJson_Enumerated_Boundary = '''
+const prompt_V_ConvertToJson_Enumerated_Boundary=(param) =>`
 Answer yes if there are any explicit boundaries in the value domain of \`${param}\`.
 Answer No if there are not any explicit boundaries in the value domain of \`${param}\`.
 
@@ -120,7 +128,7 @@ Convert your answer to the following JSON format:
 
 {
   {
-      "answer": "simply answer Yes/No",
+    "answer": "simply answer Yes/No",
     "reasons": "the reasons for giving this answer"
   }
 }
@@ -304,7 +312,7 @@ Step-2:For each constraint, identify which parameter and parameter values are in
 const prompt_Cons_3 = () => `Step-3:For each constraint give reasons why you determine it is a constraint.`
 
 
-const prompt_Cons_4_ConvertToJson =()=> `
+const prompt_Cons_4_ConvertToJson = () => `
 
 Convert your response to the following JSON format:
 [
@@ -340,29 +348,31 @@ Convert your response to the following JSON format:
 `
 
 
-export { 
-prompt_Cons_4_ConvertToJson,
-prompt_Cons_3, 
-prompt_Cons_2, 
-prompt_Cons_1_Answer, 
-prompt_Cons_1, 
-prompt_V_ConvertToJson_UserInput_NoBoundary, 
-prompt_V_UserInput_NoBoundary, 
-prompt_V_ConvertToJson_UserInput_YesBoundary, 
-prompt_V_UserInput_YesBoundary, 
-prompt_V_ConvertToJson_UserInput_Boundary, 
-prompt_V_UserInput_Boundary, 
-prompt_V_ConvertToJson_Enumerated_NoBoundary,
- prompt_V_Enumerated_NoBoundary, 
- prompt_V_ConvertToJson_Enumerated_YesBoundary, 
- prompt_V_Enumerated_YesBoundary, 
- prompt_V_Enumerated_Boundary, 
- prompt_P, 
- prompt_P_ConvertToJson, 
- prompt_P_ValueType, 
- prompt_P_ValueType_ConvertToJson, 
- prompt_V_Enumerated_Specified, 
- prompt_V_ConvertToJson_Enumerated, 
- prompt_V_Enumerated_ListAllSpecifyValues,
- prompt_V_ConvertToJson_Enumerated_ListAllSpecifyValues
+export {
+  prompt_V_ConvertToJson_Enumerated_Boundary,
+  systemContent,
+  prompt_Cons_4_ConvertToJson,
+  prompt_Cons_3,
+  prompt_Cons_2,
+  prompt_Cons_1_Answer,
+  prompt_Cons_1,
+  prompt_V_ConvertToJson_UserInput_NoBoundary,
+  prompt_V_UserInput_NoBoundary,
+  prompt_V_ConvertToJson_UserInput_YesBoundary,
+  prompt_V_UserInput_YesBoundary,
+  prompt_V_ConvertToJson_UserInput_Boundary,
+  prompt_V_UserInput_Boundary,
+  prompt_V_ConvertToJson_Enumerated_NoBoundary,
+  prompt_V_Enumerated_NoBoundary,
+  prompt_V_ConvertToJson_Enumerated_YesBoundary,
+  prompt_V_Enumerated_YesBoundary,
+  prompt_V_Enumerated_Boundary,
+  prompt_P,
+  prompt_P_ConvertToJson,
+  prompt_P_ValueType,
+  prompt_P_ValueType_ConvertToJson,
+  prompt_V_Enumerated_Specified,
+  prompt_V_ConvertToJson_Enumerated,
+  prompt_V_Enumerated_ListAllSpecifyValues,
+  prompt_V_ConvertToJson_Enumerated_ListAllSpecifyValues
 };
