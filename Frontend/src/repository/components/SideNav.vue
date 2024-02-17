@@ -50,7 +50,7 @@
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-danger text-lg opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1 p">Research Topics</span>
+            <span class="nav-link-text ms-1 p">Topics</span>
           </a>
         </li>
         <li class="nav-item" @click="jumpToVenues" style=" cursor:pointer;">
@@ -61,7 +61,7 @@
 
               <i class="ni ni-building text-info text-lg opacity-10" aria-hidden="true"></i>
             </div>
-            <span class="nav-link-text ms-1 p">Publication Venues</span>
+            <span class="nav-link-text ms-1 p">Venues</span>
           </a>
         </li>
 
