@@ -58,6 +58,7 @@ import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts'
 import "echarts/map/js/world.js";
 import { useAuthorStore } from '../store/authorStore';
+import lineStyle from "echarts/src/model/mixin/lineStyle";
 const router = useRouter();
 const route = useRoute()
 const PaperInfoStore = usePaperInfoStore()
@@ -114,7 +115,7 @@ let echartsOptions_NUMBER_OF_PUBLICATION = reactive({
 
             },
             lineStyle: {
-                color: '#f5365c' // 设置折线图的颜色
+                color: '#f53636' // 设置折线图的颜色
             },
         },
         {
@@ -166,7 +167,7 @@ let echartsOptions_DISTRIBUTION_OF_FIELD = reactive({
                 itemStyle: {
                     shadowBlur: 10,
                     shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    shadowColor: 'rgba(21,57,199,0.5)'
                 }
             }
         }
@@ -208,6 +209,100 @@ let echartsOptions_SCHOLAR_IN_THE_WORLD = reactive(
     }
 )
 
+
+
+//4
+let echartsOptions_FIELD_COUNT_EACH_YEAR = reactive({
+  xAxis: {
+    type: 'category',
+    data: [],
+    name: 'Year',
+    axisLabel: {
+      showMaxLabel: true,
+      interval: 0,
+      rotate: 90,
+      fontSize: 14
+    },
+    nameTextStyle: {
+      fontSize: 14
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Num of Papers',
+    fontSize: 14,
+    nameTextStyle: {
+      fontSize: 14
+    },
+    interval: 5
+  },
+  legend: {
+    orient: 'vertical',
+    right: 'right',
+    textStyle: {
+      fontSize: 14 // 添加字体大小配置
+    }
+  },
+  series: [],  // We will dynamically populate this array based on the response data
+  tooltip: {
+    trigger: 'item',
+    formatter: function (params) {
+      return "Paper of " + params.name + " : " + params.value;
+    },
+    axisPointer: { type: 'cross' }
+  }
+});
+
+//5
+let echartsOptions_TOP_INSTITUTIONS = reactive({
+    xAxis: {
+  type: 'category',
+      data: [],
+      name: 'Institution',
+      axisLabel: {
+    showMaxLabel: true,
+        interval: 0,
+        rotate: 0,
+        fontSize: 10,
+        formatter: function (value) {
+          const chunkSize = 18;
+          const chunks = value.match(new RegExp('.{1,' + chunkSize + '}', 'g'));
+          return chunks.join('\n');
+        },
+  },
+  nameTextStyle: {
+    fontSize: 14,
+  },
+},
+yAxis: {
+  type: 'value',
+      name: 'Num of Papers',
+      fontSize: 14,
+      nameTextStyle: {
+    fontSize: 14,
+  },
+  interval: 5,
+},
+legend: {
+  orient: 'vertical',
+      right: 'right',
+      textStyle: {
+    fontSize: 14,
+  },
+},
+series: [],  // We will dynamically populate this array based on the response data
+    tooltip: {
+  trigger: 'item',
+      formatter: function (params) {
+    return "Paper of " + params.name + " : " + params.value;
+  },
+  axisPointer: { type: 'cross' },
+},
+}
+);
+
+
+
 const initChart_NUMBER_OF_PUBLICATION = () => {
     // 对于每一个年份，统计该年份内有多少篇papers，作为series的data
     request({
@@ -241,7 +336,7 @@ const initChart_NUMBER_OF_PUBLICATION = () => {
     }).catch(() => { })
 }
 const ListByYear = (param) => {
-    console.log("ListByYear")
+    // console.log("ListByYear")
     PaperInfoStore.paperinfos.length = 0
     PaperInfoStore.searchKeyWords = param.name
     // console.log(param)
@@ -284,17 +379,21 @@ const resizeChart = () => {
     );
 }
 
-const initChart_DISTRIBUTION_OF_FIELD = () => {
-    console.log("选择了initChart_DISTRIBUTION_OF_FIELD")
-    request({
-        url: '/repo/list/countField',
+const initChart_DISTRIBUTION_OF_FIELD =  () => {
+
+  //
+  //   console.log("选择了initChart_DISTRIBUTION_OF_FIELD")
+  //   console.log("PaperInfoStore.TypeofPapers",PaperInfoStore.TypeofPapers)
+
+     request({
+        url: "repo/list/countField",
         method: 'POST',
         data: {
             info: PaperInfoStore.TypeofPapers
         }
 
     }).then((res) => {
-        console.log("countField", res)
+    //    console.log(res)
         let tempCatgory = []
         let tempdata = []
         for (var i = 0; i < res.countEachField.length; i++) {
@@ -314,13 +413,15 @@ const initChart_DISTRIBUTION_OF_FIELD = () => {
         myChart.setOption(echartsOptions_DISTRIBUTION_OF_FIELD)
         myChart.on('click', ListByResearchArea)
 
+    }).catch((err)=>{
+      console.log("err",err)
     })
 
 }
 
 const ListByResearchArea = (param) => {
     // console.log("listByResearchArea", param.data.name)
-
+    //
     // console.log(param)
     PaperInfoStore.paperinfos.length = 0
     PaperInfoStore.searchKeyWords = param.data.name
@@ -434,7 +535,7 @@ const ListByRadio = () => {
             }
         }).then((res) => {
 
-            console.log("列出该国家的papers", res)
+            // console.log("列出该国家的papers", res)
             PaperInfoStore.paperinfos.length = 0
             PaperInfoStore.paperinfos.push(...res.ListPapersByCountryResult)
             // 这里的数据是对的，地图上的数据是错误的
@@ -449,7 +550,116 @@ const ListByRadio = () => {
         }).catch(() => { })
     }
 }
-onMounted(() => {
+
+const initChart_FIELD_COUNT_EACH_YEAR = () => {
+  request({
+    url: "/repo/list/countFieldEachYear",
+    method: 'POST',
+    data: {
+      info: PaperInfoStore.TypeofPapers
+    }
+  }).then((res) => {
+    // console.log(res.countFieldEachYear);
+
+    // 获取年份和领域
+    let years = Array.from(new Set(res.countFieldEachYear.map(item => item.year)));
+    let fields = Array.from(new Set(res.countFieldEachYear.map(item => item.field)));
+
+    // 创建一个新的数组来存储处理后的数据
+    let processedData = [];
+
+    // 遍历每个领域和年份
+    fields.forEach(field => {
+      years.forEach(year => {
+        // 检查数据中是否包含当前领域和年份的记录
+        let record = res.countFieldEachYear.find(item => item.field === field && item.year === year);
+        // 如果记录不存在，则插入一个值为零的数据点
+        if (!record) {
+          if(field!=="application"){
+            processedData.push({
+              field: field,
+              year: year,
+              RecordCount: 0.001
+            });
+          }
+        } else {
+          // 否则，将原始记录插入新数组
+          processedData.push(record);
+        }
+      });
+    });
+
+    // 输出处理后的数据
+    // console.log(processedData);
+
+    // 使用处理后的数据设置图表
+    let categories = Array.from(new Set(processedData.map(item => item.year)));
+    echartsOptions_FIELD_COUNT_EACH_YEAR.xAxis.data = categories;
+
+    let seriesData = [];
+    fields.forEach(field => {
+      let fieldData = processedData
+          .filter(item => item.field === field && item.year <= 2023)
+          .map(item => item.RecordCount || item.RecordCount === 0 ? item.RecordCount : null);
+
+      seriesData.push({
+        name: field,
+        type: 'line',
+        data: fieldData,
+        lineStyle: {
+          width: 3 // 设置线段宽度，根据需要调整
+        },
+      });
+    });
+
+    echartsOptions_FIELD_COUNT_EACH_YEAR.series = seriesData;
+
+    let myChart = echarts.init(chart.value);
+    myChart.setOption(echartsOptions_FIELD_COUNT_EACH_YEAR);
+    myChart.on('click', ListByYear)
+    myChart.resize();
+  }).catch(() => { });
+};
+
+const initChart_TOP_INSTITUTIONS = () => {
+  // 请求数据
+  request({
+    url: "/repo/list/topInstitutions",
+    method: 'POST',
+    data: {
+      info: PaperInfoStore.TypeofPapers
+    }
+  }).then((res) => {
+    const topInstitutionsData = res.topInstitutions;
+
+    // 提取机构名称和论文数量
+    const institutionNames = topInstitutionsData.slice(1).map(item => item.institution);
+    const paperCounts = topInstitutionsData.slice(1).map(item => item.paperCount);
+
+    // 更新 ECharts 配置
+    echartsOptions_TOP_INSTITUTIONS.xAxis.data = institutionNames;
+    echartsOptions_TOP_INSTITUTIONS.series = [{
+      name: 'Num of Papers',
+      type: 'bar',
+      data: paperCounts,
+      barWidth: '50%',
+      itemStyle: {
+        color: 'rgba(54,79,245,0.74)',
+      },
+    }];
+
+    // 初始化图表
+    let myChart = echarts.init(chart.value);
+    myChart.setOption(echartsOptions_TOP_INSTITUTIONS);
+    myChart.resize();
+  }).catch(() => {
+    // 错误处理
+  });
+};
+
+
+
+    onMounted(() => {
 
     // console.log("进入ChartDisplay！！")
     // console.log("route.query.charts是",route.query.charts)
@@ -463,8 +673,13 @@ onMounted(() => {
     if (route.query.charts == "Distributions in the World") {
         initChart_SCHOLAR_IN_THE_WORLD()
     }
+    if (route.query.charts =="Relative Proportion of Field"){
+      initChart_FIELD_COUNT_EACH_YEAR()
+    }
+  if(route.query.charts =="Top Institutions"){
+    initChart_TOP_INSTITUTIONS()
+  }
     resizeChart()
-
 })
 
 
