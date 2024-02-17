@@ -13,13 +13,15 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <div class="card-header pb-0">
-                                <ArgonBadge type="lg" :class="{ 'borderGlow': !AbstractModelPreviewFlag }" variant="gradient"
-                                    color="primary" @click="AbstractModelPreviewFlag = !AbstractModelPreviewFlag"> Abstract
+                                <ArgonBadge type="lg" :class="{ 'borderGlow': !AbstractModelPreviewFlag }"
+                                    variant="gradient" color="primary"
+                                    @click="AbstractModelPreviewFlag = !AbstractModelPreviewFlag"> Abstract
                                     Model Prview
                                 </ArgonBadge>
 
-                                <ArgonBadge style="margin-left:10px" type="lg" :class="{ 'borderGlow': !CithubModelPreviewFlag }" variant="gradient"
-                                    color="info" @click="CithubModelPreviewFlag = !CithubModelPreviewFlag"> Cithub Model
+                                <ArgonBadge style="margin-left:10px" type="lg"
+                                    :class="{ 'borderGlow': !CithubModelPreviewFlag }" variant="gradient" color="info"
+                                    @click="CithubModelPreviewFlag = !CithubModelPreviewFlag"> Cithub Model
                                     Prview
                                 </ArgonBadge>
                             </div>
@@ -81,9 +83,11 @@ import { useCurrentProject } from '../store/currentProject';
 import { useCurrentModel } from '../store/currentModel'
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/testSuitesStore'
+import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
 const testSuitesStore = useTestSuitesStore()
 const currentModel = useCurrentModel()
-
+const currentTestSuite = useCurrentTestSuitesStore()
+const router = useRouter();
 const route = useRoute()
 const modelPreview = ref('')
 const maxValueDomain = ref(0)
@@ -158,7 +162,7 @@ const loadModel = () => {
     // 统计模型基本数据
 
     if (model.modelname) { modelObject.system = model.modelname }
-    
+
     modelObject.strength = model.strength
     modelObject.parameter = param_count
     modelObject.values = JSON.stringify(tempArray)
@@ -231,18 +235,37 @@ const AbstractModelConstraintsPreview = ref('')
 const CithubModelPreviewFlag = ref(true)
 
 onMounted(() => {
+console.log("TestSuitesHome","currentModel.currentModel.modelid",currentModel.currentModel.modelid) 
+    if (currentModel.currentModel.modelid) {
+        const parsedData = JSON.parse(currentModel.currentModel.paramsvalues)
+        // 移除 row_index 属性
+        const tableDataTmp = parsedData.map(item => {
+            const { row_index, ...rest } = item;
+            return rest;
+        });
+        AbstractModelParamsValuesPreview.value = JSON.stringify(tableDataTmp, null, 6)
+        AbstractModelConstraintsPreview.value = JSON.stringify(JSON.parse(currentModel.currentModel.cons), null, 6)
+        // 加载模型到预览区域
+        listModelInfoByModelID()
+        // 加载所有ca
 
-    const parsedData = JSON.parse(currentModel.currentModel.paramsvalues)
-    // 移除 row_index 属性
-    const tableDataTmp = parsedData.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
-    AbstractModelParamsValuesPreview.value = JSON.stringify(tableDataTmp, null, 6)
-    AbstractModelConstraintsPreview.value = JSON.stringify(JSON.parse(currentModel.currentModel.cons), null, 6)
-    // 加载模型到预览区域
-    listModelInfoByModelID()
-    // 加载所有ca
+
+        ElNotification({
+            title: 'Choose a TestSuite',
+            message: 'Please choose a TestSuite to continue.',
+            type: 'success',
+        })
+    }
+    else {
+
+        ElNotification({
+            title: 'Need to Choose a Model first',
+            message: 'Please choose a Model to continue.',
+            type: 'error',
+        })
+        router.push({ name: 'modelsHome' })
+    }
+
 })
 </script>
 

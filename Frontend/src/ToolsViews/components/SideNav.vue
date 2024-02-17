@@ -46,7 +46,7 @@
                         <span class="nav-link-text ms-1 p">Models</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToTestSuitesGeneration" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToTestSuitesHome" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
                         @mouseout="handleMouseOutScholars">
                         <div
@@ -56,7 +56,7 @@
                         <span class="nav-link-text ms-1 p">Generation</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToInstitutions" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
                         @mouseout="handleMouseOutInstitutions">
                         <div
@@ -67,7 +67,7 @@
                         <span class="nav-link-text ms-1 p">Evaluation</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToVenue" style=" cursor:pointer;">
+                <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveVenue ? 'active' : '']" @mouseover="handleMouseOverVenue"
                         @mouseout="handleMouseOutVenue">
                         <div
@@ -79,8 +79,8 @@
                     </a>
                 </li>
 
-                <li class="nav-item" @click="jumpToCharts" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveVenue ? 'active' : '']" @mouseover="handleMouseOverCharts"
+                <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
+                    <a :class="['nav-link', isActiveCharts ? 'active' : '']" @mouseover="handleMouseOverCharts"
                         @mouseout="handleMouseOutCharts">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -91,15 +91,6 @@
                     </a>
                 </li>
 
-                <!-- <li class="nav-item">
-                    <a class="nav-link " href="../repository/rank.html">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-diamond text-primary text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Rank</span>
-                    </a>
-                </li> -->
             </ul>
         </div>
     </aside>
@@ -110,12 +101,13 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentProject } from '../../store/currentProject';
+import { useCurrentTestSuitesStore } from '../../store/currentTestSuite';
 import { ElNotification } from 'element-plus'
 
 const router = useRouter();
 const currentProjectStore = useCurrentProject()
 const currentModel = useCurrentModel()
-
+const currentTestSuite = useCurrentTestSuitesStore()
 const isActiveHome = ref(false)
 const isActivePapers = ref(false)
 const isActiveScholars = ref(false)
@@ -135,7 +127,6 @@ const jumpToProjects = () => {
 
 }
 const jumpToModels = () => {
-    console.log("currentProjectStore.projectid", currentProjectStore.projectid)
     if (currentProjectStore.projectid) {
         router.push({ name: 'modelsHome' })
     }
@@ -152,7 +143,8 @@ const jumpToModels = () => {
     }
 
 }
-const jumpToTestSuitesGeneration = () => {
+
+const jumpToTestSuitesHome = () => {
     if (currentModel.currentModel.modelid) {
         router.push({
             path: '/tools/TestSuitesHome',
@@ -170,9 +162,33 @@ const jumpToTestSuitesGeneration = () => {
         router.push({ name: 'modelsHome' })
     }
 
-
+}
+const jumpToTestSuitesDetails = () => {
+    console.log("currentTestSuite.currentTestSuites.testsuitesid", currentTestSuite.currentTestSuites.testsuitesid)
+    if (currentTestSuite.currentTestSuites.testsuitesid) {
+        router.push({
+            path: '/tools/TestSuiteDetails',
+            query: {
+                TestSuiteID: currentTestSuite.currentTestSuites.testsuitesid
+            }
+        })
+    }
+    else {
+        ElNotification({
+            title: 'Need to Choose a TestSuite first',
+            message: 'Please choose a TestSuite to continue.',
+            type: 'error',
+        })
+        router.push({
+            path: '/tools/TestSuitesHome',
+            query:
+                { modelid: currentModel.currentModel.modelid }
+        })
+    }
 
 }
+
+
 
 const jumpToCategory = () => {
     router.push({ name: 'Category' })
@@ -206,8 +222,8 @@ const handleMouseOutCategory = () => { isActiveCategory.value = false }
 const handleMouseOverVenue = () => { isActiveVenue.value = true; }
 const handleMouseOutVenue = () => { isActiveVenue.value = false }
 
-const handleMouseOverCharts = () => { isActiveVenue.value = true; }
-const handleMouseOutCharts = () => { isActiveVenue.value = false }
+const handleMouseOverCharts = () => { isActiveCharts.value = true; }
+const handleMouseOutCharts = () => { isActiveCharts.value = false }
 </script>
 
 

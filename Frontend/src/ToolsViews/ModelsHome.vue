@@ -431,7 +431,7 @@ const listAllModelsByProjectID = async () => {
             ElNotification({
                 title: 'Choose a Model',
                 message: 'Please choose a model to continue.',
-                type: 'info',
+                type: 'success',
             })
 
         } catch (error) {
