@@ -102,11 +102,10 @@
         <div class="col-lg-8 mb-lg-0 mb-4">
           <div class="card z-index-2 h-100">
             <div class="card-header pt-3 bg-transparent">
-              <h5>Cumulative Nunmber of Publications</h5>
+              <h5>Cumulative Number of Publications</h5>
               <p class="text-muted">From 1985 to 2024</p>
             </div>
             <div class="card-body">
-              <Bar id="my-chart-id" :options="chartOptions" :data="chartData"/>
               <!-- div 元素，用 ref 属性绑定了一个名为 main 的虚拟 DOM 引用，这个引用会在 <script> 中使用。 -->
               <div class="charts">
                 <div class="echarts" id="chart" ref="chart" style="height:340%; width:100%"></div>
@@ -313,7 +312,7 @@ let echartsOptions = reactive({
     axisLabel: {
       showMaxLabel: true,
       interval: 0,
-      rotate: 50,
+      rotate: 45,
     }
   },
   yAxis: {

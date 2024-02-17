@@ -9,7 +9,6 @@ import Repository_Scholars from '../repository/Scholars.vue'
 import Repository_Fields from '../repository/Fields.vue'
 import Repository_Venues from '../repository/Venues.vue'
 import Repository_Statistics from '../repository/Statistics.vue'
-import ChartsDisplay from '../repository/ChartsDisplay.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
@@ -79,13 +78,7 @@ const routes = [
         name: "Repository_Statistics",
         component: Repository_Statistics,
         meta: { title: 'Statistics' }
-      },
-      {
-        path: "ChartsDisplay",
-        name: "ChartsDisplay",
-        component: ChartsDisplay,
-        meta: { title: 'ChartsDisplay' }
-      },
+      }
     ]
   },
 
