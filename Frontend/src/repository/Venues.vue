@@ -200,6 +200,8 @@ const searchByVenues = (venue) => {
 }
 
 onMounted(() => {
+  // 获取所有Venue
+  listallVenue()
 })
 </script>
 

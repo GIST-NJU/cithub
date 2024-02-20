@@ -37,12 +37,30 @@ public class authorAndscholarController {
         return R.ok().put("authors", authorAndinstitutionService.list(queryWrapper));
     }
 
+    @RequestMapping(value = "/countTotalScholars", method = RequestMethod.POST)
+    public R countTotalScholars(@RequestBody Map<String, Object> pageinfo) {
+        String typeofPaper = (String) pageinfo.get("typerofPapers");
+        QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("DISTINCT authorname").eq("Projects", typeofPaper);
+        long total =authorAndinstitutionService.count(queryWrapper);
+        return R.ok().put("total",total);
+    }
+
     @RequestMapping(value="/listAllInstitutions",method = RequestMethod.POST)
     public R listAllInstitutions(@RequestBody Map<String, Object> map) {
         String project = map.get("obj").toString();
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("DISTINCT institution").eq("projects", project).isNotNull("institution");;
         return R.ok().put("Institutions", authorAndinstitutionService.list(queryWrapper));
+    }
+
+    @RequestMapping(value = "/countTotalInstitutions", method = RequestMethod.POST)
+    public R countTotalInstitutions(@RequestBody Map<String, Object> pageinfo) {
+        String typeofPaper = (String) pageinfo.get("typerofPapers");
+        QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("DISTINCT institution").eq("Projects", typeofPaper);
+        long total =authorAndinstitutionService.count(queryWrapper);
+        return R.ok().put("total",total);
     }
 
     @RequestMapping(value="/countEachCountry",method = RequestMethod.POST)

@@ -16,16 +16,17 @@
                         <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools
                             available now.</p>
                         <div class="row" style="margin:10px 0px 0px 20px">
-                            <div class="col-lg-3 col-md-6 col-12" >
-                                <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }" :value="'Generation'"
-                                    :percentage="toolsArrayGeneration.length + ' tools included '"
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }"
+                                    :value="'Generation'" :percentage="toolsArrayGeneration.length + ' tools included '"
                                     :iconClass="'ni ni-world'" :iconBackground="'bg-gradient-success'" directionReverse
                                     @click="showGenerationFlag = !showGenerationFlag">
                                 </CategoryCard>
                             </div>
 
-                            <div class="col-lg-5 col-md-6 col-12" >
-                                <CategoryCard class="category"  :class="{ 'borderGlow': showFormatConversionFlag }" :value="'FormatConversion'"
+                            <div class="col-lg-5 col-md-6 col-12">
+                                <CategoryCard class="category" :class="{ 'borderGlow': showFormatConversionFlag }"
+                                    :value="'FormatConversion'"
                                     :percentage="toolsArrayFormatConversion.length + ' tools included'"
                                     :iconClass="'ni ni-paper-diploma'" :iconBackground="'bg-gradient-danger'"
                                     directionReverse @click="showFormatConversionFlag = !showFormatConversionFlag">
@@ -33,21 +34,23 @@
                             </div>
 
                             <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :class="{ 'borderGlow': showEvaluationFlag }" :value="'Evaluation'"
-                                    :percentage="toolsArrayEvaluation.length + ' tools included'" :iconClass="'ni ni-cart'"
-                                    :iconBackground="'bg-gradient-info'" directionReverse
+                                <CategoryCard class="category" :class="{ 'borderGlow': showEvaluationFlag }"
+                                    :value="'Evaluation'" :percentage="toolsArrayEvaluation.length + ' tools included'"
+                                    :iconClass="'ni ni-cart'" :iconBackground="'bg-gradient-info'" directionReverse
                                     @click="showEvaluationFlag = !showEvaluationFlag">
                                 </CategoryCard>
                             </div>
                             <div class="col-lg-3 col-md-6 col-12">
-                                <CategoryCard class="category" :class="{ 'borderGlow': showPrioritisationFlag }" :value="'Prioritisation'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showPrioritisationFlag }"
+                                    :value="'Prioritisation'"
                                     :percentage="toolsArrayPrioritisation.length + ' tools included'"
                                     :iconClass="'ni ni-umbrella-13'" :iconBackground="'bg-gradient-warning'"
                                     directionReverse @click="showPrioritisationFlag = !showPrioritisationFlag">
                                 </CategoryCard>
                             </div>
                             <div class="col-lg-5 col-md-6 col-12">
-                                <CategoryCard class="category" :class="{ 'borderGlow': showSelectionReductionFlag }" :value="'SelectionReduction'"
+                                <CategoryCard class="category" :class="{ 'borderGlow': showSelectionReductionFlag }"
+                                    :value="'SelectionReduction'"
                                     :percentage="toolsArraySelectionReduction.length + ' tools included'"
                                     :iconClass="'ni ni-zoom-split-in'" :iconBackground="'bg-gradient-primary'"
                                     directionReverse @click="showSelectionReductionFlag = !showSelectionReductionFlag">
@@ -80,11 +83,12 @@
                                 :toolsArray="toolsArrayPrioritisation">
                             </ToolsInfoCard>
                             <!-- SelectionReduction -->
-                            <ToolsInfoCard v-if="showSelectionReductionFlag" :toolType="'SelectionReduction'" :color="'primary'"
-                                :toolsArray="toolsArraySelectionReduction">
+                            <ToolsInfoCard v-if="showSelectionReductionFlag" :toolType="'SelectionReduction'"
+                                :color="'primary'" :toolsArray="toolsArraySelectionReduction">
                             </ToolsInfoCard>
                             <!-- Other -->
-                            <ToolsInfoCard v-if="showOtherFlag" :toolType="'Other'" :color="'secondary'" :toolsArray="toolsArrayOther"> 
+                            <ToolsInfoCard v-if="showOtherFlag" :toolType="'Other'" :color="'secondary'"
+                                :toolsArray="toolsArrayOther">
                             </ToolsInfoCard>
 
                         </div>
@@ -126,13 +130,14 @@ import CategoryCard from './components/CategoryCard.vue'
 import toolsInfo from "../ComponentCommon/tools_info.json"
 import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
+import pinia from '../store/store';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { ElNotification } from 'element-plus'
 import { CheckLoginStatus, getUserInfoByToken } from '../common'
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const userStore = useUserStore()
+const userStore = useUserStore(pinia)
 
 
 
@@ -187,41 +192,44 @@ const handleDivClick = (index) => {
     selectedDivIndex.value = index;
 };
 onMounted(async () => {
-    // 先检查用户是否登录
-    let obj = await CheckLoginStatus()
-    if (obj.loginStatus) {
 
-        // 若用户已登录，则获取用户信息！
-        let userobj = await getUserInfoByToken(obj.token)
-        userStore.userID = userobj.userid
-        userStore.account = userobj.account
-        userStore.userToken = userobj.userToken
-        userStore.usertype = userobj.usertype
-        userStore.name = userobj.name
-        userStore.email = userobj.email
-        userStore.institution = userobj.institution
-        LoadToolsInfo()
-    }
-    else {
-        // 若用户未登录则跳转到登录页面
+    if (userStore.userID == '') {
+        // Tools的Home页面由于没有发送request请求，特殊处理一下
+        // userStore.userID初始化为空，只有登录之后才会被赋值
+        console.log("用户未登录！跳转到登录界面！")
+        ElNotification({
+            title: 'Please Sign in',
+            message: 'please Sign in for using cithub',
+            type: 'warning',
+            position: 'top-left',
+        })
         router.push(
             {
                 name: 'UserLogin'
             }
         )
     }
-    const addClickHandler = (ref, flag) => {
-        ref.value.addEventListener('click', () => {
-            flag.value = !flag.value;
-        });
-    };
+    else {  
+        console.log("用户已登录！")
+        // 加载工具信息
+        LoadToolsInfo()
 
-    addClickHandler(generationRef, showGenerationFlag);
-    addClickHandler(formatConversionRef, showFormatConversionFlag);
-    addClickHandler(EvaluationRef, showEvaluationFlag);
-    addClickHandler(PrioritisationRef, showPrioritisationFlag);    
-    addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
-    addClickHandler(OtherRef, showOtherFlag);
+        const addClickHandler = (ref, flag) => {
+            ref.value.addEventListener('click', () => {
+                flag.value = !flag.value;
+            });
+        };
+
+        addClickHandler(generationRef, showGenerationFlag);
+        addClickHandler(formatConversionRef, showFormatConversionFlag);
+        addClickHandler(EvaluationRef, showEvaluationFlag);
+        addClickHandler(PrioritisationRef, showPrioritisationFlag);
+        addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
+        addClickHandler(OtherRef, showOtherFlag);
+    }
+
+
+
 })
 
 

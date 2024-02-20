@@ -150,12 +150,13 @@ import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
+import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { useModelsStore } from '../store/modelsStore'
 import { useCurrentProject } from '../store/currentProject';
-import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
+import { useLLMmodellingStore } from '../store/LLMmodellingStore';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
 import ArgonInput from '../ComponentCommon/ArgonInput.vue';
@@ -198,8 +199,8 @@ import OpenAI from "openai";
 
 const route = useRoute()
 const router = useRouter()
-const currentModel = useCurrentModel()
-const llmFormStore = useLLMmodellingStore()
+const currentModel = useCurrentModel(pinia)
+const llmFormStore = useLLMmodellingStore(pinia)
 const model = reactive({})
 
 const ParamsAndValuesPreivew = ref('')

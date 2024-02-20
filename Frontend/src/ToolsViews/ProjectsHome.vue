@@ -49,7 +49,7 @@ import { request } from '../request';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
-
+import pinia from '../store/store'
 import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
@@ -59,12 +59,12 @@ import { CheckLoginStatus, getUserInfoByToken } from '../common'
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const userStore = useUserStore()
+const userStore = useUserStore(pinia)
 
 const modelLists = reactive([]);
 const CALists = reactive([]);
 const projectList = reactive([]);
-const projectsStore = useProjectsStore()
+const projectsStore = useProjectsStore(pinia)
 
 // testAPI通过userID查询该User下所有的projects
 // 又遍历每一个project，得到每一个project对应的多个models

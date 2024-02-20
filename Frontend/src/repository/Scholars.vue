@@ -105,14 +105,12 @@ let paginationObj = reactive({
   typerofPapers: "Combinatorial Testing",
 })
 onMounted(() => {
-  // 获取所有paper
-  listAllPapers(paginationObj)
-  // 获取所有scholars
-  listAllScholars()
-  // 获取所有institutions
-  listAllInstitutions()
-  // 获取所有Venue
-  listallVenue()
+
+    // 获取所有scholars
+    listAllScholars()
+
+
+
 })
 </script>
 

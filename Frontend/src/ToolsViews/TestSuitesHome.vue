@@ -75,6 +75,7 @@ import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import TestSuitesTable from './components/TestSuitesTable.vue'
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
@@ -84,9 +85,9 @@ import { useCurrentModel } from '../store/currentModel'
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
-const testSuitesStore = useTestSuitesStore()
-const currentModel = useCurrentModel()
-const currentTestSuite = useCurrentTestSuitesStore()
+const testSuitesStore = useTestSuitesStore(pinia)
+const currentModel = useCurrentModel(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const router = useRouter();
 const route = useRoute()
 const modelPreview = ref('')

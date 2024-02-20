@@ -62,9 +62,10 @@ import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
+import pinia from '../store/store'
 const router = useRouter();
-const moduleStore = useModuleStore()
-const PaperInfoStore = usePaperInfoStore()
+const moduleStore = useModuleStore(pinia)
+const PaperInfoStore = usePaperInfoStore(pinia)
 
 
 const FiledsInfo = reactive([

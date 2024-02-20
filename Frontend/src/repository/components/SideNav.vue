@@ -104,11 +104,13 @@ const isActiveVenues = ref(false)
 const isActiveStatistics = ref(false)
 
 const jumpToHome = () => {
-  router.push({ name: 'Repository_Home' })
+  router.push({
+    name: 'Repository_Home',
+  })
 }
 
 const jumpToPapers = () => {
-  router.push({ name: 'Repository_Papers' })
+  router.push({ path: '/repository/papers' })
 }
 
 const jumpToScholars = () => {

@@ -2,6 +2,7 @@ package com.gist.cithub.backend.Repo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gist.cithub.backend.Tools.entity.ModelsEntity;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
 import com.gist.cithub.backend.Repo.service.ListService;
@@ -44,7 +45,7 @@ public class ListController {
         return R.ok().put("res", res);
     }
 
-//    @Operation(summary = "列出所有文献")
+    //    @Operation(summary = "列出所有文献")
     @RequestMapping(value = "/listAllpapers", method = RequestMethod.POST)
     public R listAllpapers(@RequestBody Map<String, Object> pageinfo) {
 /*
@@ -62,12 +63,26 @@ pagesize每页有几项
 
     }
 
+    @RequestMapping(value = "/countTotalPapers", method = RequestMethod.POST)
+    public R CountPaperTotal(@RequestBody Map<String, Object> pageinfo) {
+        String typeofPaper = (String) pageinfo.get("typerofPapers");
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("Projects",typeofPaper);
+        long total =listService.count(queryWrapper);
+        return R.ok().put("total",total);
 
-//    @Operation(summary = "通过关键字分页搜索文献")
-//    @Operation(summary = "列出所有文献")
+    }
+
+
+
+
+
+
+    // @Operation(summary = "通过关键字分页搜索文献")
+
     @RequestMapping(value = "/searchPapers", method = RequestMethod.POST)
-    public R searchPapers( @RequestBody Map<String, Object> searchinfo) {
-//        System.out.println(searchinfo);
+    public R searchPapers(@RequestBody Map<String, Object> searchinfo) {
+        System.out.println(searchinfo);
         Integer pagenum = (Integer) searchinfo.get("pagenum");
         Integer pagesize = (Integer) searchinfo.get("pagesize");
         String searchkeywords = (String) searchinfo.get("searchkeywords");
@@ -76,9 +91,9 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
-//    @Operation(summary = "通过作者名字搜索文献")
+    //    @Operation(summary = "通过作者名字搜索文献")
     @RequestMapping(value = "/searchByAuthor", method = RequestMethod.POST)
-    public R searchByAuthor( @RequestBody Map<String, Object> searchInfo) {
+    public R searchByAuthor(@RequestBody Map<String, Object> searchInfo) {
 //        System.out.println("searchInfo是" + searchInfo);
         Integer pagenum = (Integer) searchInfo.get("pagenum");
         Integer pagesize = (Integer) searchInfo.get("pagesize");
@@ -88,9 +103,9 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
-//    @Operation(summary = "通过Insitutions搜索文献")
+    //    @Operation(summary = "通过Insitutions搜索文献")
     @RequestMapping(value = "/searchByInstitutions", method = RequestMethod.POST)
-    public R searchByInstitutions( @RequestBody Map<String, Object> searchInfo) {
+    public R searchByInstitutions(@RequestBody Map<String, Object> searchInfo) {
 //        System.out.println("searchInfo是" + searchInfo);
         Integer pagenum = (Integer) searchInfo.get("pagenum");
         Integer pagesize = (Integer) searchInfo.get("pagesize");
@@ -100,9 +115,9 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
-//    @Operation(summary = "通过Field搜索文献")
+    //    @Operation(summary = "通过Field搜索文献")
     @RequestMapping(value = "/searchByField", method = RequestMethod.POST)
-    public R searchByField( @RequestBody Map<String, Object> searchInfo) {
+    public R searchByField(@RequestBody Map<String, Object> searchInfo) {
 //        System.out.println("searchInfo是" + searchInfo);
         Integer pagenum = (Integer) searchInfo.get("pagenum");
         Integer pagesize = (Integer) searchInfo.get("pagesize");
@@ -165,9 +180,9 @@ pagesize每页有几项
 //        return R.ok().put("success", "success");
 //    }
 
-//    @Operation(summary = "通过xlsx文件上传文献")
+    //    @Operation(summary = "通过xlsx文件上传文献")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public R upload( @RequestParam("uploadFile") MultipartFile file) throws FileNotFoundException, UnsupportedEncodingException {
+    public R upload(@RequestParam("uploadFile") MultipartFile file) throws FileNotFoundException, UnsupportedEncodingException {
         String saveResultPath = listService.savaUploadFile(file);
         Boolean saveResultFlag = false;
         if (saveResultPath != "保存失败") {
@@ -183,9 +198,9 @@ pagesize每页有几项
 
     }
 
-//    @Operation(summary = "通过Bibtex文件上传文献")
+    //    @Operation(summary = "通过Bibtex文件上传文献")
     @RequestMapping(value = "/uploadByBib", method = RequestMethod.POST)
-    public R uploadByBib( @RequestBody Map<String, String> bibObjArrayJson) {
+    public R uploadByBib(@RequestBody Map<String, String> bibObjArrayJson) {
 //        选择项目那里，改一下，改成公用的
         ArrayList<ListEntity> paperList = null;
         paperList = listService.saveUploadFileByBib(bibObjArrayJson.get("bibObjArrayJson"));
@@ -199,7 +214,7 @@ pagesize每页有几项
         }
     }
 
-//    @Operation(summary = "通过Form表单上传单篇文献")
+    //    @Operation(summary = "通过Form表单上传单篇文献")
     @RequestMapping(value = "/uploadOnePaper", method = RequestMethod.POST)
     public R uploadOnePaper(@RequestBody ListEntity listEntity) {
         if (listService.save(listEntity)) {
@@ -208,9 +223,9 @@ pagesize每页有几项
         } else return R.ok().put("UploadResult", "Failed!");
     }
 
-//    @Operation(summary = "通过Form表单修改单篇已有文献")
+    //    @Operation(summary = "通过Form表单修改单篇已有文献")
     @RequestMapping(value = "/updatePaper", method = RequestMethod.POST)
-    public R updatePaper( @RequestBody ListEntity listEntity) {
+    public R updatePaper(@RequestBody ListEntity listEntity) {
 //        System.out.println(listEntity.toString());
         Boolean updateFlag = listService.updateById(listEntity);
         if (updateFlag) return R.ok().put("UpdateStatus", "success!").put("UpdateResult", listEntity);
@@ -218,17 +233,17 @@ pagesize每页有几项
 
     }
 
-//    @Operation(summary = "删除单篇文献")
+    //    @Operation(summary = "删除单篇文献")
     @RequestMapping(value = "/deletePaper", method = RequestMethod.POST)
-    public R deletePaper( @RequestBody ListEntity listEntity) {
+    public R deletePaper(@RequestBody ListEntity listEntity) {
         Boolean deleteFlag = listService.removeById(listEntity);
         if (deleteFlag) return R.ok().put("DeleteStatus", "success!");
         else return R.ok().put("DeleteStatus", "failed!");
     }
 
-//    @Operation(summary = "列举所有Venue")
+    //    @Operation(summary = "列举所有Venue")
     @RequestMapping(value = "/listallVenue", method = RequestMethod.POST)
-    public R listallVenue( @RequestBody Map<String, Object> infos) {
+    public R listallVenue(@RequestBody Map<String, Object> infos) {
         String project = (String) infos.get("obj");
         QueryWrapper queryWrapper = new QueryWrapper<ListEntity>();
         queryWrapper.eq("Projects", project);
@@ -236,9 +251,9 @@ pagesize每页有几项
         return R.ok().put("res", listService.list(queryWrapper));
     }
 
-//    @Operation(summary = "通过Abbr搜索文献")
+    //    @Operation(summary = "通过Abbr搜索文献")
     @RequestMapping(value = "/searchByAbbr", method = RequestMethod.POST)
-    public R searchByAbbr( @RequestBody Map<String, Object> infos) {
+    public R searchByAbbr(@RequestBody Map<String, Object> infos) {
 
 
         Integer pagenum = (Integer) infos.get("pagenum");
@@ -251,9 +266,9 @@ pagesize每页有几项
     }
 
 
-//    @Operation(summary = "通过BookTitle搜索文献")
+    //    @Operation(summary = "通过BookTitle搜索文献")
     @RequestMapping(value = "/searchByBooktitle", method = RequestMethod.POST)
-    public R searchByBooktitle( @RequestBody Map<String, Object> infos) {
+    public R searchByBooktitle(@RequestBody Map<String, Object> infos) {
         Integer pagenum = (Integer) infos.get("pagenum");
         Integer pagesize = (Integer) infos.get("pagesize");
         String searchkeywords = (String) infos.get("searchkeywords");
@@ -272,9 +287,9 @@ pagesize每页有几项
 //        return R.ok().put("YearsCategory",listService.list(queryWrapper));
 //    }
 
-//    @Operation(summary = "统计每年出版的文献数量")
+    //    @Operation(summary = "统计每年出版的文献数量")
     @RequestMapping(value = "/countEachYear", method = RequestMethod.POST)
-    public R countEachYear( @RequestBody Map<String, Object> info) {
+    public R countEachYear(@RequestBody Map<String, Object> info) {
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("Projects", typeOfPaper);
@@ -282,9 +297,9 @@ pagesize每页有几项
         return R.ok().put("countEachYear", listService.listMaps(queryWrapper));
     }
 
-//    @Operation(summary = "通过关键字列举该关键字相关的所有文献")
+    //    @Operation(summary = "通过关键字列举该关键字相关的所有文献")
     @RequestMapping(value = "/listBy", method = RequestMethod.POST)
-    public R listBy( @RequestBody Map<String, Object> info) {
+    public R listBy(@RequestBody Map<String, Object> info) {
 //        System.out.println("info是"+info);
         Map<String, Object> pageInfo = (Map<String, Object>) info.get("pageInfo");
         Integer pagenum = (Integer) pageInfo.get("pagenum");
@@ -296,10 +311,29 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
+    @RequestMapping(value = "/listPaperInfoByPaperID", method = RequestMethod.POST)
+    public R listPaperInfoByPaperID(@RequestBody Map<String, Object> info) {
+//        System.out.println("info是"+info);
 
-//    @Operation(summary = "统计每个国家的文献数量")
+        Object PaperID = info.get("PaperID");
+        if (PaperID instanceof Integer) {
+            QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", PaperID);
+            ListEntity res = listService.getOne(queryWrapper);
+            return R.ok().put("res", res);
+        } else if (PaperID instanceof String) {
+            QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", Integer.parseInt((String) PaperID));
+            ListEntity res = listService.getOne(queryWrapper);
+            return R.ok().put("res", res);
+        }
+        return R.ok().put("res", "No match");
+    }
+
+
+    //    @Operation(summary = "统计每个国家的文献数量")
     @RequestMapping(value = "/countEachCountry", method = RequestMethod.POST)
-    public R countEachCountry( @RequestBody Map<String, Object> info) {
+    public R countEachCountry(@RequestBody Map<String, Object> info) {
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("Projects", typeOfPaper);
@@ -310,7 +344,7 @@ pagesize每页有几项
 
 
     @RequestMapping(value = "/countField", method = RequestMethod.POST)
-    public R countField( @RequestBody Map<String, Object> info) {
+    public R countField(@RequestBody Map<String, Object> info) {
         System.out.println("info是" + info);
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
@@ -320,9 +354,9 @@ pagesize每页有几项
         return R.ok().put("countEachField", listService.listMaps(queryWrapper));
     }
 
-//    @Operation(summary = "统计每个Field每年的文献数量")
+    //    @Operation(summary = "统计每个Field每年的文献数量")
     @RequestMapping(value = "/countFieldEachYear", method = RequestMethod.POST)
-    public R countFieldeachYear( @RequestBody Map<String, Object> info) {
+    public R countFieldeachYear(@RequestBody Map<String, Object> info) {
         System.out.println("info是" + info);
         String typeOfPaper = (String) info.get("info");
 
@@ -337,7 +371,7 @@ pagesize每页有几项
         return R.ok().put("countFieldEachYear", result);
     }
 
-//    @Operation(summary = "找到论文数前十的机构")
+    //    @Operation(summary = "找到论文数前十的机构")
     @RequestMapping(value = "/topInstitutions", method = RequestMethod.POST)
     public R findTopOrganizations() {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();

@@ -70,6 +70,7 @@ import { usePaperInfoStore } from '../store/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+
 const PaperInfoStore = usePaperInfoStore(pinia)
 
 import { useModuleStore } from '../store/module';
@@ -108,18 +109,25 @@ onMounted(() => {
 
   // TODO: 用英文 variable 和英文注释
   // 关闭分页
+
+  // 需要关闭分页，说明是通过搜索切换到Papers
   if (route.query.paginationActive == '关闭') {
-    // console.log("关闭分页")
+    console.log("关闭分页")
     paginationActive.value = false
   }
+    // 不需要关闭分页，说明是初始化papers
+  else{
     // 获取所有paper
+    console.log("获取所有paper")
     listAllPapers(paginationObj)
-    // 获取所有scholars
-    listAllScholars()
-    // 获取所有institutions
-    listAllInstitutions()
-    // 获取所有Venue
-    listallVenue()
+  }
+
+    // // 获取所有scholars
+    // listAllScholars()
+    // // 获取所有institutions
+    // listAllInstitutions()
+    // // 获取所有Venue
+    // listallVenue()
 
 })
 
