@@ -18,10 +18,9 @@
         <result property="vol" column="vol"/>
         <result property="no" column="no"/>
         <result property="pages" column="pages"/>
-        <result property="publisher" column="publisher"/>
         <result property="doi" column="doi"/>
         <result property="paperabstract" column="paperabstract"/>
-        <result property="projects" column="Projects"/>
+
     </resultMap>
 
 

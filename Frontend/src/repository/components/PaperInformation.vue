@@ -49,7 +49,7 @@
         <div class="card-body pb-0">
           <h5>BibTex</h5>
           <pre class="mb-0">
-{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorName + '.' + currentPaperStore.currentPaper.id + ','
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + '.' + currentPaperStore.currentPaper.id + ','
   + '\n  author={' + currentPaperStore.currentPaper.author + '},'
   + '\n  title={' + currentPaperStore.currentPaper.title + '},'
   + '\n  booktitle={' + currentPaperStore.currentPaper.booktitle + '},'
@@ -84,6 +84,9 @@ const currentPaperStore = useCurrentPaper(pinia)
 const route = useRoute()
 const FirstAuthorName = ref('')
 const OtherAuthorName = ref('')
+
+const FirstAuthorNameInBibTex = ref('')
+
 const TagArray = reactive([])
 const listPaperInfoByPaperID = async () => {
   try {
@@ -115,7 +118,7 @@ const listPaperInfoByPaperID = async () => {
     let authorsArray = currentPaperStore.currentPaper.author.split(',')
     FirstAuthorName.value = authorsArray.shift();
     OtherAuthorName.value = authorsArray.join(',')
-    console.log(" currentPaperStore.currentPaper.tag", currentPaperStore.currentPaper.tag)
+    FirstAuthorNameInBibTex.value=FirstAuthorName.value.replace(/\s/g, "")
     let tempTagArray = currentPaperStore.currentPaper.tag.split(',')
     TagArray.push(...tempTagArray)
   } catch (err) {

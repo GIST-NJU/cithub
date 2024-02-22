@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gist.cithub.backend.Tools.entity.ModelsEntity;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
+import com.gist.cithub.backend.Repo.entity.view.count_field_annualEntity;
 import com.gist.cithub.backend.Repo.service.ListService;
+import com.gist.cithub.backend.Repo.dao.viewDao.count_field_annualDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,18 +34,20 @@ public class ListController {
     private ListService listService;
 
     @Autowired
+    private  count_field_annualDao countFieldAnnualDao;
+
+
 
     /**
      * 列表
      */
 
-//    @Operation(summary = "获取当前库内所有论文的种类")
-    @RequestMapping(value = "/getAllTypeOfPapers", method = RequestMethod.POST)
-    public R getAllTypeOfPapers() {
-        List<Map<String, Object>> res = listService.getAllTypeofPapers();
-//        System.out.println("res是"+res);
-        return R.ok().put("res", res);
-    }
+//    @RequestMapping(value = "/getAllTypeOfPapers", method = RequestMethod.POST)
+//    public R getAllTypeOfPapers() {
+//        List<Map<String, Object>> res = listService.getAllTypeofPapers();
+////        System.out.println("res是"+res);
+//        return R.ok().put("res", res);
+//    }
 
     //    @Operation(summary = "列出所有文献")
     @RequestMapping(value = "/listAllpapers", method = RequestMethod.POST)
@@ -67,7 +71,6 @@ pagesize每页有几项
     public R CountPaperTotal(@RequestBody Map<String, Object> pageinfo) {
         String typeofPaper = (String) pageinfo.get("typerofPapers");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects",typeofPaper);
         long total =listService.count(queryWrapper);
         return R.ok().put("total",total);
 
@@ -246,7 +249,6 @@ pagesize每页有几项
     public R listallVenue(@RequestBody Map<String, Object> infos) {
         String project = (String) infos.get("obj");
         QueryWrapper queryWrapper = new QueryWrapper<ListEntity>();
-        queryWrapper.eq("Projects", project);
 //        queryWrapper.select("abbr");
         return R.ok().put("res", listService.list(queryWrapper));
     }
@@ -282,7 +284,6 @@ pagesize每页有几项
 //    public R getYearsCategory(@RequestBody Map<String,Object> info) {
 //        String typeOfPaper=(String) info.get("info");
 //        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("Projects",typeOfPaper);
 //        queryWrapper.select("DISTINCT year").orderByAsc("year");
 //        return R.ok().put("YearsCategory",listService.list(queryWrapper));
 //    }
@@ -292,7 +293,6 @@ pagesize每页有几项
     public R countEachYear(@RequestBody Map<String, Object> info) {
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects", typeOfPaper);
         queryWrapper.select("year", "COUNT(*) AS RecordCount").groupBy("year").orderByAsc("year");
         return R.ok().put("countEachYear", listService.listMaps(queryWrapper));
     }
@@ -336,7 +336,6 @@ pagesize每页有几项
     public R countEachCountry(@RequestBody Map<String, Object> info) {
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects", typeOfPaper);
         queryWrapper.select("year", "COUNT(*) AS RecordCount").groupBy(
                 "year").orderByAsc("year");
         return R.ok().put("countEachCountry", listService.listMaps(queryWrapper));
@@ -348,7 +347,6 @@ pagesize每页有几项
         System.out.println("info是" + info);
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects", typeOfPaper);
 //        queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
         queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
         return R.ok().put("countEachField", listService.listMaps(queryWrapper));
@@ -361,7 +359,6 @@ pagesize每页有几项
         String typeOfPaper = (String) info.get("info");
 
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects", typeOfPaper);
         queryWrapper.lt("year", 2023);// 添加年份小于2023的条件
         queryWrapper.ne("field", "application");
         queryWrapper.select("field", "year", "COUNT(*) AS RecordCount");
@@ -382,6 +379,17 @@ pagesize每页有几项
 
         List<Map<String, Object>> result = listService.listMaps(queryWrapper);
         return R.ok().put("topInstitutions", result);
+    }
+
+
+
+    @RequestMapping(value = "/listCountFieldAnnual", method = RequestMethod.POST)
+    public R listCountFieldAnnual() {
+        QueryWrapper<count_field_annualEntity> queryWrapper = new QueryWrapper<>();
+        List<count_field_annualEntity> result=countFieldAnnualDao.selectList(queryWrapper);
+
+        return R.ok().put("result", result);
+
     }
 
 

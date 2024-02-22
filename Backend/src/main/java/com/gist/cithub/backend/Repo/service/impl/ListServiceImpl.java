@@ -48,7 +48,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     @Override
     public Page<ListEntity> listAllPapers(Integer pagenum, Integer pagesize, String typerofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects", typerofPapers).orderByDesc("year");
+        queryWrapper.orderByDesc("year");
         Page<ListEntity> listEntityPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
 
         return listEntityPage;
@@ -57,20 +57,18 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     @Override
     public Page<ListEntity> listBy(Integer pagenum, Integer pagesize, String typerofPapers,String listByKey, String listByValue) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Projects",typerofPapers);
         queryWrapper.eq(listByKey,listByValue);
         Page<ListEntity> listEntityPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return listEntityPage;
 
     }
 
-    @Override
-    public List<Map<String, Object>> getAllTypeofPapers() {
-        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("DISTINCT Projects");
-        List<Map<String, Object>> res = listDao.selectMaps(queryWrapper);
-        return res;
-    }
+//    @Override
+//    public List<Map<String, Object>> getAllTypeofPapers() {
+//        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+//        List<Map<String, Object>> res = listDao.selectMaps(queryWrapper);
+//        return res;
+//    }
 
     @Override
     public Boolean writeToMysql(String filePath) {
@@ -176,13 +174,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
                     tempListentity.setPages("");
                 }
 
-                if (row.getCell(13) != null) {
-                    // System.out.println("publisher" + row.getCell(13).toString());
 
-                    tempListentity.setPublisher(row.getCell(13).toString());
-                } else {
-                    tempListentity.setPublisher("");
-                }
 
                 if (row.getCell(14) != null) {
                     // System.out.println("doi" + row.getCell(14).toString());
@@ -192,12 +184,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
                     tempListentity.setDoi("");
                 }
 
-                if (row.getCell(15) != null) {
-//                        System.out.println("project" + row.getCell(15).toString());
-                    tempListentity.setProjects(row.getCell(15).toString());
-                } else {
-                    tempListentity.setProjects("");
-                }
+
                 listEntities[i - 1] = tempListentity;
             }
 //            for (ListEntity item : listEntities) {
@@ -268,7 +255,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
         queryWrapper.like("author", searchKeywords).or().like("title", searchKeywords).or().like("booktitle", searchKeywords).or().like("tag", searchKeywords).or().like("abbr", searchKeywords).or().like("year", searchKeywords);
         queryWrapper.orderByDesc("year");
         queryWrapper.orderByAsc("author");
-        queryWrapper.eq("Projects",typeofPapers);
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
 
@@ -278,7 +264,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     public Page<ListEntity> searchByAuthor(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("author",searchKeywords);
-        queryWrapper.eq("Projects",typeofPapers);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
@@ -288,7 +273,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     public Page<ListEntity> searchByField(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("field",searchKeywords);
-        queryWrapper.eq("Projects",typeofPapers);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
@@ -298,7 +282,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     public Page<ListEntity> searchByInstitutions(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("institution",searchKeywords);
-        queryWrapper.eq("Projects",typeofPapers);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
@@ -308,7 +291,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     public Page<ListEntity> searchByAbbr(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("abbr",searchKeywords);
-        queryWrapper.eq("Projects",typeofPapers);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
@@ -318,7 +300,6 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     public Page<ListEntity> searchByBooktitle(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("booktitle",searchKeywords);
-        queryWrapper.eq("Projects",typeofPapers);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;

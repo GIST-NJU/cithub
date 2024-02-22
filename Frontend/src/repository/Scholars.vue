@@ -48,7 +48,7 @@ import { request } from '../request';
 import { useRouter } from 'vue-router';
 import pinia from '../store/store';
 import { useAuthorStore } from '../store/authorStore'
-import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+import {  listAllScholars } from './commonFunction';
 const AuthorStore = useAuthorStore(pinia)
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)

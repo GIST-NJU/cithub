@@ -16,8 +16,8 @@
             <div class="card-body">
               <div class="row">
                 <div v-for="(each, index) in FiledsInfo" class="col-lg-3 col-sm-6 col-xs-12 card-fields">
-                  <div class="card mb-4">
-                    <div class="card-body">
+                  <div class="card mb-4" @click="selectCategory(each.name)">
+                    <div class="card-body" >
                       <h5 class="card-title">{{ each.name }}</h5>
                       <p class="card-text">{{ each.description }}</p>
                     </div>
@@ -96,7 +96,7 @@ const FiledsInfo = reactive([
 ])
 
 let searchObj = reactive({
-  pagesize: 200,
+  pagesize: 1000,
   total: '',
   pagercount: 15,
   pagenum: 1,
@@ -106,6 +106,7 @@ let searchObj = reactive({
 })
 
 const selectCategory = (category) => {
+  console.log("category",category)
   if (category == "Fault Diagnosis") category = "Diagnosis"
   searchObj.searchkeywords = category
   PaperInfoStore.searchKeyWords = category
@@ -121,7 +122,7 @@ const selectCategory = (category) => {
   }).catch(() => { })
 
   router.push({
-    path: '/repo/Papers',
+    path: '/repository/papers',
     query: {
       paginationActive: '关闭'
     }

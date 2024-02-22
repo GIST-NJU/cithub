@@ -72,6 +72,7 @@ import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import pinia from '../store/store';
+import { listallVenue } from './commonFunction';
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)
 
