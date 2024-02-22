@@ -295,13 +295,16 @@ let ChartDevelopFieldOption = reactive({
     },
     formatter: function (params) {
       let tooltipContent = params[0].name + '<br/>';
+
       params.forEach(function (item) {
+        // console.log("item", item)
         tooltipContent += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' +
-          item.seriesName + ': ' + item.value + '%<br/>';
+          item.seriesName + ': ' + item.value + '% (' + ChartDevelopFieldOption.series[item.seriesIndex].count[item.dataIndex] + ')<br/>';
       });
+
       return tooltipContent;
     },
- 
+
 
 
 
@@ -309,7 +312,7 @@ let ChartDevelopFieldOption = reactive({
   legend: {
     data: ['Model', 'Generation', 'Optimization', 'Diagnosis', 'Evaluation', 'Application', 'Other'],
     top: 'bottom',
-    padding:0,
+    padding: 0,
     textStyle: {
       fontSize: 12 // 添加字体大小配置
     }
@@ -332,6 +335,13 @@ let ChartDevelopFieldOption = reactive({
   yAxis: {
     type: 'value',
     max: 100,
+    name: 'ratio of publications',
+    nameLocation: 'middle',
+    nameGap: 40,
+    nameTextStyle: {
+      fontSize: 14,
+    }
+
   },
   series: [
     {
@@ -341,10 +351,11 @@ let ChartDevelopFieldOption = reactive({
       itemStyle: {
         normal: {
           color: '#6ab0b8', // 设置颜色
-          
+
         }
       },
-      data: []
+      data: [],
+      count: []
     },
     {
       name: 'Generation',
@@ -355,7 +366,9 @@ let ChartDevelopFieldOption = reactive({
           color: '#7fae90' // 设置颜色
         }
       },
-      data: []
+      data: [],
+      count: []
+
 
     },
     {
@@ -367,7 +380,9 @@ let ChartDevelopFieldOption = reactive({
           color: '#d53a35' // 设置颜色
         }
       },
-      data: []
+      data: [],
+      count: []
+
 
     },
     {
@@ -379,7 +394,9 @@ let ChartDevelopFieldOption = reactive({
           color: '#334b5c' // 设置颜色
         }
       },
-      data: []
+      data: [],
+      count: []
+
 
     },
     {
@@ -391,7 +408,9 @@ let ChartDevelopFieldOption = reactive({
           color: '#9fdabf' // 设置颜色
         }
       },
-      data: []
+      data: [],
+      count: []
+
 
     },
     {
@@ -404,7 +423,8 @@ let ChartDevelopFieldOption = reactive({
         }
       },
       data: [],
-      barMinHeight: '100%'
+      count: []
+
     },
     {
       name: 'Other',
@@ -415,7 +435,9 @@ let ChartDevelopFieldOption = reactive({
           color: '#e98f6f' // 设置颜色
         }
       },
-      data: []
+      data: [],
+      barMinHeight: '100%'
+
     }
   ]
 });
@@ -427,7 +449,7 @@ const initChartDevelopField = () => {
       info: PaperInfoStore.TypeofPapers
     }
   }).then((res) => {
-    console.log("res", res)
+    // console.log("res", res)
 
     let data = res.result
 
@@ -450,11 +472,27 @@ const initChartDevelopField = () => {
       }
     });
 
+    // 创建一个对象，用于存储每个类别的数组，数值数组
+    const categoryArrays = {};
+
+    // 遍历每个年份的数据
+    for (const [year, categories] of Object.entries(data)) {
+      // 遍历每个类别
+      for (const [category, count] of Object.entries(categories)) {
+        // 如果 categoryArrays 中还没有该类别的数组，就创建一个空数组
+        categoryArrays[category] = categoryArrays[category] || [];
+
+        // 将该年份的数据值添加到对应类别的数组中
+        categoryArrays[category].push(count);
+      }
+    }
+
     // 计算每个年份的总数
     const yearlyTotals = {};
     for (const [year, categoryCounts] of Object.entries(yearlyCategoryCounts)) {
       yearlyTotals[year] = Object.values(categoryCounts).reduce((acc, count) => acc + count, 0);
     }
+
 
     // 计算每个类别在本年度的占比
     const yearlyCategoryPercentages = {};
@@ -470,7 +508,7 @@ const initChartDevelopField = () => {
 
 
 
-    // 创建一个对象，用于存储每个类别的百分比数组
+    // 创建一个对象，用于存储每个类别的百分比数组，百分比数组
     const categoryPercentagesArray = {};
 
     // 遍历每个年份的每个类别的百分比
@@ -481,8 +519,19 @@ const initChartDevelopField = () => {
       }
     }
 
-    // 提取每个属性形成新的数组
     let years = res.result.map(function (item) { return parseInt(item.year); });
+
+    // 提取数值数组
+    let modelsNum = categoryArrays["model"] || [];
+    let generationsNum = categoryArrays["generation"] || [];
+    let optimizationsNum = categoryArrays["optimization"] || [];
+    let diagnosesNum = categoryArrays["diagnosis"] || [];
+    let evaluationsNum = categoryArrays["evaluation"] || [];
+    let applicationsNum = categoryArrays["application"] || [];
+    let othersNum = categoryArrays["other"] || [];
+
+    // 提取百分比数组
+
     let models = categoryPercentagesArray["model"] || [];
     let generations = categoryPercentagesArray["generation"] || [];
     let optimizations = categoryPercentagesArray["optimization"] || [];
@@ -501,6 +550,14 @@ const initChartDevelopField = () => {
     ChartDevelopFieldOption.series[4].data = evaluations;
     ChartDevelopFieldOption.series[5].data = applications;
     ChartDevelopFieldOption.series[6].data = others;
+
+    ChartDevelopFieldOption.series[0].count = modelsNum;
+    ChartDevelopFieldOption.series[1].count = generationsNum;
+    ChartDevelopFieldOption.series[2].count = optimizationsNum;
+    ChartDevelopFieldOption.series[3].count = diagnosesNum;
+    ChartDevelopFieldOption.series[4].count = evaluationsNum;
+    ChartDevelopFieldOption.series[5].count = applicationsNum;
+    ChartDevelopFieldOption.series[6].count = othersNum;
 
     let myChart = echarts.init(ChartDevelopField.value);
     myChart.setOption(ChartDevelopFieldOption)
