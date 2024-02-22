@@ -658,7 +658,7 @@ const initChart_TOP_INSTITUTIONS = () => {
 
 
 
-    onMounted(() => {
+onMounted(() => {
 
     // console.log("进入ChartDisplay！！")
     // console.log("route.query.charts是",route.query.charts)

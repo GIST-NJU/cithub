@@ -115,7 +115,7 @@ watch(async () => registerform.account, async (newVal, oldVal) => {
 
     try {
         const resolvedVal = await newVal;
-        console.log('Account changed:', resolvedVal);
+        // console.log('Account changed:', resolvedVal);
 
         const res = await requestAuth({
             url: 'user/users/CheckUnique',

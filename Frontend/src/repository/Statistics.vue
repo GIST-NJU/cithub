@@ -46,11 +46,11 @@
             </div>
           </div>
         </div>
-
-        <!-- 3. developement of fields -->
-
+      </div>
 
 
+      <!-- 3. developement of fields -->
+      <div class="row">
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-body pb-0 mb-4">
@@ -64,28 +64,33 @@
         </div>
       </div>
 
+
       <!-- 4. distribution of scholars -->
       <div class="row">
-        <div class="col-6">
+        <div class="col-12">
           <div class="card mb-4">
-            <div class="card-body pb-0">
-              <h5>Distribution of <S></S>cholars</h5>
-              <p class="text-muted">The distribution of scholars accross the world
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. new institutions  -->
-        <div class="col-6">
-          <div class="card mb-4">
-            <div class="card-body pb-0">
-              <h5>Number of New Institutions</h5>
-              <p class="text-muted">The number of new institutions that contribute to CIT</p>
+            <div class="card-body pb-0 mb-4">
+              <h5>Distribution of Scholars</h5>
+              <p class="text-muted">The distribution of scholars accross the world</p>
+              <div class="charts">
+                <div class="echarts" id="ChartDistributionScholars" ref="ChartDistributionScholars"
+                  style="height:520%; width:100%"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- 5. new institutions  -->
+      <div class="col-6">
+        <div class="card mb-4">
+          <div class="card-body pb-0">
+            <h5>Number of New Institutions</h5>
+            <p class="text-muted">The number of new institutions that contribute to CIT</p>
+          </div>
+        </div>
+      </div>
+
 
       <Foot></Foot>
     </div>
@@ -97,7 +102,7 @@ import * as echarts from 'echarts'
 import SideNav from './components/SideNav.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import Foot from '../ComponentCommon/Foot.vue';
-
+import "echarts/map/js/world.js";
 import { useInstitutionStore } from '../store/institutionStore'
 import { onMounted } from 'vue';
 import { ref, computed, reactive } from 'vue';
@@ -565,16 +570,75 @@ const initChartDevelopField = () => {
   }).catch((err) => { })
 }
 
+// 4. distribution of scholars
+const ChartDistributionScholars = ref()
+let ChartDistributionScholarsOption = reactive(
+  {
+
+    series: [
+      {
+        name: '国家数据',
+        type: 'map',
+        map: 'world',
+        roam: false,
+        data: [],
+        zoom: 1, // 设置初始缩放比例
+        // 添加 visualMap 属性
+      }
+    ],
+    visualMap: {
+      min: 0,
+      max: 100,
+      inRange: {
+        color: ['#E0E0FF', '#5e72e4']
+      },
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: function (params) {
+        if (isNaN(params.value)) return "Country: " + params.name + '<br>' + " Nums of Scholars: " + 0;
+        return "Country: " + params.name + '<br>' + " Nums of Scholars: " + params.value;
+      },
+    }
+  }
+);
+const initChartDistributionScholars = () => {
+  request({
+    url: '/repo/author/CountDistributionScholars',
+    method: 'POST',
+    data: {
+      info: PaperInfoStore.TypeofPapers
+    }
+  })
+    .then((res) => {
+      console.log("res",res)
+      let tempdata = []
+      for (var i = 0; i < res.result.length; i++) {
+        let tempObj = { name: '', value: 0 }
+        tempObj.name = res.result[i].country
+        tempObj.value = res.result[i].author_count
+        tempdata.push(tempObj)
+      }
+      ChartDistributionScholarsOption.series[0].data = tempdata
+
+      let myChart = echarts.init(ChartDistributionScholars.value);
+      myChart.setOption(ChartDistributionScholarsOption)
+      myChart.resize()
+    }).catch((err) => { 
+      console.log(err)
+    })
+
+}
+
+
 
 
 onMounted(() => {
   initChartNumber()
   initChartField()
   initChartDevelopField()
+  initChartDistributionScholars()
 })
-
-
-
 </script>
 
 

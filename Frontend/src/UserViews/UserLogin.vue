@@ -142,13 +142,13 @@ const login = () => {
             userStore.email = res.useremail
             userStore.institution = res.institution
 
-            console.log("userStore", userStore.userID,
-            userStore.account ,
-            userStore.userToken,
-            userStore.usertype ,
-            userStore.name,
-            userStore.email ,
-            userStore.institution )
+            // console.log("userStore", userStore.userID,
+            // userStore.account ,
+            // userStore.userToken,
+            // userStore.usertype ,
+            // userStore.name,
+            // userStore.email ,
+            // userStore.institution )
 
 
 

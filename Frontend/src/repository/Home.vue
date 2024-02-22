@@ -344,7 +344,7 @@ onMounted(async () => {
       typerofPapers: "Combinatorial Testing"
     }
   })
-  console.log("countTotalPapersRes", countTotalPapersRes)
+  // console.log("countTotalPapersRes", countTotalPapersRes)
   totalPapersCount.value = countTotalPapersRes.total
 
   // 获取Scholars总数
@@ -355,7 +355,7 @@ onMounted(async () => {
       typerofPapers: "Combinatorial Testing"
     }
   })
-  console.log("countTotalScholarsRes", countTotalScholarsRes)
+  // console.log("countTotalScholarsRes", countTotalScholarsRes)
   totalScholarsCount.value = countTotalScholarsRes.total
 
   // 获取Institutions总数
@@ -366,7 +366,7 @@ onMounted(async () => {
       typerofPapers: "Combinatorial Testing"
     }
   })
-  console.log("countTotalInstitutionsRes", countTotalInstitutionsRes)
+  // console.log("countTotalInstitutionsRes", countTotalInstitutionsRes)
   totalInstitutionsCounth.value = countTotalInstitutionsRes.total
 
 

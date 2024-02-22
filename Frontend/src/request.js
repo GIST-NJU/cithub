@@ -19,14 +19,14 @@ export function requestAuth(config) {
   instance.interceptors.request.use(config => {
     return config
   }, err => {
-    console.log(err);
+    // console.log(err);
   })
   // 2.2.响应拦截
   instance.interceptors.response.use(res => {
     // console.log("响应拦截器res是",res)
     return res.data
   }, err => {
-    console.log(err);
+    // console.log(err);
   })
   // 3.发送真正的网络请求
   return instance(config)
