@@ -37,7 +37,7 @@ public interface ListService extends IService<ListEntity> {
 
     Page<ListEntity> listAllPapers(Integer pagenum,Integer pagesize,String typerofPapers);
     Page<ListEntity> listBy(Integer pagenum,Integer pagesize,String typerofPapers,String listByKey,String listByValue );
-    List<Map<String, Object>>  getAllTypeofPapers();
+
 
     Boolean writeToMysql(String filePath);
 

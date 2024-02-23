@@ -42,8 +42,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import { useUserStore } from '../store/userStore';
-const moduleStore = useModuleStore()
-const userStore = useUserStore()
+import pinia from '../store/store';
+const moduleStore = useModuleStore(pinia)
+const userStore = useUserStore(pinia)
 
 const isHovered = ref(false);
 const router = useRouter();
@@ -59,7 +60,6 @@ const SignOut = () => {
   })
 }
 onMounted(() => {
-  console.log(moduleStore.CurrentModule)
 })
 </script>
 

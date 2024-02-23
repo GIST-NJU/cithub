@@ -11,15 +11,57 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h3>Complete Paper List</h3>
-              <p class="text-muted mb-0"><span class="badge bg-success">{{ PaperInfoStore.total }}</span> papers found</p>
+              <!-- search author -->
+              <div>
+                <p v-if="route.query.searchType == 'author'" class="text-muted mb-0"><span>Scholar :</span> <span>{{
+                  currentAuthorStore.CurrentAuthor.name }} </span> </p>
+
+                <p v-if="route.query.searchType == 'author'" class="text-muted mb-0"><span> Institution : </span> <span>{{
+                  currentAuthorStore.CurrentAuthor.institution }} , {{ currentAuthorStore.CurrentAuthor.country
+  }}</span>
+                </p>
+              </div>
+
+              <!-- search institution -->
+              <div>
+                <p v-if="route.query.searchType == 'institution'" class="text-muted mb-0"><span> Institution : {{
+                  PaperInfoStore.searchKeyWords }}</span>
+                </p>
+              </div>
+
+              <!-- search country -->
+              <div>
+                <p v-if="route.query.searchType == 'country'" class="text-muted mb-0"><span> Country : {{
+                  PaperInfoStore.searchKeyWords }}</span>
+                </p>
+              </div>
+
+              <!-- search Tag -->
+              <div>
+                <p v-if="route.query.searchType == 'tag'" class="text-muted mb-0"><span> Tag : <ArgonBadge color="info">{{
+                  PaperInfoStore.searchKeyWords }}</ArgonBadge></span>
+                </p>
+              </div>
+
+              <!-- search Venue -->
+              <div>
+                <p v-if="route.query.searchType == 'tag'" class="text-muted mb-0"><span> Venue : {{
+                  PaperInfoStore.searchKeyWords }}</span>
+                </p>
+              </div>
+
+              <p class="text-muted mb-0"><span class="badge bg-success">{{ PaperInfoStore.total }}</span> papers found
+              </p>
             </div>
+
+
 
             <div class="card-body ps-1">
               <div class="table-responsive">
                 <table class="table mb-0">
                   <tbody>
-                    <Paper v-for="(item,index) in PaperInfoStore.paperinfos" :key="index" :item="item" :index="index" :userInfo="userInfo"
-                      @DeleteCard="DeleteCard"></Paper>
+                    <Paper v-for="(item, index) in PaperInfoStore.paperinfos" :key="index" :item="item" :index="index"
+                      :userInfo="userInfo" @DeleteCard="DeleteCard"></Paper>
                   </tbody>
                 </table>
               </div>
@@ -40,7 +82,7 @@
       <div v-if="PaperInfoStore.paperinfos.length != 0 && paginationActive == true"
         style="display:flex;justify-content: center;">
         <div>
-          <el-pagination v-model:page-size="paginationObj.pagesize" v-model:pager-count="paginationObj.pagecount" 
+          <el-pagination v-model:page-size="paginationObj.pagesize" v-model:pager-count="paginationObj.pagecount"
             layout="prev, pager, next, jumper" :total="paginationObj.total" @current-change="handleCurrentPageChange" />
         </div>
 
@@ -70,6 +112,8 @@ import { usePaperInfoStore } from '../store/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+import { useCurrentAuthorStore } from '../store/currentAuthorStore'
+const currentAuthorStore = useCurrentAuthorStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
 
 import { useModuleStore } from '../store/module';
@@ -108,18 +152,20 @@ onMounted(() => {
 
   // TODO: 用英文 variable 和英文注释
   // 关闭分页
+
+  // 需要关闭分页，说明是通过搜索切换到Papers
   if (route.query.paginationActive == '关闭') {
-    // console.log("关闭分页")
+    console.log("关闭分页")
     paginationActive.value = false
   }
+  // 不需要关闭分页，说明是初始化papers
+  else {
     // 获取所有paper
+    console.log("获取所有paper")
     listAllPapers(paginationObj)
-    // 获取所有scholars
-    listAllScholars()
-    // 获取所有institutions
-    listAllInstitutions()
-    // 获取所有Venue
-    listallVenue()
+  }
+
+
 
 })
 

@@ -310,6 +310,7 @@ import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
+import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
@@ -326,11 +327,11 @@ import toolsInfo from "../ComponentCommon/tools_info.json";
 
 const route = useRoute()
 const router = useRouter()
-const modelStore = useModelsStore()
-const projectsStore = useProjectsStore()
-const currentProjectStore = useCurrentProject()
-const currentModel = useCurrentModel()
-const llmFormStore = useLLMmodellingStore()
+const modelStore = useModelsStore(pinia)
+const projectsStore = useProjectsStore(pinia)
+const currentProjectStore = useCurrentProject(pinia)
+const currentModel = useCurrentModel(pinia)
+const llmFormStore = useLLMmodellingStore(pinia)
 const modelLists = reactive([]);
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)

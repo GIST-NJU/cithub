@@ -44,19 +44,19 @@
 <script  setup>
 import SideNav from './components/SideNav.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
-
+import pinia from '../store/store'
 import Foot from '../ComponentCommon/Foot.vue';
 import { useInstitutionStore } from '../store/institutionStore'
 import { onMounted } from 'vue';
-import { ref, computed,reactive } from 'vue';
-import {usePaperInfoStore} from '../store/paperinfoStore'
+import { ref, computed, reactive } from 'vue';
+import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const PaperInfoStore = usePaperInfoStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
 
-const InstitutionStore = useInstitutionStore()
+const InstitutionStore = useInstitutionStore(pinia)
 const itemsPerRow = ref(3);
 
 const chunkedArray = computed(() => {
@@ -84,7 +84,7 @@ const searchByInstitutions = (institution) => {
     // console.log(institution)
     searchObj.searchkeywords = institution;
     PaperInfoStore.paperinfos.length = 0
-    PaperInfoStore.searchKeyWords=institution
+    PaperInfoStore.searchKeyWords = institution
 
     request({
         url: 'repo/list/searchByInstitutions',
@@ -108,6 +108,8 @@ const searchByInstitutions = (institution) => {
 
 onMounted(() => {
     // console.log(InstitutionStore.InstitutionArray.length)
+    // 获取所有institutions
+    listAllInstitutions()
 })
 </script>
 
@@ -115,13 +117,15 @@ onMounted(() => {
 
 <style scoped>
 .col span {
-  transition: font-size 0.3s ease; /* 添加过渡效果 */
+    transition: font-size 0.3s ease;
+    /* 添加过渡效果 */
 }
 
 .col:hover span {
-  font-size: calc(15px + 5px); /* 这里使用 calc 计算新的 font-size，16px 为默认值 */
-  cursor: pointer;
-  color: rgb(94, 114, 228);
-  text-decoration: underline;
+    font-size: calc(15px + 5px);
+    /* 这里使用 calc 计算新的 font-size，16px 为默认值 */
+    cursor: pointer;
+    color: rgb(94, 114, 228);
+    text-decoration: underline;
 }
 </style>

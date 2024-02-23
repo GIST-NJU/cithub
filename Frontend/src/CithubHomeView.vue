@@ -10,7 +10,7 @@
 			<input @click="jumpToUser('login')" type="submit" value="Sign in" />&nbsp;&nbsp;
 			<input @click="jumpToUser('register')" type="submit" value="Sign Up" />
 		</div>
-		<div v-if="loginFlag == true">
+		<div v-if="loginFlag == 'true'">
 
 			<h3>Welcome {{ userStore.name }} from {{ userStore.institution }}, enjoy cithub~</h3>
 
@@ -109,17 +109,18 @@
 <script  setup>
 
 import { useModuleStore } from './store/module';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute} from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { CheckLoginStatus, getUserInfoByToken } from './common';
+import pinia from './store/store'
 
 import { ElNotification } from 'element-plus'
 import { useUserStore } from './store/userStore';
-const userStore = useUserStore()
+const userStore = useUserStore(pinia)
 const router = useRouter()
+const route= useRoute()
+const moduleStore = useModuleStore(pinia)
 
-
-const moduleStore = useModuleStore()
 const jumpToRepo = () => {
 	moduleStore.CurrentModule = 'Repository'
 	router.push({
@@ -157,31 +158,26 @@ const loginFlag = ref(false)
 const userToken = ref('')
 
 onMounted(async () => {
-	// 先检查用户是否登录
-	let obj = await CheckLoginStatus()
-	loginFlag.value = obj.loginStatus
-	userToken.value = obj.token
-	if (loginFlag.value) {
-
-		// 若用户已登录，则获取用户信息！
-		let obj = await getUserInfoByToken(userToken.value)
-		userStore.userID = obj.userid
-		userStore.account = obj.account
-		userStore.userToken = obj.userToken
-		userStore.usertype = obj.usertype
-		userStore.name = obj.name
-		userStore.email = obj.email
-		userStore.institution = obj.institution
-
+	// console.log("loginFlag",route.query.loginFlag,typeof(route.query.loginFlag))
+	if (route.query.loginFlag) {
+		loginFlag.value = route.query.loginFlag
 	}
-	else{
-		ElNotification({
-                title: 'Please Sign in',
-                message: 'please Sign in for using cithub',
-                type: 'warning',
-				position: 'top-left',
-            })
-	}
+
+	// console.log("Cithub Home userStore", userStore.userID,
+	// 	userStore.account,
+	// 	userStore.userToken,
+	// 	userStore.usertype,
+	// 	userStore.name,
+	// 	userStore.email,
+	// 	userStore.institution)
+
+	ElNotification({
+		title: 'Welcome to CitHub',
+		message: 'CitHub is a open platform for the study and use of Combinatorial Interaction Testing (CIT) ',
+		type: 'success',
+		position: 'top-left',
+	})
+
 })
 </script>
 

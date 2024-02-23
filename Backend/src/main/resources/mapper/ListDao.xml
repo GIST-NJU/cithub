@@ -18,11 +18,33 @@
         <result property="vol" column="vol"/>
         <result property="no" column="no"/>
         <result property="pages" column="pages"/>
-        <result property="publisher" column="publisher"/>
         <result property="doi" column="doi"/>
         <result property="paperabstract" column="paperabstract"/>
-        <result property="projects" column="Projects"/>
+
     </resultMap>
+    <select id="searchByInstitution" resultType="com.gist.cithub.backend.Repo.entity.ListEntity">
+        SELECT SQL_CALC_FOUND_ROWS DISTINCT *
+        FROM repository_list
+        WHERE EXISTS (
+            SELECT 1
+            FROM repository_scholar p
+            WHERE repository_list.author LIKE CONCAT('%', p.name, '%') AND p.institution = #{institution}
+            )
+    </select>
+
+    <select id="searchByCountry" resultType="com.gist.cithub.backend.Repo.entity.ListEntity">
+        SELECT SQL_CALC_FOUND_ROWS DISTINCT *
+        FROM (
+            SELECT name, country FROM repository_scholar WHERE country = #{country}
+            ) p
+            LEFT JOIN repository_list q ON q.author LIKE CONCAT("%", p.name, "%")
+    </select>
+
+    <select id="searchByTag" resultType="com.gist.cithub.backend.Repo.entity.ListEntity">
+        select SQL_CALC_FOUND_ROWS *  from repository_list where tag like CONCAT("%", #{tag} , "%")
+
+    </select>
+
 
 
 </mapper>

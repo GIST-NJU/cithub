@@ -6,8 +6,7 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.gist.cithub.backend.Repo.entity.authorAndscholarEntity" id="authorMap">
         <result property="id" column="id"/>
-        <result property="authorname" column="authorname"/>
-        <result property="projects" column="projects"/>
+        <result property="name" column="name"/>
         <result property="institution" column="institution"/>
         <result property="category" column="category"/>
         <result property="country" column="country"/>

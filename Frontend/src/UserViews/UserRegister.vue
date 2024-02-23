@@ -90,7 +90,7 @@ import ArgonInput from "../ComponentCommon/ArgonInput.vue";
 import ArgonButton from "../ComponentCommon/ArgonButton.vue";
 import ArgonCheckbox from "../ComponentCommon/ArgonCheckbox.vue";
 import { ref, reactive, watch } from 'vue'
-import { request } from '../request'
+import { requestAuth } from '../request'
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus'
 
@@ -115,9 +115,9 @@ watch(async () => registerform.account, async (newVal, oldVal) => {
 
     try {
         const resolvedVal = await newVal;
-        console.log('Account changed:', resolvedVal);
+        // console.log('Account changed:', resolvedVal);
 
-        const res = await request({
+        const res = await requestAuth({
             url: 'user/users/CheckUnique',
             method: 'POST',
             data: {
@@ -146,7 +146,7 @@ let timecountdown = ref(3)
 const registerFlag = ref()
 const register = async () => {
     try {
-        const res = await request({
+        const res = await requestAuth({
             url: '/user/users/RegisterUser',
             method: 'POST',
             data: registerform

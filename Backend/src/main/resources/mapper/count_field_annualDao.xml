@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gist.cithub.backend.Repo.dao.viewDao.count_field_annualDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gist.cithub.backend.Repo.entity.view.count_field_annualEntity" id="count_field_annualMap">
+
+        <result property="year" column="year"/>
+        <result property="model" column="model"/>
+        <result property="generation" column="generation"/>
+        <result property="optimization" column="optimization"/>
+        <result property="diagnosis" column="diagnosis"/>
+        <result property="application" column="application"/>
+        <result property="other" column="other"/>
+
+    </resultMap>
+
+
+</mapper>

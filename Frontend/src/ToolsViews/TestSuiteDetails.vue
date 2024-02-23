@@ -224,6 +224,7 @@ import EvaluationsTable from './components/EvaluationsTable.vue'
 import ConversionTable from './components/ConversionTable.vue'
 import PrioritisationTable from './components/PrioritisationTable.vue'
 import ReductionTable from './components/ReductionTable.vue'
+import pinia from '../store/store'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 import { useCurrentModel } from '../store/currentModel'
 import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
@@ -232,9 +233,9 @@ import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 
 
-const currentModel = useCurrentModel()
-const testSuitesStore = useTestSuitesStore()
-const currentTestSuite = useCurrentTestSuitesStore()
+const currentModel = useCurrentModel(pinia)
+const testSuitesStore = useTestSuitesStore(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const route = useRoute()
 
 const AbstractModelPreviewFlag = ref(true)

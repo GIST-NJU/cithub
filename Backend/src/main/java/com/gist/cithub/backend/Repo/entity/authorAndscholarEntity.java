@@ -1,5 +1,6 @@
 package com.gist.cithub.backend.Repo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -7,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("authorAndscholar")
+@TableName("repository_scholar")
 public class authorAndscholarEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -15,8 +16,10 @@ public class authorAndscholarEntity implements Serializable{
     @TableId
     private Integer id;
 
-    private String authorname;
-    private String projects;
+    @TableField(value = "name")
+    private String name;
+
+
     private String institution;
     private String category;
     private String country;

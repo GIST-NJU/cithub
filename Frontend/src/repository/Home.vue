@@ -6,7 +6,7 @@
     <Navbar></Navbar>
 
     <div class="container-fluid py-4">
-      <!-- 1. basic statistic -->
+      <!-- 1. basic statistic done -->
       <div class="row">
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
@@ -15,9 +15,9 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Research Papers</p>
-                    <h5 class="font-weight-bolder">{{ paginationObj.total }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span> since last year
+                    <h5 class="font-weight-bolder">{{ totalPapersCount }}</h5>
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -36,10 +36,9 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Scholars</p>
-                    <h5 class="font-weight-bolder">{{
-                      AuthorStore.authorsArray.length }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span> since last year
+                    <h5 class="font-weight-bolder">{{ totalScholarsCount }}</h5>
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -58,10 +57,10 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Institutions</p>
-                    <h5 class="font-weight-bolder">{{ InstitutionStore.InstitutionArray.length }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span>
-                    since last year
+                    <h5 class="font-weight-bolder">{{ totalInstitutionsCounth }}</h5>
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
+
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -75,7 +74,7 @@
         </div>
       </div>
 
-      <!-- 2. search form -->
+      <!-- 2. search form done -->
       <div class="row mt-4">
         <div class="col-12">
           <div class="card">
@@ -83,11 +82,12 @@
               <h5>Find Papers</h5>
               <div class="row pt-2">
                 <div class="col-10">
-                  <input type="text" class="form-control" placeholder="Name of paper, scholar, publication venue, ...">
+                  <input v-model="searchObj.searchkeywords" type="text" class="form-control"
+                    placeholder="Name of paper, scholar, publication venue, ...">
                 </div>
                 <div class="col-2">
                   <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary" @click="searchPapers">Search</button>
                   </div>
                 </div>
               </div>
@@ -96,9 +96,9 @@
         </div>
       </div>
 
-      <!-- 3. other information -->
+      <!-- 3. other information  -->
       <div class="row mt-4">
-        <!-- 3.1 cumulative number of publications -->
+        <!-- 3.1 cumulative number of publications done -->
         <div class="col-lg-8 mb-lg-0 mb-4">
           <div class="card z-index-2 h-100">
             <div class="card-header pt-3 bg-transparent">
@@ -165,91 +165,6 @@
       <Foot></Foot>
     </div>
   </main>
-
-  <!-- TODO: js does not work -->
-  <!-- leave this as a feature, or remove it? -->
-  <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="fa fa-cog py-2"> </i>
-    </a>
-    <div class="card shadow-lg">
-      <div class="card-header pb-0 pt-3 ">
-        <div class="float-start">
-          <h5 class="mt-3 mb-0">Argon Configurator</h5>
-          <p>See our dashboard options.</p>
-        </div>
-        <div class="float-end mt-4">
-          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-            <i class="fa fa-close"></i>
-          </button>
-        </div>
-        <!-- End Toggle Button -->
-      </div>
-      <hr class="horizontal dark my-1">
-      <div class="card-body pt-sm-3 pt-0 overflow-auto">
-        <!-- Sidebar Backgrounds -->
-        <div>
-          <h6 class="mb-0">Sidebar Colors</h6>
-        </div>
-        <a href="javascript:void(0)" class="switch-trigger background-color">
-          <div class="badge-colors my-2 text-start">
-            <span class="badge filter bg-gradient-primary active" data-color="primary"
-              onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-          </div>
-        </a>
-        <!-- Sidenav Type -->
-        <div class="mt-3">
-          <h6 class="mb-0">Sidenav Type</h6>
-          <p class="text-sm">Choose between 2 different sidenav types.</p>
-        </div>
-        <div class="d-flex">
-          <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white"
-            onclick="sidebarType(this)">White</button>
-          <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default"
-            onclick="sidebarType(this)">Dark</button>
-        </div>
-        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-        <!-- Navbar Fixed -->
-        <div class="d-flex my-3">
-          <h6 class="mb-0">Navbar Fixed</h6>
-          <div class="form-check form-switch ps-0 ms-auto my-auto">
-            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-          </div>
-        </div>
-        <hr class="horizontal dark my-sm-4">
-        <div class="mt-2 mb-5 d-flex">
-          <h6 class="mb-0">Light / Dark</h6>
-          <div class="form-check form-switch ps-0 ms-auto my-auto">
-            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
-          </div>
-        </div>
-        <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free
-          Download</a>
-        <a class="btn btn-outline-dark w-100"
-          href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View
-          documentation</a>
-        <div class="w-100 text-center">
-          <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard" data-icon="octicon-star"
-            data-size="large" data-show-count="true"
-            aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
-          <h6 class="mt-3">Thank you for sharing!</h6>
-          <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard"
-            class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
-          </a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard"
-            class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -261,7 +176,7 @@ import { onMounted, reactive, ref, } from 'vue';
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
-
+import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { useAuthorStore } from '../store/authorStore'
@@ -271,22 +186,33 @@ import { useUserStore } from '../store/userStore';
 import { CheckLoginStatus, getUserInfoByToken } from '../common'
 
 
-const userStore = useUserStore()
-const moduleStore = useModuleStore()
-const PaperInfoStore = usePaperInfoStore()
-const AuthorStore = useAuthorStore()
-const InstitutionStore = useInstitutionStore()
-const VenueStore = useVenueStore()
+const userStore = useUserStore(pinia)
+const moduleStore = useModuleStore(pinia)
+const PaperInfoStore = usePaperInfoStore(pinia)
+const AuthorStore = useAuthorStore(pinia)
+const InstitutionStore = useInstitutionStore(pinia)
+const VenueStore = useVenueStore(pinia)
 const router = useRouter();
 
 // 分页查询的传递的对象  
 let paginationObj = reactive({
   pagesize: 30,
   total: 0,
+  pagercount: 8,
+  pagenum: 1,
+  searchkeywords: "",
+  typerofPapers: "Combinatorial Testing",
+})
+
+// 搜索查询对象
+let searchObj = reactive({
+  pagesize: 800,
+  total: '',
   pagercount: 15,
   pagenum: 1,
   searchkeywords: "",
   typerofPapers: "Combinatorial Testing",
+
 })
 
 // the cumulative chart in the home page
@@ -337,7 +263,7 @@ let echartsOptions = reactive({
 })
 
 const initChart = () => {
-  // TODO: 展示 cumulative 而不是 annual number
+
   // 对于每一个年份，统计该年份内有多少篇papers，作为series的data
   request({
     url: "repo/list/countEachYear",
@@ -350,9 +276,11 @@ const initChart = () => {
     // console.log("countEachYear",res)
     let tempYear = []
     let tempData = []
+    let totalPapers = 0; // 新增一个变量用于累加总篇数
     for (var i = 0; i < res.countEachYear.length; i++) {
       tempYear.push(res.countEachYear[i].year)
-      tempData.push(res.countEachYear[i].RecordCount)
+      totalPapers += res.countEachYear[i].RecordCount; // 累加总篇数
+      tempData.push(totalPapers); // 将累加的总篇数添加到tempData中
     }
     echartsOptions.xAxis.data = tempYear
     echartsOptions.series[0].data = tempData
@@ -375,52 +303,73 @@ const resizeChart = () => {
   );
 }
 
-// TODO: only GET necessary data, but not the comple list
-// None of paper list, scholar list, venue list is needed here
 
 
 
+const searchPapers = async () => {
+  const searchRes = await request({
+    url: "/repo/list/searchPapers",
+    method: 'POST',
+    data: searchObj
+  })
+  PaperInfoStore.paperinfos.length = 0
+  PaperInfoStore.paperinfos.push(...searchRes.res.records)
+  PaperInfoStore.total = searchRes.res.total
 
+  router.push({
+    path: '/repository/papers',
+    query: {
+      paginationActive: '关闭'
+    }
+  })
+}
+
+const totalPapersCount = ref(0)
+const totalScholarsCount = ref(0)
+const totalInstitutionsCounth = ref(0)
 onMounted(async () => {
   moduleStore.CurrentModule = 'Repository'
 
-  // TODO: right strategy?
-  // 先检查用户是否登录
-  let obj = await CheckLoginStatus()
-  // console.log("obj.loginStatus", obj.loginStatus)
-  if (obj.loginStatus) {
-    // 若用户已登录，则获取用户信息！
-    let userobj = await getUserInfoByToken(obj.token)
-    userStore.userID = userobj.userid
-    userStore.account = userobj.account
-    userStore.userToken = userobj.userToken
-    userStore.usertype = userobj.usertype
-    userStore.name = userobj.name
-    userStore.email = userobj.email
-    userStore.institution = userobj.institution
+  // 首页折线图
+  initChart()
+  resizeChart()
 
-    // 首页折线图
-    initChart()
-    resizeChart()
+  // 获取papers总数
+  const countTotalPapersRes = await request({
+    url: "repo/list/countTotalPapers",
+    method: 'POST',
+    data: {
+      typerofPapers: "Combinatorial Testing"
+    }
+  })
+  // console.log("countTotalPapersRes", countTotalPapersRes)
+  totalPapersCount.value = countTotalPapersRes.total
+
+  // 获取Scholars总数
+  const countTotalScholarsRes = await request({
+    url: "repo/author/countTotalScholars",
+    method: 'POST',
+    data: {
+      typerofPapers: "Combinatorial Testing"
+    }
+  })
+  // console.log("countTotalScholarsRes", countTotalScholarsRes)
+  totalScholarsCount.value = countTotalScholarsRes.total
+
+  // 获取Institutions总数
+  const countTotalInstitutionsRes = await request({
+    url: "repo/author/countTotalInstitutions",
+    method: 'POST',
+    data: {
+      typerofPapers: "Combinatorial Testing"
+    }
+  })
+  // console.log("countTotalInstitutionsRes", countTotalInstitutionsRes)
+  totalInstitutionsCounth.value = countTotalInstitutionsRes.total
 
 
-    // 获取所有paper
-    listAllPapers(paginationObj)
-    // 获取所有scholars
-    listAllScholars()
-    // 获取所有institutions
-    listAllInstitutions()
-    // 获取所有Venue
-    listallVenue()
-  }
-  else {
-    // 若用户未登录则跳转到登录页面
-    router.push(
-      {
-        name: 'UserLogin'
-      }
-    )
-  }
+
+
 })
 </script>
 

@@ -23,8 +23,7 @@
                                 </div>
                                 <div class="card-body">
 
-                                    <el-form label-position="top" label-width="80px" :model="loginform" style="width:100%"
-                                      >
+                                    <el-form label-position="top" label-width="80px" :model="loginform" style="width:100%">
                                         <el-form-item prop="account">
                                             <el-input v-model="loginform.account" placeholder="please input your account">
                                             </el-input>
@@ -40,7 +39,8 @@
                                                     login</el-button> -->
                                         <div v-auto-animate>
                                             <span v-if="loginSuccessFlag == 'LoginSuccess!'"
-                                                style="margin:0px;font:14px;color: green;">Sign In Successfully! Rendering into Cithub in {{ timecountdown }}s~</span>
+                                                style="margin:0px;font:14px;color: green;">Sign In Successfully! Rendering
+                                                into Cithub in {{ timecountdown }}s~</span>
                                             <span v-if="loginSuccessFlag == 'LoginFail!'"
                                                 style="margin:0px;font:14px;color: red;">Login failed! pleas check
                                                 your inputs
@@ -105,11 +105,12 @@ import ArgonInput from "../ComponentCommon/ArgonInput.vue";
 import ArgonButton from "../ComponentCommon/ArgonButton.vue";
 import { useRouter } from 'vue-router';
 import { reactive, ref } from 'vue';
-import { request } from '../request'
+import { requestAuth } from '../request'
 import { useUserStore } from '../store/userStore'
+import pinia from '../store/store';
 import { ElNotification } from 'element-plus'
 
-const userStore = useUserStore()
+const userStore = useUserStore(pinia)
 const router = useRouter()
 const loginSuccessFlag = ref('')
 
@@ -120,7 +121,7 @@ const loginform = reactive({
 let timecountdown = ref(3)
 
 const login = () => {
-    request({
+    requestAuth({
         url: '/user/users/login',
         method: 'POST',
         data: loginform,
@@ -129,14 +130,17 @@ const login = () => {
         loginSuccessFlag.value = res.status
         if (res.status == "LoginSuccess!") {
 
-            // 用户信息在主页获取！
-            // userStore.userID = res.userid
-            // userStore.account = res.account
-            // userStore.userToken = res.token
-            // userStore.usertype = res.usertype
-            // userStore.name = res.name
-            // userStore.email = res.useremail
-            // userStore.institution = res.institution
+            // 登录成功，储存token
+            localStorage.setItem("userToken", res.token)
+            // 获取用户信息
+            // console.log("登录成功，用户信息",res)
+            userStore.userID = res.userid
+            userStore.account = res.account
+            userStore.userToken = res.token
+            userStore.usertype = res.usertype
+            userStore.name = res.name
+            userStore.email = res.useremail
+            userStore.institution = res.institution
 
             // console.log("userStore", userStore.userID,
             // userStore.account ,
@@ -146,7 +150,7 @@ const login = () => {
             // userStore.email ,
             // userStore.institution )
 
-            localStorage.setItem("userToken", res.token)
+
 
             ElNotification({
                 title: 'Success',
@@ -155,15 +159,20 @@ const login = () => {
                 position: 'top-left',
 
             })
-            // localStorage.setItem("token", res.token)
+
             let countdown = setInterval(() => {
                 timecountdown.value--;
                 if (timecountdown.value == 0) clearInterval(countdown)
             }, 1000)
-            // 成功获取到usertoken，回到主页，在主页获取用户信息！
+            // 成功获取到usertoken，回到主页
             setTimeout(() => {
                 router.push({
-                    path: '/'
+                    path: '/',
+                    query:{
+                        loginFlag:true
+                    }
+                
+                
                 })
             }, 3000)
         }

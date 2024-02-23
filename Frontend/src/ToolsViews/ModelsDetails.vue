@@ -210,6 +210,7 @@ import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import { request } from '../request';
 import { onMounted, reactive, ref, computed, defineProps, watch, onUnmounted, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import pinia from '../store/store'
 import { useCurrentModel } from '../store/currentModel'
 
 
@@ -217,7 +218,7 @@ import { ElNotification } from 'element-plus';
 
 const route = useRoute()
 const router = useRouter()
-const currentModel = useCurrentModel()
+const currentModel = useCurrentModel(pinia)
 const tbContainerRef = ref(null);
 const strength = ref(0)
 const StrengthOptions = [

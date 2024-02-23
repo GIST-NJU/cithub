@@ -15,6 +15,7 @@ import Repository_Scholars from '../repository/Scholars.vue'
 import Repository_Fields from '../repository/Fields.vue'
 import Repository_Venues from '../repository/Venues.vue'
 import Repository_Statistics from '../repository/Statistics.vue'
+import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
@@ -60,7 +61,13 @@ const routes = [
         path: "papers",
         name: "Repository_Papers",
         component: Repository_Papers,
-        meta: { title: 'Papers' }
+        meta: { title: 'Papers' },
+      },
+      {
+        path: "paperInfo",
+        name: "Repository_PaperInfo",
+        component: Repository_PaperInfo,
+        meta: { title: 'PaperInfo' },
       },
       {
         path: "scholars",

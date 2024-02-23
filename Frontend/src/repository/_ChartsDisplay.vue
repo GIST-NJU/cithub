@@ -57,12 +57,13 @@ import { request } from '../request';
 import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts'
 import "echarts/map/js/world.js";
+import pinia from '../store/store'
 import { useAuthorStore } from '../store/authorStore';
 import lineStyle from "echarts/src/model/mixin/lineStyle";
 const router = useRouter();
 const route = useRoute()
-const PaperInfoStore = usePaperInfoStore()
-const AuthorStore=useAuthorStore()
+const PaperInfoStore = usePaperInfoStore(pinia)
+const AuthorStore=useAuthorStore(pinia)
 
 
 
@@ -657,7 +658,7 @@ const initChart_TOP_INSTITUTIONS = () => {
 
 
 
-    onMounted(() => {
+onMounted(() => {
 
     // console.log("进入ChartDisplay！！")
     // console.log("route.query.charts是",route.query.charts)
