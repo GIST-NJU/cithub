@@ -16,8 +16,8 @@
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Research Papers</p>
                     <h5 class="font-weight-bolder">{{ totalPapersCount }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span> since last year
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -37,8 +37,8 @@
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Scholars</p>
                     <h5 class="font-weight-bolder">{{ totalScholarsCount }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span> since last year
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -58,9 +58,9 @@
                   <div class="numbers">
                     <p class="mb-1 font-weight-bolder text-lg">Institutions</p>
                     <h5 class="font-weight-bolder">{{ totalInstitutionsCounth }}</h5>
-                    <i class="fa fa-arrow-up text-info"></i>
-                    <span class="text-info font-weight-bolder">+3%</span>
-                    since last year
+                    <!-- <i class="fa fa-arrow-up text-info"></i>
+                    <span class="text-info font-weight-bolder">+3%</span> since last year -->
+
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <!-- 2. search form done --> 
+      <!-- 2. search form done -->
       <div class="row mt-4">
         <div class="col-12">
           <div class="card">
@@ -165,8 +165,6 @@
       <Foot></Foot>
     </div>
   </main>
-
-
 </template>
 
 <script setup>

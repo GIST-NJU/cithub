@@ -78,6 +78,8 @@
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>3.5.5</version>
         </dependency>
+
+
         <!-- Spring Boot Starter Validation: 提供验证功能支持，包括Bean验证和方法验证 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

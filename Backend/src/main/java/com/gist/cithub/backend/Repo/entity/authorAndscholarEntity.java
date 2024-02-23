@@ -17,7 +17,7 @@ public class authorAndscholarEntity implements Serializable{
     private Integer id;
 
     @TableField(value = "name")
-    private String authorname;
+    private String name;
 
 
     private String institution;

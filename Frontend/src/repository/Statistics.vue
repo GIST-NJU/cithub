@@ -82,11 +82,13 @@
       </div>
 
       <!-- 5. new institutions  -->
-      <div class="col-6">
-        <div class="card mb-4">
-          <div class="card-body pb-0">
-            <h5>Number of New Institutions</h5>
-            <p class="text-muted">The number of new institutions that contribute to CIT</p>
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-body pb-0 mb-4">
+              <h5>Number of New Institutions</h5>
+              <p class="text-muted">The number of new institutions that contribute to CIT</p>
+            </div>
           </div>
         </div>
       </div>
@@ -611,7 +613,7 @@ const initChartDistributionScholars = () => {
     }
   })
     .then((res) => {
-      console.log("res",res)
+      console.log("res", res)
       let tempdata = []
       for (var i = 0; i < res.result.length; i++) {
         let tempObj = { name: '', value: 0 }
@@ -624,7 +626,7 @@ const initChartDistributionScholars = () => {
       let myChart = echarts.init(ChartDistributionScholars.value);
       myChart.setOption(ChartDistributionScholarsOption)
       myChart.resize()
-    }).catch((err) => { 
+    }).catch((err) => {
       console.log(err)
     })
 

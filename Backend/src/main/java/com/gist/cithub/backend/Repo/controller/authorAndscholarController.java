@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.gist.cithub.backend.Repo.dao.authorAndscholarDao;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,28 +33,48 @@ public class authorAndscholarController {
 
     @RequestMapping(value = "/listallauthor", method = RequestMethod.POST)
     public R listAllauthor(@RequestBody Map<String, Object> map) {
-        String project = map.get("obj").toString();
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("DISTINCT authorname").eq("projects", project);
+        queryWrapper.select("DISTINCT name");
         return R.ok().put("authors", authorAndinstitutionService.list(queryWrapper));
+    }
+
+    @RequestMapping(value = "/listAllCountry", method = RequestMethod.POST)
+    public R listAllCountry(@RequestBody Map<String, Object> map) {
+        QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("DISTINCT country");
+        return R.ok().put("country", authorAndinstitutionService.list(queryWrapper));
+    }
+
+    @RequestMapping(value = "/listAuthorByname", method = RequestMethod.POST)
+    public R listAuthorByname(@RequestBody Map<String, Object> info) {
+        String name = (String) info.get("searchkeywords");
+        QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", name);
+        return R.ok().put("authors", authorAndinstitutionService.getOne(queryWrapper));
     }
 
     @RequestMapping(value = "/countTotalScholars", method = RequestMethod.POST)
     public R countTotalScholars(@RequestBody Map<String, Object> pageinfo) {
         String typeofPaper = (String) pageinfo.get("typerofPapers");
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("DISTINCT authorname");
+        queryWrapper.select("DISTINCT name");
         long total = authorAndinstitutionService.count(queryWrapper);
         return R.ok().put("total", total);
     }
 
     @RequestMapping(value = "/listAllInstitutions", method = RequestMethod.POST)
     public R listAllInstitutions(@RequestBody Map<String, Object> map) {
-        String project = map.get("obj").toString();
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("DISTINCT institution").eq("projects", project).isNotNull("institution");
-        ;
-        return R.ok().put("Institutions", authorAndinstitutionService.list(queryWrapper));
+        queryWrapper.select("institution", "category").isNotNull("institution");
+
+        List<authorAndscholarEntity> resultList = authorAndinstitutionService.list(queryWrapper);
+
+        // 使用 Java 8 Stream API 去重
+        List<authorAndscholarEntity> distinctInstitutions = resultList.stream()
+                .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(authorAndscholarEntity::getInstitution))),
+                        ArrayList::new));
+
+        return R.ok().put("Institutions", distinctInstitutions);
     }
 
     @RequestMapping(value = "/countTotalInstitutions", method = RequestMethod.POST)
@@ -84,9 +104,9 @@ public class authorAndscholarController {
         String typeOfPaper = (String) info.get("typeofPapers");
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("country", country);
-        queryWrapper.select("authorname");
+        queryWrapper.select("name");
 //        System.out.println("authorService.list(queryWrapper)"+ authorService.listMaps(queryWrapper));
-        List<String> list = authorAndinstitutionService.listMaps(queryWrapper).stream().map(map -> map.get("authorname").toString()).collect(Collectors.toList());
+        List<String> list = authorAndinstitutionService.listMaps(queryWrapper).stream().map(map -> map.get("name").toString()).collect(Collectors.toList());
 
         return R.ok().put("AuthorList", list);
     }
@@ -101,9 +121,9 @@ public class authorAndscholarController {
         String typerofPapers = (String) pageInfo.get("typerofPapers");
         QueryWrapper<authorAndscholarEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("country", country);
-        queryWrapper.select("authorname");
+        queryWrapper.select("name");
 //        System.out.println("authorService.list(queryWrapper)"+ authorService.listMaps(queryWrapper));
-        List<String> listOfAuthor = authorAndinstitutionService.listMaps(queryWrapper).stream().map(map -> map.get("authorname").toString()).collect(Collectors.toList());
+        List<String> listOfAuthor = authorAndinstitutionService.listMaps(queryWrapper).stream().map(map -> map.get("name").toString()).collect(Collectors.toList());
         List<ListEntity> ListPapersByCountryResult = authorAndinstitutionService.listPaperByCountry(pagenum, pagesize, typerofPapers, listOfAuthor);
         return R.ok().put("ListPapersByCountryResult", ListPapersByCountryResult);
     }
@@ -114,7 +134,7 @@ public class authorAndscholarController {
         queryWrapper.select("country", "COUNT(name) AS author_count");
         queryWrapper.groupBy("country");
         List<Map<String, Object>> result = authorAndscholarDao.selectMaps(queryWrapper);
-        return R.ok().put("result",result);
+        return R.ok().put("result", result);
     }
 
 

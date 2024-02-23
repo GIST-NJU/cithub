@@ -60,7 +60,6 @@ const SignOut = () => {
   })
 }
 onMounted(() => {
-  console.log(moduleStore.CurrentModule)
 })
 </script>
 

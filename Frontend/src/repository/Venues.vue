@@ -5,7 +5,7 @@
     <Navbar></Navbar>
 
     <div class="container-fluid py-4">
-      <div class="row">
+      <div class="row" @click="handleDtClick">
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
@@ -200,9 +200,42 @@ const searchByVenues = (venue) => {
 
 }
 
+
+
+const handleDtClick = async (event) => {
+
+  try {
+    searchObj.searchkeywords = event.target.textContent;
+    PaperInfoStore.paperinfos.length = 0
+    PaperInfoStore.searchKeyWords = event.target.textContent;
+
+    const searchByVenueRes = await request({
+      url: 'repo/list/searchByVenue',
+      method: 'POST',
+      data: searchObj
+    })
+    PaperInfoStore.paperinfos.push(...searchByVenueRes.res)
+    PaperInfoStore.total = searchByVenueRes.res.length
+
+    router.push({
+      path: '/repository/papers',
+      query: {
+        paginationActive: '关闭',
+        searchType: 'venue',
+      }
+    })
+
+
+
+
+  } catch (error) {
+
+  }
+
+};
 onMounted(() => {
-  // 获取所有Venue
-  listallVenue()
+  // // 获取所有Venue
+  // listallVenue()
 })
 </script>
 
@@ -224,5 +257,17 @@ onMounted(() => {
 
 .VenueType {
   margin-left: 20px;
+}
+
+dl dt {
+  transition: font-size 0.3s ease;
+}
+
+dl dt:hover {
+  transform: scale(1.03);
+  /* 这里使用 calc 计算新的 font-size，16px 为默认值 */
+  cursor: pointer;
+  color: rgb(94, 114, 228);
+  text-decoration: underline;
 }
 </style>

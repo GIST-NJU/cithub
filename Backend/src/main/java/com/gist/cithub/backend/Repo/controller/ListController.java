@@ -1,7 +1,9 @@
 package com.gist.cithub.backend.Repo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gist.cithub.backend.Repo.dao.ListDao;
 import com.gist.cithub.backend.Tools.entity.ModelsEntity;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
@@ -34,8 +36,10 @@ public class ListController {
     private ListService listService;
 
     @Autowired
-    private  count_field_annualDao countFieldAnnualDao;
+    private count_field_annualDao countFieldAnnualDao;
 
+    @Autowired
+    private ListDao listDao;
 
 
     /**
@@ -71,14 +75,10 @@ pagesize每页有几项
     public R CountPaperTotal(@RequestBody Map<String, Object> pageinfo) {
         String typeofPaper = (String) pageinfo.get("typerofPapers");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        long total =listService.count(queryWrapper);
-        return R.ok().put("total",total);
+        long total = listService.count(queryWrapper);
+        return R.ok().put("total", total);
 
     }
-
-
-
-
 
 
     // @Operation(summary = "通过关键字分页搜索文献")
@@ -106,15 +106,33 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
-    //    @Operation(summary = "通过Insitutions搜索文献")
-    @RequestMapping(value = "/searchByInstitutions", method = RequestMethod.POST)
-    public R searchByInstitutions(@RequestBody Map<String, Object> searchInfo) {
-//        System.out.println("searchInfo是" + searchInfo);
-        Integer pagenum = (Integer) searchInfo.get("pagenum");
-        Integer pagesize = (Integer) searchInfo.get("pagesize");
-        String searchkeywords = (String) searchInfo.get("searchkeywords");
-        String typeofPapers = (String) searchInfo.get("typerofPapers");
-        Page<ListEntity> res = listService.searchByInstitutions(pagenum, pagesize, searchkeywords, typeofPapers);
+    @RequestMapping(value = "/searchByInstitution", method = RequestMethod.POST)
+    public R searchByInstitution(@RequestBody Map<String, Object> searchInfo) {
+        String institution = (String) searchInfo.get("searchkeywords");
+        List<ListEntity> res = listDao.searchByInstitution(institution);
+        return R.ok().put("res", res);
+    }
+
+    @RequestMapping(value = "/searchByCountry", method = RequestMethod.POST)
+    public R searchByCountry(@RequestBody Map<String, Object> searchInfo) {
+        String country = (String) searchInfo.get("searchkeywords");
+        List<ListEntity> res = listDao.searchByCountry(country);
+        return R.ok().put("res", res);
+    }
+
+    @RequestMapping(value = "/searchByTag", method = RequestMethod.POST)
+    public R searchByTag(@RequestBody Map<String, Object> searchInfo) {
+        String tag = (String) searchInfo.get("searchkeywords");
+        List<ListEntity> res = listDao.searchByTag(tag);
+        return R.ok().put("res", res);
+    }
+
+    @RequestMapping(value = "/searchByVenue", method = RequestMethod.POST)
+    public R searchByVenue(@RequestBody Map<String, Object> searchInfo) {
+        String venue = (String) searchInfo.get("searchkeywords");
+        QueryWrapper <ListEntity> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("abbr",venue);
+        List<ListEntity> res = listService.list(queryWrapper);
         return R.ok().put("res", res);
     }
 
@@ -253,6 +271,14 @@ pagesize每页有几项
         return R.ok().put("res", listService.list(queryWrapper));
     }
 
+    @RequestMapping(value = "/listAllTags", method = RequestMethod.POST)
+    public R listAllTags(@RequestBody Map<String, Object> infos) {
+        QueryWrapper queryWrapper = new QueryWrapper<ListEntity>();
+        queryWrapper.isNotNull("tag");
+        queryWrapper.select("DISTINCT tag"); // 添加条件，确保tag字段不为空
+        return R.ok().put("res", listService.list(queryWrapper));
+    }
+
     //    @Operation(summary = "通过Abbr搜索文献")
     @RequestMapping(value = "/searchByAbbr", method = RequestMethod.POST)
     public R searchByAbbr(@RequestBody Map<String, Object> infos) {
@@ -382,11 +408,10 @@ pagesize每页有几项
     }
 
 
-
     @RequestMapping(value = "/listCountFieldAnnual", method = RequestMethod.POST)
     public R listCountFieldAnnual() {
         QueryWrapper<count_field_annualEntity> queryWrapper = new QueryWrapper<>();
-        List<count_field_annualEntity> result=countFieldAnnualDao.selectList(queryWrapper);
+        List<count_field_annualEntity> result = countFieldAnnualDao.selectList(queryWrapper);
 
         return R.ok().put("result", result);
 
