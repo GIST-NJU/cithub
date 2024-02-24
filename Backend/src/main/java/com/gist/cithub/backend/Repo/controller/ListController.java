@@ -148,6 +148,15 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
+    @RequestMapping(value = "/listRecentPapers", method = RequestMethod.POST)
+    public R listRecentPapers(@RequestBody Map<String, Object> searchInfo) {
+        QueryWrapper<ListEntity> queryWrapper=new QueryWrapper<>();
+        queryWrapper.orderByDesc("year");
+        // 获取最新的5篇paper
+        queryWrapper.last("LIMIT 5");
+        return  R.ok().put("res",listService.list(queryWrapper));
+    }
+
 //    @RequestMapping(value="/testRPC")
 //    public R testRPC() {
 //        R res = guitoolsFeignService.getUserProjects();
