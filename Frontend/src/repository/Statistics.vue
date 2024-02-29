@@ -311,10 +311,6 @@ let ChartDevelopFieldOption = reactive({
 
       return tooltipContent;
     },
-
-
-
-
   },
   legend: {
     data: ['Model', 'Generation', 'Optimization', 'Diagnosis', 'Evaluation', 'Application', 'Other'],

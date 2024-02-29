@@ -174,8 +174,8 @@
                                                         currentModel.currentModel.modelname }}`</h5>
                                                 </div>
 
-                                                    <!-- 下拉框 -->
-                                                    <div class="btn-group">
+                                                <!-- 下拉框 -->
+                                                <div class="btn-group">
                                                     <button type="button" class="btn btn-secondary dropdown-toggle"
                                                         data-bs-toggle="dropdown" aria-expanded="false">
                                                         Operations
@@ -186,7 +186,8 @@
                                                         <li><a class="dropdown-item"
                                                                 @click="showdialogNewConversion">Convert into Test Plan</a>
                                                         </li>
-                                                        <li><a class="dropdown-item">Evaluation</a></li>
+                                                        <li><a class="dropdown-item"
+                                                                @click="showdialogNewEvaluation">Evaluation</a></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -426,6 +427,44 @@
                     </el-dialog>
 
 
+                    <!-- New Evaluation -->
+                    <el-dialog v-model="dialogFormVisibleNewEvaluation" title="New Evaluation">
+                        <el-form :model="dialogformNewTestSuites">
+                            <el-form-item label="Algorithm: ">
+                                <el-select v-model="AlgorithmChosedEvaluation" class="m-2"
+                                    placeholder="Select an Algorithm for evaluating">
+                                    <el-option v-for="item in AlgorithmOptionsEvaluation" :key="item.value"
+                                        :label="item.label" :value="item.value" />
+                                </el-select>
+                            </el-form-item>
+                        </el-form>
+
+
+                        <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 20px;">
+                            <div class="spinner-border text-success col-1" role="status">
+                            </div>
+                            <div class="col-11" style="margin: 5px 0px 0px 5px;">
+                                <h6>Cithub is calling the API of {{ AlgorithmChosedEvaluation }} to evaluate, Please wait a
+                                    while...
+                                </h6>
+                            </div>
+                        </div>
+
+                        <div ref="lineChartContainer" class="line-chart-container">
+                            <div ref="lineChart" style="width: 600px; height: 400px;"></div>
+                        </div>
+
+                        <template #footer>
+                            <span class="dialog-footer">
+                                <el-button @click="dialogFormVisibleNewEvaluation = false">Cancel</el-button>
+                                <el-button type="primary" @click="confirmNewEvaluation">
+                                    Confirm
+                                </el-button>
+                            </span>
+                        </template>
+                    </el-dialog>
+
+
 
 
 
@@ -458,6 +497,7 @@ import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
 import toolsInfo from "../ComponentCommon/tools_info.json";
+import * as echarts from 'echarts'
 const testSuitesStore = useTestSuitesStore(pinia)
 const currentModel = useCurrentModel(pinia)
 const currentTestSuite = useCurrentTestSuitesStore(pinia)
@@ -1253,6 +1293,134 @@ const confirmNewConversion = async () => {
 
 // --------------------------------------------------------
 
+// -------------------------For Evaluation------------------------------
+
+const dialogFormVisibleNewEvaluation = ref(false)
+const showdialogNewEvaluation = () => {
+    dialogFormVisibleNewEvaluation.value = true
+    dialogformNewTestSuites.modelid = route.query.modelid
+}
+const AlgorithmChosedEvaluation = ref('')
+const AlgorithmOptionsEvaluation = reactive([])
+const listAllEvaluationAlgorithm = () => {
+    for (const tool of toolsInfo.RECORDS) {
+        if (tool.type == "Evaluation" && !tool.title.includes("GUI")) {
+            AlgorithmOptionsEvaluation.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+        }
+    }
+}
+// 用于画coverage checker的折线图
+const lineChart = ref(null);
+const confirmNewEvaluation = async () => {
+    inAPIcall.value = true
+    // 构造发送给evaluation的data对象
+    let evaluationObj = {}
+    let ParametersAndValues = JSON.parse(currentModel.currentModel.paramsvalues)
+    let tempArray = []
+    let param_count = 0
+    for (let i = 0, len = ParametersAndValues.length; i < len; i++) {
+        if (ParametersAndValues[i].Value != '') { tempArray.push(ParametersAndValues[i].Value.split(',').length) }
+        if (ParametersAndValues[i].Parameter != '') { param_count = param_count + 1 }
+    }
+
+
+    evaluationObj.strength = currentModel.currentModel.strength
+    evaluationObj.parameter = param_count
+    evaluationObj.values = JSON.stringify(tempArray)
+    evaluationObj.testsuite = JSON.parse(currentTestSuite.currentTestSuites.testsuitescontents).testsuite
+    evaluationObj = JSON.stringify(evaluationObj).replace(/"/g, '')
+
+    // 发送请求，对  test suites 得到 evalution
+    for (const tool of AlgorithmOptionsEvaluation) {
+        if (tool.value == AlgorithmChosedEvaluation.value) {
+            try {
+                const EvaluationRes = await request({
+                    // 这里记得改回去，在校外无法用校内服务器
+                    url: tool.url,
+                    // url: 'http://localhost:8301',
+                    method: 'POST',
+                    // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    data: evaluationObj
+                })
+                ElNotification({
+                    title: 'Evaluate success!',
+                    type: 'success',
+                })
+                // dialogFormVisibleNewEvaluation.value = false
+                inAPIcall.value = false
+                console.log("EvaluationRes", EvaluationRes)
+                if (AlgorithmChosedEvaluation.value == 'Coverage Checker') {
+                    let data = EvaluationRes.coverArray
+                    // Convert data to ratio values
+                    const ratioData = data.map(value => value / 36);
+                    const myChart = echarts.init(lineChart.value);
+                    // Define the options for the line chart
+                    const options = {
+                        tooltip: {
+                                trigger: 'axis',
+                                formatter: function (params) {
+                                    const ratio = (params[0].value * 100).toFixed(2) + '%';
+                                    return `Coverage: ${ratio}`;
+                                }
+                            },
+                        title: {
+                            text: 'Changes in Coverage'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: Array.from({ length: ratioData.length }, (_, i) => i + 1),
+                            name: 'Num of Testcase',
+                        },
+                        yAxis: {
+                            type: 'value',
+                            min: 0,
+                            max: 1,
+                            name: 'Ratio of Coverage',
+                            axisLabel: {
+                                formatter: function (value) {
+                                    return (value * 100).toFixed(2) + '%';
+                                }
+                            }
+                        },
+                        series: [{
+                            type: 'line',
+                            data: ratioData,
+                            lineStyle: {
+                                color: 'green' // Set line color to green
+                            },
+                        }]
+                    };
+
+
+
+
+                    // Set the options to the chart
+                    myChart.setOption(options);
+                }
+
+
+
+
+            }
+            catch (err) {
+                console.log("err", err)
+                ElNotification({
+                    title: 'Evaluate fail!',
+                    type: 'error',
+                })
+                dialogFormVisibleNewEvaluation.value = false
+                inAPIcall.value = false
+
+
+            }
+        }
+    }
+
+}
+
 // --------------------------Export TestSuite------------------------------
 const ExportTestSuite = () => {
     // 将表格数据转换为CSV格式
@@ -1302,7 +1470,8 @@ onMounted(async () => {
         await listAllReductionOptions()
         // 加载所有 Conversion 工具
         await listAllConversionOptions()
-
+        // 加载所有 Evaluation 工具
+        await listAllEvaluationAlgorithm()
 
         // 将 ca 转换成表格显示
         getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuite)
@@ -1330,4 +1499,12 @@ onMounted(async () => {
     /* 设置边框样式，这里使用蓝色边框作为示例 */
     box-shadow: 0 0 10px #2dce89;
     /* 设置阴影效果，使边框发光 */
-}</style>
+}
+
+.line-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+</style>
