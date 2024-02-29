@@ -1,24 +1,64 @@
 <template>
   <div class="card">
-    <div class="p-3 mx-4 text-center card-header">
-      <div :class="icon_bg" class="icon icon-shape icon-lg bg-gradient-success shadow text-center border-radius-lg">
-        <i class="opacity-10" :class="classIcon" aria-hidden="true"></i>
-      </div>
-    </div>
-    <div class="p-3 pt-0 text-center card-body">
-      <h5 class="mb-0 text-center">{{ props.model.modelname }}</h5>
-      <!-- <span class="text-xs">{{ modeldescriptions }}</span> -->
+    <div class="p-3 mx-4 card-body">
+      <h6 class="mb-0 ">Model#{{ props.index }} : {{ props.model.modelname }}</h6>
+      <span class="text-md">{{ props.model.modeldescriptions }}</span>
+      <!-- <h6>{{ props.model.modeldescriptions }}</h6> -->
       <hr class="my-3 horizontal dark" />
-      <h6>{{ props.model.modeldescriptions }}</h6>
-      <hr class="my-3 horizontal dark" />
+      <div class="row">
+        <div class="col">
+          <argon-badge   style="margin: 5px">
+            Num of Params
+          </argon-badge>{{ props.model.NumofParams }}
+        </div>
 
+        <div class="col">
+          <argon-badge  color="danger" style="margin: 5px">
+            Num of Cons
+          </argon-badge>{{ props.model.NumofCons }}
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col">
+          <argon-badge  color="info" style="margin: 5px">
+            Updated time
+          </argon-badge>{{ props.model.lastupdatedtimeFortmat }}
+        </div>
+        <div class="col">
+          <argon-badge  color="info" style="margin: 5px">
+            Created time
+          </argon-badge>{{ props.model.createdtimeFortmat }}
+        </div>
+      </div>
+
+
+      <!-- <div style="display: flex;flex-direction: column; align-items: flex-start;">
+        <p class="text-xs">
+          <argon-badge variant="gradient" color="warning" style="margin: 5px">
+            Strength:
+          </argon-badge>{{ props.model.strength }}
+        </p>
+        <p class="text-xs">
+
+        </p>
+        <p class="text-xs">
+
+        </p>
+      </div> -->
+
+      <hr class="my-3 horizontal dark" />
 
       <a class="btn btn-link text-dark px-3 mb-0" @click="EnterModels(props.model)">
-        <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Enter
+        <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Edit Model
       </a>
 
-      <a class="btn btn-link text-dark px-3 mb-0" @click="Generation(props.model)">
+      <!-- <a class="btn btn-link text-dark px-3 mb-0" @click="Generation(props.model)">
         <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>Generation
+      </a> -->
+
+      <a class="btn btn-link text-dark px-3 mb-0" @click="TestSuite(props.model)">
+        <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>TestSuite
       </a>
 
       <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
@@ -31,26 +71,6 @@
         </template>
       </el-popconfirm>
 
-      <hr class="my-3 horizontal dark" />
-      <div style="display: flex;flex-direction: column; align-items: flex-start;">
-        <p class="text-xs">
-          <argon-badge variant="gradient" color="warning" style="margin: 5px">
-            Strength:
-          </argon-badge>{{ props.model.strength }}
-        </p>
-        <p class="text-xs">
-          <argon-badge variant="gradient" color="success" style="margin: 5px">
-            Updated time:
-          </argon-badge>{{ props.model.lastupdatedtimeFortmat }}
-        </p>
-        <p class="text-xs">
-          <argon-badge variant="gradient" color="primary" style="margin: 5px">
-            Created time:
-          </argon-badge>{{ props.model.createdtimeFortmat }}
-        </p>
-      </div>
-
-
     </div>
   </div>
 </template>
@@ -59,14 +79,16 @@
 import ArgonBadge from '../../ComponentCommon/ArgonBadge.vue'
 import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
 import { useModelsStore } from '../../store/modelsStore'
+import { useCurrentModel } from '../../store/currentModel'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../../request';
 import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue';
+import pinia from '../../store/store'
 const route = useRoute()
 const router = useRouter()
-const modelStore = useModelsStore()
-
+const modelStore = useModelsStore(pinia)
+const currentModel = useCurrentModel(pinia)
 const props = defineProps({
   icon_bg: {
     type: String,
@@ -77,6 +99,7 @@ const props = defineProps({
     required: true,
   },
   model: Object,
+  index: Object
 })
 const EnterModels = (model) => {
   router.push({
@@ -85,19 +108,145 @@ const EnterModels = (model) => {
       { modelid: model.modelid }
   })
 }
+const findPosition = (parameterName, value, tableData) => {
+  for (let i = 0; i < tableData.length; i++) {
+    const parameter = tableData[i].Parameter;
+    const values = tableData[i].Value.split(',');
 
+    if (parameter === parameterName) {
+      const valueIndex = values.indexOf(value);
+      if (valueIndex !== -1) {
+        return { parameterIndex: i, valueIndex };
+      }
+    }
+  }
+
+  return { parameterIndex: -1, valueIndex: -1 };
+}
+// 将model转成 cithub格式的model
+const loadModel = (model) => {
+  // 解析参数和参数取值的Json字符串
+  const parsedData = JSON.parse(model.paramsvalues)
+  // 移除 row_index 属性
+  const tableDataTmp = parsedData.map(item => {
+    const { row_index, ...rest } = item;
+    return rest;
+  });
+
+  // 加载约束table
+  let tempArray = []
+  let param_count = 0
+  for (let i = 0, len = tableDataTmp.length; i < len; i++) {
+    if (tableDataTmp[i].Value != '') { tempArray.push(tableDataTmp[i].Value.split(',').length) }
+    if (tableDataTmp[i].Parameter != '') { param_count = param_count + 1 }
+
+  }
+  let modelObject = {
+    system: "",
+    strength: '',
+    parameter: '',
+    values: '',
+    constraints: []
+
+  }
+  // 统计模型基本数据
+  if (model.modelname) { modelObject.system = model.modelname }
+  modelObject.strength = model.strength
+  modelObject.parameter = param_count
+  modelObject.values = JSON.stringify(tempArray)
+
+
+  // 对 tableData 的数据做处理，转成被constraintsTableData
+  let tempArrayCons = []
+  for (let i = 0, len = tableDataTmp.length; i < len; i++) {
+    let tempObj = {}
+    tempObj.Parameter = tableDataTmp[i].Parameter
+    tempObj.valueArray = tableDataTmp[i].Value.split(',').map((value, index) => ({
+      [`Value${index + 1}`]: value
+    }));
+    tempObj.ValueDomain = tempObj.valueArray.length
+    tempArrayCons.push(tempObj)
+
+  }
+
+
+  let consArray = JSON.parse(model.cons)
+  // 对每个约束进行处理，将其转换成 '参数索引'/'取值索引' 的形式
+  let consArrayToAPI = []
+  for (const constraint of consArray) {
+    let consArrayTemp = []
+    // 遍历元素中的键值对
+    for (const key in constraint) {
+      if (Object.hasOwnProperty.call(constraint, key)) {
+        const elements = constraint[key];
+        // elements 是一个数组，包含了多个键值对
+        for (const element of elements) {
+          // 在这里访问 Parameter 和 Value
+          const parameter = element.Parameter;
+          const value = element.Value;
+
+          // 这里可以使用 parameter 和 value 进行其他操作
+          // console.log(`Key: ${key}, Parameter: ${parameter}, Value: ${value}`);
+          let constempObj = findPosition(parameter, value, tableDataTmp)
+          let consString = `\'${constempObj.parameterIndex}/${constempObj.valueIndex}\'`
+          consArrayTemp.push(consString)
+        }
+      }
+      consArrayToAPI.push(consArrayTemp)
+    }
+  }
+  modelObject.constraints = consArrayToAPI
+
+  // 将模型数据转换成cithub格式
+  currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+}
 const Generation = (model) => {
-  router.push({
-    path: '/tools/modelsGeneration',
-    query:
-      { modelid: model.modelid }
-  })
+  // 记录下当前的model
+  currentModel.currentModel = {}
+  currentModel.currentModel = model
+  if (currentModel.currentModel.paramsvalues != null) {
+    // 将model转成Cithub格式的model,并添加到currentModel中
+    loadModel(model)
+    router.push({
+      path: '/tools/TestSuitesHome',
+      query:
+        { modelid: model.modelid }
+    })
+  }
+  else {
+    ElNotification({
+      title: 'Enter Generation Error!',
+      message: 'Please create a model first!',
+      type: 'error',
+    })
+  }
+
+}
+
+const TestSuite =(model)=>{
+    // 记录下当前的model
+  currentModel.currentModel = {}
+  currentModel.currentModel = model
+  if (currentModel.currentModel.paramsvalues != null) {
+    // 将model转成Cithub格式的model,并添加到currentModel中
+    loadModel(model)
+    router.push({
+      path: '/tools/TestSuitesHomeNew',
+      query:
+        { modelid: model.modelid }
+    })
+  }
+  else {
+    ElNotification({
+      title: 'Enter Generation Error!',
+      message: 'Please create a model first!',
+      type: 'error',
+    })
+  }
 }
 
 const confirmDelete = (model) => {
 
-
-  console.log("model", model)
   request({
     url: '/tools/models/DeleteByModelID',
     method: 'POST',
@@ -125,6 +274,8 @@ const confirmDelete = (model) => {
     })
   })
 }
+
+
 const ReloadModels = async () => {
   try {
     // 获取当前Project的所有的models
@@ -161,7 +312,8 @@ const ReloadModels = async () => {
 
 };
 onMounted(() => {
-  // console.log("model",props.model)
+
+
 })
 </script>
 <style scoped>

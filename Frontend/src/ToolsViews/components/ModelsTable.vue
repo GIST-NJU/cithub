@@ -92,13 +92,15 @@ import { useCurrentModel } from '../../store/currentModel'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../../request';
 import { ElNotification } from 'element-plus'
+import pinia from '../../store/store'
+
 const props = defineProps({
   model: Object,
 })
 const route = useRoute()
 const router = useRouter()
-const modelStore = useModelsStore()
-const currentModel = useCurrentModel()
+const modelStore = useModelsStore(pinia)
+const currentModel = useCurrentModel(pinia)
 const EnterModels = (model) => {
   // 记录下当前的model
   currentModel.currentModel = {}
@@ -321,6 +323,10 @@ const ReloadModels = async () => {
 
 };
 
+
+onMounted(()=>{
+  console.log()
+})
 </script>
 
 <style scoped>

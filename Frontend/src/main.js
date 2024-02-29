@@ -13,6 +13,7 @@ import 'element-plus/dist/index.css'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import ArgonDashboard from "./argon-dashboard";
 import bootstrap from 'bootstrap'
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 
 

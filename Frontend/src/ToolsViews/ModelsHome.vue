@@ -272,20 +272,22 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                         </el-dialog>
                         <div class="card-body px-0 pt-0 pb-2">
 
-                            <!-- 废弃使用Card -->
-                            <!-- <div v-for="(chunk, index) in chunkedArray" :key="index" class="row"
+
+                            <div v-for="(chunk, rowIndex) in chunkedArray" :key="rowIndex" class="row"
                                 style="margin: 0 0 0 20px;">
                                 <div class="col" v-for="(model, colIndex) in chunk" :key="colIndex">
-
-                                    <ModelCard style="margin:5px 5px 5px 5px" :classIcon="getRandomIcon()" :model="model">
+                                    <ModelCard style="margin:5px 5px 5px 5px" :model="model"
+                                        :index="calculateOriginalIndex(rowIndex, colIndex)">
                                     </ModelCard>
                                 </div>
-                            </div> -->
-
-                            <!-- 换成Table显示 -->
-                            <div class="card-header">
-                                <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                                <!-- 在最后一行添加一个空白的col，确保最后一行只有一个元素时也只占用一个位置 -->
+                                <div v-if="isLastRow(rowIndex) && chunk.length === 1" class="col"></div>
                             </div>
+
+                            <!-- 废弃Table显示 -->
+                            <!-- <div class="card-header">
+                                <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                            </div> -->
 
                         </div>
 
@@ -310,6 +312,7 @@ import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
+import ModelCard from './components/ModelCard.vue'
 import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
@@ -417,15 +420,28 @@ const listAllModelsByProjectID = async () => {
                 modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
                 modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
 
-                // 统计每个Model下拥有的TestSuites的数量
-                const testSuitesRes = await request({
-                    method: "POST",
-                    url: '/tools/testSuites/listTestSuitesByModelID',
-                    data: {
-                        modelid: modelStore.modelsList[i].modelid
-                    }
+
+                modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
+                modelStore.modelsList[i].ConsOBJ = JSON.parse(modelStore.modelsList[i].cons)
+                modelStore.modelsList[i].NumofParams = modelStore.modelsList[i].PandVOBJ.length
+                modelStore.modelsList[i].NumofCons = modelStore.modelsList[i].ConsOBJ.length
+                let transformedData = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    // 将逗号分隔的字符串转换为数组
+                    const valueArray = item.Value.split(',');
+
+                    // 更新对象的Value字段为数组
+                    return {
+                        ...item,
+                        Value: valueArray
+                    };
                 });
-                modelStore.modelsList[i].NumOfTestSuites = testSuitesRes.TestSuites.length
+                modelStore.modelsList[i].PandVOBJ = transformedData
+                // 移除 row_index 属性
+                let tableDataTmp = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    const { row_index, ...rest } = item;
+                    return rest;
+                });
+                modelStore.modelsList[i].PandVOBJ = tableDataTmp
             }
 
 
@@ -442,13 +458,14 @@ const listAllModelsByProjectID = async () => {
                 message: 'Please choose a Project to continue.',
                 type: 'error',
             })
-            router.push({
-                name: 'ProjectsHome'
-            })
+            // router.push({
+            //     name: 'ProjectsHome'
+            // })
         }
 
     }
     else {
+        // console.log("currentProjectStore.projectid是", currentProjectStore.projectid)
         ElNotification({
             title: 'Need to Choose a Project first',
             message: 'Please choose a Project to continue.',
@@ -461,7 +478,7 @@ const listAllModelsByProjectID = async () => {
 
 };
 
-const itemsPerRow = ref(3);
+const itemsPerRow = ref(2);
 const chunkedArray = computed(() => {
     const result = [];
     for (let i = 0; i < modelStore.modelsList.length; i += itemsPerRow.value) {
@@ -469,6 +486,15 @@ const chunkedArray = computed(() => {
     }
     return result;
 });
+const calculateOriginalIndex = (rowIndex, colIndex) => {
+    // 计算原始索引的方法
+    return rowIndex * itemsPerRow.value + colIndex;
+}
+const isLastRow = computed(() => {
+  return rowIndex => rowIndex === chunkedArray.value.length - 1;
+});
+
+
 const dialogFormVisibleNew = ref(false)
 const dialogformNewModel = reactive({
     modelname: '',
@@ -544,8 +570,9 @@ const confirmNewModel = async () => {
                         // console.log("obj_ACTS", JSON.stringify(obj_ACTS))
                         try {
                             const ACTSRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8310',
+                                // 这里记得改回去，在校外无法用校内服务器
+                                url: 'http://210.28.135.32:8106',
+                                // url: 'http://localhost:8310',
                                 method: 'POST',
                                 // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                                 headers: {
@@ -700,8 +727,9 @@ const confirmNewModel = async () => {
                         obj_casa.model_file = ModelConversionForm.model_file
                         try {
                             const CASARes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8313',
+                                //  这里记得改回去，在校外无法用校内服务器
+                                url: 'http://210.28.135.32:8107',
+                                // url: 'http://localhost:8313',
                                 method: 'POST',
                                 // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                                 headers: {
@@ -842,8 +870,9 @@ const confirmNewModel = async () => {
                         // console.log("obj", JSON.stringify(obj_ctwedge))
                         try {
                             const CTWedgeRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8311',
+                                // 这里记得改回去，在校外无法用校内服务器
+                                url: 'http://210.28.135.32:8114',
+                                // url: 'http://localhost:8311',
                                 method: 'POST',
                                 // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                                 headers: {
@@ -1014,8 +1043,9 @@ const confirmNewModel = async () => {
                         // console.log("obj", JSON.stringify(obj_pict))
                         try {
                             const PICTRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8312',
+                                // 这里记得改回去，在校外无法用校内服务器
+                                url: 'http://210.28.135.32:8115',
+                                // url: 'http://localhost:8312',
                                 method: 'POST',
                                 // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                                 headers: {
@@ -1200,7 +1230,7 @@ const confirmNewModel = async () => {
                     }
 
 
-              
+
                 }
 
                 break;
@@ -1281,17 +1311,9 @@ const ReloadModels = async () => {
 
 }
 
-const iconsArray = [
-    'text-white fas fa-landmark',
-    'text-white fas fa-kiwi-bird',
-    'text-white fas fa-laptop-code',
-    'text-white fas fa-laugh-wink',
-]; // 替换为你的图标数组
 
-const getRandomIcon = () => {
-    const randomIndex = Math.floor(Math.random() * iconsArray.length);
-    return iconsArray[randomIndex];
-};
+
+
 
 const selectedModellingType = ref(null);
 const chooseModellingType = (type) => {

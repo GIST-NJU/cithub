@@ -18,10 +18,10 @@
               URL:
               <span class="text-dark ms-sm-2 font-weight-bold">{{ tool.url }}</span>
             </span>
-            <span class="mb-2 text-xs">
+            <!-- <span class="mb-2 text-xs">
               Github Repository:
               <span class="text-dark ms-sm-2 font-weight-bold">{{ tool.repository }}</span>
-            </span>
+            </span> -->
             <span v-if="tool.docker_image" class="mb-2 text-xs">
               DockerImage Repository:
               <span class="text-dark ms-sm-2 font-weight-bold">{{ tool.docker_image }}</span>

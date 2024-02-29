@@ -11,10 +11,10 @@
                 <div class="col-12">
                     <div class="card mb-4">
                         <h3 style="margin: 20px 0px 0px 40px;">Tools</h3>
-                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Cithub Provides a variety of tools of
-                            Combinatorial Testing for using.</p>
-                        <p style="margin-left: 45px;" class="text-muted text-sm mb-0"> Following are the categories of tools
+                        <p style="margin-left: 45px;" class="text-muted text-md mb-0"> Cithub Provides a variety of tools of
+                            Combinatorial Testing for using. Following are the categories of tools
                             available now.</p>
+                        <p style="margin-left: 45px;" class="text-muted text-md mb-0">Don't know how to use? <a style="cursor:pointer" @click="jumpToHelps"><i class="ni ni-send text-info text-lg opacity-10"></i><span class="nav-link-text ms-1 p">Help</span></a></p>
                         <div class="row" style="margin:10px 0px 0px 20px">
                             <div class="col-lg-3 col-md-6 col-12">
                                 <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }"
@@ -191,6 +191,10 @@ const selectedDivIndex = ref(null);
 const handleDivClick = (index) => {
     selectedDivIndex.value = index;
 };
+const jumpToHelps = () => {
+    router.push({ name: 'HelpCenter' })
+}
+
 onMounted(async () => {
 
     if (userStore.userID == '') {
@@ -209,7 +213,7 @@ onMounted(async () => {
             }
         )
     }
-    else {  
+    else {
         console.log("用户已登录！")
         // 加载工具信息
         LoadToolsInfo()

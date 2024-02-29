@@ -69,32 +69,33 @@
 
                             <div style="display: flex;">
                                 <div>
-                                    <span style="margin-left:5px">
-                                        Algorithm:</span>
-
-                                    <argon-badge style="margin-left:5px" variant="gradient" color="info">{{
-                                        currentTestSuite.currentTestSuites.algorithm }}</argon-badge>
+                                    <argon-badge style="margin-left:5px" variant="gradient"
+                                        color="info">Algorithm</argon-badge>
+                                    <span style="margin-left:5px">{{currentTestSuite.currentTestSuites.algorithm }}</span>
                                 </div>
 
                                 <div>
-                                    <span style="margin-left:15px">
-                                        Strength:</span>
                                     <argon-badge class="statics" variant="gradient" color="warning">
-                                        {{ currentModel.currentModel.strength }}</argon-badge>
+                                        Strength </argon-badge>
+                                    <span style="margin-left:5px">
+                                         {{ currentModel.currentModel.strength }}</span>
+                      
 
                                 </div>
 
 
                                 <div>
-                                    <span style="margin-left:15px">Time:</span>
                                     <argon-badge class="statics" variant="gradient" color="primary">
-                                        {{ currentTestSuite.currentTestSuites.time }}</argon-badge>
+                                        Time</argon-badge>
+                                    <span style="margin-left:5px">{{ currentTestSuite.currentTestSuites.time }}</span>
+                                  
 
                                 </div>
                                 <div>
-                                    <span style="margin-left:15px">Size:</span>
-                                    <argon-badge class="statics" variant="gradient">{{
-                                        currentTestSuite.currentTestSuites.size }} </argon-badge>
+                                    <argon-badge class="statics" variant="gradient"> Size</argon-badge>
+
+                                    <span style="margin-left:5px">{{
+                                        currentTestSuite.currentTestSuites.size }}</span>
 
                                 </div>
 
@@ -254,7 +255,6 @@ const ConversionPreviewFlag = ref(true)
 
 
 onMounted(async () => {
-    // console.log("currentmodel", currentModel.currentModel)
 
     const parsedData = JSON.parse(currentModel.currentModel.paramsvalues)
     // 移除 row_index 属性
@@ -276,7 +276,7 @@ onMounted(async () => {
 <style scoped>
 .statics {
 
-    margin: 0px 5px 0px 5px;
+    margin: 0px 5px 0px 40px;
 }
 
 .button-container:hover {

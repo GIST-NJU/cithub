@@ -21,10 +21,12 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
 import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
+import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
 import LLMModelDetails from '../ToolsViews/LLMModelDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
+import TestSuitesHomeNew from '../ToolsViews/TestSuiteHomeNew.vue'
 import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
@@ -110,6 +112,13 @@ const routes = [
         meta: { title: 'ToolsHome' }
       },
       {
+        // HelpCenter
+        path: "HelpCenter",
+        name: 'HelpCenter',
+        component: HelpCenter,
+        meta: { title: 'HelpCenter' }
+      },
+      {
         // ProjectsHome
         path: "ProjectsHome",
         name: 'ProjectsHome',
@@ -143,6 +152,13 @@ const routes = [
         name: 'TestSuitesHome',
         component: TestSuitesHome,
         meta: { title: 'TestSuitesHome' }
+      },
+      {
+        // TestSuitesHome
+        path: "TestSuitesHomeNew",
+        name: 'TestSuitesHomeNew',
+        component: TestSuitesHomeNew,
+        meta: { title: 'TestSuitesHomeNew' }
       },
       {
         // TestSuiteDetails

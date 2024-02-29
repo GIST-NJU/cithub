@@ -22,6 +22,13 @@
                 </p>
               </div>
 
+              <!-- search field -->
+              <div>
+                <p v-if="route.query.searchType == 'field'" class="text-muted mb-0"><span> Field : <ArgonBadge color="info">{{
+                  PaperInfoStore.searchKeyWords }}</ArgonBadge></span>
+                </p>
+              </div>
+
               <!-- search institution -->
               <div>
                 <p v-if="route.query.searchType == 'institution'" class="text-muted mb-0"><span> Institution : {{

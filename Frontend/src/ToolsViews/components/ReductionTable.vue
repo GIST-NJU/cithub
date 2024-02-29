@@ -72,7 +72,7 @@
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center  ">
-              <td class="align-middle text-center  ">
+              <td class="align-middle   ">
                 <h6 class="mb-0  text-sm">{{ Reduction.reductionname }}</h6>
                 <p class="text-xs text-secondary mb-0">{{ Reduction.reductiondescriptions }}</p>
               </td>
@@ -148,11 +148,12 @@ import { useReductionStore } from '../../store/reductionStore'
 import toolsInfo from "../../ComponentCommon/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentTestSuitesStore } from '../../store/currentTestSuite'
+import pinia from '../../store/store'
 const router = useRouter();
-const currentModel = useCurrentModel()
-const testSuitesStore = useTestSuitesStore()
-const ReductionStore = useReductionStore()
-const currentTestSuite = useCurrentTestSuitesStore()
+const currentModel = useCurrentModel(pinia)
+const testSuitesStore = useTestSuitesStore(pinia)
+const ReductionStore = useReductionStore(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const route = useRoute()
 const functionHead = ref('')
 const functionBody = ref('')
@@ -237,110 +238,119 @@ const confirmNewReduction = async () => {
   Obj.strength = currentModel.currentModel.strength
   Obj = JSON.stringify(Obj)
   // console.log("OBJ",Obj)
-  try {
-    const ReductionRes = await request({
-      // url:tool.url 这里记得改回去，在校外无法用校内服务器
-      url: 'http://localhost:8305',
-      method: 'POST',
-      // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-      headers: {
-        'Content-Type': 'text/plain'
-      },
-      data: Obj
-    })
-    // console.log("ReductionRes",ReductionRes)
-    const newReductionRes = await request({
-      url: "/tools/reduction/NewReduction",
-      method: "POST",
-      data:
-      {
-        Reductionname: dialogformNewReduction.Reductionname,
-        Reductiondescriptions: dialogformNewReduction.Reductiondescriptions,
-        lastupdatedtime: dialogformNewReduction.lastupdatedtime,
-        createdtime: dialogformNewReduction.createdtime,
-        testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
-        ReductiondContents: JSON.stringify(ReductionRes),
-        time: ReductionRes.time,
-        size: ReductionRes.size,
-        algorithm: AlgorithmChosed.value
-      }
-    })
 
-    if (newReductionRes.NewStatus == 'success!') {
-      listAllReductionByTestSuitesID()
-      ElNotification({
-        title: 'Save Success!',
-        type: 'success',
-      })
-      dialogFormVisibleNew.value = false
+  for (const tool of AlgorithmOptions) {
+    if (tool.value == AlgorithmChosed.value) {
+
+      try {
+        const ReductionRes = await request({
+          // 这里记得改回去，在校外无法用校内服务器
+          url:tool.url,
+          // url: 'http://localhost:8305',
+          method: 'POST',
+          // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          data: Obj
+        })
+        // console.log("ReductionRes",ReductionRes)
+        const newReductionRes = await request({
+          url: "/tools/reduction/NewReduction",
+          method: "POST",
+          data:
+          {
+            Reductionname: dialogformNewReduction.Reductionname,
+            Reductiondescriptions: dialogformNewReduction.Reductiondescriptions,
+            lastupdatedtime: dialogformNewReduction.lastupdatedtime,
+            createdtime: dialogformNewReduction.createdtime,
+            testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+            ReductiondContents: JSON.stringify(ReductionRes),
+            time: ReductionRes.time,
+            size: ReductionRes.size,
+            algorithm: AlgorithmChosed.value
+          }
+        })
+
+        if (newReductionRes.NewStatus == 'success!') {
+          listAllReductionByTestSuitesID()
+          ElNotification({
+            title: 'Save Success!',
+            type: 'success',
+          })
+          dialogFormVisibleNew.value = false
+        }
+        else {
+          ElNotification({
+            title: 'Save fail!',
+            type: 'error',
+          })
+          dialogFormVisibleNew.value = false
+
+        }
+      }
+      catch (err) { }
     }
-    else {
+
+
+
+
+  }
+
+}
+  const confirmDelete = (Reduction) => {
+    request({
+      url: '/tools/reduction/DeleteByReductionID',
+      method: 'POST',
+      data: {
+        Reductionid: Reduction.Reductionid
+      }
+    }).then((res) => {
+      if (res.DeleteStatus == 'success!') {
+        listAllReductionByTestSuitesID()
+        // 实时更新页面数据
+        ElNotification({
+          title: 'Delete Success!',
+          message: 'please check the results',
+          type: 'success',
+        })
+
+      }
+    }).catch((error) => {
+      // console.log(error)
       ElNotification({
-        title: 'Save fail!',
+        title: 'Delete Error!',
+        message: 'please check the results',
         type: 'error',
       })
-      dialogFormVisibleNew.value = false
-
-    }
-  }
-  catch (err) { }
-
-
-
-}
-const confirmDelete = (Reduction) => {
-  request({
-    url: '/tools/reduction/DeleteByReductionID',
-    method: 'POST',
-    data: {
-      Reductionid: Reduction.Reductionid
-    }
-  }).then((res) => {
-    if (res.DeleteStatus == 'success!') {
-      listAllReductionByTestSuitesID()
-      // 实时更新页面数据
-      ElNotification({
-        title: 'Delete Success!',
-        message: 'please check the results',
-        type: 'success',
-      })
-
-    }
-  }).catch((error) => {
-    // console.log(error)
-    ElNotification({
-      title: 'Delete Error!',
-      message: 'please check the results',
-      type: 'error',
     })
-  })
-}
+  }
 
 
-const AlgorithmChosed = ref('')
-const AlgorithmOptions = reactive([])
-const listAllReductionOptions = () => {
-  for (const tool of toolsInfo.RECORDS) {
-    if (tool.type == "SelectionReduction") {
-      AlgorithmOptions.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+  const AlgorithmChosed = ref('')
+  const AlgorithmOptions = reactive([])
+  const listAllReductionOptions = () => {
+    for (const tool of toolsInfo.RECORDS) {
+      if (tool.type == "SelectionReduction") {
+        AlgorithmOptions.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+      }
     }
   }
-}
 
 
 
 
 
 
-onMounted(async () => {
+  onMounted(async () => {
 
-  // 加载当前testSuites的 Reduction 信息
-  await listAllReductionByTestSuitesID()
+    // 加载当前testSuites的 Reduction 信息
+    await listAllReductionByTestSuitesID()
 
-  // 加载所有Reduction选项
-  await listAllReductionOptions()
+    // 加载所有Reduction选项
+    await listAllReductionOptions()
 
 
 
-})
+  })
 </script>

@@ -64,18 +64,21 @@
               </div>
               <div class="ms-auto text-end">
                 <a class="btn btn-link text-dark px-3 mb-0" @click="enterProject(project)">
-                  <i class="fas fa-book-open text-success me-2" aria-hidden="true"></i>Project Details
+                  <ArgonButton color="success"><i class="fas fa-book-open text-white me-2" aria-hidden="true"></i>Enter
+                    Project</ArgonButton>
                 </a>
                 <a class="btn btn-link text-dark px-3 mb-0" @click="showdialogUpdate(project, index)">
-                  <i class="fas fa-pencil-alt text-primary me-2" aria-hidden="true"></i>Edit Project
+                  <ArgonButton color="primary"> <i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Edit Project</ArgonButton>
+
                 </a>
 
                 <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
                   @confirm="confirmDelete(project)">
                   <template #reference>
-                    <!-- <el-button>Delete</el-button> -->
-                    <a class="btn btn-link text-danger text-gradient px-3 mb-0">
-                      <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete
+                    
+                    <a class="btn btn-link text-dark  px-3 mb-0">
+                      <ArgonButton><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete</ArgonButton>
+                      
                     </a>
                   </template>
                 </el-popconfirm>
@@ -128,14 +131,14 @@ import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
 import { useUserStore } from '../../store/userStore'
 import { useProjectsStore } from '../../store/projectsStore'
 import { useRouter } from 'vue-router';
-import { async } from 'q';
+import pinia from '../../store/store'
 const router = useRouter();
-const currentProjectStore = useCurrentProject()
+const currentProjectStore = useCurrentProject(pinia)
 const dialogFormVisibleNew = ref(false)
 const dialogFormVisibleUpdate = ref(false)
-const userStore = useUserStore()
-
-
+const userStore = useUserStore(pinia)
+const projectList = reactive([]);
+const projectsStore = useProjectsStore(pinia)
 const props = defineProps({
   chunkedArray: Object,
 })
@@ -304,8 +307,7 @@ const confirmDelete = (project) => {
     })
   })
 }
-const projectList = reactive([]);
-const projectsStore = useProjectsStore()
+
 
 const ReloadProjects = async () => {
   try {

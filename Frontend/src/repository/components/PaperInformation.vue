@@ -9,7 +9,7 @@
           <p class="text-muted mb-0"><a href="">{{ FirstAuthorName }}</a>,{{ OtherAuthorName }}</p>
           <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }}</p>
           <p>
-            <span v-if="TagArray.length!=0" class="badge rounded-pill bg-primary">research field</span>&nbsp;
+            <span v-if="TagArray.length!=0" class="badge rounded-pill bg-primary">{{currentPaperStore.currentPaper.field  }}</span>&nbsp;
               <span v-for="(tag, index) in TagArray" :key="index" class="badge rounded-pill bg-info" style="margin-right:5px">{{ tag }}</span>
           </p>
 
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-body pb-0">
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="row">
     <div class="col-12">

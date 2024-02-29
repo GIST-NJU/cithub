@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                     
+
                         <div class="card-body">
                             <!-- <p class=" text-lg">Model Infomation</p> -->
                             <div class="col-md-3">
@@ -181,7 +181,7 @@
                             <hr class="horizontal dark" />
                             <div style="width:100%;margin-bottom: 5px;text-align: center;">
                                 <argon-button style="margin:5px 5px 5px 5px;float: right" color="success" class="ms-auto"
-                                    @click="Generation">Generated test suites</argon-button>
+                                    @click="Generation">Test suite</argon-button>
                                 <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary" class="ms-auto"
                                     @click="SaveModel">Save Model</argon-button>
 
@@ -517,7 +517,7 @@ const addCons = () => {
     }
     // 存储cons！
     let cons_count = consArray.value.length + 1
-    consArray.value.push({ ["Constrain_" + cons_count]: ForbiddenTuple });
+    consArray.value.push({ ["Constraint_" + cons_count]: ForbiddenTuple });
     consPreview.value = JSON.stringify(consArray.value, null, 6).replace(/"/g, '')
 
     // 清空本次的高亮cell
@@ -597,6 +597,7 @@ const SaveModel = async () => {
     if (tableData.value.length != 0) {
         if (strength.value !== null && strength.value !== 0) {
             const currentDate = new Date();
+
             // 如果没有约束
             if (consArray.value.length == 0) {
                 const SaveModelContentRes = await request({
@@ -613,12 +614,39 @@ const SaveModel = async () => {
                 })
 
                 if (SaveModelContentRes.SaveModelStatus == 'success') {
+
+
                     currentModel.currentModel.modelid = route.query.modelid
                     currentModel.currentModel.modelname = model.modelname
                     currentModel.currentModel.modeldescriptions = model.modeldescriptions
                     currentModel.currentModel.strength = strength.value
                     currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
                     currentModel.currentModel.lastupdatedtime = currentDate
+
+
+                    currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+
+                    currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+
+                    let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+                        // 将逗号分隔的字符串转换为数组
+                        const valueArray = item.Value.split(',');
+
+                        // 更新对象的Value字段为数组
+                        return {
+                            ...item,
+                            Value: valueArray
+                        };
+                    });
+                    currentModel.currentModel.PandVOBJ = transformedData
+                    // 移除 row_index 属性
+                    let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
+                        const { row_index, ...rest } = item;
+                        return rest;
+                    });
+                    currentModel.currentModel.PandVOBJ = tableDataTmp
+
+
                     ElNotification({
                         title: 'Save Success!',
                         type: 'success',
@@ -655,6 +683,30 @@ const SaveModel = async () => {
                     currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
                     currentModel.currentModel.cons = JSON.stringify(consArray.value)
                     currentModel.currentModel.lastupdatedtime = currentDate
+
+
+                    currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+                    currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
+                    currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+                    currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
+                    let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+                        // 将逗号分隔的字符串转换为数组
+                        const valueArray = item.Value.split(',');
+
+                        // 更新对象的Value字段为数组
+                        return {
+                            ...item,
+                            Value: valueArray
+                        };
+                    });
+                    currentModel.currentModel.PandVOBJ = transformedData
+                    // 移除 row_index 属性
+                    let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
+                        const { row_index, ...rest } = item;
+                        return rest;
+                    });
+                    currentModel.currentModel.PandVOBJ = tableDataTmp
+
                     ElNotification({
                         title: 'Save Success!',
                         type: 'success',
@@ -712,6 +764,39 @@ const listModelInfoByModelID = async () => {
         modelObject.system = model.modelname
 
 
+
+
+        currentModel.currentModel.modelid = res.models.modelid
+        currentModel.currentModel.strength = res.models.strength
+        currentModel.currentModel.modelname = res.models.modelname
+        currentModel.currentModel.modeldescriptions = res.models.modeldescriptions
+        currentModel.currentModel.paramsvalues = res.models.paramsvalues
+        currentModel.currentModel.cons = res.models.cons
+        currentModel.currentModel.lastupdatedtime = res.models.lastupdatedtime
+        currentModel.currentModel.createdtime = res.models.createdtime
+        currentModel.currentModel.PandVOBJ = JSON.parse(model.paramsvalues)
+        currentModel.currentModel.ConsOBJ = JSON.parse(model.cons)
+        currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+        currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
+
+        let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+            // 将逗号分隔的字符串转换为数组
+            const valueArray = item.Value.split(',');
+
+            // 更新对象的Value字段为数组
+            return {
+                ...item,
+                Value: valueArray
+            };
+        });
+        currentModel.currentModel.PandVOBJ = transformedData
+        // 移除 row_index 属性
+        let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
+            const { row_index, ...rest } = item;
+            return rest;
+        });
+        currentModel.currentModel.PandVOBJ = tableDataTmp
+        
         // 加载模型到table
         // 加载模型到预览区
         loadModel();
@@ -745,7 +830,7 @@ const loadModel = () => {
 
     if (model.modelname) { modelObject.system = model.modelname }
     modelObject.system = model.modelname
-    // modelObject.strength = strength.value
+    modelObject.strength = model.strength
     modelObject.parameter = param_count
     modelObject.values = JSON.stringify(tempArray)
 
@@ -805,6 +890,7 @@ const loadModel = () => {
 
     // 将模型数据显示在Model Preview区域
     modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
 
 }
 watch(strength, (newStrength, oldStrength) => {
@@ -822,87 +908,13 @@ watch(strength, (newStrength, oldStrength) => {
 
 }, { deep: true });
 
-// 将model转成 cithub格式的model
-const loadCithubModel = (model) => {
-    // 解析参数和参数取值的Json字符串
-    const parsedData = JSON.parse(model.paramsvalues)
-    // 移除 row_index 属性
-    const tableDataTmp = parsedData.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
-
-    // 加载约束table
-    let tempArray = []
-    let param_count = 0
-    for (let i = 0, len = tableDataTmp.length; i < len; i++) {
-        if (tableDataTmp[i].Value != '') { tempArray.push(tableDataTmp[i].Value.split(',').length) }
-        if (tableDataTmp[i].Parameter != '') { param_count = param_count + 1 }
-
-    }
-    let modelObject = {
-        system: "",
-        strength: '',
-        parameter: '',
-        values: '',
-        constraints: []
-
-    }
-    // 统计模型基本数据
-    modelObject.system = model.modelname
-    modelObject.strength = model.strength
-    modelObject.parameter = param_count
-    modelObject.values = JSON.stringify(tempArray)
 
 
-    // 对 tableData 的数据做处理，转成被constraintsTableData
-    let tempArrayCons = []
-    for (let i = 0, len = tableDataTmp.length; i < len; i++) {
-        let tempObj = {}
-        tempObj.Parameter = tableDataTmp[i].Parameter
-        tempObj.valueArray = tableDataTmp[i].Value.split(',').map((value, index) => ({
-            [`Value${index + 1}`]: value
-        }));
-        tempObj.ValueDomain = tempObj.valueArray.length
-        tempArrayCons.push(tempObj)
-
-    }
-
-
-    let consArray = JSON.parse(model.cons)
-    // 对每个约束进行处理，将其转换成 '参数索引'/'取值索引' 的形式
-    let consArrayToAPI = []
-    for (const constraint of consArray) {
-        let consArrayTemp = []
-        // 遍历元素中的键值对
-        for (const key in constraint) {
-            if (Object.hasOwnProperty.call(constraint, key)) {
-                const elements = constraint[key];
-                // elements 是一个数组，包含了多个键值对
-                for (const element of elements) {
-                    // 在这里访问 Parameter 和 Value
-                    const parameter = element.Parameter;
-                    const value = element.Value;
-
-                    // 这里可以使用 parameter 和 value 进行其他操作
-                    // console.log(`Key: ${key}, Parameter: ${parameter}, Value: ${value}`);
-                    let constempObj = findPosition(parameter, value, tableDataTmp)
-                    let consString = `\'${constempObj.parameterIndex}/${constempObj.valueIndex}\'`
-                    consArrayTemp.push(consString)
-                }
-            }
-            consArrayToAPI.push(consArrayTemp)
-        }
-    }
-    modelObject.constraints = consArrayToAPI
-
-    // 将模型数据转换成cithub格式
-    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
-}
 const Generation = () => {
-    loadCithubModel(currentModel.currentModel)
+    loadModel()
     router.push({
-        path: '/tools/TestSuitesHome',
+        // path: '/tools/TestSuitesHome',
+        path: '/tools/TestSuitesHomeNew',
         query:
             { modelid: route.query.modelid }
     })

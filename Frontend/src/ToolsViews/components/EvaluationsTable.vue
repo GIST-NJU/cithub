@@ -140,11 +140,12 @@ import { useEvaluationStore } from '../../store/evaluationStore'
 import toolsInfo from "../../ComponentCommon/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentTestSuitesStore } from '../../store/currentTestSuite'
+import pinia from '../../store/store'
 const router = useRouter();
-const currentModel = useCurrentModel()
-const testSuitesStore = useTestSuitesStore()
-const evaluationStore = useEvaluationStore()
-const currentTestSuite = useCurrentTestSuitesStore()
+const currentModel = useCurrentModel(pinia)
+const testSuitesStore = useTestSuitesStore(pinia)
+const evaluationStore = useEvaluationStore(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const route = useRoute()
 
 const listAllEvaluationByTestSuitesID = async () => {
@@ -232,8 +233,9 @@ const confirmNewEvaluation = async () => {
     if (tool.value == AlgorithmChosed.value) {
       try {
         const EvaluationRes = await request({
-          // url:tool.url 这里记得改回去，在校外无法用校内服务器
-          url: 'http://localhost:8301',
+          // 这里记得改回去，在校外无法用校内服务器
+          url:tool.url ,
+          // url: 'http://localhost:8301',
           method: 'POST',
           // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
           headers: {

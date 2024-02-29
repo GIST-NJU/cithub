@@ -148,11 +148,12 @@ import { usePrioritisationStore } from '../../store/prioritisationStore'
 import toolsInfo from "../../ComponentCommon/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentTestSuitesStore } from '../../store/currentTestSuite'
+import pinia from '../../store/store'
 const router = useRouter();
-const currentModel = useCurrentModel()
-const testSuitesStore = useTestSuitesStore()
-const prioritisationStore = usePrioritisationStore()
-const currentTestSuite = useCurrentTestSuitesStore()
+const currentModel = useCurrentModel(pinia)
+const testSuitesStore = useTestSuitesStore(pinia)
+const prioritisationStore = usePrioritisationStore(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const route = useRoute()
 const functionHead = ref('')
 const functionBody = ref('')
@@ -224,110 +225,114 @@ const confirmNewPrioritisation = async () => {
 
   Obj.weight = WeightArray
   Obj = JSON.stringify(Obj)
+  for (const tool of AlgorithmOptions) {
+    if (tool.value == AlgorithmChosed.value) {
+      try {
+        const PrioritisationRes = await request({
+          // 这里记得改回去，在校外无法用校内服务器
+          url: tool.url,
+          // url: 'http://localhost:8304',
+          method: 'POST',
+          // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          data: Obj
+        })
+        // console.log("PrioritisationRes",PrioritisationRes)
+        const newPrioritisationRes = await request({
+          url: "/tools/prioritisation/NewPrioritisation",
+          method: "POST",
+          data:
+          {
+            prioritisationname: dialogformNewPrioritisation.prioritisationname,
+            prioritisationdescriptions: dialogformNewPrioritisation.prioritisationdescriptions,
+            lastupdatedtime: dialogformNewPrioritisation.lastupdatedtime,
+            createdtime: dialogformNewPrioritisation.createdtime,
+            testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+            prioritisationdContents: JSON.stringify(PrioritisationRes),
+            time: PrioritisationRes.time,
+            algorithm: AlgorithmChosed.value
+          }
+        })
 
-  try {
-    const PrioritisationRes = await request({
-      // url:tool.url 这里记得改回去，在校外无法用校内服务器
-      url: 'http://localhost:8304',
-      method: 'POST',
-      // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-      headers: {
-        'Content-Type': 'text/plain'
-      },
-      data: Obj
-    })
-    // console.log("PrioritisationRes",PrioritisationRes)
-    const newPrioritisationRes = await request({
-      url: "/tools/prioritisation/NewPrioritisation",
-      method: "POST",
-      data:
-      {
-        prioritisationname: dialogformNewPrioritisation.prioritisationname,
-        prioritisationdescriptions: dialogformNewPrioritisation.prioritisationdescriptions,
-        lastupdatedtime: dialogformNewPrioritisation.lastupdatedtime,
-        createdtime: dialogformNewPrioritisation.createdtime,
-        testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
-        prioritisationdContents: JSON.stringify(PrioritisationRes),
-        time: PrioritisationRes.time,
-        algorithm: AlgorithmChosed.value
+        if (newPrioritisationRes.NewStatus == 'success!') {
+          listAllPrioritisationByTestSuitesID()
+          ElNotification({
+            title: 'Save Success!',
+            type: 'success',
+          })
+          dialogFormVisibleNew.value = false
+        }
+        else {
+          ElNotification({
+            title: 'Save fail!',
+            type: 'error',
+          })
+          dialogFormVisibleNew.value = false
+
+        }
       }
-    })
-
-    if (newPrioritisationRes.NewStatus == 'success!') {
-      listAllPrioritisationByTestSuitesID()
-      ElNotification({
-        title: 'Save Success!',
-        type: 'success',
-      })
-      dialogFormVisibleNew.value = false
+      catch (err) { }
     }
-    else {
+
+
+
+  }
+}
+  const confirmDelete = (prioritisation) => {
+    request({
+      url: '/tools/prioritisation/DeleteByPrioritisationID',
+      method: 'POST',
+      data: {
+        Prioritisationid: prioritisation.prioritisationid
+      }
+    }).then((res) => {
+      if (res.DeleteStatus == 'success!') {
+        listAllPrioritisationByTestSuitesID()
+        // 实时更新页面数据
+        ElNotification({
+          title: 'Delete Success!',
+          message: 'please check the results',
+          type: 'success',
+        })
+
+      }
+    }).catch((error) => {
+      // console.log(error)
       ElNotification({
-        title: 'Save fail!',
+        title: 'Delete Error!',
+        message: 'please check the results',
         type: 'error',
       })
-      dialogFormVisibleNew.value = false
-
-    }
-  }
-  catch (err) { }
-
-
-
-}
-const confirmDelete = (prioritisation) => {
-  request({
-    url: '/tools/prioritisation/DeleteByPrioritisationID',
-    method: 'POST',
-    data: {
-      Prioritisationid: prioritisation.prioritisationid
-    }
-  }).then((res) => {
-    if (res.DeleteStatus == 'success!') {
-      listAllPrioritisationByTestSuitesID()
-      // 实时更新页面数据
-      ElNotification({
-        title: 'Delete Success!',
-        message: 'please check the results',
-        type: 'success',
-      })
-
-    }
-  }).catch((error) => {
-    // console.log(error)
-    ElNotification({
-      title: 'Delete Error!',
-      message: 'please check the results',
-      type: 'error',
     })
-  })
-}
+  }
 
 
-const AlgorithmChosed = ref('')
-const AlgorithmOptions = reactive([])
-const listAllPrioritisationOptions = () => {
-  for (const tool of toolsInfo.RECORDS) {
-    if (tool.type == "Prioritisation") {
-      AlgorithmOptions.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+  const AlgorithmChosed = ref('')
+  const AlgorithmOptions = reactive([])
+  const listAllPrioritisationOptions = () => {
+    for (const tool of toolsInfo.RECORDS) {
+      if (tool.type == "Prioritisation") {
+        AlgorithmOptions.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+      }
     }
   }
-}
 
 
 
 
 
 
-onMounted(async () => {
+  onMounted(async () => {
 
-  // 加载当前testSuites的 Prioritisation 信息
-  await listAllPrioritisationByTestSuitesID()
+    // 加载当前testSuites的 Prioritisation 信息
+    await listAllPrioritisationByTestSuitesID()
 
-  // 加载所有Prioritisation选项
-  await listAllPrioritisationOptions()
+    // 加载所有Prioritisation选项
+    await listAllPrioritisationOptions()
 
 
 
-})
+  })
 </script>

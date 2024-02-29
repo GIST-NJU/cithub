@@ -192,11 +192,6 @@ import {
 import OpenAI from "openai";
 
 
-
-
-
-
-
 const route = useRoute()
 const router = useRouter()
 const currentModel = useCurrentModel(pinia)

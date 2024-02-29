@@ -97,7 +97,12 @@ const FiledsInfo = reactive([
   {
     "name": "Application",
     "description": "Studies on applying, improving, and popularizing CT and its procedures in real world."
-  }
+  },
+  {
+    "name": "Other",
+    "description": "Studies that do not belong to any of the above categories."
+  },
+
 ])
 const TagsInfo = [
   {
@@ -180,7 +185,8 @@ const selectCategory = (category) => {
   router.push({
     path: '/repository/papers',
     query: {
-      paginationActive: '关闭'
+      paginationActive: '关闭',
+      searchType:'field'
     }
   })
 }

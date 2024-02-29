@@ -53,7 +53,7 @@
 					<h3>Benchmark</h3>
 					<p>A collection of real-world test models and evaluation results for comparing combinatorial interaction
 						testing algorithms.</p>
-					<p><em>(under construction)</em></p>
+					<!-- <p><em>(under construction)</em></p> -->
 				</div>
 			</section>
 			<!-- <section class="feature right">

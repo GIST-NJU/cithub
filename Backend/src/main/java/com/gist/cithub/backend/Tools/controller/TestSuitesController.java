@@ -2,6 +2,7 @@ package com.gist.cithub.backend.Tools.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gist.cithub.backend.Tools.entity.ModelsEntity;
+import com.gist.cithub.backend.Tools.service.ModelsService;
 import com.gist.cithub.backend.common.utils.PageUtils;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Tools.entity.TestSuitesEntity;
@@ -27,6 +28,9 @@ public class TestSuitesController {
     @Autowired
     private TestSuitesService testSuitesService;
 
+    @Autowired
+    private ModelsService modelsService;
+
     /**
      * 列表
      */
@@ -47,32 +51,100 @@ public class TestSuitesController {
             List<TestSuitesEntity> TestSuites = testSuitesService.listTestSuitesByModelID((Integer) info.get("modelid"));
             return R.ok().put("TestSuites", TestSuites);
         }
-        return R.ok().put("TestSuites","failed");
+        return R.ok().put("TestSuites", "failed");
 
 
     }
 
     @RequestMapping(value = "/NewTestSuites", method = RequestMethod.POST)
     public R NewTestSuites(@RequestBody Map<String, Object> info) {
-//        System.out.println(info);
-        TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
-        testSuitesEntity.setTestsuitesname((String) info.get("testsuitesname"));
-        testSuitesEntity.setTestsuitesdescriptions((String) info.get("testsuitesdescriptions"));
-        testSuitesEntity.setModelid(Integer.parseInt((String) info.get("modelid")));
-        testSuitesEntity.setTestsuitescontents((String) info.get("testsuitescontents"));
-        testSuitesEntity.setTime((Integer) info.get("time"));
-        testSuitesEntity.setSize((Integer) info.get("size"));
-        testSuitesEntity.setAlgorithm((String) info.get("algorithm"));
-//        将时间戳转为Date类型
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
-        LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
 
-        testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
-        testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
-        Boolean flag = testSuitesService.save(testSuitesEntity);
-        if (flag) return R.ok().put("NewStatus", "success!");
-        else return R.ok().put("NewStatus", "failed!");
+        QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ModelID", info.get("modelid"));
+        ModelsEntity modelsEntity = modelsService.getOne(queryWrapper);
+        Object strength = info.get("strength");
+
+        if (strength != null) {
+            if (strength instanceof Integer) {
+                modelsEntity.setStrength((Integer) strength);
+            } else if (strength instanceof String) {
+                modelsEntity.setStrength(Integer.parseInt((String) strength));
+            }
+            modelsService.updateById(modelsEntity);
+        }
+
+
+        TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
+
+        Object testsuitesname = info.get("testsuitesname");
+        if (testsuitesname != null) {
+            testSuitesEntity.setTestsuitesname((String) testsuitesname);
+        }
+
+        Object testsuitesdescriptions = info.get("testsuitesdescriptions");
+        if (testsuitesdescriptions != null) {
+            testSuitesEntity.setTestsuitesdescriptions((String) testsuitesdescriptions);
+        }
+
+        Object modelid = info.get("modelid");
+        if (modelid != null) {
+            testSuitesEntity.setModelid(Integer.parseInt(modelid.toString()));
+        }
+
+        Object testsuitescontents = info.get("testsuitescontents");
+        if (testsuitescontents != null) {
+            testSuitesEntity.setTestsuitescontents((String) testsuitescontents);
+        }
+
+        Object time = info.get("time");
+        if (time != null) {
+            testSuitesEntity.setTime((Integer) time);
+        }
+
+        Object size = info.get("size");
+        if (size != null) {
+            testSuitesEntity.setSize((Integer) size);
+        }
+
+        Object algorithm = info.get("algorithm");
+        if (algorithm != null) {
+            testSuitesEntity.setAlgorithm((String) algorithm );
+        }
+
+        //        将时间戳转为Date类型
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+        Object createdtime = info.get("createdtime");
+        if (createdtime != null) {
+            LocalDateTime createTime = LocalDateTime.parse((String) createdtime , formatter);
+            testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+
+        }
+
+        Object lastupdatedtime = info.get("lastupdatedtime");
+        if (lastupdatedtime != null) {
+            LocalDateTime lastUpdateTime = LocalDateTime.parse((String) lastupdatedtime, formatter);
+            testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+        }
+
+        // Check if TestSuitesEntity exists for the given modelid
+        QueryWrapper<TestSuitesEntity> queryWrapperTestSuite = new QueryWrapper<>();
+        queryWrapperTestSuite.eq("ModelID", info.get("modelid"));
+        TestSuitesEntity existingTestSuites = testSuitesService.getOne(queryWrapperTestSuite);
+
+        if (existingTestSuites != null) {
+            // If exists, update the existing TestSuitesEntity
+            testSuitesEntity.setTestsuitesid(existingTestSuites.getTestsuitesid());
+            testSuitesService.updateById(testSuitesEntity);
+        } else {
+            // If doesn't exist, save a new TestSuitesEntity
+            Boolean flag = testSuitesService.save(testSuitesEntity);
+            if (!flag) {
+                return R.ok().put("NewStatus", "failed!");
+            }
+        }
+
+        return R.ok().put("NewStatus", "success!");
     }
 
     @RequestMapping(value = "/reduction/NewTestSuites", method = RequestMethod.POST)
