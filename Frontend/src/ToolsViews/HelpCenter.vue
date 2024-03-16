@@ -14,30 +14,9 @@
                             <h2 style="margin:15px 0 0 0" class="text-center">User Guide & FAQ</h2>
                             <p class="text-lg text-center">This user guide gives a quick introduction to Tools of CitHub. If
                                 any questions remain, please don't hesitate to contact us.</p>
-                            <!-- Overview Section -->
-                            <div class="accordion" id="overviewAccordion">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="overviewHeader">
-                                        <button @click="OverviewFlag = !OverviewFlag" class="accordion-button" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#overviewCollapse"
-                                            aria-expanded="true" aria-controls="overviewCollapse">
-                                            <i
-                                                :class="OverviewFlag ? 'bi bi-caret-down-fill' : 'bi bi-caret-right-fill'"></i>
-                                            Overview
-                                        </button>
-                                    </h2>
-                                    <div id="overviewCollapse" class="accordion-collapse collapse"
-                                        aria-labelledby="overviewHeader" data-bs-parent="#overviewAccordion">
-                                        <div class="accordion-body">
-                                            1
-                                            <!-- Content for Overview -->
-                                            <!-- Add your content here -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- What is Combinatorial Testing? Section -->
+
+                                      <!-- What is Combinatorial Testing? Section -->
                             <div class="accordion" id="combTestingAccordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="combTestingHeader">
@@ -78,6 +57,29 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Overview Section -->
+                            <div class="accordion" id="overviewAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="overviewHeader">
+                                        <button @click="OverviewFlag = !OverviewFlag" class="accordion-button" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#overviewCollapse"
+                                            aria-expanded="true" aria-controls="overviewCollapse">
+                                            <i
+                                                :class="OverviewFlag ? 'bi bi-caret-down-fill' : 'bi bi-caret-right-fill'"></i>
+                                            CitHub Tools Overview
+                                        </button>
+                                    </h2>
+                                    <div id="overviewCollapse" class="accordion-collapse collapse"
+                                        aria-labelledby="overviewHeader" data-bs-parent="#overviewAccordion">
+                                        <div class="accordion-body">
+                                            1
+                                            <!-- Content for Overview -->
+                                            <!-- Add your content here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <!-- Feature Overview Section -->
                             <div class="accordion" id="featureOverviewAccordion">
@@ -89,7 +91,7 @@
                                             aria-controls="featureOverviewCollapse">
                                             <i
                                                 :class="FeatureOverviewFlag ? 'bi bi-caret-down-fill' : 'bi bi-caret-right-fill'"></i>
-                                            Feature Overview
+                                            Features In CitHub Tools
                                         </button>
                                     </h2>
                                     <div id="featureOverviewCollapse" class="accordion-collapse collapse"
@@ -124,7 +126,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            </div>
+
+                            
+                      
 
                     </div>
                 </div>

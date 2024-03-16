@@ -1,5 +1,7 @@
 
 <template >
+
+  
   <tr :class="{ 'paper': true, 'table-active': isHovered }" @click="enterPaperInfo(props.item)"
     @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
     <td class="align-top">

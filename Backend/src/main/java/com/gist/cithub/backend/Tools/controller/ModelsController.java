@@ -85,8 +85,8 @@ public class ModelsController {
 
     @RequestMapping(value = "/SaveModel", method = RequestMethod.POST)
     public R SaveModel(@RequestBody Map<String, Object> info) {
+        System.out.println("接收到的信息是！");
         System.out.println(info);
-        System.out.println(info.get("ParametersAndValues"));
 //        System.out.println(info.get("modelid"));
         QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("ModelID", info.get("modelid"));

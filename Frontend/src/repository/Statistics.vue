@@ -609,7 +609,7 @@ const initChartDistributionScholars = () => {
     }
   })
     .then((res) => {
-      console.log("res", res)
+      // console.log("res", res)
       let tempdata = []
       for (var i = 0; i < res.result.length; i++) {
         let tempObj = { name: '', value: 0 }

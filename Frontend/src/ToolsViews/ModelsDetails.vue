@@ -320,64 +320,116 @@ const newParam = () => {
     }
 }
 
-watch(tableData, (newTableData, oldTableData) => {
+// watch(tableData, (newTableData, oldTableData) => {
+//     // 处理tableData变化的逻辑
+//     console.log("观察器已触发。newTableData:", newTableData);
+//     let tempArray = []
+//     let param_count = 0
+//     for (let i = 0, len = newTableData.length; i < len; i++) {
+//         if (newTableData[i].Value != '') { tempArray.push(newTableData[i].Value.split(',').length) }
+//         if (newTableData[i].Parameter != '') { param_count = param_count + 1 }
+
+//     }
+//     // 统计模型基本数据
+//     modelObject.system = model.modelname
+//     modelObject.strength = strength.value
+//     modelObject.parameter = param_count
+//     modelObject.values = JSON.stringify(tempArray)
+
+
+//     // 对 tableData 的数据做处理，转成被constraintsTableData
+//     let tempArrayCons = []
+//     for (let i = 0, len = newTableData.length; i < len; i++) {
+//         let tempObj = {}
+//         tempObj.Parameter = newTableData[i].Parameter
+//         tempObj.valueArray = newTableData[i].Value.split(',').map((value, index) => ({
+//             [`Value${index + 1}`]: value
+//         }));
+//         tempObj.ValueDomain = tempObj.valueArray.length
+//         tempArrayCons.push(tempObj)
+
+//     }
+//     constraintsTableData.value = tempArrayCons
+
+
+//     // 得到最大的ValueDomain
+//     const maxDomain = constraintsTableData.value.reduce((max, item) => {
+//         return Math.max(max, item.ValueDomain);
+//     }, -Infinity);
+
+
+//     maxValueDomain.value = maxDomain
+//     // console.log("maxValueDomain", maxValueDomain.value)
+//     // console.log("constraintsTableData", constraintsTableData.value)
+
+
+//     // 将模型数据显示在Model Preview区域
+//     modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+
+
+
+// }, { deep: true });
+
+
+const stopWatch = watchEffect(() => {
     // 处理tableData变化的逻辑
-    // console.log("观察器已触发。newTableData:", newTableData);
-    let tempArray = []
-    let param_count = 0
+    const newTableData = tableData.value; // 使用 .value 获取响应式数据
+    console.log("观察器已触发。newTableData:", newTableData);
+
+    let tempArray = [];
+    let param_count = 0;
+
     for (let i = 0, len = newTableData.length; i < len; i++) {
-        if (newTableData[i].Value != '') { tempArray.push(newTableData[i].Value.split(',').length) }
-        if (newTableData[i].Parameter != '') { param_count = param_count + 1 }
-
+        if (newTableData[i].Value !== '') {
+            tempArray.push(newTableData[i].Value.split(',').length);
+        }
+        if (newTableData[i].Parameter !== '') {
+            param_count = param_count + 1;
+        }
     }
-    // 统计模型基本数据
-    modelObject.system = model.modelname
-    modelObject.strength = strength.value
-    modelObject.parameter = param_count
-    modelObject.values = JSON.stringify(tempArray)
 
+    // 统计模型基本数据
+    modelObject.system = model.modelname;
+    modelObject.strength = strength.value;
+    modelObject.parameter = param_count;
+    modelObject.values = JSON.stringify(tempArray);
 
     // 对 tableData 的数据做处理，转成被constraintsTableData
-    let tempArrayCons = []
+    let tempArrayCons = [];
+
     for (let i = 0, len = newTableData.length; i < len; i++) {
-        let tempObj = {}
-        tempObj.Parameter = newTableData[i].Parameter
+        let tempObj = {};
+        tempObj.Parameter = newTableData[i].Parameter;
         tempObj.valueArray = newTableData[i].Value.split(',').map((value, index) => ({
-            [`Value${index + 1}`]: value
+            [`Value${index + 1}`]: value,
         }));
-        tempObj.ValueDomain = tempObj.valueArray.length
-        tempArrayCons.push(tempObj)
-
+        tempObj.ValueDomain = tempObj.valueArray.length;
+        tempArrayCons.push(tempObj);
     }
-    constraintsTableData.value = tempArrayCons
 
+    constraintsTableData.value = tempArrayCons;
 
     // 得到最大的ValueDomain
     const maxDomain = constraintsTableData.value.reduce((max, item) => {
         return Math.max(max, item.ValueDomain);
     }, -Infinity);
 
-
-    maxValueDomain.value = maxDomain
-    // console.log("maxValueDomain", maxValueDomain.value)
-    // console.log("constraintsTableData", constraintsTableData.value)
-
+    maxValueDomain.value = maxDomain;
 
     // 将模型数据显示在Model Preview区域
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '');
 
-
-
-}, { deep: true });
-
+}, { flush: 'sync' });
 
 
 const deleteParam = () => {
     // 这里需要debug！
     showMenu.value = false;
     curTarget.value.rowIdx !== null && tableData.value.splice(curTarget.value.rowIdx, 1);
+    clearCons()
 
 }
+
 const getColumnWidth = (index) => {
     if (tbContainerRef.value) {
         const tableWidth = tbContainerRef.value.clientWidth; // 获取当前表格宽度
@@ -598,69 +650,69 @@ const SaveModel = async () => {
         if (strength.value !== null && strength.value !== 0) {
             const currentDate = new Date();
 
-            // 如果没有约束
-            if (consArray.value.length == 0) {
-                const SaveModelContentRes = await request({
-                    url: '/tools/models/SaveModel',
-                    method: 'POST',
-                    data: {
-                        modelid: route.query.modelid,
-                        modelname: model.modelname,
-                        modeldescriptions: model.modeldescriptions,
-                        strength: strength.value,
-                        ParametersAndValues: JSON.stringify(tableData.value),
-                        lastupdatedtime: currentDate
-                    }
-                })
+            // // 如果没有约束
+            // if (consArray.value.length == 0) {
+            //     const SaveModelContentRes = await request({
+            //         url: '/tools/models/SaveModel',
+            //         method: 'POST',
+            //         data: {
+            //             modelid: route.query.modelid,
+            //             modelname: model.modelname,
+            //             modeldescriptions: model.modeldescriptions,
+            //             strength: strength.value,
+            //             ParametersAndValues: JSON.stringify(tableData.value),
+            //             lastupdatedtime: currentDate
+            //         }
+            //     })
 
-                if (SaveModelContentRes.SaveModelStatus == 'success') {
-
-
-                    currentModel.currentModel.modelid = route.query.modelid
-                    currentModel.currentModel.modelname = model.modelname
-                    currentModel.currentModel.modeldescriptions = model.modeldescriptions
-                    currentModel.currentModel.strength = strength.value
-                    currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
-                    currentModel.currentModel.lastupdatedtime = currentDate
+            //     if (SaveModelContentRes.SaveModelStatus == 'success') {
 
 
-                    currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
-
-                    currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
-
-                    let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
-                        // 将逗号分隔的字符串转换为数组
-                        const valueArray = item.Value.split(',');
-
-                        // 更新对象的Value字段为数组
-                        return {
-                            ...item,
-                            Value: valueArray
-                        };
-                    });
-                    currentModel.currentModel.PandVOBJ = transformedData
-                    // 移除 row_index 属性
-                    let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
-                        const { row_index, ...rest } = item;
-                        return rest;
-                    });
-                    currentModel.currentModel.PandVOBJ = tableDataTmp
+            //         currentModel.currentModel.modelid = route.query.modelid
+            //         currentModel.currentModel.modelname = model.modelname
+            //         currentModel.currentModel.modeldescriptions = model.modeldescriptions
+            //         currentModel.currentModel.strength = strength.value
+            //         currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
+            //         currentModel.currentModel.lastupdatedtime = currentDate
 
 
-                    ElNotification({
-                        title: 'Save Success!',
-                        type: 'success',
-                    })
-                }
-                else {
-                    ElNotification({
-                        title: 'Save fail!',
-                        type: 'error',
-                    })
-                }
-            }
+            //         currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+
+            //         currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+
+            //         let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+            //             // 将逗号分隔的字符串转换为数组
+            //             const valueArray = item.Value.split(',');
+
+            //             // 更新对象的Value字段为数组
+            //             return {
+            //                 ...item,
+            //                 Value: valueArray
+            //             };
+            //         });
+            //         currentModel.currentModel.PandVOBJ = transformedData
+            //         // 移除 row_index 属性
+            //         let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
+            //             const { row_index, ...rest } = item;
+            //             return rest;
+            //         });
+            //         currentModel.currentModel.PandVOBJ = tableDataTmp
+
+
+            //         ElNotification({
+            //             title: 'Save Success!',
+            //             type: 'success',
+            //         })
+            //     }
+            //     else {
+            //         ElNotification({
+            //             title: 'Save fail!',
+            //             type: 'error',
+            //         })
+            //     }
+            // }
             // 如果有约束
-            else {
+            // else {
                 const SaveModelContentRes = await request({
                     url: '/tools/models/SaveModel',
                     method: 'POST',
@@ -718,7 +770,7 @@ const SaveModel = async () => {
                         type: 'error',
                     })
                 }
-            }
+            // }
 
 
 
@@ -796,7 +848,7 @@ const listModelInfoByModelID = async () => {
             return rest;
         });
         currentModel.currentModel.PandVOBJ = tableDataTmp
-        
+
         // 加载模型到table
         // 加载模型到预览区
         loadModel();

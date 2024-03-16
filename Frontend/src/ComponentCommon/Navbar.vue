@@ -50,6 +50,7 @@ const isHovered = ref(false);
 const router = useRouter();
 
 const jumpToCithub = () => {
+  // 这里要增加登录状态的判断
   router.push({ name: 'Cithub' });
 }
 const SignOut = () => {
@@ -60,6 +61,7 @@ const SignOut = () => {
   })
 }
 onMounted(() => {
+
 })
 </script>
 

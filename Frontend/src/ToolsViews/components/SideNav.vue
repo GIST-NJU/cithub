@@ -31,12 +31,13 @@
                         @mouseout="handleMouseOutPapers">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-success text-lg opacity-10"></i>
+                            <i class="ni ni-calendar-grid-58 text-warning text-lg opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1 p">Projects</span>
                     </a>
                 </li>
-                <li v-if="currentProjectStore.projectid" class="nav-item" @click="jumpToModels" style=" cursor:pointer;">
+                <!-- <li v-if="currentProjectStore.projectid" class="nav-item" @click="jumpToModels" style=" cursor:pointer;"> -->
+                <li class="nav-item" @click="jumpToModels" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveCategory ? 'active' : '']" @mouseover="handleMouseOverCategory"
                         @mouseout="handleMouseOutCategory">
                         <div
@@ -46,27 +47,18 @@
                         <span class="nav-link-text ms-1 p">Models</span>
                     </a>
                 </li>
-                <li class="nav-item" @click="jumpToHelps" style=" cursor:pointer;">
+
+                <li class="nav-item" @click="jumpToTestSuite" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
                         @mouseout="handleMouseOutScholars">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-send text-info text-lg opacity-10"></i>
+                            <i class="fas fa-print text-success text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Help</span>
+                        <span class="nav-link-text ms-1 p">TestSuite</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item" @click="jumpToTestSuitesHome" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
-                        @mouseout="handleMouseOutScholars">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-bag-17 text-warning text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Generation</span>
-                    </a>
-                </li>
-                <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
+                <!-- <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
                         @mouseout="handleMouseOutInstitutions">
                         <div
@@ -83,7 +75,7 @@
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 
-                            <i class="ni ni-building text-info text-lg opacity-10" aria-hidden="true"></i>
+                            <i class="ni ni-building text-danger text-lg opacity-10" aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1 p">Prioritisation</span>
                     </a>
@@ -100,6 +92,17 @@
                         <span class="nav-link-text ms-1 p">Reduction</span>
                     </a>
                 </li> -->
+
+                <li class="nav-item" @click="jumpToHelps" style=" cursor:pointer;">
+                    <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
+                        @mouseout="handleMouseOutInstitutions">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-send text-info text-lg opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1 p">Help</span>
+                    </a>
+                </li>
 
             </ul>
         </div>
@@ -154,13 +157,12 @@ const jumpToModels = () => {
 
 }
 
-const jumpToTestSuitesHome = () => {
+const jumpToTestSuite = () => {
     if (currentModel.currentModel.modelid) {
         router.push({
-            path: '/tools/TestSuitesHome',
-            query: {
-                modelid: currentModel.currentModel.modelid
-            }
+            path: '/tools/TestSuitesHomeNew',
+            query:
+                { modelid: currentModel.currentModel.modelid }
         })
     }
     else {

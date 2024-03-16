@@ -12,6 +12,9 @@ export const useUserStore = defineStore("UserStore", {
 
         }
     },
+    persist: {
+        enabled: true // true 表示开启持久化保存
+    },
     actions: {
 
     },

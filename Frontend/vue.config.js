@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: './',
   lintOnSave:false,//关闭eslint语法检查
   devServer: {
     port:8090,

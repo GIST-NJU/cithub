@@ -373,9 +373,9 @@ const   listRecentPapers= async()=>{
     carouselItems.push(...listRecentPapersRes.res)
     for(let i=0;i<carouselItems.length;i++)
     { 
-      carouselItems[i].image='../assets/img/carousel-'+((i)%3+1)+'.jpg'
-      carouselItems[i].titleClass='text-white mb-1',
-      console.log("carouselItems[i].image",carouselItems[i].image)
+      carouselItems[i].image='/assets/img/carousel-'+((i)%3+1)+'.jpg'
+      carouselItems[i].titleClass='text-white mb-1'
+      
     }
   } catch (error) {
     

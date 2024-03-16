@@ -30,7 +30,7 @@
 		<div class="box alt container">
 			<section class="feature left">
 				<a class="image icon solid fa-university" @click="jumpToRepo" style="cursor:pointer">
-					<img src="/images/repository.jpg" alt="" /></a>
+					<img src="images/repository.jpg" alt="" /></a>
 				<div class="content">
 					<h3>Repository</h3>
 					<p>A web application that provides a full coverage of publications in the literature of combinatorial
@@ -39,7 +39,7 @@
 			</section>
 			<section class="feature right">
 				<a class="image icon solid fa-code" @click="jumpToTools" style="cursor:pointer"><img
-						src="/images/algorithm.jpg" alt="" /></a>
+						src="images/algorithm.jpg" alt="" /></a>
 				<div class="content">
 					<h3>Tools</h3>
 					<p>A series of web services that implement automated test suite (covering array) generation,
@@ -48,7 +48,7 @@
 			</section>
 			<section class="feature left">
 				<a class="image icon solid fa-stream" @click="jumpToBenchmark" style="cursor:pointer"><img
-						src="/images/benchmark.jpg" alt="" /></a>
+						src="images/benchmark.jpg" alt="" /></a>
 				<div class="content">
 					<h3>Benchmark</h3>
 					<p>A collection of real-world test models and evaluation results for comparing combinatorial interaction

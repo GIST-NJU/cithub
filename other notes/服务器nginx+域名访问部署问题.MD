@@ -1,4 +1,4 @@
-[nginx安装及其配置详细教程 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/83890573)
+nginx安装及其配置详细教程 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/83890573)
 
 服务器nginx安装路径：
 
@@ -21,7 +21,7 @@
 
    1. 区块链前端的axios的baseurl是：`baseURL: "http://210.28.135.32/BlockChainAPI",`
 
-   2. 在服务器的nginx.conf配置文件里加上
+   2. 在服务器的nginx.conf配置文件(/usr/local/nginx/conf)里加上
       ```
               location /BlockChainAPI {
               proxy_pass http://210.28.135.32:9983;

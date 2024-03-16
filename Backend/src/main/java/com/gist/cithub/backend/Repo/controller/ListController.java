@@ -383,7 +383,8 @@ pagesize每页有几项
         String typeOfPaper = (String) info.get("info");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
-        queryWrapper.select("field", "COUNT(field) AS RecordCount").groupBy("field").orderByDesc("year");
+        queryWrapper.select("field", "COUNT(field) AS RecordCount", "MAX(year) AS maxYear").groupBy("field").orderByDesc("maxYear");
+
         return R.ok().put("countEachField", listService.listMaps(queryWrapper));
     }
 

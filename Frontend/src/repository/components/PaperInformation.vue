@@ -1,38 +1,49 @@
 
 <template>
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-body pb-0">
-          <h5>{{ currentPaperStore.currentPaper.title }}
-          </h5>
-          <p class="text-muted mb-0"><a href="">{{ FirstAuthorName }}</a>,{{ OtherAuthorName }}</p>
-          <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }}</p>
-          <p>
-            <span v-if="TagArray.length!=0" class="badge rounded-pill bg-primary">{{currentPaperStore.currentPaper.field  }}</span>&nbsp;
-              <span v-for="(tag, index) in TagArray" :key="index" class="badge rounded-pill bg-info" style="margin-right:5px">{{ tag }}</span>
-          </p>
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <SideNav></SideNav>
+  <main class="main-content position-relative border-radius-lg ">
+    <Navbar></Navbar>
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-body ps-1">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card mb-4">
+                    <div class="card-body pb-0">
+                      <h5>{{ currentPaperStore.currentPaper.title }}
+                      </h5>
+                      <p class="text-muted mb-0"><a href="">{{ FirstAuthorName }}</a>,{{ OtherAuthorName }}</p>
+                      <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }}</p>
+                      <p>
+                        <span v-if="TagArray.length != 0"
+                          class="badge rounded-pill bg-primary">{{ currentPaperStore.currentPaper.field }}</span>&nbsp;
+                        <span v-for="(tag, index) in TagArray" :key="index" class="badge rounded-pill bg-info"
+                          style="margin-right:5px">{{ tag }}</span>
+                      </p>
 
-        </div>
-      </div>
-    </div>
-  </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-body pb-0">
-          <h5>Abstract</h5>
-          <p>
-            {{ currentPaperStore.currentPaper.paperabstract }}
-            
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="card mb-4">
+                    <div class="card-body pb-0">
+                      <h5>Abstract</h5>
+                      <p>
+                        {{ currentPaperStore.currentPaper.paperabstract }}
 
-  <!-- <div class="row">
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="row">
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-body pb-0">
@@ -43,12 +54,12 @@
     </div>
   </div> -->
 
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-body pb-0">
-          <h5>BibTex</h5>
-          <pre class="mb-0">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card mb-4">
+                    <div class="card-body pb-0">
+                      <h5>BibTex</h5>
+                      <pre class="mb-0">
 {{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + '.' + currentPaperStore.currentPaper.id + ','
   + '\n  author={' + currentPaperStore.currentPaper.author + '},'
   + '\n  title={' + currentPaperStore.currentPaper.title + '},'
@@ -67,14 +78,30 @@
   doi={10.1145/3540250.3549155},
 } -->
           </pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
+
+
+
+
+      <Foot></Foot>
+
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup>
 import { defineProps, reactive, ref, onMounted } from 'vue'
+import SideNav from '../components/SideNav.vue';
+import Navbar from '../../ComponentCommon/Navbar.vue';
+import Foot from '../../ComponentCommon/Foot.vue';
 import pinia from '../../store/store'
 import { useCurrentPaper } from '../../store/currentPaper'
 import { useRoute, useRouter } from 'vue-router';
@@ -118,7 +145,7 @@ const listPaperInfoByPaperID = async () => {
     let authorsArray = currentPaperStore.currentPaper.author.split(',')
     FirstAuthorName.value = authorsArray.shift();
     OtherAuthorName.value = authorsArray.join(',')
-    FirstAuthorNameInBibTex.value=FirstAuthorName.value.replace(/\s/g, "")
+    FirstAuthorNameInBibTex.value = FirstAuthorName.value.replace(/\s/g, "")
     let tempTagArray = currentPaperStore.currentPaper.tag.split(',')
     TagArray.push(...tempTagArray)
   } catch (err) {
