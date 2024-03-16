@@ -11,7 +11,7 @@
             <div class="card-header pb-0">
               <ul style="margin: 0px 0px 0px 0px" class="nav nav-tabs">
                 <li class="nav-item" :class="{ 'show': activeTab === 'Scholars' }">
-                  <a class="nav-link" @click="setActiveTab('Scholars')" href="#">
+                  <a class="nav-link" @click="setActiveTab('Scholars')" >
                     <span>Scholars</span> <span v-if="activeTab == 'Scholars'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         AuthorStore.authorsArray.length }}</ArgonBadge>
@@ -19,7 +19,7 @@
                   </a>
                 </li>
                 <li class="nav-item" :class="{ 'show': activeTab === 'Institutions' }">
-                  <a class="nav-link" @click="setActiveTab('Institutions')" href="#">
+                  <a class="nav-link" @click="setActiveTab('Institutions')" >
                     <span>Institutions</span> <span v-if="activeTab == 'Institutions'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         InstitutionStore.InstitutionArray.length }}</ArgonBadge>
@@ -27,7 +27,7 @@
                   </a>
                 </li>
                 <li class="nav-item" :class="{ 'show': activeTab === 'Country' }">
-                  <a class="nav-link" @click="setActiveTab('Country')" href="#">
+                  <a class="nav-link" @click="setActiveTab('Country')" >
                     <span>Country</span> <span v-if="activeTab == 'Country'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         CountryStore.CountryArray.length }}</ArgonBadge>
@@ -88,7 +88,6 @@
             <div v-if="activeTab === 'Country'" class="card-body px-0 pt-0 pb-2">
 
               <!-- 在此处渲染分组后的结果 -->
-
               <div>
                 <div v-for="(cous, index) in chunkedNames(CountryStore.CountryArray, 5)" :key="index" class="row"
                   style="margin:10px 0px 10px 10px">
@@ -328,11 +327,13 @@ const sortedGroupedNames = computed(() => {
 
 
 
-// 使用 watch 监听 InstitutionArray 的变化
-watch(() => InstitutionStore.InstitutionArray, () => {
-  groupInstitutionByCategory();
-});
+// // 使用 watch 监听 InstitutionArray 的变化
+// watch(() => InstitutionStore.InstitutionArray, () => {
+//   groupInstitutionByCategory();
+// });
+
 onMounted(async () => {
+
   moduleStore.CurrentModule = activeTab.value
   // 获取所有scholars
   await listAllScholars()
@@ -348,12 +349,17 @@ onMounted(async () => {
 
 
 <style scoped>
+
+.nav-item {
+  cursor: pointer;
+}
 /* Inactive tab styles */
 .nav-tabs .nav-item.show h3 {
   background-color: #ffffff;
   /* Set the background color for inactive tabs */
   color: #5e72e4;
   /* Set the text color for inactive tabs */
+ 
 }
 
 /* Active tab styles */
@@ -362,6 +368,8 @@ onMounted(async () => {
   /* Set the background color for active tab */
   color: #8392ab;
   /* Set the text color for active tab */
+ 
+
 }
 
 
