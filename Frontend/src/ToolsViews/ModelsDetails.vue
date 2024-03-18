@@ -763,6 +763,8 @@ const SaveModel = async () => {
                         title: 'Save Success!',
                         type: 'success',
                     })
+
+                    await listModelInfoByModelID()
                 }
                 else {
                     ElNotification({
