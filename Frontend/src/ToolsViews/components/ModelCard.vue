@@ -1,79 +1,60 @@
 <template>
   <div class="card">
     <div class="p-3 mx-4 card-body">
-      <h6 class="mb-0 ">Model#{{ props.index }} : {{ props.model.modelname }}</h6>
+      <h6 class="mb-0">Model#{{ props.index }} : {{ props.model.modelname }}</h6>
       <span class="text-md">{{ props.model.modeldescriptions }}</span>
-      <!-- <h6>{{ props.model.modeldescriptions }}</h6> -->
       <hr class="my-3 horizontal dark" />
       <div class="row">
         <div class="col">
-          <argon-badge   style="margin: 5px">
+          <argon-badge style="margin: 5px">
             Num of Params
           </argon-badge>{{ props.model.NumofParams }}
         </div>
-
         <div class="col">
-          <argon-badge  color="danger" style="margin: 5px">
+          <argon-badge color="danger" style="margin: 5px">
             Num of Cons
           </argon-badge>{{ props.model.NumofCons }}
         </div>
       </div>
       <div class="row">
-
         <div class="col">
-          <argon-badge  color="info" style="margin: 5px">
+          <argon-badge color="info" style="margin: 5px">
             Updated time
           </argon-badge>{{ props.model.lastupdatedtimeFortmat }}
         </div>
         <div class="col">
-          <argon-badge  color="info" style="margin: 5px">
+          <argon-badge color="info" style="margin: 5px">
             Created time
           </argon-badge>{{ props.model.createdtimeFortmat }}
         </div>
       </div>
-
-
-      <!-- <div style="display: flex;flex-direction: column; align-items: flex-start;">
-        <p class="text-xs">
-          <argon-badge variant="gradient" color="warning" style="margin: 5px">
-            Strength:
-          </argon-badge>{{ props.model.strength }}
-        </p>
-        <p class="text-xs">
-
-        </p>
-        <p class="text-xs">
-
-        </p>
-      </div> -->
-
       <hr class="my-3 horizontal dark" />
-
-      <a class="btn btn-link text-dark px-3 mb-0" @click="EnterModels(props.model)">
-        <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Edit Model
-      </a>
-
-      <!-- <a class="btn btn-link text-dark px-3 mb-0" @click="Generation(props.model)">
-        <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>Generation
-      </a> -->
-
-      <a class="btn btn-link text-dark px-3 mb-0" @click="TestSuite(props.model)">
-        <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>TestSuite
-      </a>
-
-      <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
-        @confirm="confirmDelete(props.model)">
-        <template #reference>
-          <!-- <el-button>Delete</el-button> -->
-          <a class="btn btn-link text-danger text-gradient px-3 mb-0">
-            <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete
-          </a>
-        </template>
-      </el-popconfirm>
-
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <ArgonButton color="primary" variant="gradient" @click="EnterModels(props.model)">
+            <span class="fas fa-book-open text-white me-2" />
+            Edit Model
+          </ArgonButton>
+          <ArgonButton color="success" variant="gradient" style="margin-left: 10px;" @click="TestSuite(props.model)">
+            <span class="fas fa-print text-white me-2" />
+            TestSuite
+          </ArgonButton>
+        </div>
+        <div>
+          <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes" @confirm="confirmDelete(props.model)">
+            <template #reference>
+              <ArgonButton color="danger" variant="gradient" @click="confirmDelete(props.model)">
+                <span class="far fa-trash-alt text-white me-2" />
+                Delete
+              </ArgonButton>
+            </template>
+          </el-popconfirm>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import ArgonBadge from '../../ComponentCommon/ArgonBadge.vue'
@@ -322,7 +303,8 @@ onMounted(() => {
 }
 
 .card:hover {
-  transform: scale(1.04);
-  cursor: pointer;
+  box-shadow: 0 0 10px #2dce89;
+  border: 2px solid #2dce89;
+  transform: scale(1.02);
 }
 </style>

@@ -30,16 +30,16 @@
                                 <div class="tb-container" ref="tbContainerRef">
                                     <h3 style="margin:0;text-align:center;">Model Content</h3>
 
-                                    <p style="text-align:left;color:#ccc;">Note:
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
                                     </p>
-                                    <p style="text-align:left;color:#ccc;">1.Double click to change the content of each
-                                        cell.
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Select a number as covering `<b><i>Strength</i></b>`.</p>
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click the cell of table to input `<b><i>Parameter</i></b>`.
                                     </p>
-                                    <p style="text-align:left;color:#ccc;">2.For Column `Value`, Use `,` to seperate each
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.For Column `<b><i>Value</i></b>`, double click the cell to input , and use `<b><i>,</i></b>` to seperate each
                                         value.</p>
-                                    <p style="text-align:left;color:#ccc;">3.Select a number as covering strength.</p>
-                                    <p style="text-align:left;color:#ccc;">4.The Model you create will be displayed in
-                                        `Model Preview` area.</p>
+                          
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">4.The Model you create will be displayed in
+                                        `<b><i>Model Preview</i></b>` area.</p>
                                     <hr class="my-3 horizontal white" />
 
 
@@ -66,7 +66,7 @@
 
                                     <!---------------------------------- 参数和参数取值 table，col index 从 参数 col开始 ，index 的col不计算在内 ---------------------------------------------->
 
-                                    <h4 style="margin:0;">Parameters and Values</h4>
+                                    <h4 style="text-align:center;">Parameters and Values</h4>
                                     <!-- 输入参数 -->
                                     <el-table :data="tableData" border style="width: 100%;margin-top:10px"
                                         @cell-dblclick="cellDblclick" @cell-click="cellClick"
@@ -102,16 +102,16 @@
 
                                     <!---------------------------------- 约束table 注意，约束table的col index 从参数取值col开始 ，index 和 param 的col不计算在内 ---------------------------------------------->
                                     <!-- 选择约束 -->
-                                    <h4 style="margin:0;">Constraints</h4>
-                                    <p style="text-align:left;color:#ccc;">Note:
+                                    <h4 style="text-align:center;">Constraints</h4>
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
                                     </p>
-                                    <p style="text-align:left;color:#ccc;">1.Cithub tools use `Forbidden tuples` to
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Cithub tools use `<b><i>Forbidden tuples</i></b>` to
                                         represent Constraints.
                                     </p>
-                                    <p style="text-align:left;color:#ccc;">2.Double click to choose the invalid combination.
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click each cell of below table to choose every <b><i>invalid combination.</i></b> .
                                     </p>
-                                    <p style="text-align:left;color:#ccc;">3.Click the `Add Constraint` button to put
-                                        combination into the Constraints set.
+                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.Click the  `<b><i>Add Constraint</i></b>`  button to put `<b><i>invalid
+                                        combination</i></b>`  into the `<b><i>current Constraints set</i></b>`.
                                     </p>
 
                                     <el-table :data="constraintsTableData" border style="width: 100%;margin-top:10px"
