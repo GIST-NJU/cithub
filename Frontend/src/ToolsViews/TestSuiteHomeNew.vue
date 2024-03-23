@@ -842,7 +842,7 @@ const confirmGenerateNewTestSuites = async () => {
                             title: 'Generate Success!',
                             type: 'success',
                             message: 'Strength ' + strength.value + ' test suite' + ' by ' + AlgorithmChosed.value + ' generated success! Please check the results.',
-                            duration: 0
+                            
                         })
                         inAPIcall.value = false
                         dialogFormVisibleNew.value = false
@@ -960,7 +960,7 @@ const confirmNewPrioritisation = async () => {
                         title: 'Prioritize Success!',
                         type: 'success',
                         message: 'Strength ' + strength.value + ' test suite' + ' by ' + AlgorithmChosedPrioritization.value + ' prioritized success! Please check the results.',
-                        duration: 0
+                        
 
                     })
                     inAPIcall.value = false
@@ -1085,7 +1085,7 @@ const confirmNewReduction = async () => {
                         title: 'Reduct Success!',
                         type: 'success',
                         message: 'Strength ' + strength.value + ' test suite' + ' by ' + AlgorithmChosedReduction.value + ' reducted success! Please check the results.',
-                        duration: 0
+                        
                     })
                     inAPIcall.value = false
                     dialogFormVisibleNewReduction.value = false
@@ -1204,7 +1204,7 @@ const confirmNewConversion = async () => {
                     ElNotification({
                         title: 'Convert Success!',
                         type: 'success',
-                        duration: 0
+                        
                     })
 
                     console.log("ConversionRes", ConversionRes)
@@ -1268,7 +1268,7 @@ const confirmNewConversion = async () => {
                     ElNotification({
                         title: 'Convert Success!',
                         type: 'success',
-                        duration: 0
+                        
                     })
 
                 }
