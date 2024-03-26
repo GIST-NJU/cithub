@@ -217,19 +217,20 @@ const routes = [
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
-  history: createWebHashHistory(),
+  // history: createWebHashHistory(), 
+  history: createWebHistory(), //去掉路径中的 # 号
   routes,
   linkActiveClass: "active",
 });
 
 router.beforeEach((to, from, next) => {
 
-  const userStore = useUserStore()
-  const moduleStore = useModuleStore()
-  const PaperInfoStore = usePaperInfoStore()
-  const AuthorStore = useAuthorStore()
-  const InstitutionStore = useInstitutionStore()
-  const VenueStore = useVenueStore()
+  // const userStore = useUserStore()
+  // const moduleStore = useModuleStore()
+  // const PaperInfoStore = usePaperInfoStore()
+  // const AuthorStore = useAuthorStore()
+  // const InstitutionStore = useInstitutionStore()
+  // const VenueStore = useVenueStore()
 
   window.document.title = to.meta.title
   next()

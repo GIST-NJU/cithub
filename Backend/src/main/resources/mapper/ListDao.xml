@@ -38,6 +38,7 @@
             SELECT name, country FROM repository_scholar WHERE country = #{country}
             ) p
             LEFT JOIN repository_list q ON q.author LIKE CONCAT("%", p.name, "%")
+        ORDER BY q.year DESC;
     </select>
 
     <select id="searchByTag" resultType="com.gist.cithub.backend.Repo.entity.ListEntity">

@@ -79,6 +79,12 @@
             <version>3.5.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.yulichang</groupId>
+            <artifactId>mybatis-plus-join-boot-starter</artifactId>
+            <version>1.4.11</version>
+        </dependency>
+
 
         <!-- Spring Boot Starter Validation: 提供验证功能支持，包括Bean验证和方法验证 -->
         <dependency>

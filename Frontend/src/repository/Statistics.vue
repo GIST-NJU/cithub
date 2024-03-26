@@ -111,9 +111,13 @@ import { ref, computed, reactive } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
+import { useModuleStore } from '../store/module';
 import pinia from '../store/store';
+import { ElLoading } from 'element-plus'
+
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)
+const moduleStore = useModuleStore(pinia)
 
 // 1. number of publication
 const ChartNumber = ref()
@@ -189,40 +193,40 @@ let ChartNumberOption = reactive({
     }
   ]
 })
-const initChartNumber = () => {
-  request({
-    url: "repo/list/countEachYear",
-    method: 'POST',
-    data: {
-      info: PaperInfoStore.TypeofPapers
-    }
-  }).then((res) => {
-    let tempYear = []
-    let tempDataAnnual = []  // 存储每年的数据
-    let tempDataCumulative = []  // 存储累加的数据
+const initChartNumber = async () => {
+  try {
+    const res = await request({
+      url: "repo/list/countEachYear",
+      method: 'POST',
+      data: {
+        info: PaperInfoStore.TypeofPapers
+      }
+    });
+
+    let tempYear = [];
+    let tempDataAnnual = [];  // 存储每年的数据
+    let tempDataCumulative = [];  // 存储累加的数据
     let totalPapers = 0;
 
     for (var i = 0; i < res.countEachYear.length; i++) {
-      tempYear.push(res.countEachYear[i].year)
+      tempYear.push(res.countEachYear[i].year);
       totalPapers += res.countEachYear[i].RecordCount;
       tempDataAnnual.push(res.countEachYear[i].RecordCount);  // 每年的数据
       tempDataCumulative.push(totalPapers);  // 累加的数据
     }
 
-    ChartNumberOption.xAxis.data = tempYear
-    ChartNumberOption.series[0].data = tempDataCumulative  // 累加的数据
-    ChartNumberOption.series[1].data = tempDataAnnual  // 每年的数据
-
-
+    ChartNumberOption.xAxis.data = tempYear;
+    ChartNumberOption.series[0].data = tempDataCumulative;  // 累加的数据
+    ChartNumberOption.series[1].data = tempDataAnnual;  // 每年的数据
 
     let myChart = echarts.init(ChartNumber.value);
-    myChart.setOption(ChartNumberOption)
-    myChart.resize()
-
-
-
-  }).catch(() => { })
+    myChart.setOption(ChartNumberOption);
+    myChart.resize();
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 // 2. distribution of fields
 const ChartField = ref()
@@ -261,34 +265,38 @@ let ChartFieldOption = reactive({
     }
   ]
 })
-const initChartField = () => {
+const initChartField = async () => {
+  try {
+    const res = await request({
+      url: "repo/list/countField",
+      method: 'POST',
+      data: {
+        info: PaperInfoStore.TypeofPapers
+      }
+    });
 
-  request({
-    url: "repo/list/countField",
-    method: 'POST',
-    data: {
-      info: PaperInfoStore.TypeofPapers
-    }
-  }).then((res) => {
-    // console.log("field", res)
-    let tempCatgory = []
-    let tempdata = []
+    let tempCatgory = [];
+    let tempdata = [];
     for (var i = 0; i < res.countEachField.length; i++) {
       let tempObj = {
         value: '',
         name: '',
-      }
+      };
       if (res.countEachField[i].field) {
-        tempObj.name = res.countEachField[i].field
-        tempObj.value = res.countEachField[i].RecordCount
-        ChartFieldOption.series[0].data.push(tempObj)
+        tempObj.name = res.countEachField[i].field;
+        tempObj.value = res.countEachField[i].RecordCount;
+        ChartFieldOption.series[0].data.push(tempObj);
       }
     }
+
     let myChart = echarts.init(ChartField.value);
-    myChart.setOption(ChartFieldOption)
-    myChart.resize()
-  }).catch((err) => { })
+    myChart.setOption(ChartFieldOption);
+    myChart.resize();
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 
 // 3. development of Fields
@@ -444,18 +452,17 @@ let ChartDevelopFieldOption = reactive({
     }
   ]
 });
-const initChartDevelopField = () => {
-  request({
-    url: "repo/list/listCountFieldAnnual",
-    method: 'POST',
-    data: {
-      info: PaperInfoStore.TypeofPapers
-    }
-  }).then((res) => {
-    // console.log("res", res)
+const initChartDevelopField = async () => {
+  try {
+    const res = await request({
+      url: "repo/list/listCountFieldAnnual",
+      method: 'POST',
+      data: {
+        info: PaperInfoStore.TypeofPapers
+      }
+    });
 
-    let data = res.result
-
+    let data = res.result;
 
     // 创建一个对象，用于存储每个年份的类别计数
     const yearlyCategoryCounts = {};
@@ -496,7 +503,6 @@ const initChartDevelopField = () => {
       yearlyTotals[year] = Object.values(categoryCounts).reduce((acc, count) => acc + count, 0);
     }
 
-
     // 计算每个类别在本年度的占比
     const yearlyCategoryPercentages = {};
     for (const [year, categoryCounts] of Object.entries(yearlyCategoryCounts)) {
@@ -508,8 +514,6 @@ const initChartDevelopField = () => {
         yearlyCategoryPercentages[year][category] = percentage.toFixed(2);
       }
     }
-
-
 
     // 创建一个对象，用于存储每个类别的百分比数组，百分比数组
     const categoryPercentagesArray = {};
@@ -563,10 +567,13 @@ const initChartDevelopField = () => {
     ChartDevelopFieldOption.series[6].count = othersNum;
 
     let myChart = echarts.init(ChartDevelopField.value);
-    myChart.setOption(ChartDevelopFieldOption)
-    myChart.resize()
-  }).catch((err) => { })
+    myChart.setOption(ChartDevelopFieldOption);
+    myChart.resize();
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 // 4. distribution of scholars
 const ChartDistributionScholars = ref()
@@ -600,42 +607,50 @@ let ChartDistributionScholarsOption = reactive(
     }
   }
 );
-const initChartDistributionScholars = () => {
-  request({
-    url: '/repo/author/CountDistributionScholars',
-    method: 'POST',
-    data: {
-      info: PaperInfoStore.TypeofPapers
-    }
-  })
-    .then((res) => {
-      // console.log("res", res)
-      let tempdata = []
-      for (var i = 0; i < res.result.length; i++) {
-        let tempObj = { name: '', value: 0 }
-        tempObj.name = res.result[i].country
-        tempObj.value = res.result[i].author_count
-        tempdata.push(tempObj)
+const initChartDistributionScholars = async () => {
+  try {
+    const res = await request({
+      url: '/repo/author/CountDistributionScholars',
+      method: 'POST',
+      data: {
+        info: PaperInfoStore.TypeofPapers
       }
-      ChartDistributionScholarsOption.series[0].data = tempdata
+    });
 
-      let myChart = echarts.init(ChartDistributionScholars.value);
-      myChart.setOption(ChartDistributionScholarsOption)
-      myChart.resize()
-    }).catch((err) => {
-      console.log(err)
-    })
+    let tempdata = [];
+    for (var i = 0; i < res.result.length; i++) {
+      let tempObj = { name: '', value: 0 };
+      tempObj.name = res.result[i].country;
+      tempObj.value = res.result[i].author_count;
+      tempdata.push(tempObj);
+    }
 
+    ChartDistributionScholarsOption.series[0].data = tempdata;
+
+    let myChart = echarts.init(ChartDistributionScholars.value);
+    myChart.setOption(ChartDistributionScholarsOption);
+    myChart.resize();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 
 
 
-onMounted(() => {
-  initChartNumber()
-  initChartField()
-  initChartDevelopField()
-  initChartDistributionScholars()
+onMounted(async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  
+  moduleStore.CurrentModule = 'Statistics'
+  await initChartNumber()
+  await initChartField()
+  await initChartDevelopField()
+  await initChartDistributionScholars()
+
+  loadingInstance.close()
+ 
+
+
 })
 </script>
 

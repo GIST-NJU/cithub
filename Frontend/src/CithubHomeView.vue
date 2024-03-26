@@ -171,12 +171,12 @@ onMounted(async () => {
 	// 	userStore.email,
 	// 	userStore.institution)
 
-	ElNotification({
-		title: 'Welcome to CitHub',
-		message: 'CitHub is a open platform for the study and use of Combinatorial Interaction Testing (CIT) ',
-		type: 'success',
-		position: 'top-left',
-	})
+	// ElNotification({
+	// 	title: 'Welcome to CitHub',
+	// 	message: 'CitHub is a open platform for the study and use of Combinatorial Interaction Testing (CIT) ',
+	// 	type: 'success',
+	// 	position: 'top-left',
+	// })
 
 })
 </script>

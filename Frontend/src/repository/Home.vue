@@ -215,7 +215,7 @@ import { useAuthorStore } from '../store/authorStore'
 import { useInstitutionStore } from '../store/institutionStore'
 import { useVenueStore } from '../store/venueStore'
 import { useUserStore } from '../store/userStore';
-import { CheckLoginStatus, getUserInfoByToken } from '../common'
+import { ElLoading } from 'element-plus'
 
 
 const userStore = useUserStore(pinia)
@@ -382,6 +382,7 @@ const   listRecentPapers= async()=>{
   }
 }
 onMounted(async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
   moduleStore.CurrentModule = 'Repository'
 
   // 首页折线图
@@ -422,7 +423,7 @@ onMounted(async () => {
   totalInstitutionsCounth.value = countTotalInstitutionsRes.total
 
   await listRecentPapers()
-
+  loadingInstance.close()
 
 })
 </script>

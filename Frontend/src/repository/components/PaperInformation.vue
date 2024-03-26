@@ -15,7 +15,7 @@
                     <div class="card-body pb-0">
                       <h5>{{ currentPaperStore.currentPaper.title }}
                       </h5>
-                      <p class="text-muted mb-0"><a href="">{{ FirstAuthorName }}</a>,{{ OtherAuthorName }}</p>
+                      <p class="text-muted mb-0">{{ FirstAuthorName }},{{ OtherAuthorName }}</p>
                       <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }}</p>
                       <p>
                         <span v-if="TagArray.length != 0"

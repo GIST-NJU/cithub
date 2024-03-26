@@ -38,9 +38,9 @@
                                                     @click="handelLogin">
                                                     login</el-button> -->
                                         <div v-auto-animate>
-                                            <span v-if="loginSuccessFlag == 'LoginSuccess!'"
+                                            <!-- <span v-if="loginSuccessFlag == 'LoginSuccess!'"
                                                 style="margin:0px;font:14px;color: green;">Sign In Successfully! Rendering
-                                                into Cithub in {{ timecountdown }}s~</span>
+                                                into Cithub in {{ timecountdown }}s~</span> -->
                                             <span v-if="loginSuccessFlag == 'LoginFail!'"
                                                 style="margin:0px;font:14px;color: red;">Login failed! pleas check
                                                 your inputs
@@ -118,7 +118,7 @@ const loginform = reactive({
     account: '',
     password: ''
 })
-let timecountdown = ref(3)
+let timecountdown = ref(1)
 
 const login = () => {
     requestAuth({
@@ -152,29 +152,32 @@ const login = () => {
 
 
 
-            ElNotification({
-                title: 'Success',
-                message: 'enjoy cithub!',
-                type: 'success',
-                position: 'top-left',
+            // ElNotification({
+            //     title: 'Success',
+            //     message: 'enjoy cithub!',
+            //     type: 'success',
+            //     position: 'top-left',
+
+            // })
+
+            // let countdown = setInterval(() => {
+            //     timecountdown.value--;
+            //     if (timecountdown.value == 0) clearInterval(countdown)
+            // }, 1000)
+            // 成功获取到usertoken，回到主页
+            // setTimeout(() => {
+
+            // }, 1000)
+
+            router.push({
+                path: '/',
+                query: {
+                    loginFlag: true
+                }
+
 
             })
 
-            let countdown = setInterval(() => {
-                timecountdown.value--;
-                if (timecountdown.value == 0) clearInterval(countdown)
-            }, 1000)
-            // 成功获取到usertoken，回到主页
-            setTimeout(() => {
-                router.push({
-                    path: '/',
-                    query:{
-                        loginFlag:true
-                    }
-                
-                
-                })
-            }, 3000)
         }
 
         else {

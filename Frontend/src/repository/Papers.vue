@@ -10,37 +10,33 @@
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
-              <h3>Complete Paper List</h3>
+              <h3 v-if="moduleStore.CurrentModule == 'Complete Paper List'">Complete Paper List</h3>
               <!-- search author -->
+              <h3 v-if="route.query.module == 'Scholars'">{{ currentAuthorStore.CurrentAuthor.name }}'s Papers </h3>
               <div>
-                <p v-if="route.query.searchType == 'author'" class="text-muted mb-0"><span>Scholar :</span> <span>{{
-                  currentAuthorStore.CurrentAuthor.name }} </span> </p>
-
-                <p v-if="route.query.searchType == 'author'" class="text-muted mb-0"><span> Institution : </span> <span>{{
+                <!-- <p v-if="route.query.module == 'Scholars'" class="text-muted mb-0"><span>Scholar :</span> <span>{{
+                  currentAuthorStore.CurrentAuthor.name }} </span> </p> -->
+                <p v-if="route.query.module == 'Scholars'" class="text-muted mb-0"><span> Institution : </span> <span>{{
                   currentAuthorStore.CurrentAuthor.institution }} , {{ currentAuthorStore.CurrentAuthor.country
   }}</span>
                 </p>
               </div>
 
               <!-- search field -->
-              <div>
-                <p v-if="route.query.searchType == 'field'" class="text-muted mb-0"><span> Field : <ArgonBadge color="info">{{
-                  PaperInfoStore.searchKeyWords }}</ArgonBadge></span>
-                </p>
+              <div v-if="route.query.module == 'Fields'">
+                <h3>Papers from Research Field of {{ PaperInfoStore.searchKeyWords }}</h3>
               </div>
 
               <!-- search institution -->
-              <div>
-                <p v-if="route.query.searchType == 'institution'" class="text-muted mb-0"><span> Institution : {{
-                  PaperInfoStore.searchKeyWords }}</span>
-                </p>
+              <div v-if="route.query.module == 'Institution'">
+                <h3 class="text-muted mb-0">{{ PaperInfoStore.searchKeyWords }}'s Papers
+                </h3>
               </div>
 
               <!-- search country -->
-              <div>
-                <p v-if="route.query.searchType == 'country'" class="text-muted mb-0"><span> Country : {{
-                  PaperInfoStore.searchKeyWords }}</span>
-                </p>
+              <div v-if="route.query.module == 'Country'">
+                <h3 class="text-muted mb-0">{{ PaperInfoStore.searchKeyWords }}'s Papers
+                </h3>
               </div>
 
               <!-- search Tag -->
@@ -67,8 +63,9 @@
               <div class="table-responsive">
                 <table class="table mb-0">
                   <tbody>
-                    <Paper v-for="(item, index) in PaperInfoStore.paperinfos" :key="index" :item="item" :index="index"
-                      :userInfo="userInfo" @DeleteCard="DeleteCard"></Paper>
+                    <Paper v-for="(item, index) in PaperInfoStore.paperinfos" :key="index" :item="item"
+                      :index="index + PaperInfoStore.paginationOffset" :userInfo="userInfo"></Paper>
+
                   </tbody>
                 </table>
               </div>
@@ -79,18 +76,18 @@
       </div>
 
       <div style="width:100%;height: 100%;"
-        v-if="PaperInfoStore.paperinfos.length == 0 && paginationObj.searchkeywords != ''">
+        v-if="PaperInfoStore.paperinfos.length == 0 && PaginationStore.searchkeywords != ''">
         <el-result style="width:100%;height: 100%;" icon="warning" :title="'No Papers Found.'"
           sub-title="please check your search keywords">
         </el-result>
       </div>
 
       <!-- 分页 -->
-      <div v-if="PaperInfoStore.paperinfos.length != 0 && paginationActive == true"
-        style="display:flex;justify-content: center;">
+      <!-- <div v-if="PaperInfoStore.paperinfos.length != 0 && paginationActive == true" -->
+      <div v-if="PaperInfoStore.paperinfos.length != 0" style="display:flex;justify-content: center;">
         <div>
-          <el-pagination v-model:page-size="paginationObj.pagesize" v-model:pager-count="paginationObj.pagecount"
-            layout="prev, pager, next, jumper" :total="paginationObj.total" @current-change="handleCurrentPageChange" />
+          <el-pagination v-model:page-size="PaginationStore.pagesize" v-model:pager-count="PaginationStore.pagecount"
+            layout="prev, pager, next, jumper" :total="PaginationStore.total" @current-change="handleCurrentPageChange" />
         </div>
 
       </div>
@@ -120,85 +117,89 @@ import ArgonBadge from './components/ArgonBadge.vue'
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
 import { useCurrentAuthorStore } from '../store/currentAuthorStore'
+import { useModuleStore } from '../store/module';
+import { usePaginationStore } from '../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
 const currentAuthorStore = useCurrentAuthorStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
-
-import { useModuleStore } from '../store/module';
 const moduleStore = useModuleStore(pinia)
 
 // 接收参数
 const route = useRoute()
 
 
-//分页查询的传递的对象 
-let paginationObj = reactive({
-  pagesize: 30,
-  total: PaperInfoStore.total,
-  pagecount: 8,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: "Combinatorial Testing",
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields']
 
-})
-
-let paginationActive = ref(true)
-
-let isPageActive = ref(false)
-
-const handleMouseOverPagiantion = () => { isPageActive.value = true; }
-const handleMouseOutPagiantion = () => { isPageActive.value = false }
-
-let countAllPapers = ref(0)
-
-
-
-onMounted(() => {
-  moduleStore.CurrentModule = 'Complete Paper List'
-
-  // TODO: 打开该页面时发送 HTTP request 请求论文列表
-
-  // TODO: 用英文 variable 和英文注释
-  // 关闭分页
-
-  // 需要关闭分页，说明是通过搜索切换到Papers
-  if (route.query.paginationActive == '关闭') {
-    console.log("关闭分页")
-    paginationActive.value = false
-  }
-  // 不需要关闭分页，说明是初始化papers
-  else {
-    // 获取所有paper
-    console.log("获取所有paper")
-    listAllPapers(paginationObj)
-  }
-
-
-
-})
-
-const handleCurrentPageChange = (val) => {
+onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
 
-  paginationObj.pagenum = val
-  console.log("当前是第", paginationObj.pagenum, "页")
-  request({
-    url: '/repo/list/listAllpapers',
-    method: 'POST',
-    data: paginationObj
-  }).then((res) => {
-    console.log(res)
+  if (DetailedModule.includes(moduleStore.CurrentModule) && moduleStore.CurrentModuleDetails != '') {
+    // console.log("moduleStore.CurrentModule的值不变依然是", moduleStore.CurrentModule)
+  }
+  else {
+    // console.log("设置为Complete Paper List")
+    moduleStore.CurrentModule = 'Complete Paper List'
+    await listAllPapers({
+      pagenum: PaginationStore.pagenum,
+      pagesize: PaginationStore.pagesize,
+    })
+
+    // console.log(" moduleStore.CurrentModule", moduleStore.CurrentModule)
+  }
+
+  loadingInstance.close()
+
+
+})
+
+const handleCurrentPageChange = async (val) => {
+  let loadingInstance = ElLoading.service({ fullscreen: true });
+
+  PaginationStore.pagenum = val;
+  console.log("当前是第", PaginationStore.pagenum, "页");
+  // 通过institution查询是特殊的
+
+  try {
+    const res = await request({
+      url: '/repo/list/searchBy',
+      method: 'POST',
+      data: {
+        pagenum: PaginationStore.pagenum,
+        pagesize: PaginationStore.pagesize,
+        searchkeywords: PaginationStore.searchkeywords,
+        column: PaginationStore.column
+      }
+    });
+
+    console.log("handleCurrentPageChange中的res",res);
     PaperInfoStore.paperinfos.length = 0;
-    PaperInfoStore.paperinfos.push(...res.listEntityPage.records)
+    PaperInfoStore.paperinfos.push(...res.res.records);
 
-    paginationObj.pagenum = res.listEntityPage.current
+    PaginationStore.pagenum = res.res.current;
+
+    // console.log("PaginationStore.pagenum",PaginationStore.pagenum)
+    // console.log("PaginationStore.pagesize",PaginationStore.pagesize)
+    // 计算偏移量
+    const paginationOffset = (PaginationStore.pagenum - 1) * PaginationStore.pagesize;
+    // console.log("计算偏移量偏移量",paginationOffset)
+    // 更新全局偏移量
+    PaperInfoStore.paginationOffset = paginationOffset;
+
+    // console.log("全局偏移量",PaperInfoStore.paginationOffset)
+
+
     if (PaperInfoStore.paperinfos.length != 0) {
-      setTimeout(() => {
-        loadingInstance.close()
 
-      }, 300)
+      loadingInstance.close();
+
     }
-  }).catch((error) => { })
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+
+
 
 const searchPapers = () => {
   // console.log("搜索关键词是:", paginationObj.searchkeywords)
@@ -207,7 +208,10 @@ const searchPapers = () => {
   request({
     url: '/repo/list/searchPapers',
     method: 'POST',
-    data: paginationObj,
+    data: {
+      pagenum: PaginationStore.pagenum,
+      pagesize: PaginationStore.pagesize,
+    },
   }).then((res) => {
     // console.log("搜索的res是", res)
     PaperInfoStore.paperinfos.length = 0
@@ -218,7 +222,7 @@ const searchPapers = () => {
 
     }
     if (res.res.records.length == 0) loadingInstance.close()
-    paginationObj.total = res.res.total
+    PaginationStore.total = res.res.total
   }).catch(
     (errors) => {
 

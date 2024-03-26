@@ -72,10 +72,13 @@ import { usePaperInfoStore } from '../store/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import pinia from '../store/store';
+import { useModuleStore } from '../store/module';
 import { listallVenue } from './commonFunction';
+import { ElLoading } from 'element-plus'
+
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)
-
+const moduleStore = useModuleStore(pinia)
 const VenueStore = useVenueStore(pinia)
 const itemsPerRow = ref(6);
 const itemsPerRowBook = ref(2);
@@ -234,8 +237,13 @@ const handleDtClick = async (event) => {
 
 };
 onMounted(() => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+
+  moduleStore.CurrentModule = 'Venues'
   // // 获取所有Venue
   // listallVenue()
+  loadingInstance.close()
+
 })
 </script>
 

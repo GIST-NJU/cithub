@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,7 @@ pagesize每页有几项
         System.out.println("pageinfo是" + pageinfo);
         Integer pagenum = (Integer) pageinfo.get("pagenum");
         Integer pagesize = (Integer) pageinfo.get("pagesize");
-        String typeofPaper = (String) pageinfo.get("typerofPapers");
-        Page<ListEntity> listEntityPage = listService.listAllPapers(pagenum, pagesize, typeofPaper);
+        Page<ListEntity> listEntityPage = listService.listAllPapers(pagenum, pagesize);
 //        System.out.println("success");
         return R.ok().put("listEntityPage", listEntityPage);
 
@@ -94,6 +94,56 @@ pagesize每页有几项
         return R.ok().put("res", res);
     }
 
+    @RequestMapping(value = "/searchBy", method = RequestMethod.POST)
+    public R searchBy(@RequestBody Map<String, Object> searchinfo) {
+        System.out.println("searchBy中的" + searchinfo);
+        Integer pagenum = (Integer) searchinfo.get("pagenum");
+        Integer pagesize = (Integer) searchinfo.get("pagesize");
+        String searchkeywords = (String) searchinfo.get("searchkeywords");
+        String column = (String) searchinfo.get("column");
+        if (column.length() != 0) {
+            if (column.equals(("institution"))) {
+                //        原始的查询，无分页
+//        List<ListEntity> res = listDao.searchByInstitution(institution);
+//        return R.ok().put("res", res);
+                Page<ListEntity> res = listService.searchByInstitutionPages(pagenum, pagesize, searchkeywords, column);
+                return R.ok().put("res", res);
+            }
+
+            else if(column.equals(("country"))){
+
+                List<ListEntity> dataList = listDao.searchByCountry(searchkeywords);
+                int total = dataList.size(); // 总记录数
+                // 在dataList的基础上执行分页查询，手动分页
+                int fromIndex = (pagenum - 1) * pagesize;
+
+                int toIndex = Math.min(pagenum * pagesize, total);
+
+                List<ListEntity> pageDataList = dataList.subList(fromIndex, toIndex);
+                // 创建一个 Map 对象
+                Map<String, Object> resMap = new HashMap<>();
+
+                // 将 Records 数组放入 res 对象中
+                resMap.put("records", pageDataList);
+
+                // 向 res 对象中添加 current 键值对
+                resMap.put("current", pagenum);
+
+
+                return R.ok().put("res",resMap).put("total", total);
+            }
+            else {
+                Page<ListEntity> res = listService.searchBy(pagenum, pagesize, searchkeywords, column);
+                return R.ok().put("res", res);
+            }
+
+        } else {
+            Page<ListEntity> res = listService.listAllPapers(pagenum, pagesize);
+            return R.ok().put("res", res);
+        }
+
+    }
+
     //    @Operation(summary = "通过作者名字搜索文献")
     @RequestMapping(value = "/searchByAuthor", method = RequestMethod.POST)
     public R searchByAuthor(@RequestBody Map<String, Object> searchInfo) {
@@ -108,16 +158,38 @@ pagesize每页有几项
 
     @RequestMapping(value = "/searchByInstitution", method = RequestMethod.POST)
     public R searchByInstitution(@RequestBody Map<String, Object> searchInfo) {
-        String institution = (String) searchInfo.get("searchkeywords");
-        List<ListEntity> res = listDao.searchByInstitution(institution);
+        String searchkeywords = (String) searchInfo.get("searchkeywords");
+        Integer pagenum = (Integer) searchInfo.get("pagenum");
+        Integer pagesize = (Integer) searchInfo.get("pagesize");
+        String column = (String) searchInfo.get("column");
+
+        Page<ListEntity> res = listService.searchByInstitutionPages(pagenum, pagesize, searchkeywords, column);
         return R.ok().put("res", res);
+
+
     }
 
     @RequestMapping(value = "/searchByCountry", method = RequestMethod.POST)
     public R searchByCountry(@RequestBody Map<String, Object> searchInfo) {
-        String country = (String) searchInfo.get("searchkeywords");
-        List<ListEntity> res = listDao.searchByCountry(country);
-        return R.ok().put("res", res);
+        String searchkeywords = (String) searchInfo.get("searchkeywords");
+        Integer pagenum = (Integer) searchInfo.get("pagenum");
+        Integer pagesize = (Integer) searchInfo.get("pagesize");
+
+
+        List<ListEntity> dataList = listDao.searchByCountry(searchkeywords);
+        int total = dataList.size(); // 总记录数
+        // 在dataList的基础上执行分页查询
+        int fromIndex = (pagenum - 1) * pagesize;
+        int toIndex = Math.min(pagenum * pagesize, total);
+
+        List<ListEntity> pageDataList = dataList.subList(fromIndex, toIndex);
+
+        return R.ok().put("res", pageDataList).put("total", total);
+
+
+
+
+
     }
 
     @RequestMapping(value = "/searchByTag", method = RequestMethod.POST)
@@ -130,8 +202,8 @@ pagesize每页有几项
     @RequestMapping(value = "/searchByVenue", method = RequestMethod.POST)
     public R searchByVenue(@RequestBody Map<String, Object> searchInfo) {
         String venue = (String) searchInfo.get("searchkeywords");
-        QueryWrapper <ListEntity> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("abbr",venue);
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("abbr", venue);
         List<ListEntity> res = listService.list(queryWrapper);
         return R.ok().put("res", res);
     }
@@ -143,18 +215,17 @@ pagesize每页有几项
         Integer pagenum = (Integer) searchInfo.get("pagenum");
         Integer pagesize = (Integer) searchInfo.get("pagesize");
         String searchkeywords = (String) searchInfo.get("searchkeywords");
-        String typeofPapers = (String) searchInfo.get("typerofPapers");
-        Page<ListEntity> res = listService.searchByField(pagenum, pagesize, searchkeywords, typeofPapers);
+        Page<ListEntity> res = listService.searchByField(pagenum, pagesize, searchkeywords);
         return R.ok().put("res", res);
     }
 
     @RequestMapping(value = "/listRecentPapers", method = RequestMethod.POST)
     public R listRecentPapers(@RequestBody Map<String, Object> searchInfo) {
-        QueryWrapper<ListEntity> queryWrapper=new QueryWrapper<>();
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("year");
         // 获取最新的5篇paper
         queryWrapper.last("LIMIT 5");
-        return  R.ok().put("res",listService.list(queryWrapper));
+        return R.ok().put("res", listService.list(queryWrapper));
     }
 
 //    @RequestMapping(value="/testRPC")

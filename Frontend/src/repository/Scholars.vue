@@ -11,7 +11,7 @@
             <div class="card-header pb-0">
               <ul style="margin: 0px 0px 0px 0px" class="nav nav-tabs">
                 <li class="nav-item" :class="{ 'show': activeTab === 'Scholars' }">
-                  <a class="nav-link" @click="setActiveTab('Scholars')" >
+                  <a class="nav-link" @click="setActiveTab('Scholars')">
                     <span>Scholars</span> <span v-if="activeTab == 'Scholars'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         AuthorStore.authorsArray.length }}</ArgonBadge>
@@ -19,7 +19,7 @@
                   </a>
                 </li>
                 <li class="nav-item" :class="{ 'show': activeTab === 'Institutions' }">
-                  <a class="nav-link" @click="setActiveTab('Institutions')" >
+                  <a class="nav-link" @click="setActiveTab('Institutions')">
                     <span>Institutions</span> <span v-if="activeTab == 'Institutions'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         InstitutionStore.InstitutionArray.length }}</ArgonBadge>
@@ -27,7 +27,7 @@
                   </a>
                 </li>
                 <li class="nav-item" :class="{ 'show': activeTab === 'Country' }">
-                  <a class="nav-link" @click="setActiveTab('Country')" >
+                  <a class="nav-link" @click="setActiveTab('Country')">
                     <span>Country</span> <span v-if="activeTab == 'Country'">
                       <ArgonBadge variant="gradient" color="success" style="color:white"># {{
                         CountryStore.CountryArray.length }}</ArgonBadge>
@@ -44,7 +44,7 @@
                   <ArgonBadge variant="gradient" color="primary" style="font-size: 18px;">{{ letter }}</ArgonBadge>
                   <div v-for="(chunk, index) in chunkedNames(names, 4)" :key="index" class="row"
                     style="margin:10px 0px 10px 10px">
-                    <div class="col" v-for="name in chunk" :key="name" @click="searchByAuthor(name)">
+                    <div class="col" v-for="name in chunk" :key="name" @click="searchBy(name)">
                       <span>{{ name }}</span>
                     </div>
                   </div>
@@ -64,7 +64,7 @@
                 </ArgonBadge>
                 <div v-for="(insObj, index) in chunkedNames(InstitutionStore.Academia, 2)" :key="index" class="row"
                   style="margin:10px 0px 10px 10px">
-                  <div class="col" v-for="ins in insObj" :key="name" @click="searchByInstitution(ins.institution)">
+                  <div class="col" v-for="ins in insObj" :key="name" @click="searchBy(ins.institution)">
                     <span>{{ ins.institution }}</span>
                   </div>
                 </div>
@@ -77,7 +77,7 @@
                 </ArgonBadge>
                 <div v-for="(insObj, index) in chunkedNames(InstitutionStore.Industry, 2)" :key="index" class="row"
                   style="margin:10px 0px 10px 10px">
-                  <div class="col" v-for="ins in insObj" :key="name" @click="searchByInstitution(ins.institution)">
+                  <div class="col" v-for="ins in insObj" :key="name" @click="searchBy(ins.institution)">
                     <span>{{ ins.institution }}</span>
                   </div>
                 </div>
@@ -91,7 +91,7 @@
               <div>
                 <div v-for="(cous, index) in chunkedNames(CountryStore.CountryArray, 5)" :key="index" class="row"
                   style="margin:10px 0px 10px 10px">
-                  <div class="col" v-for="cou in cous" :key="name" @click="searchByCountry(cou)">
+                  <div class="col" v-for="cou in cous" :key="name" @click="searchBy(cou)">
                     <span>{{ cou }}</span>
                   </div>
                 </div>
@@ -128,6 +128,9 @@ import { useInstitutionStore } from '../store/institutionStore'
 import { useCurrentAuthorStore } from '../store/currentAuthorStore'
 import { ElNotification } from 'element-plus'
 import { useCountryStore } from '../store/CountryStore'
+import { ElLoading } from 'element-plus'
+import { usePaginationStore } from '../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
 const currentAuthorStore = useCurrentAuthorStore(pinia)
 const moduleStore = useModuleStore(pinia)
 const AuthorStore = useAuthorStore(pinia)
@@ -139,6 +142,7 @@ const activeTab = ref('Scholars'); // Set the default active tab
 
 const setActiveTab = (tabName) => {
   activeTab.value = tabName;
+  moduleStore.CurrentModuleDetails = ''
 };
 
 // Watch for changes in activeTab
@@ -159,115 +163,194 @@ let searchObj = reactive({
 
 })
 
-const searchByAuthor = async (authorname) => {
+const searchBy = async (value) => {
+  console.log("当前选中的是", activeTab.value)
+  console.log("待搜索的值是", value)
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  moduleStore.CurrentModuleDetails = value
 
-  try {
-    searchObj.searchkeywords = authorname;
-    PaperInfoStore.paperinfos.length = 0
-    PaperInfoStore.searchKeyWords = authorname
+  PaginationStore.pagenum = 1
+  PaginationStore.pagesize = 25
+  PaginationStore.searchkeywords = value
 
-    const searchByAuthorRes = await request({
-      url: 'repo/list/searchByAuthor',
-      method: 'POST',
-      data: searchObj
-    })
-    PaperInfoStore.paperinfos.push(...searchByAuthorRes.res.records)
-    PaperInfoStore.total = searchByAuthorRes.res.total
+  PaperInfoStore.paginationOffset = 0
+  PaperInfoStore.paperinfos.length = 0
+  PaperInfoStore.searchKeyWords = value
+
+  if (activeTab.value == 'Scholars') {
+    try {
+
+      PaginationStore.column = 'author'
+      const searchByAuthorRes = await request({
+        url: 'repo/list/searchBy',
+        method: 'POST',
+        data: {
+          pagesize: PaginationStore.pagesize,
+          searchkeywords: PaginationStore.searchkeywords,
+          column: PaginationStore.column,
+          pagenum: PaginationStore.pagenum,
+        }
+      })
+      // console.log("searchByAuthorRes", searchByAuthorRes)
+      PaperInfoStore.paperinfos.push(...searchByAuthorRes.res.records)
+      PaperInfoStore.total = searchByAuthorRes.res.total
+      PaginationStore.total = searchByAuthorRes.res.total
 
 
-    const getAuthorInfoRes = await request({
-      url: 'repo/author/listAuthorByname',
-      method: 'POST',
-      data: searchObj
-    })
-    currentAuthorStore.CurrentAuthor.category = getAuthorInfoRes.authors.category
-    currentAuthorStore.CurrentAuthor.country = getAuthorInfoRes.authors.country
-    currentAuthorStore.CurrentAuthor.email = getAuthorInfoRes.authors.email
-    currentAuthorStore.CurrentAuthor.homepage = getAuthorInfoRes.authors.homepage
-    currentAuthorStore.CurrentAuthor.institution = getAuthorInfoRes.authors.institution
-    currentAuthorStore.CurrentAuthor.name = getAuthorInfoRes.authors.name
+      const getAuthorInfoRes = await request({
+        url: 'repo/author/listAuthorByname',
+        method: 'POST',
+        data: {
+          searchkeywords: PaginationStore.searchkeywords,
+        }
+      })
+      currentAuthorStore.CurrentAuthor.category = getAuthorInfoRes.authors.category
+      currentAuthorStore.CurrentAuthor.country = getAuthorInfoRes.authors.country
+      currentAuthorStore.CurrentAuthor.email = getAuthorInfoRes.authors.email
+      currentAuthorStore.CurrentAuthor.homepage = getAuthorInfoRes.authors.homepage
+      currentAuthorStore.CurrentAuthor.institution = getAuthorInfoRes.authors.institution
+      currentAuthorStore.CurrentAuthor.name = getAuthorInfoRes.authors.name
+      loadingInstance.close()
+      router.push({
+        path: '/repository/papers',
+        query: {
+          module: 'Scholars',
+        }
+      })
+    } catch (error) {
 
-    ElNotification({
-      title: 'Rendring',
-      message: 'Please wait for results',
-      type: 'success',
-    })
+    }
+  }
 
-    router.push({
-      path: '/repository/papers',
-      query: {
-        paginationActive: '关闭',
-        searchType: 'author',
-      }
-    })
-  } catch (error) {
+
+  if (activeTab.value == 'Institutions') {
+
+    try {
+
+      PaginationStore.column = 'institution'
+      const searchByInstitutionRes = await request({
+        url: 'repo/list/searchBy',
+        method: 'POST',
+        data: {
+          pagesize: PaginationStore.pagesize,
+          searchkeywords: PaginationStore.searchkeywords,
+          column: PaginationStore.column,
+          pagenum: PaginationStore.pagenum,
+        }
+      })
+      console.log("searchByInstitutionRes", searchByInstitutionRes)
+      PaperInfoStore.paperinfos.push(...searchByInstitutionRes.res.records)
+      PaperInfoStore.total = searchByInstitutionRes.res.total
+      PaginationStore.total = searchByInstitutionRes.res.total
+
+
+      loadingInstance.close()
+      router.push({
+        path: '/repository/papers',
+        query: {
+          module: 'Institution',
+        }
+      })
+    } catch (error) {
+
+    }
+  }
+
+  if (activeTab.value == 'Country') {
+    try {
+
+      PaginationStore.column = 'country'
+      const searchByCountryRes = await request({
+        url: 'repo/list/searchByCountry',
+        method: 'POST',
+        data: {
+          pagesize: PaginationStore.pagesize,
+          searchkeywords: PaginationStore.searchkeywords,
+          column: PaginationStore.column,
+          pagenum: PaginationStore.pagenum,
+        }
+      })
+      console.log("searchByCountryRes", searchByCountryRes)
+      PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
+      PaperInfoStore.total = searchByCountryRes.total
+      PaginationStore.total = searchByCountryRes.total
+
+
+      loadingInstance.close()
+      router.push({
+        path: '/repository/papers',
+        query: {
+          module: 'Country',
+        }
+      })
+    } catch (error) {
+
+    }
 
   }
 
 
+
+
 }
 
-const searchByInstitution = async (institution) => {
-  try {
-    searchObj.searchkeywords = institution;
-    PaperInfoStore.paperinfos.length = 0
-    PaperInfoStore.searchKeyWords = institution
+// const searchByInstitution = async (institution) => {
+//   try {
+//     moduleStore.CurrentModuleDetails = institution
+//     searchObj.searchkeywords = institution;
+//     PaperInfoStore.paperinfos.length = 0
+//     PaperInfoStore.searchKeyWords = institution
 
-    const searchByInstitutionRes = await request({
-      url: 'repo/list/searchByInstitution',
-      method: 'POST',
-      data: searchObj
-    })
-    PaperInfoStore.paperinfos.push(...searchByInstitutionRes.res)
-    PaperInfoStore.total = searchByInstitutionRes.res.length
+//     const searchByInstitutionRes = await request({
+//       url: 'repo/list/searchByInstitution',
+//       method: 'POST',
+//       data: searchObj
+//     })
+//     PaperInfoStore.paperinfos.push(...searchByInstitutionRes.res)
+//     PaperInfoStore.total = searchByInstitutionRes.res.length
 
-    ElNotification({
-      title: 'Rendring',
-      message: 'Please wait for results',
-      type: 'success',
-    })
 
-    router.push({
-      path: '/repository/papers',
-      query: {
-        paginationActive: '关闭',
-        searchType: 'institution',
-      }
-    })
+
+//     router.push({
+//       path: '/repository/papers',
+//       query: {
+//         paginationActive: '关闭',
+//         module: 'Institution',
+//       }
+//     })
 
 
 
 
-  } catch (error) {
+//   } catch (error) {
 
-  }
-}
+//   }
+// }
 
 const searchByCountry = async (country) => {
   try {
-    searchObj.searchkeywords = country;
+    moduleStore.CurrentModuleDetails = country
     PaperInfoStore.paperinfos.length = 0
     PaperInfoStore.searchKeyWords = country
 
     const searchByCountryRes = await request({
       url: 'repo/list/searchByCountry',
       method: 'POST',
-      data: searchObj
+      data: {
+        searchkeywords: country
+      }
     })
+    console.log("searchByCountryRes", searchByCountryRes)
     PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
     PaperInfoStore.total = searchByCountryRes.res.length
 
-    ElNotification({
-      title: 'Rendring',
-      message: 'Please wait for results',
-      type: 'success',
-    })
+
 
     router.push({
       path: '/repository/papers',
       query: {
         paginationActive: '关闭',
-        searchType: 'country',
+        module: 'Country',
       }
     })
 
@@ -333,8 +416,16 @@ const sortedGroupedNames = computed(() => {
 // });
 
 onMounted(async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
 
-  moduleStore.CurrentModule = activeTab.value
+  if (moduleStore.CurrentModule == '') {
+    moduleStore.CurrentModule = activeTab.value
+
+  }
+  else {
+    activeTab.value = moduleStore.CurrentModule
+  }
+
   // 获取所有scholars
   await listAllScholars()
   // 获取所有Institution
@@ -342,6 +433,8 @@ onMounted(async () => {
 
   // 获取所有Country
   await listAllCountry()
+  loadingInstance.close()
+
 
 })
 </script>
@@ -349,17 +442,17 @@ onMounted(async () => {
 
 
 <style scoped>
-
 .nav-item {
   cursor: pointer;
 }
+
 /* Inactive tab styles */
 .nav-tabs .nav-item.show h3 {
   background-color: #ffffff;
   /* Set the background color for inactive tabs */
   color: #5e72e4;
   /* Set the text color for inactive tabs */
- 
+
 }
 
 /* Active tab styles */
@@ -368,7 +461,7 @@ onMounted(async () => {
   /* Set the background color for active tab */
   color: #8392ab;
   /* Set the text color for active tab */
- 
+
 
 }
 
