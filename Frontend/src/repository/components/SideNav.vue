@@ -10,7 +10,7 @@
       </div>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main">
+    <div class="w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor:pointer;">
           <a @click.prevent="jumpToHome" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]">
@@ -162,4 +162,11 @@ const jumpToStatistics = () => {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+
+.sidenav {
+  height: 100vh; /* 将侧边栏高度设置为屏幕的高度 */
+  overflow-y: hidden; /* 隐藏纵向滚动条 */
+}
+
+</style>

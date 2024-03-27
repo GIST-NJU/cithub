@@ -65,10 +65,10 @@ public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> imp
     }
 
     @Override
-    public Page<ListEntity> listBy(Integer pagenum, Integer pagesize, String typerofPapers,String listByKey, String listByValue) {
+    public List<ListEntity> listBy(String column, String value) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(listByKey,listByValue);
-        Page<ListEntity> listEntityPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
+        queryWrapper.like(column,value);
+        List<ListEntity> listEntityPage = listDao.selectList(queryWrapper);
         return listEntityPage;
 
     }

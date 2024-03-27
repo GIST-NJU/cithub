@@ -406,17 +406,23 @@ pagesize每页有几项
         return R.ok().put("countEachYear", listService.listMaps(queryWrapper));
     }
 
-    //    @Operation(summary = "通过关键字列举该关键字相关的所有文献")
+    @RequestMapping(value = "/countEachYearScholars", method = RequestMethod.POST)
+    public R countEachYearScholars(@RequestBody Map<String, Object> info) {
+        String author = (String) info.get("author");
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("author",author);
+        queryWrapper.select("year", "COUNT(*) AS RecordCount").groupBy("year").orderByAsc("year");
+        return R.ok().put("res", listService.listMaps(queryWrapper));
+    }
+
+//    通过关键词list 出全部符合要求的记录
     @RequestMapping(value = "/listBy", method = RequestMethod.POST)
     public R listBy(@RequestBody Map<String, Object> info) {
-//        System.out.println("info是"+info);
-        Map<String, Object> pageInfo = (Map<String, Object>) info.get("pageInfo");
-        Integer pagenum = (Integer) pageInfo.get("pagenum");
-        Integer pagesize = (Integer) pageInfo.get("pagesize");
-        String typerofPapers = (String) pageInfo.get("typerofPapers");
-        String listByKey = (String) info.get("listByKey");
-        String listByValue = (String) info.get("listByValue");
-        Page<ListEntity> res = listService.listBy(pagenum, pagesize, typerofPapers, listByKey, listByValue);
+        System.out.println("info是"+info);
+
+        String column = (String) info.get("column");
+        String value = (String) info.get("searchkeywords");
+        List<ListEntity> res = listService.listBy(column, value);
         return R.ok().put("res", res);
     }
 

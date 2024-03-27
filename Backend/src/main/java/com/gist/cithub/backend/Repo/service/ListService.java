@@ -38,7 +38,7 @@ public interface ListService extends MPJBaseService<ListEntity> {
     Page<ListEntity> searchByBooktitle (Integer pagenum, Integer pagesize, String searchKeywords,String typeofPapers);
 
     Page<ListEntity> listAllPapers(Integer pagenum,Integer pagesize);
-    Page<ListEntity> listBy(Integer pagenum,Integer pagesize,String typerofPapers,String listByKey,String listByValue );
+    List<ListEntity> listBy(String column,String value );
 
 
     Boolean writeToMysql(String filePath);

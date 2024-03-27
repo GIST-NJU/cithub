@@ -14,9 +14,9 @@
                 <div class="col-12">
 
                   <div style="margin: 0px 0px 5px 5px; display: flex; align-items: center;">
-                    <ArgonButton size="sm" color="dark" variant="outline" @click = "goBack">
-                      <span style="margin: 3px 0px 0px 0px" class="ni ni-bold-left ni-lg me-1" />
-                      <span>Back</span>
+
+                    <ArgonButton color="secondary" size="sm" @click="goBack">
+                      <span class="ni ni-bold-left  me-1"> Back </span>
                     </ArgonButton>
                   </div>
 
@@ -58,14 +58,14 @@
                       </p>
 
                       <p>
-                        <span  class="badge bg-primary">{{
-                          currentPaperStore.currentPaper.field }}</span>&nbsp;
+                        <span>Research Field : </span><span :class="getResearchFieldColor(currentPaperStore.currentPaper.field)">{{ currentPaperStore.currentPaper.field
+                        }}</span>&nbsp;
                       </p>
 
-                      <p v-if="TagArray.length != 0">
-                        <span v-for="(tag, index) in TagArray" :key="index" class="badge rounded-pill bg-info"
-                          style="margin-right:5px">{{ tag }}</span>
-                      </p>
+                        <p v-if="TagArray.length != 0">
+                          <span>Topics : </span> <span v-for="(tag, index) in TagArray" :key="index"
+                            class="badge rounded-pill bg-success" style="margin-right:5px">{{ tag }}</span>
+                        </p>
 
                     </div>
                   </div>
@@ -192,13 +192,34 @@ const listPaperInfoByPaperID = async () => {
     FirstAuthorNameInBibTex.value = FirstAuthorName.value.replace(/\s/g, "")
     let tempTagArray = currentPaperStore.currentPaper.tag.split(',')
     TagArray.push(...tempTagArray)
+    if(TagArray[0]=='') {TagArray.length=0}
   } catch (err) {
     console.error(err);
   }
 }
-const goBack=()=>{
+const goBack = () => {
   window.history.back();
 }
+const getResearchFieldColor = (field) => {
+  switch (field) {
+    case 'Model':
+      return 'badge bg-success';
+    case 'Generation':
+      return 'badge bg-primary';
+    case 'Optimization':
+      return 'badge bg-warning';
+    case 'Diagnosis':
+      return 'badge bg-danger';
+    case 'Evaluation':
+      return 'badge bg-dark';
+    case 'Application':
+      return 'badge bg-info';
+    case 'Other':
+      return 'badge bg-secondary';
+  }
+}
+
+
 onMounted(() => {
 
   listPaperInfoByPaperID()

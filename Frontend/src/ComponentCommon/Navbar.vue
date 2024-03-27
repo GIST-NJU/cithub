@@ -8,19 +8,13 @@
           <router-link :to="{ name: 'Cithub' }" class="breadcrumb-item text-sm text-white" aria-current="page">
             CitHub
           </router-link>
-          <!-- <li class="breadcrumb-item text-sm" @click="jumpToCithub" @mouseover="isHovered = true"
-            @mouseleave="isHovered = false" style="cursor:pointer;" id="liCithub">
-            <span v-show="isHovered" class="opacity-5 text-white hovered">CitHub</span>
-            <span v-show="!isHovered" class="opacity-5 text-white">CitHub</span>
-          </li> -->
+
           <router-link :to="{ name: moduleStore.CurrentRoute }" @click="handleRouterLinkClick" :exact="true"
             class="breadcrumb-item text-sm text-white" aria-current="page">
             {{ moduleStore.CurrentModule }}
           </router-link>
 
-          <!-- <router-link :to="{name:moduleLink}" :exact="true" class="breadcrumb-item text-sm text-white" aria-current="page">
-            {{ moduleStore.CurrentModule }}
-          </router-link> -->
+  
 
 
           <li v-if="moduleStore.CurrentModuleDetails != ''" class="breadcrumb-item text-sm text-white active"
@@ -116,14 +110,7 @@ onMounted(() => {
 
 
 <style scoped>
-#liCithub span {
-  transition: color 0.3s, opacity 0.3s, text-decoration 0.3s;
-}
 
-#liCithub span.hovered:hover {
-  text-decoration: underline;
-  color: white;
-  opacity: 1;
-}
+
 </style>
 

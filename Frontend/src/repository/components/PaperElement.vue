@@ -16,35 +16,45 @@
                 ({{ props.item.abbr }}),
               </template>
               <template v-if="props.item.vol">
-                {{props.item.vol}}
+                {{ props.item.vol }}
               </template>
               <template v-if="props.item.no">
-                ({{props.item.no}}):
+                ({{ props.item.no }}):
               </template>
-              <template v-if="props.item.pages&&props.item.pages!='not found'">
-                  {{ props.item.pages }}
+              <template v-if="props.item.pages && props.item.pages != 'not found'">
+                {{ props.item.pages }}
               </template>
             </template>
 
             <template v-if="props.item.type === 'inproceedings'">
               <template v-if="props.item.abbr">
-                ({{ props.item.abbr }}), 
+                ({{ props.item.abbr }}),
               </template>
               <template v-if="props.item.year">
-                {{props.item.year}}
+                {{ props.item.year }}
               </template>
-              <template v-if="props.item.pages&&props.item.pages!='not found'">
+              <template v-if="props.item.pages && props.item.pages != 'not found'">
                 :{{ props.item.pages }}
               </template>
             </template>
           </p>
         </div>
       </div>
-      <div style="display: flex;flex-direction:row-reverse">
+      <div style="display: flex; justify-content:space-between;margin:10px 0 0 0">
 
-        <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary"> detailed </argon-button></div>
-        <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="success"> doi</argon-button></div>
+        <div>
+          <!-- <p v-if="moduleStore.CurrentRoute=='Repository_Papers'" :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p> -->
+          <p  :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p>
+        </div>
 
+        <div style="display: flex;">
+          <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="enterPaperInfo(props.item)" size="sm"
+              color="success"> doi</argon-button></div>
+
+          <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary"> detailed </argon-button>
+          </div>
+
+        </div>
 
       </div>
 
@@ -58,7 +68,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCurrentPaper } from '../../store/currentPaper'
 import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
 import pinia from '../../store/store'
+import { useModuleStore } from '../../store/module';
 
+const moduleStore = useModuleStore(pinia)
 const router = useRouter()
 const props = defineProps({
   item: Object,
@@ -84,6 +96,26 @@ const enterPaperInfo = (paper) => {
       { paperid: paper.id }
   })
 }
+
+const getResearchFieldColor = (field) => {
+  switch (field) {
+    case 'Model':
+      return 'badge bg-success';
+    case 'Generation':
+      return 'badge bg-primary';
+    case 'Optimization':
+      return 'badge bg-warning';
+    case 'Diagnosis':
+      return 'badge bg-danger';
+    case 'Evaluation':
+      return 'badge bg-dark';
+    case 'Application':
+      return 'badge bg-info';
+    case 'Other':
+      return 'badge bg-secondary';
+  }
+}
+
 </script>
 
 
