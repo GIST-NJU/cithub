@@ -44,11 +44,11 @@
 
         <div>
           <!-- <p v-if="moduleStore.CurrentRoute=='Repository_Papers'" :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p> -->
-          <p  :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p>
+          <p :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p>
         </div>
 
         <div style="display: flex;">
-          <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="enterPaperInfo(props.item)" size="sm"
+          <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="JumpToDoi(props.item.doi)" size="sm"
               color="success"> doi</argon-button></div>
 
           <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary"> detailed </argon-button>
@@ -69,7 +69,7 @@ import { useCurrentPaper } from '../../store/currentPaper'
 import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
 import pinia from '../../store/store'
 import { useModuleStore } from '../../store/module';
-
+import { ElNotification } from 'element-plus'
 const moduleStore = useModuleStore(pinia)
 const router = useRouter()
 const props = defineProps({
@@ -89,6 +89,23 @@ const handleMouseOver = () => {
 const handleMouseLeave = () => {
   isHovered.value = false;
 }
+
+const JumpToDoi = (doi) => {
+  if (doi == 'not found') {
+    ElNotification({
+      title: 'Sorry...',
+      message: 'We do not find the doi of this paper.',
+      type: 'error',
+    })
+  }
+  {  // 拼接DOI链接
+    const doiLink = 'http://dx.doi.org/' + doi;
+    // 打开新窗口
+    window.open(doiLink);
+  }
+
+}
+
 const enterPaperInfo = (paper) => {
   router.push({
     path: '/repository/paperInfo',

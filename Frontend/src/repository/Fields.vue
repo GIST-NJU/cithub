@@ -200,7 +200,7 @@ const selectCategory = (category) => {
 
 const searchByTag = async (tag) => {
   // console.log("tag", tag)
-  moduleStore.CurrentModule = 'Tag'
+  moduleStore.CurrentModule = 'Topics'
   moduleStore.CurrentModuleDetails = tag
   try {
     PaginationStore.pagenum = 1
@@ -231,7 +231,7 @@ const searchByTag = async (tag) => {
     router.push({
       path: '/repository/papers',
       query: {
-        module: 'Tag',
+        module: 'Topics',
       }
     })
 

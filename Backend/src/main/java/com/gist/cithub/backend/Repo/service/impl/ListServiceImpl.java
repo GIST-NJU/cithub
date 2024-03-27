@@ -252,6 +252,7 @@ public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> imp
     public Page<ListEntity> searchByInstitutionPages(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.apply("EXISTS (SELECT 1 FROM repository_scholar p WHERE repository_list.author LIKE CONCAT('%', p.name, '%') AND p.institution = {0})", searchkeywords);
+        queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;
     }

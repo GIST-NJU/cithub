@@ -14,7 +14,7 @@
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor:pointer;">
           <a @click.prevent="jumpToHome" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]">
-          <!-- <a href="/repository/home" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]"> -->
+            <!-- <a href="/repository/home" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]"> -->
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
@@ -33,7 +33,7 @@
           </a>
         </li>
 
-        <li class="nav-item"  style=" cursor:pointer;">
+        <li class="nav-item" style=" cursor:pointer;">
           <a @click.prevent="jumpToScholars" :class="['nav-link', { 'active': isRouteActive('Repository_Scholars') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -43,7 +43,7 @@
           </a>
         </li>
 
-        <li class="nav-item"  style=" cursor:pointer;">
+        <li class="nav-item" style=" cursor:pointer;">
           <a @click.prevent="jumpToFields" :class="['nav-link', { 'active': isRouteActive('Repository_Fields') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -52,7 +52,7 @@
             <span class="nav-link-text ms-1 p">Topics</span>
           </a>
         </li>
-        <li class="nav-item"  style=" cursor:pointer;">
+        <li class="nav-item" style=" cursor:pointer;">
           <a @click.prevent="jumpToVenues" :class="['nav-link', { 'active': isRouteActive('Repository_Venues') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -63,8 +63,9 @@
           </a>
         </li>
 
-        <li class="nav-item"  style=" cursor:pointer;">
-          <a  @click.prevent="jumpToStatistics" :class="['nav-link', { 'active': isRouteActive('Repository_Statistics') }]">
+        <li class="nav-item" style=" cursor:pointer;">
+          <a @click.prevent="jumpToStatistics"
+            :class="['nav-link', { 'active': isRouteActive('Repository_Statistics') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 
@@ -84,7 +85,7 @@
           </a>
         </li> -->
 
-   
+
       </ul>
     </div>
   </aside>
@@ -92,69 +93,84 @@
 
 <script  setup>
 import { useRouter } from 'vue-router';
-import { ref,reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import pinia from '../../store/store'
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from '../commonFunction';
 import { useModuleStore } from '../../store/module';
 import { usePaperInfoStore } from '../../store/paperinfoStore'
-
+import { usePaginationStore } from '../../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
 const moduleStore = useModuleStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
 const router = useRouter();
 
 
+// 监听 moduleStore.CurrentRoute 的变化
+watch(() => moduleStore.CurrentRoute, (newRoute, oldRoute) => {
+  // 每次路由变化时触发 isRouteActive 方法
+  console.log("moduleStore.CurrentRoute sideNav", moduleStore.CurrentRoute);
+  isRouteActive(newRoute);
+});
 
 const isRouteActive = (routeName) => {
   return moduleStore.CurrentRoute === routeName;
 }
 
 const jumpToHome = () => {
-  moduleStore.CurrentModule='Repository'
-  moduleStore.CurrentModuleDetails=''
+  moduleStore.CurrentModule = 'Repository'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Home'
   router.push({ name: 'Repository_Home' });
 }
-//分页查询的传递的对象 
-let paginationObj = reactive({
-  pagesize: 20,
-  total: PaperInfoStore.total,
-  pagecount: 8,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: "Combinatorial Testing",
 
-})
-const jumpToPapers = () => {
+const jumpToPapers = async () => {
   // 每次点击进入Papers都显示所有论文的信息。
-  moduleStore.CurrentModule='Complete Paper List'
-  moduleStore.CurrentModuleDetails=''
-  listAllPapers(paginationObj)
+  moduleStore.CurrentModule = 'Complete Paper List'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Papers'
+  PaginationStore.pagenum = 1
+  PaginationStore.pagesize = 25
+  PaginationStore.searchkeywords=''
+  PaginationStore.column = ''
+  PaperInfoStore.paperinfos.length = 0
+  // 计算偏移量
+  const paginationOffset = (PaginationStore.pagenum - 1) * PaginationStore.pagesize;
+  // 更新全局偏移量
+  PaperInfoStore.paginationOffset = paginationOffset;
+  await listAllPapers()
   router.push({ path: '/repository/papers' });
 }
 
 const jumpToScholars = () => {
-  moduleStore.CurrentModule='Scholars'
-  moduleStore.CurrentModuleDetails=''
+  moduleStore.CurrentModule = 'Scholars'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Scholars'
+
   router.push({ name: 'Repository_Scholars' })
 }
 
 const jumpToFields = () => {
-  moduleStore.CurrentModule='Fields'
-  moduleStore.CurrentModuleDetails=''
+  moduleStore.CurrentModule = 'Fields'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Fields'
 
   router.push({ name: 'Repository_Fields' })
 }
 
 const jumpToVenues = () => {
-  moduleStore.CurrentModule='Venues'
+  moduleStore.CurrentModule = 'Venues'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Venues'
 
-  moduleStore.CurrentModuleDetails=''
 
   router.push({ name: 'Repository_Venues' })
 }
 
 const jumpToStatistics = () => {
-  moduleStore.CurrentModule='Statistics'
-  moduleStore.CurrentModuleDetails=''
+  moduleStore.CurrentModule = 'Statistics'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Statistics'
+
   router.push({ name: 'Repository_Statistics' })
 }
 
@@ -163,10 +179,10 @@ const jumpToStatistics = () => {
 
 
 <style scoped>
-
 .sidenav {
-  height: 100vh; /* 将侧边栏高度设置为屏幕的高度 */
-  overflow-y: hidden; /* 隐藏纵向滚动条 */
+  height: 100vh;
+  /* 将侧边栏高度设置为屏幕的高度 */
+  overflow-y: hidden;
+  /* 隐藏纵向滚动条 */
 }
-
 </style>

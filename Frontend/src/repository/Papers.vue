@@ -136,9 +136,9 @@
                 </h4>
               </div>
 
-              <!-- search Tag -->
-              <div v-if="route.query.module == 'Tag'">
-                <h4>Papers related to <span style="color: #2dce89">{{ PaperInfoStore.searchKeyWords }}</span></h4>
+              <!-- search Topics -->
+              <div v-if="route.query.module == 'Topics'">
+                <h4>Papers related to Topic <span style="color: #2dce89">{{ PaperInfoStore.searchKeyWords }}</span></h4>
               </div>
 
               <!-- search institution -->
@@ -238,7 +238,6 @@ import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } fro
 import { useCurrentAuthorStore } from '../store/currentAuthorStore'
 import { useModuleStore } from '../store/module';
 import { usePaginationStore } from '../store/paginationStore'
-import { set } from '@vueuse/shared';
 const PaginationStore = usePaginationStore(pinia)
 const currentAuthorStore = useCurrentAuthorStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
@@ -279,7 +278,7 @@ const handleCurrentPageChange = async (val) => {
 
     }
   }
-  // 其他查询的翻译
+  // 其他查询的翻页
   else {
     try {
       const res = await request({
@@ -451,7 +450,7 @@ let ChartScholarPartnershipOption = reactive({
         // 修改tooltip，显示边的源节点、目标节点和权重
         return params.data.source + ' > ' + params.data.target + '<br>Times of co-work : ' + params.data.weight;
       }
-      if (params.dataType === 'node') { return params.name + '<br>Times of co-work :' + params.data.weight}
+      if (params.dataType === 'node') { return params.name + '<br>Times of co-work :' + params.data.weight }
     }
   },
   series: [
@@ -544,8 +543,10 @@ const initPartnershipChart = async () => {
     ChartScholarPartnershipOption.series[0].data.push(...nodeArray)
 
     // 构造边数组
-    let edgeArray = PartnershipAuthorArray.map(name => ({ source: currentAuthorStore.CurrentAuthor.name, target: name, // 将权重添加到边数据中
-      weight: countMap[name]}))
+    let edgeArray = PartnershipAuthorArray.map(name => ({
+      source: currentAuthorStore.CurrentAuthor.name, target: name, // 将权重添加到边数据中
+      weight: countMap[name]
+    }))
     // console.log("edgeArray", edgeArray)
     ChartScholarPartnershipOption.series[0].links.push(...edgeArray)
 
@@ -573,7 +574,7 @@ const calculateSymbolSize = (weight) => {
 }
 
 
-const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Tag', 'Search', 'Repository']
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)
   let loadingInstance = ElLoading.service({ fullscreen: true })
@@ -595,10 +596,18 @@ onMounted(async () => {
   else {
     // console.log("设置为Complete Paper List")
     moduleStore.CurrentModule = 'Complete Paper List'
-    await listAllPapers({
-      pagenum: PaginationStore.pagenum,
-      pagesize: PaginationStore.pagesize,
-    })
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Repository_Papers'
+    PaginationStore.pagenum = 1
+    PaginationStore.pagesize = 25
+    PaginationStore.searchkeywords = ''
+    PaginationStore.column = ''
+    PaperInfoStore.paperinfos.length = 0
+    // 计算偏移量
+    const paginationOffset = (PaginationStore.pagenum - 1) * PaginationStore.pagesize;
+    // 更新全局偏移量
+    PaperInfoStore.paginationOffset = paginationOffset;
+    await listAllPapers()
 
     // console.log(" moduleStore.CurrentModule", moduleStore.CurrentModule)
   }

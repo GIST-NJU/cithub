@@ -95,7 +95,7 @@ onMounted(() => {
     if (route.query.module == 'Scholars' || route.query.module == 'Institutions' || route.query.module == 'Country') {
       moduleStore.CurrentRoute = 'Repository_Scholars';
     }
-    if (route.query.module == 'Fields' || route.query.module == 'Tag') {
+    if (route.query.module == 'Fields' || route.query.module == 'Topics') {
       moduleStore.CurrentRoute = 'Repository_Fields';
     }
     if (route.query.module == 'Venues') {
