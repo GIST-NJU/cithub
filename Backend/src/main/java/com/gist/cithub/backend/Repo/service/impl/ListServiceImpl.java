@@ -284,7 +284,7 @@ public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> imp
     }
 
     @Override
-    public Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords,String typeofPapers) {
+    public Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("author", searchKeywords).or().like("title", searchKeywords).or().like("booktitle", searchKeywords).or().like("tag", searchKeywords).or().like("abbr", searchKeywords).or().like("year", searchKeywords);
         queryWrapper.orderByDesc("year");

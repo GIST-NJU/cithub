@@ -105,7 +105,7 @@ const router = useRouter();
 
 
 const isRouteActive = (routeName) => {
-  return router.currentRoute.value.name === routeName;
+  return moduleStore.CurrentRoute === routeName;
 }
 
 const jumpToHome = () => {

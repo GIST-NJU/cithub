@@ -10,16 +10,59 @@
           <div class="card mb-4">
             <div class="card-body ps-1">
               <div class="row">
+
                 <div class="col-12">
+
+                  <div style="margin: 0px 0px 5px 5px; display: flex; align-items: center;">
+                    <ArgonButton size="sm" color="dark" variant="outline" @click = "goBack">
+                      <span style="margin: 3px 0px 0px 0px" class="ni ni-bold-left ni-lg me-1" />
+                      <span>Back</span>
+                    </ArgonButton>
+                  </div>
+
                   <div class="card mb-4">
+
                     <div class="card-body pb-0">
                       <h5>{{ currentPaperStore.currentPaper.title }}
                       </h5>
                       <p class="text-muted mb-0">{{ FirstAuthorName }},{{ OtherAuthorName }}</p>
-                      <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }}</p>
+                      <p class="text-muted mb-2">{{ currentPaperStore.currentPaper.booktitle }} <template
+                          v-if="currentPaperStore.currentPaper.type === 'article'">
+                          <template v-if="currentPaperStore.currentPaper.abbr">
+                            ({{ currentPaperStore.currentPaper.abbr }}),
+                          </template>
+                          <template v-if="currentPaperStore.currentPaper.vol">
+                            {{ currentPaperStore.currentPaper.vol }}
+                          </template>
+                          <template v-if="currentPaperStore.currentPaper.no">
+                            ({{ currentPaperStore.currentPaper.no }}):
+                          </template>
+                          <template
+                            v-if="currentPaperStore.currentPaper.pages && currentPaperStore.currentPaper.pages != 'not found'">
+                            {{ currentPaperStore.currentPaper.pages }}
+                          </template>
+                        </template>
+
+                        <template v-if="currentPaperStore.currentPaper.type === 'inproceedings'">
+                          <template v-if="currentPaperStore.currentPaper.abbr">
+                            ({{ currentPaperStore.currentPaper.abbr }}),
+                          </template>
+                          <template v-if="currentPaperStore.currentPaper.year">
+                            {{ currentPaperStore.currentPaper.year }}
+                          </template>
+                          <template
+                            v-if="currentPaperStore.currentPaper.pages && currentPaperStore.currentPaper.pages != 'not found'">
+                            :{{ currentPaperStore.currentPaper.pages }}
+                          </template>
+                        </template>
+                      </p>
+
                       <p>
-                        <span v-if="TagArray.length != 0"
-                          class="badge rounded-pill bg-primary">{{ currentPaperStore.currentPaper.field }}</span>&nbsp;
+                        <span  class="badge bg-primary">{{
+                          currentPaperStore.currentPaper.field }}</span>&nbsp;
+                      </p>
+
+                      <p v-if="TagArray.length != 0">
                         <span v-for="(tag, index) in TagArray" :key="index" class="badge rounded-pill bg-info"
                           style="margin-right:5px">{{ tag }}</span>
                       </p>
@@ -99,6 +142,7 @@
 
 <script setup>
 import { defineProps, reactive, ref, onMounted } from 'vue'
+import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
 import SideNav from '../components/SideNav.vue';
 import Navbar from '../../ComponentCommon/Navbar.vue';
 import Foot from '../../ComponentCommon/Foot.vue';
@@ -131,11 +175,11 @@ const listPaperInfoByPaperID = async () => {
     currentPaperStore.currentPaper.booktitle = res.res.booktitle
     currentPaperStore.currentPaper.doi = res.res.doi
     currentPaperStore.currentPaper.field = res.res.field
-    currentPaperStore.currentPaper.institution = res.res.institution
+    // currentPaperStore.currentPaper.institution = res.res.institution 
     currentPaperStore.currentPaper.no = res.res.no
     currentPaperStore.currentPaper.pages = res.res.pages
     currentPaperStore.currentPaper.paperabstract = res.res.paperabstract
-    currentPaperStore.currentPaper.publisher = res.res.publisher
+    // currentPaperStore.currentPaper.publisher = res.res.publisher 
     currentPaperStore.currentPaper.tag = res.res.tag
     currentPaperStore.currentPaper.timeStamp = res.res.timeStamp
     currentPaperStore.currentPaper.title = res.res.title
@@ -151,6 +195,9 @@ const listPaperInfoByPaperID = async () => {
   } catch (err) {
     console.error(err);
   }
+}
+const goBack=()=>{
+  window.history.back();
 }
 onMounted(() => {
 

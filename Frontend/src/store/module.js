@@ -4,6 +4,7 @@ export const useModuleStore = defineStore("ModuleStore", {
         return {
             CurrentModule: '',
             CurrentModuleDetails:'',
+            CurrentRoute:''
         }
     },
     actions: {

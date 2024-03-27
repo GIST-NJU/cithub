@@ -31,7 +31,7 @@ const listAllPapers = async () => {
         }
       });
   
-      console.log("listAllPapers", res);
+    //   console.log("listAllPapers", res);
       PaperInfoStore.paperinfos.length = 0;
       PaperInfoStore.searchKeyWords = '';
       PaperInfoStore.paperinfos.push(...res.listEntityPage.records);

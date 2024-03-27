@@ -13,7 +13,7 @@
             <span v-show="isHovered" class="opacity-5 text-white hovered">CitHub</span>
             <span v-show="!isHovered" class="opacity-5 text-white">CitHub</span>
           </li> -->
-          <router-link :to="{ name: moduleLink }" @click="handleRouterLinkClick" :exact="true"
+          <router-link :to="{ name: moduleStore.CurrentRoute }" @click="handleRouterLinkClick" :exact="true"
             class="breadcrumb-item text-sm text-white" aria-current="page">
             {{ moduleStore.CurrentModule }}
           </router-link>
@@ -63,7 +63,6 @@ const isHovered = ref(false);
 const router = useRouter();
 const route = useRoute();
 
-const moduleLink = ref('');
 
 const jumpToCithub = () => {
   // 这里要增加登录状态的判断
@@ -79,26 +78,38 @@ const handleRouterLinkClick = () => {
   moduleStore.CurrentModuleDetails = ''
   // console.log("当前module是",moduleStore.CurrentModule)
 }
+
+
+
 onMounted(() => {
   console.log("route.query.module", route.query.module)
   if (typeof route.query.module === 'undefined') {
-    if (moduleStore.CurrentModule == 'Repository') { moduleLink.value = 'Repository_Home' }
-    if (moduleStore.CurrentModule == 'Complete Paper List') { moduleLink.value = 'Repository_Papers' }
-    if (moduleStore.CurrentModule == 'Scholars') { moduleLink.value = 'Repository_Scholars' }
-    if (moduleStore.CurrentModule == 'Fields') { moduleLink.value = 'Repository_Fields' }
-    if (moduleStore.CurrentModule == 'Venues') { moduleLink.value = 'Repository_Venues' }
-    if (moduleStore.CurrentModule == 'Statistics') { moduleLink.value = 'Repository_Statistics' }
+    if (moduleStore.CurrentModule == 'Repository') { moduleStore.CurrentRoute = 'Repository_Home' }
+    if (moduleStore.CurrentModule == 'Complete Paper List') { moduleStore.CurrentRoute = 'Repository_Papers' }
+    if (moduleStore.CurrentModule == 'Scholars') { moduleStore.CurrentRoute = 'Repository_Scholars' }
+    if (moduleStore.CurrentModule == 'Fields') { moduleStore.CurrentRoute = 'Repository_Fields' }
+    if (moduleStore.CurrentModule == 'Venues') { moduleStore.CurrentRoute = 'Repository_Venues' }
+    if (moduleStore.CurrentModule == 'Statistics') { moduleStore.CurrentRoute = 'Repository_Statistics' }
   }
 
   else {
-    let newValue = route.query.module
-    if (newValue == 'Scholars' || 'Institutions' || 'Country') { moduleLink.value = 'Repository_Scholars' }
-    if (newValue == 'Fields' ) { moduleLink.value = 'Repository_Fields' }
-    if (newValue == 'Venues') { moduleLink.value = 'Repository_Venues' }
+    // console.log("route.query.module有值！", route.query.module);
+    if (route.query.module == 'Search'|| route.query.module == 'Repository') { 
+      moduleStore.CurrentRoute = 'Repository_Home' ;
+    }
+
+    if (route.query.module == 'Scholars' || route.query.module == 'Institutions' || route.query.module == 'Country') {
+      moduleStore.CurrentRoute = 'Repository_Scholars';
+    }
+    if (route.query.module == 'Fields' || route.query.module == 'Tag') {
+      moduleStore.CurrentRoute = 'Repository_Fields';
+    }
+    if (route.query.module == 'Venues') {
+      moduleStore.CurrentRoute = 'Repository_Venues';
+    }
   }
 
-
-  // console.log("moduleLink.value", moduleLink.value)
+  console.log("得到的moduleStore.CurrentRoute是", moduleStore.CurrentRoute)
 
 })
 </script>

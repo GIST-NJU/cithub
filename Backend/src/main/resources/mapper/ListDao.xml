@@ -43,6 +43,7 @@
 
     <select id="searchByTag" resultType="com.gist.cithub.backend.Repo.entity.ListEntity">
         select SQL_CALC_FOUND_ROWS *  from repository_list where tag like CONCAT("%", #{tag} , "%")
+        ORDER BY year DESC;
 
     </select>
 

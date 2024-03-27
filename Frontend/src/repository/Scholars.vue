@@ -164,9 +164,12 @@ let searchObj = reactive({
 })
 
 const searchBy = async (value) => {
+
   console.log("当前选中的是", activeTab.value)
   console.log("待搜索的值是", value)
+
   let loadingInstance = ElLoading.service({ fullscreen: true })
+  moduleStore.CurrentModule=activeTab.value
   moduleStore.CurrentModuleDetails = value
 
   PaginationStore.pagenum = 1
@@ -248,7 +251,7 @@ const searchBy = async (value) => {
       router.push({
         path: '/repository/papers',
         query: {
-          module: 'Institution',
+          module: 'Institutions',
         }
       })
     } catch (error) {
@@ -433,6 +436,7 @@ onMounted(async () => {
 
   // 获取所有Country
   await listAllCountry()
+
   loadingInstance.close()
 
 

@@ -89,8 +89,7 @@ pagesize每页有几项
         Integer pagenum = (Integer) searchinfo.get("pagenum");
         Integer pagesize = (Integer) searchinfo.get("pagesize");
         String searchkeywords = (String) searchinfo.get("searchkeywords");
-        String typeofPapers = (String) searchinfo.get("typerofPapers");
-        Page<ListEntity> res = listService.searchByKeywords(pagenum, pagesize, searchkeywords, typeofPapers);
+        Page<ListEntity> res = listService.searchByKeywords(pagenum, pagesize, searchkeywords);
         return R.ok().put("res", res);
     }
 
@@ -110,9 +109,13 @@ pagesize每页有几项
                 return R.ok().put("res", res);
             }
 
-            else if(column.equals(("country"))){
+//            country和tag是通过自定义的sql语句查询的，特殊处理
+            else if(column.equals(("country")) || column.equals(("tag"))){
+                List<ListEntity> dataList=null;
 
-                List<ListEntity> dataList = listDao.searchByCountry(searchkeywords);
+                if(column.equals(("country"))){ dataList = listDao.searchByCountry(searchkeywords);}
+                if(column.equals(("tag"))){ dataList = listDao.searchByTag(searchkeywords);}
+
                 int total = dataList.size(); // 总记录数
                 // 在dataList的基础上执行分页查询，手动分页
                 int fromIndex = (pagenum - 1) * pagesize;

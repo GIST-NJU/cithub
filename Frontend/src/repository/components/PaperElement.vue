@@ -42,7 +42,9 @@
       </div>
       <div style="display: flex;flex-direction:row-reverse">
 
-        <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary">Details</argon-button></div>
+        <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary"> detailed </argon-button></div>
+        <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="success"> doi</argon-button></div>
+
 
       </div>
 
@@ -62,7 +64,6 @@ const props = defineProps({
   item: Object,
   index: Number,
 })
-const currentPaperStore = useCurrentPaper(pinia)
 
 let BibTexFlag = ref(false)
 let AbsFlag = ref(false)

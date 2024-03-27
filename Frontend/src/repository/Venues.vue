@@ -52,6 +52,7 @@
             </div>
           </div>
         </div>
+
       </div>
 
       <Foot></Foot>
@@ -75,163 +76,63 @@ import pinia from '../store/store';
 import { useModuleStore } from '../store/module';
 import { listallVenue } from './commonFunction';
 import { ElLoading } from 'element-plus'
-
+import { usePaginationStore } from '../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)
 const moduleStore = useModuleStore(pinia)
 const VenueStore = useVenueStore(pinia)
-const itemsPerRow = ref(6);
-const itemsPerRowBook = ref(2);
-const itemsPerRowPhd = ref(2);
-const itemsPerRowOther = ref(2);
-
-const chunkedArray = computed(() => {
-  const result = [];
-  for (let i = 0; i < VenueStore.VenueArray.length; i += itemsPerRow.value) {
-    result.push(VenueStore.VenueArray.slice(i, i + itemsPerRow.value));
-  }
-  return result;
-});
-
-const chunkedArrayBook = computed(() => {
-  const result = [];
-  for (let i = 0; i < VenueStore.VenueArrayBook.length; i += itemsPerRowBook.value) {
-    result.push(VenueStore.VenueArrayBook.slice(i, i + itemsPerRowBook.value));
-  }
-  return result;
-});
-const chunkedArrayPhd = computed(() => {
-  const result = [];
-  for (let i = 0; i < VenueStore.VenueArrayPhd.length; i += itemsPerRowPhd.value) {
-    result.push(VenueStore.VenueArrayPhd.slice(i, i + itemsPerRowPhd.value));
-  }
-  return result;
-});
-const chunkedArrayOther = computed(() => {
-  const result = [];
-  for (let i = 0; i < VenueStore.VenueArrayOther.length; i += itemsPerRowOther.value) {
-    result.push(VenueStore.VenueArrayOther.slice(i, i + itemsPerRowOther.value));
-  }
-  return result;
-});
-
-let searchObj = reactive({
-  pagesize: 200,
-  total: '',
-  pagercount: 15,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: PaperInfoStore.TypeofPapers,
-
-})
 
 
-const searchByBookTitle = (booktitle) => {
-  // console.log("booktitleVenue是", booktitle)
-  searchObj.searchkeywords = booktitle
-  PaperInfoStore.searchKeyWords = booktitle;
-  PaperInfoStore.paperinfos.length = 0
-  PaperInfoStore.total = 0
-  request({
-    url: "/repo/list/searchByBooktitle",
-    method: 'POST',
-    data: searchObj
-  }).then((res) => {
-    // console.log("res是", res)
-    PaperInfoStore.paperinfos.push(...res.res.records)
-    PaperInfoStore.total = res.res.total
-  }).catch(() => { })
-
-  router.push({
-    path: '/Repo/Papers',
-    query: {
-      paginationActive: '关闭'
-    }
-
-  })
-}
-
-
-const searchByAbbr = (venue) => {
-  // console.log("venue是", venue)
-  searchObj.searchkeywords = venue
-  PaperInfoStore.searchKeyWords = venue;
-  PaperInfoStore.paperinfos.length = 0
-  PaperInfoStore.total = 0
-  request({
-    url: "/repo/list/searchByAbbr",
-    method: 'POST',
-    data: searchObj
-  }).then((res) => {
-    // console.log("res是", res)
-    PaperInfoStore.paperinfos.push(...res.res.records)
-    PaperInfoStore.total = res.res.total
-  }).catch(() => { })
-  router.push({
-    path: '/Repo/Papers',
-    query: {
-      paginationActive: '关闭'
-    }
-
-  })
-
-}
-
-const searchByVenues = (venue) => {
-  // console.log(institution)
-  searchObj.searchkeywords = venue;
-  PaperInfoStore.paperinfos.length = 0
-  PaperInfoStore.searchKeyWords = venue
-
-  request({
-    url: 'repo/list/searchByVenues',
-    method: 'POST',
-    data: searchObj
-  }).then((res) => {
-    // console.log("searchByInstitutions", res)
-    PaperInfoStore.paperinfos.push(...res.res.records)
-    PaperInfoStore.total = res.res.total
-  }).catch(() => { })
-
-  router.push({
-    path: '/Repo/Papers',
-    query: {
-      paginationActive: '关闭'
-    }
-
-  })
-
-}
 
 
 
 const handleDtClick = async (event) => {
+  if (event.target.tagName == 'DT') {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
 
-  try {
-    searchObj.searchkeywords = event.target.textContent;
+    moduleStore.CurrentModuleDetails = event.target.textContent;
+
+    PaginationStore.pagenum = 1
+    PaginationStore.pagesize = 25
+    PaginationStore.searchkeywords = event.target.textContent;
+    PaginationStore.column = 'abbr'
+
+    PaperInfoStore.paginationOffset = 0
     PaperInfoStore.paperinfos.length = 0
     PaperInfoStore.searchKeyWords = event.target.textContent;
 
-    const searchByVenueRes = await request({
-      url: 'repo/list/searchByVenue',
-      method: 'POST',
-      data: searchObj
-    })
-    PaperInfoStore.paperinfos.push(...searchByVenueRes.res)
-    PaperInfoStore.total = searchByVenueRes.res.length
+    try {
 
-    router.push({
-      path: '/repository/papers',
-      query: {
-        paginationActive: '关闭',
-        searchType: 'venue',
-      }
-    })
+      const searchByVenueRes = await request({
+        url: 'repo/list/searchBy',
+        method: 'POST',
+        data:
+        {
+          pagesize: PaginationStore.pagesize,
+          searchkeywords: PaginationStore.searchkeywords,
+          column: PaginationStore.column,
+          pagenum: PaginationStore.pagenum,
+        }
+      })
+      PaperInfoStore.paperinfos.push(...searchByVenueRes.res.records)
+      PaperInfoStore.total = searchByVenueRes.res.total
+      PaginationStore.total = searchByVenueRes.res.total
+
+      loadingInstance.close()
+      router.push({
+        path: '/repository/papers',
+        query: {
+          module: 'Venues',
+        }
+      })
 
 
 
 
-  } catch (error) {
+    } catch (error) {
+
+    }
 
   }
 

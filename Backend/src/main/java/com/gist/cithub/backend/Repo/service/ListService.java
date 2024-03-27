@@ -26,7 +26,7 @@ public interface ListService extends MPJBaseService<ListEntity> {
 
     String savaUploadFile(MultipartFile file);
 
-    Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords,String typeofPapers);
+    Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords);
 
     Page<ListEntity> searchByAuthor (Integer pagenum, Integer pagesize, String searchKeywords,String typeofPapers);
     Page<ListEntity> searchByField (Integer pagenum, Integer pagesize, String searchKeywords);
