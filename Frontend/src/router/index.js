@@ -217,8 +217,8 @@ const routes = [
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
-  // history: createWebHashHistory(), 
-  history: createWebHistory(), //去掉路径中的 # 号
+  history: createWebHashHistory(), 
+  // history: createWebHistory(), //去掉路径中的 # 号，不行，打包之后会白屏
   routes,
   linkActiveClass: "active",
 });

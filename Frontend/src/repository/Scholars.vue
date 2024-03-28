@@ -153,15 +153,6 @@ watch(activeTab, (newValue, oldValue) => {
 
 
 
-let searchObj = reactive({
-  pagesize: 1000,
-  total: '',
-  pagercount: 15,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: PaperInfoStore.TypeofPapers,
-
-})
 
 const searchBy = async (value) => {
 

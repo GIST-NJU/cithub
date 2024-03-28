@@ -164,6 +164,7 @@
           <div class="card card-carousel overflow-hidden h-100 p-0">
             <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
               <div class="carousel-inner border-radius-lg h-100">
+
                 <div v-for="(item, index) in carouselItems" :key="index"
                   :class="{ 'carousel-item': true, 'h-100': true, 'active': index === 0 }"
                   :style="{ 'background-image': 'url(' + item.image + ')', 'background-size': 'cover' }">
@@ -176,6 +177,8 @@
                     </p>
                   </div>
                 </div>
+                
+
               </div>
               <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions"
                 data-bs-slide="prev">
@@ -381,10 +384,10 @@ const listRecentPapers = async () => {
       method: 'POST',
       data: searchObj
     })
-    console.log("listRecentPapers", listRecentPapersRes)
+    // console.log("listRecentPapers", listRecentPapersRes)
     carouselItems.push(...listRecentPapersRes.res)
     for (let i = 0; i < carouselItems.length; i++) {
-      carouselItems[i].image = '/assets/img/carousel-' + ((i) % 3 + 1) + '.jpg'
+      carouselItems[i].image = 'images/carousel-' + ((i) % 3 + 1) + '.jpg'
       carouselItems[i].titleClass = 'text-white mb-1'
 
     }
@@ -392,6 +395,7 @@ const listRecentPapers = async () => {
 
   }
 }
+
 onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
   moduleStore.CurrentModule = 'Repository'

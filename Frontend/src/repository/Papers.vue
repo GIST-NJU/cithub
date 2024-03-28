@@ -387,7 +387,11 @@ let ChartScholarYearlyOption = reactive({
       name: '# annual publications',
       data: [],
       type: 'line',
-      itemStyle: { color: '#2dce89' },
+      itemStyle: {
+        color: '#2dce89' // 设置点的颜色
+      },
+      symbolSize: 8, // 设置点的大小为8
+      symbol: 'emptyCircle',// 设置点的形状为空心圆
       label: {
         // show: true,  // 初始状态下显示数据值
         position: 'top'
@@ -468,7 +472,7 @@ let ChartScholarPartnershipOption = reactive({
         repulsion: 800, // 控制节点之间的排斥力
         layoutAnimation: false,
       },
-      edgeSymbol: ['circle', 'arrow'],
+      edgeSymbol: ['', 'arrow'],
 
       animation: false, // 取消动画
       data: [
@@ -477,7 +481,7 @@ let ChartScholarPartnershipOption = reactive({
           symbol: 'diamond', // 中心节点形状
           symbolSize: 20, // 设置中心节点大小为30
           itemStyle: {
-            color: 'red' // 中心节点颜色
+            color: '#f5365c' // 中心节点颜色
           }
         },
 
@@ -487,6 +491,8 @@ let ChartScholarPartnershipOption = reactive({
     }
   ]
 })
+
+
 const initPartnershipChart = async () => {
   // console.log("初始化合作关系图")
   try {
@@ -533,7 +539,7 @@ const initPartnershipChart = async () => {
       name,
       symbol: "circle",
       itemStyle: {
-        color: 'green'
+        color: '#2dce89'
       },
       // 根据权重计算节点大小，权重越大节点越小
       symbolSize: calculateSymbolSize(countMap[name]),
@@ -566,10 +572,7 @@ const initPartnershipChart = async () => {
 // 根据权重计算节点大小的函数
 const calculateSymbolSize = (weight) => {
   // 根据权重计算节点大小
-  // 这里可以根据具体需求调整计算公式
-  // 例如，可以使用线性或指数函数关联权重和节点大小
-  // 以下是一个简单的线性关系
-  // 你可以根据实际情况调整这个函数
+  // 根据实际情况调整这个函数
   return weight * 3;
 }
 

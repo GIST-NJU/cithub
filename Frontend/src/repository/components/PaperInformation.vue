@@ -58,14 +58,16 @@
                       </p>
 
                       <p>
-                        <span>Research Field : </span><span :class="getResearchFieldColor(currentPaperStore.currentPaper.field)">{{ currentPaperStore.currentPaper.field
-                        }}</span>&nbsp;
+                        <span>Research Field : </span><span
+                          :class="getResearchFieldColor(currentPaperStore.currentPaper.field)">{{
+                            currentPaperStore.currentPaper.field
+                          }}</span>&nbsp;
                       </p>
 
-                        <p v-if="TagArray.length != 0">
-                          <span>Topics : </span> <span v-for="(tag, index) in TagArray" :key="index"
-                            class="badge rounded-pill bg-success" style="margin-right:5px">{{ tag }}</span>
-                        </p>
+                      <p v-if="TagArray.length != 0">
+                        <span>Topics : </span> <span v-for="(tag, index) in TagArray" :key="index"
+                          class="badge rounded-pill bg-success" style="margin-right:5px">{{ tag }}</span>
+                      </p>
 
                     </div>
                   </div>
@@ -102,9 +104,23 @@
                   <div class="card mb-4">
                     <div class="card-body pb-0">
                       <h5>BibTex</h5>
-                      <pre class="mb-0">
-{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + '.' + currentPaperStore.currentPaper.id + ','
-  + '\n  author={' + currentPaperStore.currentPaper.author + '},'
+                      <pre v-if="currentPaperStore.currentPaper.type=='article'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author={' + authorStr + '},'
+  + '\n  title={' + currentPaperStore.currentPaper.title + '},'
+  + '\n  journal ={' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  volume ={' + currentPaperStore.currentPaper.vol + '},'
+  + '\n  number ={' + currentPaperStore.currentPaper.no + '},'
+  + '\n  pages={' + currentPaperStore.currentPaper.pages + '},'
+  + '\n  year={' + currentPaperStore.currentPaper.year + '},'
+  + `\n  doi={` + currentPaperStore.currentPaper.doi + `}`
+  + `\n }` }}
+
+          </pre>
+
+<pre v-if="currentPaperStore.currentPaper.type=='inproceedings'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author={' + authorStr + '},'
   + '\n  title={' + currentPaperStore.currentPaper.title + '},'
   + '\n  booktitle={' + currentPaperStore.currentPaper.booktitle + '},'
   + '\n  pages={' + currentPaperStore.currentPaper.pages + '},'
@@ -112,14 +128,6 @@
   + `\n  doi={` + currentPaperStore.currentPaper.doi + `}`
   + `\n }` }}
 
-<!-- @inproceedings{FirstAuthorFamilyName.PaperID,
-  author={Chuan Luo, Qiyuan Zhao, Shaowei Cai, Hongyu Zhang, Chunming Hu},
-  title={SamplingCA: effective and efficient sampling-based pairwise testing for highly configurable software systems},
-  booktitle={SIGSOFT},
-  pages={1185--1197},
-  year={2022},
-  doi={10.1145/3540250.3549155},
-} -->
           </pre>
                     </div>
                   </div>
@@ -157,6 +165,7 @@ const FirstAuthorName = ref('')
 const OtherAuthorName = ref('')
 
 const FirstAuthorNameInBibTex = ref('')
+const authorStr=ref('')
 
 const TagArray = reactive([])
 const listPaperInfoByPaperID = async () => {
@@ -187,12 +196,16 @@ const listPaperInfoByPaperID = async () => {
     currentPaperStore.currentPaper.vol = res.res.vol
     currentPaperStore.currentPaper.year = res.res.year
     let authorsArray = currentPaperStore.currentPaper.author.split(',')
+    authorsArray=authorsArray.map(author=>author.trim())
+    let authorStrTemp=authorsArray.join(" and ")
+    authorStr.value=authorStrTemp
+    console.log("authorStr",authorStr.value)
     FirstAuthorName.value = authorsArray.shift();
     OtherAuthorName.value = authorsArray.join(',')
-    FirstAuthorNameInBibTex.value = FirstAuthorName.value.replace(/\s/g, "")
+    FirstAuthorNameInBibTex.value = FirstAuthorName.value.split(' ').slice(-1)
     let tempTagArray = currentPaperStore.currentPaper.tag.split(',')
     TagArray.push(...tempTagArray)
-    if(TagArray[0]=='') {TagArray.length=0}
+    if (TagArray[0] == '') { TagArray.length = 0 }
   } catch (err) {
     console.error(err);
   }

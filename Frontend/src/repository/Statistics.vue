@@ -33,23 +33,10 @@
         </div>
       </div>
 
-      <!-- 2. distribution of fields -->
-      <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="card-body pb-0 mb-4">
-              <h5>Distribution of Fields</h5>
-              <p class="text-muted">The distribution of different CIT research fields</p>
-              <div class="charts">
-                <div class="echarts" id="ChartField" ref="ChartField" style="height:320%; width:100%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
 
-      <!-- 3. developement of fields -->
+
+      <!-- 2. developement of fields -->
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
@@ -64,10 +51,23 @@
         </div>
       </div>
 
+      <!-- 3. distribution of fields -->
+      <div class="row">
+        
+        <div class="col-6">
+          <div class="card mb-4">
+            <div class="card-body pb-0 mb-4">
+              <h5>Distribution of Fields</h5>
+              <p class="text-muted">The distribution of different CIT research fields</p>
+              <div class="charts">
+                <div class="echarts" id="ChartField" ref="ChartField" style="height:520%; width:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       <!-- 4. distribution of scholars -->
-      <div class="row">
-        <div class="col-12">
+        <div class="col-6">
           <div class="card mb-4">
             <div class="card-body pb-0 mb-4">
               <h5>Distribution of Scholars</h5>
@@ -79,19 +79,11 @@
             </div>
           </div>
         </div>
+
       </div>
 
-      <!-- 5. new institutions  -->
-      <!-- <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="card-body pb-0 mb-4">
-              <h5>Number of New Institutions</h5>
-              <p class="text-muted">The number of new institutions that contribute to CIT</p>
-            </div>
-          </div>
-        </div>
-      </div> -->
+
+
 
 
       <Foot></Foot>
