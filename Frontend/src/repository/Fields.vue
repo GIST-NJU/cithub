@@ -223,7 +223,7 @@ const searchByTag = async (tag) => {
         pagenum: PaginationStore.pagenum,
       }
     })
-    console.log("searchByTagRes", searchByTagRes)
+    // console.log("searchByTagRes", searchByTagRes)
     PaperInfoStore.paperinfos.push(...searchByTagRes.res.records)
     PaperInfoStore.total = searchByTagRes.total
     PaginationStore.total = searchByTagRes.total

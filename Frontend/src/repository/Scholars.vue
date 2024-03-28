@@ -232,7 +232,7 @@ const searchBy = async (value) => {
           pagenum: PaginationStore.pagenum,
         }
       })
-      console.log("searchByInstitutionRes", searchByInstitutionRes)
+      // console.log("searchByInstitutionRes", searchByInstitutionRes)
       PaperInfoStore.paperinfos.push(...searchByInstitutionRes.res.records)
       PaperInfoStore.total = searchByInstitutionRes.res.total
       PaginationStore.total = searchByInstitutionRes.res.total
@@ -264,7 +264,7 @@ const searchBy = async (value) => {
           pagenum: PaginationStore.pagenum,
         }
       })
-      console.log("searchByCountryRes", searchByCountryRes)
+      // console.log("searchByCountryRes", searchByCountryRes)
       PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
       PaperInfoStore.total = searchByCountryRes.total
       PaginationStore.total = searchByCountryRes.total
@@ -334,7 +334,7 @@ const searchByCountry = async (country) => {
         searchkeywords: country
       }
     })
-    console.log("searchByCountryRes", searchByCountryRes)
+    // console.log("searchByCountryRes", searchByCountryRes)
     PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
     PaperInfoStore.total = searchByCountryRes.res.length
 

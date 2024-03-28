@@ -208,6 +208,7 @@ import pinia from '../../store/store'
 import { useCurrentPaper } from '../../store/currentPaper'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../../request'
+import { ElLoading } from 'element-plus'
 
 const currentPaperStore = useCurrentPaper(pinia)
 const route = useRoute()
@@ -249,7 +250,7 @@ const listPaperInfoByPaperID = async () => {
     authorsArray = authorsArray.map(author => author.trim())
     let authorStrTemp = authorsArray.join(" and ")
     authorStr.value = authorStrTemp
-    console.log("authorStr", authorStr.value)
+    // console.log("authorStr", authorStr.value)
     FirstAuthorName.value = authorsArray.shift();
     OtherAuthorName.value = authorsArray.join(',')
     FirstAuthorNameInBibTex.value = FirstAuthorName.value.split(' ').slice(-1)
@@ -283,14 +284,16 @@ const getResearchFieldColor = (field) => {
 }
 
 
-onMounted(() => {
+onMounted(async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  await listPaperInfoByPaperID()
+  loadingInstance.close()
 
-  listPaperInfoByPaperID()
 
 })
 </script>
 
 
 <style scoped>
-.bibtex {}
+
 </style>

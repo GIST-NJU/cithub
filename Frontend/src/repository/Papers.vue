@@ -12,8 +12,16 @@
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
+
+              <div style="margin: 0px 0px 5px 5px; display: flex; align-items: center;">
+                <ArgonButton color="secondary" size="sm" @click="goBack">
+                  <span class="ni ni-bold-left  me-1"> Back </span>
+                </ArgonButton>
+              </div>
+
               <h4 class="text-center">Scholar Info</h4>
               <hr class="my-3 horizontal dark" />
+
 
               <div class="row">
 
@@ -233,6 +241,7 @@ import { useRoute } from 'vue-router'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
 import ArgonInput from '../ComponentCommon/ArgonInput.vue';
+import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
 import { useCurrentAuthorStore } from '../store/currentAuthorStore'
@@ -576,7 +585,9 @@ const calculateSymbolSize = (weight) => {
   return weight * 3;
 }
 
-
+const goBack = () => {
+  window.history.back();
+}
 const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)

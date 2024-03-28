@@ -14,8 +14,8 @@ export function requestAuth(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    // baseURL: "http://localhost:8090/api",
-    baseURL: "http://210.28.135.32/CitHubAPI",
+    baseURL: "http://localhost:8090/api",
+    // baseURL: "http://210.28.135.32/CitHubAPI",
 
   })
   // 2.1.请求拦截的作用
@@ -35,8 +35,7 @@ export function requestAuth(config) {
   return instance(config)
 }
 
-const CheckLoginStatus = async () => {
-
+export const CheckLoginStatus = async () => {
   let tokenForVerify = localStorage.getItem("userToken");
 
   if (tokenForVerify) {
@@ -71,7 +70,7 @@ const CheckLoginStatus = async () => {
 };
 
 // 通过token 获得user信息
-const getUserInfoByToken = async (token) => {
+export const getUserInfoByToken = async (token) => {
   try {
     const res = await requestAuth({
       url: "user/users/getUserInfoByToken",
@@ -103,8 +102,8 @@ export function request(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    // baseURL: "http://localhost:8090/api",
-    baseURL: "http://210.28.135.32/CitHubAPI",
+    baseURL: "http://localhost:8090/api",
+    // baseURL: "http://210.28.135.32/CitHubAPI",
 
   })
 

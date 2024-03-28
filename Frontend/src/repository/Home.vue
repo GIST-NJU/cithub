@@ -398,6 +398,9 @@ const listRecentPapers = async () => {
 
 onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
+  
+  try {
+    
   moduleStore.CurrentModule = 'Repository'
   if(PaginationStore.searchkeywords!="") {PaginationStore.searchkeywords=""}
 
@@ -440,6 +443,12 @@ onMounted(async () => {
 
   await listRecentPapers()
   loadingInstance.close()
+    
+  } catch (error) {
+  loadingInstance.close()
+    
+  }
+
 
 })
 </script>

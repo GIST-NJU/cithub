@@ -10,7 +10,7 @@
 			<input @click="jumpToUser('login')" type="submit" value="Sign in" />&nbsp;&nbsp;
 			<input @click="jumpToUser('register')" type="submit" value="Sign Up" />
 		</div>
-		<div v-if="loginFlag == 'true'">
+		<div v-if="loginFlag == true">
 
 			<h3>Welcome {{ userStore.name }} from {{ userStore.institution }}, enjoy cithub~</h3>
 
@@ -109,16 +109,16 @@
 <script  setup>
 
 import { useModuleStore } from './store/module';
-import { useRouter,useRoute} from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import { CheckLoginStatus, getUserInfoByToken } from './common';
+import { CheckLoginStatus, getUserInfoByToken } from './request';
 import pinia from './store/store'
 
 import { ElNotification } from 'element-plus'
 import { useUserStore } from './store/userStore';
 const userStore = useUserStore(pinia)
 const router = useRouter()
-const route= useRoute()
+const route = useRoute()
 const moduleStore = useModuleStore(pinia)
 
 const jumpToRepo = () => {
@@ -158,25 +158,31 @@ const loginFlag = ref(false)
 const userToken = ref('')
 
 onMounted(async () => {
-	// console.log("loginFlag",route.query.loginFlag,typeof(route.query.loginFlag))
-	if (route.query.loginFlag) {
-		loginFlag.value = route.query.loginFlag
+
+	// 逻辑：
+	// 每次到该界面，都要使用 userToken 检查用户是否处于登录状态，由服务器检查。
+	// 若处于登录状态则加载用户信息！
+
+	let LoginStatusObj = await CheckLoginStatus()
+	loginFlag.value =LoginStatusObj.loginStatus
+	if (loginFlag.value) {
+		// console.log("已登录！加载用户信息！")
+		let userobj = await getUserInfoByToken(LoginStatusObj.token)
+		userStore.userID = userobj.userid
+		userStore.account = userobj.account
+		userStore.userToken = userobj.userToken
+		userStore.usertype = userobj.usertype
+		userStore.name = userobj.name
+		userStore.email = userobj.email
+		userStore.institution = userobj.institution
+		// console.log("userStore",userStore)
+	}
+	else {
+		console.log("未登录！")
+
 	}
 
-	// console.log("Cithub Home userStore", userStore.userID,
-	// 	userStore.account,
-	// 	userStore.userToken,
-	// 	userStore.usertype,
-	// 	userStore.name,
-	// 	userStore.email,
-	// 	userStore.institution)
 
-	// ElNotification({
-	// 	title: 'Welcome to CitHub',
-	// 	message: 'CitHub is a open platform for the study and use of Combinatorial Interaction Testing (CIT) ',
-	// 	type: 'success',
-	// 	position: 'top-left',
-	// })
 
 })
 </script>

@@ -108,7 +108,7 @@ const router = useRouter();
 // 监听 moduleStore.CurrentRoute 的变化
 watch(() => moduleStore.CurrentRoute, (newRoute, oldRoute) => {
   // 每次路由变化时触发 isRouteActive 方法
-  console.log("moduleStore.CurrentRoute sideNav", moduleStore.CurrentRoute);
+  // console.log("moduleStore.CurrentRoute sideNav", moduleStore.CurrentRoute);
   isRouteActive(newRoute);
 });
 
