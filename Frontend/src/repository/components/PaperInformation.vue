@@ -104,30 +104,80 @@
                   <div class="card mb-4">
                     <div class="card-body pb-0">
                       <h5>BibTex</h5>
-                      <pre v-if="currentPaperStore.currentPaper.type=='article'" class="mb-0">
+                      <pre v-if="currentPaperStore.currentPaper.type == 'article'" class="mb-0">
 {{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
-  + '\n  author={' + authorStr + '},'
-  + '\n  title={' + currentPaperStore.currentPaper.title + '},'
-  + '\n  journal ={' + currentPaperStore.currentPaper.booktitle + '},'
-  + '\n  volume ={' + currentPaperStore.currentPaper.vol + '},'
-  + '\n  number ={' + currentPaperStore.currentPaper.no + '},'
-  + '\n  pages={' + currentPaperStore.currentPaper.pages + '},'
-  + '\n  year={' + currentPaperStore.currentPaper.year + '},'
-  + `\n  doi={` + currentPaperStore.currentPaper.doi + `}`
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  journal = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  volume = {' + currentPaperStore.currentPaper.vol + '},'
+  + '\n  number = {' + currentPaperStore.currentPaper.no + '},'
+  + '\n  pages = {' + currentPaperStore.currentPaper.pages + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '},'
+  + `\n  doi = {` + currentPaperStore.currentPaper.doi + `}`
   + `\n }` }}
 
           </pre>
 
-<pre v-if="currentPaperStore.currentPaper.type=='inproceedings'" class="mb-0">
+                      <pre v-if="currentPaperStore.currentPaper.type == 'inproceedings'" class="mb-0">
 {{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
-  + '\n  author={' + authorStr + '},'
-  + '\n  title={' + currentPaperStore.currentPaper.title + '},'
-  + '\n  booktitle={' + currentPaperStore.currentPaper.booktitle + '},'
-  + '\n  pages={' + currentPaperStore.currentPaper.pages + '},'
-  + '\n  year={' + currentPaperStore.currentPaper.year + '},'
-  + `\n  doi={` + currentPaperStore.currentPaper.doi + `}`
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  booktitle = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  pages = {' + currentPaperStore.currentPaper.pages + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '},'
+  + `\n  doi = {` + currentPaperStore.currentPaper.doi + `}`
   + `\n }` }}
 
+          </pre>
+
+                      <pre v-if="currentPaperStore.currentPaper.type == 'phdthesis'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  school = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '}'
+  + `\n }` }}
+          </pre>
+
+
+                      <pre v-if="currentPaperStore.currentPaper.type == 'book'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  publisher = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '}'
+  + `\n }` }}
+          </pre>
+
+                      <pre v-if="currentPaperStore.currentPaper.type == 'inbook'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  chapter = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '}'
+  + `\n }` }}
+          </pre>
+
+                      <pre v-if="currentPaperStore.currentPaper.type == 'techreport'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  institution = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  number = {' + currentPaperStore.currentPaper.no + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '}'
+  + `\n }` }}
+          </pre>
+
+                      <pre v-if="currentPaperStore.currentPaper.type == 'incollection'" class="mb-0">
+{{ '@' + currentPaperStore.currentPaper.type + '{' + FirstAuthorNameInBibTex + ':' + currentPaperStore.currentPaper.year + '.' + currentPaperStore.currentPaper.id + ','
+  + '\n  author = {' + authorStr + '},'
+  + '\n  title = {' + currentPaperStore.currentPaper.title + '},'
+  + '\n  booktitle = {' + currentPaperStore.currentPaper.booktitle + '},'
+  + '\n  volume = {' + currentPaperStore.currentPaper.vol + '},'
+  + '\n  pages = {' + currentPaperStore.currentPaper.pages + '},'
+  + '\n  year = {' + currentPaperStore.currentPaper.year + '},'
+  + `\n  doi = {` + currentPaperStore.currentPaper.doi + `}`
+  + `\n }` }}
           </pre>
                     </div>
                   </div>
@@ -165,7 +215,7 @@ const FirstAuthorName = ref('')
 const OtherAuthorName = ref('')
 
 const FirstAuthorNameInBibTex = ref('')
-const authorStr=ref('')
+const authorStr = ref('')
 
 const TagArray = reactive([])
 const listPaperInfoByPaperID = async () => {
@@ -196,10 +246,10 @@ const listPaperInfoByPaperID = async () => {
     currentPaperStore.currentPaper.vol = res.res.vol
     currentPaperStore.currentPaper.year = res.res.year
     let authorsArray = currentPaperStore.currentPaper.author.split(',')
-    authorsArray=authorsArray.map(author=>author.trim())
-    let authorStrTemp=authorsArray.join(" and ")
-    authorStr.value=authorStrTemp
-    console.log("authorStr",authorStr.value)
+    authorsArray = authorsArray.map(author => author.trim())
+    let authorStrTemp = authorsArray.join(" and ")
+    authorStr.value = authorStrTemp
+    console.log("authorStr", authorStr.value)
     FirstAuthorName.value = authorsArray.shift();
     OtherAuthorName.value = authorsArray.join(',')
     FirstAuthorNameInBibTex.value = FirstAuthorName.value.split(' ').slice(-1)
