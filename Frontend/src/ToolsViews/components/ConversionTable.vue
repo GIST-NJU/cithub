@@ -126,7 +126,7 @@
             </tr>
 
             <tr v-auto-animate v-for="(conversion, index) in conversionStore.ConversionList" :key="`content-${index}`">
-              <td  v-if="showContentFlag[index]" colspan="6" >
+              <td v-if="showContentFlag[index]" colspan="6">
                 <div>
                   <h6>Conversion Result of `{{ conversion.conversionname }}` </h6>
                   <el-input disabled v-model="conversion.ConversionResultPreview" autosize type="textarea"
@@ -157,11 +157,12 @@ import { useConversionStore } from '../../store/conversionStore'
 import toolsInfo from "../../ComponentCommon/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentTestSuitesStore } from '../../store/currentTestSuite'
+import pinia from '../../store/store'
 const router = useRouter();
-const currentModel = useCurrentModel()
-const testSuitesStore = useTestSuitesStore()
-const conversionStore = useConversionStore()
-const currentTestSuite = useCurrentTestSuitesStore()
+const currentModel = useCurrentModel(pinia)
+const testSuitesStore = useTestSuitesStore(pinia)
+const conversionStore = useConversionStore(pinia)
+const currentTestSuite = useCurrentTestSuitesStore(pinia)
 const route = useRoute()
 const functionHead = ref('')
 const functionBody = ref('')
@@ -242,118 +243,132 @@ const confirmNewConversion = async () => {
   }
   conversionObj.actual_value = actual_value
 
+
   if (AlgorithmChosed.value == 'NL Test Plan') {
     conversionObj.outputModel = outputModel.value
     conversionObj = JSON.stringify(conversionObj)
-    try {
-      const ConversionRes = await request({
-        // url:tool.url 这里记得改回去，在校外无法用校内服务器
-        url: 'http://localhost:8302',
-        method: 'POST',
-        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        data: conversionObj
-      })
 
-      const newConversionRes = await request({
-        url: "/tools/conversion/NewConversion",
-        method: "POST",
-        data:
-        {
-          conversionname: dialogformNewConversion.conversionname,
-          conversiondescriptions: dialogformNewConversion.conversiondescriptions,
-          lastupdatedtime: dialogformNewConversion.lastupdatedtime,
-          createdtime: dialogformNewConversion.createdtime,
-          testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
-          conversionContents: JSON.stringify(ConversionRes.testsuiteOfConversion),
-          algorithm: AlgorithmChosed.value
+    for (const tool of AlgorithmOptions) {
+      if (tool.value == AlgorithmChosed.value) {
+        try {
+          const ConversionRes = await request({
+            // 这里记得改回去，在校外无法用校内服务器
+            url: tool.url,
+            // url: 'http://localhost:8302',
+            method: 'POST',
+            // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            data: conversionObj
+          })
+
+          const newConversionRes = await request({
+            url: "/tools/conversion/NewConversion",
+            method: "POST",
+            data:
+            {
+              conversionname: dialogformNewConversion.conversionname,
+              conversiondescriptions: dialogformNewConversion.conversiondescriptions,
+              lastupdatedtime: dialogformNewConversion.lastupdatedtime,
+              createdtime: dialogformNewConversion.createdtime,
+              testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+              conversionContents: JSON.stringify(ConversionRes.testsuiteOfConversion),
+              algorithm: AlgorithmChosed.value
+            }
+          })
+
+          if (newConversionRes.NewStatus == 'success!') {
+            listAllConversionByTestSuitesID()
+            ElNotification({
+              title: 'Save Success!',
+              type: 'success',
+            })
+            dialogFormVisibleNew.value = false
+          }
+          else {
+            ElNotification({
+              title: 'Save fail!',
+              type: 'error',
+            })
+            dialogFormVisibleNew.value = false
+
+          }
         }
-      })
-
-      if (newConversionRes.NewStatus == 'success!') {
-        listAllConversionByTestSuitesID()
-        ElNotification({
-          title: 'Save Success!',
-          type: 'success',
-        })
-        dialogFormVisibleNew.value = false
-      }
-      else {
-        ElNotification({
-          title: 'Save fail!',
-          type: 'error',
-        })
-        dialogFormVisibleNew.value = false
-
+        catch (err) { }
       }
     }
-    catch (err) { }
+
   }
+
 
   if (AlgorithmChosed.value == 'JUnit Test Plan') {
     conversionObj.functionHead = functionHead.value
     conversionObj.functionBody = functionBody.value
     conversionObj = JSON.stringify(conversionObj)
-    try {
-      const ConversionRes = await request({
-        // url:tool.url 这里记得改回去，在校外无法用校内服务器
-        url: 'http://localhost:8303',
-        method: 'POST',
-        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        data: conversionObj
-      })
 
-      const newConversionRes = await request({
-        url: "/tools/conversion/NewConversion",
-        method: "POST",
-        data:
-        {
-          conversionname: dialogformNewConversion.conversionname,
-          conversiondescriptions: dialogformNewConversion.conversiondescriptions,
-          lastupdatedtime: dialogformNewConversion.lastupdatedtime,
-          createdtime: dialogformNewConversion.createdtime,
-          testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
-          conversionContents: JSON.stringify(ConversionRes.testsuiteOfJUnit),
-          algorithm: AlgorithmChosed.value
+    for (const tool of AlgorithmOptions) {
+      if (tool.value == AlgorithmChosed.value) {
+        try {
+          const ConversionRes = await request({
+            // 这里记得改回去，在校外无法用校内服务器
+            url: tool.url,
+            // url: 'http://localhost:8302',
+            method: 'POST',
+            // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            data: conversionObj
+          })
+
+          const newConversionRes = await request({
+            url: "/tools/conversion/NewConversion",
+            method: "POST",
+            data:
+            {
+              conversionname: dialogformNewConversion.conversionname,
+              conversiondescriptions: dialogformNewConversion.conversiondescriptions,
+              lastupdatedtime: dialogformNewConversion.lastupdatedtime,
+              createdtime: dialogformNewConversion.createdtime,
+              testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+              conversionContents: JSON.stringify(ConversionRes.testsuiteOfJUnit),
+              algorithm: AlgorithmChosed.value
+            }
+          })
+
+          if (newConversionRes.NewStatus == 'success!') {
+            listAllConversionByTestSuitesID()
+            ElNotification({
+              title: 'Save Success!',
+              type: 'success',
+            })
+            dialogFormVisibleNew.value = false
+          }
+          else {
+            ElNotification({
+              title: 'Save fail!',
+              type: 'error',
+            })
+            dialogFormVisibleNew.value = false
+
+          }
         }
-      })
-
-      if (newConversionRes.NewStatus == 'success!') {
-        listAllConversionByTestSuitesID()
-        ElNotification({
-          title: 'Save Success!',
-          type: 'success',
-        })
-        dialogFormVisibleNew.value = false
-      }
-      else {
-        ElNotification({
-          title: 'Save fail!',
-          type: 'error',
-        })
-        dialogFormVisibleNew.value = false
+        catch (err) { }
 
       }
     }
-    catch (err) { }
+
+
 
   }
 
-
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
 const confirmDelete = (conversion) => {
   request({
     url: '/tools/conversion/DeleteByConversionID',

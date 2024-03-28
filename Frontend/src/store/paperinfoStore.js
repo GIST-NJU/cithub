@@ -4,6 +4,7 @@ export const usePaperInfoStore = defineStore("paperinforStore", {
         return {
             paperinfos: [],
             TypeofPapers:"Combinatorial Testing",
+            paginationOffset:0,
             listAllpaperFlag:'',
             searchKeyWords:'',
             total:0,

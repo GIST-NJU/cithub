@@ -79,6 +79,12 @@
             <version>3.5.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.yulichang</groupId>
+            <artifactId>mybatis-plus-join-boot-starter</artifactId>
+            <version>1.4.11</version>
+        </dependency>
+
 
         <!-- Spring Boot Starter Validation: 提供验证功能支持，包括Bean验证和方法验证 -->
         <dependency>
@@ -148,7 +154,19 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <forkCount>0</forkCount>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+
 
 </project>

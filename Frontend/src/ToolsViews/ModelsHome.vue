@@ -272,20 +272,22 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                         </el-dialog>
                         <div class="card-body px-0 pt-0 pb-2">
 
-                            <!-- 废弃使用Card -->
-                            <!-- <div v-for="(chunk, index) in chunkedArray" :key="index" class="row"
+
+                            <div v-for="(chunk, rowIndex) in chunkedArray" :key="rowIndex" class="row"
                                 style="margin: 0 0 0 20px;">
                                 <div class="col" v-for="(model, colIndex) in chunk" :key="colIndex">
-
-                                    <ModelCard style="margin:5px 5px 5px 5px" :classIcon="getRandomIcon()" :model="model">
+                                    <ModelCard style="margin:5px 5px 5px 5px" :model="model"
+                                        :index="calculateOriginalIndex(rowIndex, colIndex)">
                                     </ModelCard>
                                 </div>
-                            </div> -->
-
-                            <!-- 换成Table显示 -->
-                            <div class="card-header">
-                                <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                                <!-- 在最后一行添加一个空白的col，确保最后一行只有一个元素时也只占用一个位置 -->
+                                <div v-if="isLastRow(rowIndex) && chunk.length === 1" class="col"></div>
                             </div>
+
+                            <!-- 废弃Table显示 -->
+                            <!-- <div class="card-header">
+                                <ModelsTable :model="modelStore.modelsList"></ModelsTable>
+                            </div> -->
 
                         </div>
 
@@ -310,6 +312,7 @@ import ArgonButton from '../ComponentCommon/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
+import ModelCard from './components/ModelCard.vue'
 import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
@@ -417,15 +420,28 @@ const listAllModelsByProjectID = async () => {
                 modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
                 modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
 
-                // 统计每个Model下拥有的TestSuites的数量
-                const testSuitesRes = await request({
-                    method: "POST",
-                    url: '/tools/testSuites/listTestSuitesByModelID',
-                    data: {
-                        modelid: modelStore.modelsList[i].modelid
-                    }
+
+                modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
+                modelStore.modelsList[i].ConsOBJ = JSON.parse(modelStore.modelsList[i].cons)
+                modelStore.modelsList[i].NumofParams = modelStore.modelsList[i].PandVOBJ.length
+                modelStore.modelsList[i].NumofCons = modelStore.modelsList[i].ConsOBJ.length
+                let transformedData = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    // 将逗号分隔的字符串转换为数组
+                    const valueArray = item.Value.split(',');
+
+                    // 更新对象的Value字段为数组
+                    return {
+                        ...item,
+                        Value: valueArray
+                    };
                 });
-                modelStore.modelsList[i].NumOfTestSuites = testSuitesRes.TestSuites.length
+                modelStore.modelsList[i].PandVOBJ = transformedData
+                // 移除 row_index 属性
+                let tableDataTmp = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    const { row_index, ...rest } = item;
+                    return rest;
+                });
+                modelStore.modelsList[i].PandVOBJ = tableDataTmp
             }
 
 
@@ -442,13 +458,14 @@ const listAllModelsByProjectID = async () => {
                 message: 'Please choose a Project to continue.',
                 type: 'error',
             })
-            router.push({
-                name: 'ProjectsHome'
-            })
+            // router.push({
+            //     name: 'ProjectsHome'
+            // })
         }
 
     }
     else {
+        // console.log("currentProjectStore.projectid是", currentProjectStore.projectid)
         ElNotification({
             title: 'Need to Choose a Project first',
             message: 'Please choose a Project to continue.',
@@ -461,7 +478,7 @@ const listAllModelsByProjectID = async () => {
 
 };
 
-const itemsPerRow = ref(3);
+const itemsPerRow = ref(2);
 const chunkedArray = computed(() => {
     const result = [];
     for (let i = 0; i < modelStore.modelsList.length; i += itemsPerRow.value) {
@@ -469,6 +486,15 @@ const chunkedArray = computed(() => {
     }
     return result;
 });
+const calculateOriginalIndex = (rowIndex, colIndex) => {
+    // 计算原始索引的方法
+    return rowIndex * itemsPerRow.value + colIndex;
+}
+const isLastRow = computed(() => {
+    return rowIndex => rowIndex === chunkedArray.value.length - 1;
+});
+
+
 const dialogFormVisibleNew = ref(false)
 const dialogformNewModel = reactive({
     modelname: '',
@@ -508,7 +534,7 @@ const confirmNewModel = async () => {
                     });
                     if (res.NewStatus == 'success!') {
 
-                        ReloadModels()
+                        await listAllModelsByProjectID()
 
                         ElNotification({
                             title: 'New Model Success!',
@@ -542,295 +568,306 @@ const confirmNewModel = async () => {
                         obj_ACTS.strength = ModelConversionForm.strength
                         obj_ACTS.file = ModelConversionForm.file
                         // console.log("obj_ACTS", JSON.stringify(obj_ACTS))
-                        try {
-                            const ACTSRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8310',
-                                method: 'POST',
-                                // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                data: JSON.stringify(obj_ACTS)
-                            })
-                            // console.log("ACTSRes", ACTSRes)
-                            let inputString = ModelConversionForm.file.replace(/&#/g, '\n');
-                            // console.log("inputString ", inputString)
-                            // 将导入的模型加载到table上
+                        for (const tool of toolsInfo.RECORDS) {
+                            if (tool.title == ImportModelTypeChosed.value) {
+                                try {
+                                    const ACTSRes = await request({
+                                        // 这里记得改回去，在校外无法用校内服务器
+                                        url: tool.url,
+                                        // url: 'http://localhost:8310',
+                                        method: 'POST',
+                                        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+                                        headers: {
+                                            'Content-Type': 'text/plain'
+                                        },
+                                        data: JSON.stringify(obj_ACTS)
+                                    })
+                                    // console.log("ACTSRes", ACTSRes)
+                                    let inputString = ModelConversionForm.file.replace(/&#/g, '\n');
+                                    // console.log("inputString ", inputString)
+                                    // 将导入的模型加载到table上
 
 
-                            // 定义一个正则表达式来匹配[Parameter]和[Constraint]之间的内容
-                            const regex = /\[Parameter\]([\s\S]+?)\[Constraint\]/;
+                                    // 定义一个正则表达式来匹配[Parameter]和[Constraint]之间的内容
+                                    const regex = /\[Parameter\]([\s\S]+?)\[Constraint\]/;
 
-                            // 使用正则表达式匹配字符串
-                            const match = inputString.match(regex);
+                                    // 使用正则表达式匹配字符串
+                                    const match = inputString.match(regex);
 
-                            if (match) {
-                                // 获取匹配到的内容
-                                const parameterSection = match[1].trim();
+                                    if (match) {
+                                        // 获取匹配到的内容
+                                        const parameterSection = match[1].trim();
 
-                                // 分割参数部分为每一行
-                                const parameterLines = parameterSection.split('\n');
+                                        // 分割参数部分为每一行
+                                        const parameterLines = parameterSection.split('\n');
 
-                                // 创建一个数组来存储参数对象
-                                const parameterArray = [];
+                                        // 创建一个数组来存储参数对象
+                                        const parameterArray = [];
 
-                                // 遍历每一行，解析参数
-                                parameterLines.forEach(line => {
-                                    const [nameAndType, values] = line.split(':');
-                                    const [name, type] = nameAndType.split('(').map(part => part.trim());
+                                        // 遍历每一行，解析参数
+                                        parameterLines.forEach(line => {
+                                            const [nameAndType, values] = line.split(':');
+                                            const [name, type] = nameAndType.split('(').map(part => part.trim());
 
-                                    // 将值分割为数组
-                                    const valuesArray = values.split(',').map(value => value.trim());
+                                            // 将值分割为数组
+                                            const valuesArray = values.split(',').map(value => value.trim());
 
-                                    // 将参数对象添加到数组中
-                                    parameterArray.push({
-                                        Parameter: name,
-                                        Value: valuesArray.join(','),
-                                        ValueArray: valuesArray
-                                    });
+                                            // 将参数对象添加到数组中
+                                            parameterArray.push({
+                                                Parameter: name,
+                                                Value: valuesArray.join(','),
+                                                ValueArray: valuesArray
+                                            });
 
-                                });
+                                        });
 
-                                // // 输出生成的JSON数组
-                                // console.log("读取参数和参数取值！")
-                                // console.log("parameterArray", JSON.stringify(parameterArray, null, 2));
+                                        // // 输出生成的JSON数组
+                                        // console.log("读取参数和参数取值！")
+                                        // console.log("parameterArray", JSON.stringify(parameterArray, null, 2));
 
 
-                                // 处理约束部分
-                                const consArray = [];
+                                        // 处理约束部分
+                                        const consArray = [];
 
-                                for (const cons of ACTSRes.constraints) {
-                                    const result = getParameterValue(cons, parameterArray);
+                                        for (const cons of ACTSRes.constraints) {
+                                            const result = getParameterValue(cons, parameterArray);
 
-                                    // 创建包含 Constrain_x 键和结果数组的对象
-                                    const index = consArray.length + 1;
-                                    const key = `Constrain_${index}`;
-                                    const resultObject = { [key]: result };
+                                            // 创建包含 Constrain_x 键和结果数组的对象
+                                            const index = consArray.length + 1;
+                                            const key = `Constrain_${index}`;
+                                            const resultObject = { [key]: result };
 
-                                    // 将对象添加到数组中
-                                    consArray.push(resultObject);
+                                            // 将对象添加到数组中
+                                            consArray.push(resultObject);
+
+                                        }
+
+                                        // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
+                                        const ParameterValuesArray = parameterArray.map(element => {
+                                            // 创建一个新对象，保留 Parameter 和 Value 键值对
+                                            const { Parameter, Value } = element;
+                                            return { Parameter, Value };
+                                        });
+
+                                        // console.log("parameterArray", parameterArray)
+                                        // console.log("ParameterValuesArray", ParameterValuesArray)
+                                        console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
+
+                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
+                                            const currentDate = new Date();
+                                            const NewModelRes = await request({
+                                                url: '/tools/models/NewModel',
+                                                method: 'POST',
+                                                data: {
+                                                    projectID: dialogformNewModel.projectID,
+                                                    modelname: dialogformNewModel.modelname,
+                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                    modeltype: dialogformNewModel.modeltype,
+                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                    createdtime: dialogformNewModel.createdtime,
+
+                                                    strength: ModelConversionForm.strength,
+                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                    Cons: JSON.stringify(consArray),
+                                                }
+                                            })
+                                            if (NewModelRes.NewStatus == 'success!') {
+                                                ElNotification({
+                                                    title: 'New Model Success!',
+                                                    type: 'success',
+                                                })
+                                                await listAllModelsByProjectID()
+                                                dialogFormVisibleNew.value = false
+                                                currentModel.currentModel.modelid = route.query.modelid
+                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
+                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
+                                                currentModel.currentModel.strength = ModelConversionForm.strength
+                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
+                                                currentModel.currentModel.cons = JSON.stringify(consArray)
+                                                currentModel.currentModel.lastupdatedtime = currentDate
+
+
+                                            }
+                                            else {
+                                                ElNotification({
+                                                    title: 'New Model Failed!',
+                                                    type: 'error',
+                                                })
+                                            }
+
+                                        }
+                                        else {
+                                            ElNotification({
+                                                title: 'New Model Failed!',
+                                                message: 'Must choose a Strength',
+                                                type: 'error',
+                                            })
+                                        }
+
+
+                                    } else {
+                                        console.log('未找到匹配的内容');
+                                    }
+
 
                                 }
-
-                                // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
-                                const ParameterValuesArray = parameterArray.map(element => {
-                                    // 创建一个新对象，保留 Parameter 和 Value 键值对
-                                    const { Parameter, Value } = element;
-                                    return { Parameter, Value };
-                                });
-
-                                // console.log("parameterArray", parameterArray)
-                                // console.log("ParameterValuesArray", ParameterValuesArray)
-                                console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
-
-                                if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                    const currentDate = new Date();
-                                    const NewModelRes = await request({
-                                        url: '/tools/models/NewModel',
-                                        method: 'POST',
-                                        data: {
-                                            projectID: dialogformNewModel.projectID,
-                                            modelname: dialogformNewModel.modelname,
-                                            modeldescriptions: dialogformNewModel.modeldescriptions,
-                                            modeltype: dialogformNewModel.modeltype,
-                                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                            createdtime: dialogformNewModel.createdtime,
-
-                                            strength: ModelConversionForm.strength,
-                                            ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                            Cons: JSON.stringify(consArray),
-                                        }
+                                catch (err) {
+                                    ElNotification({
+                                        title: 'New Model Failed!',
+                                        message: 'check your inputs!',
+                                        type: 'error',
                                     })
-                                    if (NewModelRes.NewStatus == 'success!') {
-                                        ElNotification({
-                                            title: 'New Model Success!',
-                                            type: 'success',
-                                        })
-                                        dialogFormVisibleNew.value = false
-                                        ReloadModels()
-                                        currentModel.currentModel.modelid = route.query.modelid
-                                        currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                        currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                        currentModel.currentModel.strength = ModelConversionForm.strength
-                                        currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                        currentModel.currentModel.cons = JSON.stringify(consArray)
-                                        currentModel.currentModel.lastupdatedtime = currentDate
+                                }
+                            }
+                        }
 
+
+                        break;
+
+                    case 'CASA Format Reader':
+                        // 构造发送给PICT Format Reader的obj
+                        let obj_casa = {}
+                        obj_casa.constraints_file = ModelConversionForm.constraints_file
+                        obj_casa.model_file = ModelConversionForm.model_file
+                        for (const tool of toolsInfo.RECORDS) {
+                            if (tool.title == ImportModelTypeChosed.value) {
+                                try {
+                                    const CASARes = await request({
+                                        //  这里记得改回去，在校外无法用校内服务器
+                                        url: tool.url,
+                                        // url: 'http://localhost:8313',
+                                        method: 'POST',
+                                        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+                                        headers: {
+                                            'Content-Type': 'text/plain'
+                                        },
+                                        data: JSON.stringify(obj_casa)
+                                    })
+                                    // console.log("CASARes结果", CASARes)
+
+                                    //由于casa model的特殊性，手动构造其模型
+                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
+                                    // console.log("inputString", inputString)
+
+                                    const regexNumber = /\b(\d+)\b/;
+                                    // 获取覆盖强度
+                                    const match = inputString.match(regexNumber);
+                                    // 输出匹配到的第一个数字作为数字类型
+                                    let strength = 0
+                                    if (match) {
+                                        strength = parseInt(match[1], 10); // 使用parseInt将字符串转换为数字
+                                    } else {
+                                        console.log("No strength found.");
+                                    }
+
+                                    // console.log("strength", strength)
+                                    ModelConversionForm.strength = strength
+                                    const parameterArray = [];
+                                    for (let i = 0, len = CASARes.values.length; i < len; i++) {
+
+                                        let objTemp = {}
+                                        objTemp.Parameter = `Parameter_${i + 1}`
+                                        const currentElement = CASARes.values[i];
+                                        const currentArray = [];
+
+                                        for (let j = 1; j <= currentElement; j++) {
+                                            currentArray.push(`value_${j}`);
+                                        }
+                                        objTemp.ValueArray = currentArray
+                                        objTemp.Value = currentArray.join(',')
+                                        parameterArray.push(objTemp)
+                                    }
+                                    // console.log("parameterArray", parameterArray)
+                                    // 处理约束部分
+                                    const consArray = [];
+
+                                    for (const cons of CASARes.constraints) {
+                                        const result = getParameterValue(cons, parameterArray);
+
+                                        // 创建包含 Constrain_x 键和结果数组的对象
+                                        const index = consArray.length + 1;
+                                        const key = `Constrain_${index}`;
+                                        const resultObject = { [key]: result };
+
+                                        // 将对象添加到数组中
+                                        consArray.push(resultObject);
+
+                                    }
+
+                                    // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
+                                    const ParameterValuesArray = parameterArray.map(element => {
+                                        // 创建一个新对象，保留 Parameter 和 Value 键值对
+                                        const { Parameter, Value } = element;
+                                        return { Parameter, Value };
+                                    });
+                                    // console.log("consArray",consArray)
+                                    // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
+
+                                    if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
+                                        const currentDate = new Date();
+                                        const NewModelRes = await request({
+                                            url: '/tools/models/NewModel',
+                                            method: 'POST',
+                                            data: {
+                                                projectID: dialogformNewModel.projectID,
+                                                modelname: dialogformNewModel.modelname,
+                                                modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                modeltype: dialogformNewModel.modeltype,
+                                                lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                createdtime: dialogformNewModel.createdtime,
+
+                                                strength: ModelConversionForm.strength,
+                                                ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                Cons: JSON.stringify(consArray),
+                                            }
+                                        })
+                                        if (NewModelRes.NewStatus == 'success!') {
+                                            ElNotification({
+                                                title: 'New Model Success!',
+                                                type: 'success',
+                                            })
+                                            await listAllModelsByProjectID()
+                                            dialogFormVisibleNew.value = false
+                                            currentModel.currentModel.modelid = route.query.modelid
+                                            currentModel.currentModel.modelname = dialogformNewModel.modelname
+                                            currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
+                                            currentModel.currentModel.strength = ModelConversionForm.strength
+                                            currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
+                                            currentModel.currentModel.cons = JSON.stringify(consArray)
+                                            currentModel.currentModel.lastupdatedtime = currentDate
+
+
+                                        }
+                                        else {
+                                            ElNotification({
+                                                title: 'New Model Failed!',
+                                                type: 'error',
+                                            })
+                                        }
 
                                     }
                                     else {
                                         ElNotification({
                                             title: 'New Model Failed!',
+                                            message: 'check your inputs!',
                                             type: 'error',
                                         })
                                     }
 
                                 }
-                                else {
+
+                                catch (err) {
+
+                                    console.log("err", err)
                                     ElNotification({
                                         title: 'New Model Failed!',
-                                        message: 'Must choose a Strength',
+                                        message: 'check your inputs!',
                                         type: 'error',
                                     })
                                 }
-
-
-                            } else {
-                                console.log('未找到匹配的内容');
                             }
-
-
-                        }
-                        catch (err) {
-                            ElNotification({
-                                title: 'New Model Failed!',
-                                message: 'check your inputs!',
-                                type: 'error',
-                            })
                         }
 
-                        break;
-
-                    case 'CASA Format Reader':
-                        console.log("CASA")
-                        // 构造发送给PICT Format Reader的obj
-                        let obj_casa = {}
-                        obj_casa.constraints_file = ModelConversionForm.constraints_file
-                        obj_casa.model_file = ModelConversionForm.model_file
-                        try {
-                            const CASARes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8313',
-                                method: 'POST',
-                                // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                data: JSON.stringify(obj_casa)
-                            })
-                            // console.log("CASARes结果", CASARes)
-
-                            //由于casa model的特殊性，手动构造其模型
-                            let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
-                            // console.log("inputString", inputString)
-
-                            const regexNumber = /\b(\d+)\b/;
-                            // 获取覆盖强度
-                            const match = inputString.match(regexNumber);
-                            // 输出匹配到的第一个数字作为数字类型
-                            let strength = 0
-                            if (match) {
-                                strength = parseInt(match[1], 10); // 使用parseInt将字符串转换为数字
-                            } else {
-                                console.log("No strength found.");
-                            }
-
-                            // console.log("strength", strength)
-                            ModelConversionForm.strength = strength
-                            const parameterArray = [];
-                            for (let i = 0, len = CASARes.values.length; i < len; i++) {
-
-                                let objTemp = {}
-                                objTemp.Parameter = `Parameter_${i + 1}`
-                                const currentElement = CASARes.values[i];
-                                const currentArray = [];
-
-                                for (let j = 1; j <= currentElement; j++) {
-                                    currentArray.push(`value_${j}`);
-                                }
-                                objTemp.ValueArray = currentArray
-                                objTemp.Value = currentArray.join(',')
-                                parameterArray.push(objTemp)
-                            }
-                            // console.log("parameterArray", parameterArray)
-                            // 处理约束部分
-                            const consArray = [];
-
-                            for (const cons of CASARes.constraints) {
-                                const result = getParameterValue(cons, parameterArray);
-
-                                // 创建包含 Constrain_x 键和结果数组的对象
-                                const index = consArray.length + 1;
-                                const key = `Constrain_${index}`;
-                                const resultObject = { [key]: result };
-
-                                // 将对象添加到数组中
-                                consArray.push(resultObject);
-
-                            }
-
-                            // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
-                            const ParameterValuesArray = parameterArray.map(element => {
-                                // 创建一个新对象，保留 Parameter 和 Value 键值对
-                                const { Parameter, Value } = element;
-                                return { Parameter, Value };
-                            });
-                            // console.log("consArray",consArray)
-                            // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
-
-                            if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                const currentDate = new Date();
-                                const NewModelRes = await request({
-                                    url: '/tools/models/NewModel',
-                                    method: 'POST',
-                                    data: {
-                                        projectID: dialogformNewModel.projectID,
-                                        modelname: dialogformNewModel.modelname,
-                                        modeldescriptions: dialogformNewModel.modeldescriptions,
-                                        modeltype: dialogformNewModel.modeltype,
-                                        lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                        createdtime: dialogformNewModel.createdtime,
-
-                                        strength: ModelConversionForm.strength,
-                                        ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                        Cons: JSON.stringify(consArray),
-                                    }
-                                })
-                                if (NewModelRes.NewStatus == 'success!') {
-                                    ElNotification({
-                                        title: 'New Model Success!',
-                                        type: 'success',
-                                    })
-                                    dialogFormVisibleNew.value = false
-                                    ReloadModels()
-                                    currentModel.currentModel.modelid = route.query.modelid
-                                    currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                    currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                    currentModel.currentModel.strength = ModelConversionForm.strength
-                                    currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                    currentModel.currentModel.cons = JSON.stringify(consArray)
-                                    currentModel.currentModel.lastupdatedtime = currentDate
-
-
-                                }
-                                else {
-                                    ElNotification({
-                                        title: 'New Model Failed!',
-                                        type: 'error',
-                                    })
-                                }
-
-                            }
-                            else {
-                                ElNotification({
-                                    title: 'New Model Failed!',
-                                    message: 'check your inputs!',
-                                    type: 'error',
-                                })
-                            }
-
-                        }
-
-                        catch (err) {
-
-                            console.log("err", err)
-                            ElNotification({
-                                title: 'New Model Failed!',
-                                message: 'check your inputs!',
-                                type: 'error',
-                            })
-                        }
                         break;
 
                     case 'CTWedge Format Reader':
@@ -839,168 +876,174 @@ const confirmNewModel = async () => {
                         let obj_ctwedge = {}
                         obj_ctwedge.strength = ModelConversionForm.strength
                         obj_ctwedge.model_file = ModelConversionForm.model_file
-                        // console.log("obj", JSON.stringify(obj_ctwedge))
-                        try {
-                            const CTWedgeRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8311',
-                                method: 'POST',
-                                // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                data: JSON.stringify(obj_ctwedge)
-                            })
-                            // console.log("CTWedgeRes结果", CTWedgeRes)
-                            let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
-                            // console.log("inputString是 ", inputString)
-                            // 将导入的模型加载到table上
-                            // 定义一个正则表达式来匹配Parameters:和end之间的内容
-                            const regex = /Parameters:(.*?)(?=end)/s;
+                        for (const tool of toolsInfo.RECORDS) {
+                            if (tool.title == ImportModelTypeChosed.value) {
+                                try {
+                                    const CTWedgeRes = await request({
+                                        // 这里记得改回去，在校外无法用校内服务器
+                                        url: tool.url,
+                                        // url: 'http://localhost:8311',
+                                        method: 'POST',
+                                        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+                                        headers: {
+                                            'Content-Type': 'text/plain'
+                                        },
+                                        data: JSON.stringify(obj_ctwedge)
+                                    })
+                                    // console.log("CTWedgeRes结果", CTWedgeRes)
+                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
+                                    // console.log("inputString是 ", inputString)
+                                    // 将导入的模型加载到table上
+                                    // 定义一个正则表达式来匹配Parameters:和end之间的内容
+                                    const regex = /Parameters:(.*?)(?=end)/s;
 
-                            // 使用正则表达式匹配字符串
-                            const match = inputString.match(regex);
-
-                            if (match) {
-                                // 获取匹配到的内容
-                                const parametersContent = match[1].trim();
-                                // console.log("parametersContent", parametersContent);
-                                const lines = parametersContent.trim().split('\n');
-                                // parameterArray
-                                const parameterArray = [];
-
-                                // 定义正则表达式
-                                const regex = /^(\w+)\s+(\w+)\s*(?:\{([^}]+)\}|(?:\[(\d+)\s*\.\.\s*(\d+)\]))?;$/;
-
-                                // 遍历每一行并匹配正则表达式
-                                for (const line of lines) {
-                                    const match = line.match(regex);
+                                    // 使用正则表达式匹配字符串
+                                    const match = inputString.match(regex);
 
                                     if (match) {
-                                        const [, type, name, enumValues, rangeStart, rangeEnd] = match;
-                                        const element = {
-                                            type,
-                                            name,
-                                            enumValues: enumValues ? enumValues.split(',').map(value => value.trim()) : null,
-                                            range: rangeStart && rangeEnd ? { start: parseInt(rangeStart), end: parseInt(rangeEnd) } : null,
-                                        };
-                                        parameterArray.push(element);
-                                    }
-                                }
-                                const ParameterAndValues = []
-                                for (const param of parameterArray) {
-                                    let PandVtemp = {};
-                                    if (param.type === "Boolean") {
-                                        PandVtemp.Parameter = param.name;
-                                        PandVtemp.Value = 'TRUE,FALSE';
-                                        PandVtemp.ValueArray = ['TRUE', 'FALSE'];
-                                        ParameterAndValues.push({ ...PandVtemp }); // Use spread operator to create a copy
-                                    }
-                                    if (param.type === "Range") {
-                                        PandVtemp.Parameter = param.name;
-                                        PandVtemp.Value = [];
+                                        // 获取匹配到的内容
+                                        const parametersContent = match[1].trim();
+                                        // console.log("parametersContent", parametersContent);
+                                        const lines = parametersContent.trim().split('\n');
+                                        // parameterArray
+                                        const parameterArray = [];
 
-                                        // 生成范围内的所有值
-                                        for (let i = param.range.start; i <= param.range.end; i++) {
-                                            PandVtemp.Value.push(i);
+                                        // 定义正则表达式
+                                        const regex = /^(\w+)\s+(\w+)\s*(?:\{([^}]+)\}|(?:\[(\d+)\s*\.\.\s*(\d+)\]))?;$/;
+
+                                        // 遍历每一行并匹配正则表达式
+                                        for (const line of lines) {
+                                            const match = line.match(regex);
+
+                                            if (match) {
+                                                const [, type, name, enumValues, rangeStart, rangeEnd] = match;
+                                                const element = {
+                                                    type,
+                                                    name,
+                                                    enumValues: enumValues ? enumValues.split(',').map(value => value.trim()) : null,
+                                                    range: rangeStart && rangeEnd ? { start: parseInt(rangeStart), end: parseInt(rangeEnd) } : null,
+                                                };
+                                                parameterArray.push(element);
+                                            }
                                         }
-                                        PandVtemp.Value = PandVtemp.Value.map(String)
-                                        PandVtemp.ValueArray = [...PandVtemp.Value]; // Use spread operator to create a copy
-                                        PandVtemp.Value = PandVtemp.Value.join(',');
-                                        ParameterAndValues.push({ ...PandVtemp });
-                                    }
-                                    if (param.type === "Enumerative") {
-                                        PandVtemp.Parameter = param.name;
-                                        PandVtemp.Value = param.enumValues.join(',');
-                                        PandVtemp.ValueArray = [...param.enumValues]; // Use spread operator to create a copy
-                                        ParameterAndValues.push({ ...PandVtemp });
-                                    }
-                                }
+                                        const ParameterAndValues = []
+                                        for (const param of parameterArray) {
+                                            let PandVtemp = {};
+                                            if (param.type === "Boolean") {
+                                                PandVtemp.Parameter = param.name;
+                                                PandVtemp.Value = 'TRUE,FALSE';
+                                                PandVtemp.ValueArray = ['TRUE', 'FALSE'];
+                                                ParameterAndValues.push({ ...PandVtemp }); // Use spread operator to create a copy
+                                            }
+                                            if (param.type === "Range") {
+                                                PandVtemp.Parameter = param.name;
+                                                PandVtemp.Value = [];
 
-                                // 处理约束部分
-                                const consArray = [];
-                                for (const cons of CTWedgeRes.constraints) {
-                                    const result = getParameterValue(cons, ParameterAndValues);
-
-                                    // 创建包含 Constrain_x 键和结果数组的对象
-                                    const index = consArray.length + 1;
-                                    const key = `Constrain_${index}`;
-                                    const resultObject = { [key]: result };
-
-                                    // 将对象添加到数组中
-                                    consArray.push(resultObject);
-
-                                }
-
-                                // console.log("consArray", consArray)
-
-                                // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
-                                const ParameterValuesArray = ParameterAndValues.map(element => {
-                                    // 创建一个新对象，保留 Parameter 和 Value 键值对
-                                    const { Parameter, Value } = element;
-                                    return { Parameter, Value };
-                                });
-                                // console.log("JSON.stringify(ParameterValuesArray)",JSON.stringify(ParameterValuesArray))
-                                if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                    const currentDate = new Date();
-                                    const NewModelRes = await request({
-                                        url: '/tools/models/NewModel',
-                                        method: 'POST',
-                                        data: {
-                                            projectID: dialogformNewModel.projectID,
-                                            modelname: dialogformNewModel.modelname,
-                                            modeldescriptions: dialogformNewModel.modeldescriptions,
-                                            modeltype: dialogformNewModel.modeltype,
-                                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                            createdtime: dialogformNewModel.createdtime,
-
-                                            strength: ModelConversionForm.strength,
-                                            ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                            Cons: JSON.stringify(consArray),
+                                                // 生成范围内的所有值
+                                                for (let i = param.range.start; i <= param.range.end; i++) {
+                                                    PandVtemp.Value.push(i);
+                                                }
+                                                PandVtemp.Value = PandVtemp.Value.map(String)
+                                                PandVtemp.ValueArray = [...PandVtemp.Value]; // Use spread operator to create a copy
+                                                PandVtemp.Value = PandVtemp.Value.join(',');
+                                                ParameterAndValues.push({ ...PandVtemp });
+                                            }
+                                            if (param.type === "Enumerative") {
+                                                PandVtemp.Parameter = param.name;
+                                                PandVtemp.Value = param.enumValues.join(',');
+                                                PandVtemp.ValueArray = [...param.enumValues]; // Use spread operator to create a copy
+                                                ParameterAndValues.push({ ...PandVtemp });
+                                            }
                                         }
-                                    })
-                                    if (NewModelRes.NewStatus == 'success!') {
-                                        ElNotification({
-                                            title: 'New Model Success!',
-                                            type: 'success',
-                                        })
-                                        dialogFormVisibleNew.value = false
-                                        ReloadModels()
-                                        currentModel.currentModel.modelid = route.query.modelid
-                                        currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                        currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                        currentModel.currentModel.strength = ModelConversionForm.strength
-                                        currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                        currentModel.currentModel.cons = JSON.stringify(consArray)
-                                        currentModel.currentModel.lastupdatedtime = currentDate
+
+                                        // 处理约束部分
+                                        const consArray = [];
+                                        for (const cons of CTWedgeRes.constraints) {
+                                            const result = getParameterValue(cons, ParameterAndValues);
+
+                                            // 创建包含 Constrain_x 键和结果数组的对象
+                                            const index = consArray.length + 1;
+                                            const key = `Constrain_${index}`;
+                                            const resultObject = { [key]: result };
+
+                                            // 将对象添加到数组中
+                                            consArray.push(resultObject);
+
+                                        }
+
+                                        // console.log("consArray", consArray)
+
+                                        // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
+                                        const ParameterValuesArray = ParameterAndValues.map(element => {
+                                            // 创建一个新对象，保留 Parameter 和 Value 键值对
+                                            const { Parameter, Value } = element;
+                                            return { Parameter, Value };
+                                        });
+                                        // console.log("JSON.stringify(ParameterValuesArray)",JSON.stringify(ParameterValuesArray))
+                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
+                                            const currentDate = new Date();
+                                            const NewModelRes = await request({
+                                                url: '/tools/models/NewModel',
+                                                method: 'POST',
+                                                data: {
+                                                    projectID: dialogformNewModel.projectID,
+                                                    modelname: dialogformNewModel.modelname,
+                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                    modeltype: dialogformNewModel.modeltype,
+                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                    createdtime: dialogformNewModel.createdtime,
+
+                                                    strength: ModelConversionForm.strength,
+                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                    Cons: JSON.stringify(consArray),
+                                                }
+                                            })
+                                            if (NewModelRes.NewStatus == 'success!') {
+                                                ElNotification({
+                                                    title: 'New Model Success!',
+                                                    type: 'success',
+                                                })
+                                                await listAllModelsByProjectID()
+                                                dialogFormVisibleNew.value = false
+
+                                                currentModel.currentModel.modelid = route.query.modelid
+                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
+                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
+                                                currentModel.currentModel.strength = ModelConversionForm.strength
+                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
+                                                currentModel.currentModel.cons = JSON.stringify(consArray)
+                                                currentModel.currentModel.lastupdatedtime = currentDate
 
 
+                                            }
+                                            else {
+                                                ElNotification({
+                                                    title: 'New Model Failed!',
+                                                    type: 'error',
+                                                })
+                                            }
+
+                                        }
+                                        else {
+                                            ElNotification({
+                                                title: 'New Model Failed!',
+                                                message: 'Must choose a Strength',
+                                                type: 'error',
+                                            })
+                                        }
+                                    } else {
+                                        console.log('未找到匹配的内容');
                                     }
-                                    else {
-                                        ElNotification({
-                                            title: 'New Model Failed!',
-                                            type: 'error',
-                                        })
-                                    }
-
                                 }
-                                else {
+                                catch (err) {
                                     ElNotification({
                                         title: 'New Model Failed!',
-                                        message: 'Must choose a Strength',
+                                        message: 'check your inputs!',
                                         type: 'error',
                                     })
                                 }
-                            } else {
-                                console.log('未找到匹配的内容');
+
                             }
-                        }
-                        catch (err) {
-                            ElNotification({
-                                title: 'New Model Failed!',
-                                message: 'check your inputs!',
-                                type: 'error',
-                            })
                         }
 
                         break;
@@ -1012,129 +1055,137 @@ const confirmNewModel = async () => {
                         obj_pict.strength = ModelConversionForm.strength
                         obj_pict.model_file = ModelConversionForm.model_file
                         // console.log("obj", JSON.stringify(obj_pict))
-                        try {
-                            const PICTRes = await request({
-                                // url:tool.url 这里记得改回去，在校外无法用校内服务器
-                                url: 'http://localhost:8312',
-                                method: 'POST',
-                                // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                data: JSON.stringify(obj_pict)
-                            })
-                            // console.log("PICTRes结果", PICTRes)
-                            let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
-                            // console.log("inputString是 ", inputString)
-                            // 将导入的模型加载到table上
-                            // 定义一个正则表达式来匹配Parameters:和end之间的内容
-                            const regexALL = /([^:\n]+:[^:\n]+)/g;
-
-                            // 使用正则表达式匹配字符串
-                            console.log("inputString", inputString)
-                            const lines = inputString.match(regexALL);
-                            if (lines) {
-                                // parameterArray
-                                const parameterArray = [];
-                                // 定义正则表达式
-                                console.log("lines", lines)
-                                // 遍历每一行并匹配正则表达式
-                                for (const line of lines) {
-                                    let tempArray = line.split(':')
-                                    let tempObj = {}
-
-
-                                    tempObj.Parameter = tempArray[0]
-                                    tempObj.Value = tempArray[1]
-                                    tempObj.ValueArray = tempArray[1].split(',')
-                                    parameterArray.push(tempObj)
-                                }
-                                console.log("parameterArray", parameterArray)
-
-                                // 处理约束部分
-                                const consArray = [];
-
-                                for (const cons of PICTRes.constraints) {
-                                    const result = getParameterValue(cons, parameterArray);
-
-                                    // 创建包含 Constrain_x 键和结果数组的对象
-                                    const index = consArray.length + 1;
-                                    const key = `Constrain_${index}`;
-                                    const resultObject = { [key]: result };
-
-                                    // 将对象添加到数组中
-                                    consArray.push(resultObject);
-
-                                }
-
-                                // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
-                                const ParameterValuesArray = parameterArray.map(element => {
-                                    // 创建一个新对象，保留 Parameter 和 Value 键值对
-                                    const { Parameter, Value } = element;
-                                    return { Parameter, Value };
-                                });
-                                // console.log("consArray",consArray)
-                                // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
-
-                                if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                    const currentDate = new Date();
-                                    const NewModelRes = await request({
-                                        url: '/tools/models/NewModel',
+                        for (const tool of toolsInfo.RECORDS) {
+                            if (tool.title == ImportModelTypeChosed.value) {
+                                try {
+                                    const PICTRes = await request({
+                                        // 这里记得改回去，在校外无法用校内服务器
+                                        url: tool.url,
+                                        // url: 'http://localhost:8312',
                                         method: 'POST',
-                                        data: {
-                                            projectID: dialogformNewModel.projectID,
-                                            modelname: dialogformNewModel.modelname,
-                                            modeldescriptions: dialogformNewModel.modeldescriptions,
-                                            modeltype: dialogformNewModel.modeltype,
-                                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                            createdtime: dialogformNewModel.createdtime,
-
-                                            strength: ModelConversionForm.strength,
-                                            ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                            Cons: JSON.stringify(consArray),
-                                        }
+                                        // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+                                        headers: {
+                                            'Content-Type': 'text/plain'
+                                        },
+                                        data: JSON.stringify(obj_pict)
                                     })
-                                    if (NewModelRes.NewStatus == 'success!') {
-                                        ElNotification({
-                                            title: 'New Model Success!',
-                                            type: 'success',
-                                        })
-                                        dialogFormVisibleNew.value = false
-                                        ReloadModels()
-                                        currentModel.currentModel.modelid = route.query.modelid
-                                        currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                        currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                        currentModel.currentModel.strength = ModelConversionForm.strength
-                                        currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                        currentModel.currentModel.cons = JSON.stringify(consArray)
-                                        currentModel.currentModel.lastupdatedtime = currentDate
+                                    // console.log("PICTRes结果", PICTRes)
+                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
+                                    // console.log("inputString是 ", inputString)
+                                    // 将导入的模型加载到table上
+                                    // 定义一个正则表达式来匹配Parameters:和end之间的内容
+                                    const regexALL = /([^:\n]+:[^:\n]+)/g;
 
+                                    // 使用正则表达式匹配字符串
+                                    console.log("inputString", inputString)
+                                    const lines = inputString.match(regexALL);
+                                    if (lines) {
+                                        // parameterArray
+                                        const parameterArray = [];
+                                        // 定义正则表达式
+                                        console.log("lines", lines)
+                                        // 遍历每一行并匹配正则表达式
+                                        for (const line of lines) {
+                                            let tempArray = line.split(':')
+                                            let tempObj = {}
+
+
+                                            tempObj.Parameter = tempArray[0]
+                                            tempObj.Value = tempArray[1]
+                                            tempObj.ValueArray = tempArray[1].split(',')
+                                            parameterArray.push(tempObj)
+                                        }
+                                        console.log("parameterArray", parameterArray)
+
+                                        // 处理约束部分
+                                        const consArray = [];
+
+                                        for (const cons of PICTRes.constraints) {
+                                            const result = getParameterValue(cons, parameterArray);
+
+                                            // 创建包含 Constrain_x 键和结果数组的对象
+                                            const index = consArray.length + 1;
+                                            const key = `Constrain_${index}`;
+                                            const resultObject = { [key]: result };
+
+                                            // 将对象添加到数组中
+                                            consArray.push(resultObject);
+
+                                        }
+
+                                        // 使用 map 方法遍历数组，去掉每个元素中的 ValueArray 键值对
+                                        const ParameterValuesArray = parameterArray.map(element => {
+                                            // 创建一个新对象，保留 Parameter 和 Value 键值对
+                                            const { Parameter, Value } = element;
+                                            return { Parameter, Value };
+                                        });
+                                        // console.log("consArray",consArray)
+                                        // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
+
+                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
+                                            const currentDate = new Date();
+                                            const NewModelRes = await request({
+                                                url: '/tools/models/NewModel',
+                                                method: 'POST',
+                                                data: {
+                                                    projectID: dialogformNewModel.projectID,
+                                                    modelname: dialogformNewModel.modelname,
+                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                    modeltype: dialogformNewModel.modeltype,
+                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                    createdtime: dialogformNewModel.createdtime,
+
+                                                    strength: ModelConversionForm.strength,
+                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                    Cons: JSON.stringify(consArray),
+                                                }
+                                            })
+                                            if (NewModelRes.NewStatus == 'success!') {
+                                                ElNotification({
+                                                    title: 'New Model Success!',
+                                                    type: 'success',
+                                                })
+                                                await listAllModelsByProjectID()
+                                                dialogFormVisibleNew.value = false
+
+                                                currentModel.currentModel.modelid = route.query.modelid
+                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
+                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
+                                                currentModel.currentModel.strength = ModelConversionForm.strength
+                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
+                                                currentModel.currentModel.cons = JSON.stringify(consArray)
+                                                currentModel.currentModel.lastupdatedtime = currentDate
+
+
+                                            }
+                                            else {
+                                                ElNotification({
+                                                    title: 'New Model Failed!',
+                                                    type: 'error',
+                                                })
+                                            }
+
+                                        }
+                                        else {
+                                            ElNotification({
+                                                title: 'New Model Failed!',
+                                                message: 'Must choose a Strength',
+                                                type: 'error',
+                                            })
+                                        }
 
                                     }
-                                    else {
-                                        ElNotification({
-                                            title: 'New Model Failed!',
-                                            type: 'error',
-                                        })
-                                    }
-
                                 }
-                                else {
+                                catch (err) {
                                     ElNotification({
                                         title: 'New Model Failed!',
-                                        message: 'Must choose a Strength',
+                                        message: 'check your inputs!',
                                         type: 'error',
                                     })
                                 }
 
+
                             }
-                        }
-                        catch (err) {
-                            ElNotification({
-                                title: 'New Model Failed!',
-                                message: 'check your inputs!',
-                                type: 'error',
-                            })
                         }
 
                         break;
@@ -1178,8 +1229,9 @@ const confirmNewModel = async () => {
                             title: 'New LLM Model Success!',
                             type: 'success',
                         })
+                        await listAllModelsByProjectID()
                         dialogFormVisibleNew.value = false
-                        ReloadModels()
+
                         currentModel.currentModel.modelid = route.query.modelid
                         currentModel.currentModel.modelname = dialogformNewModel.modelname
                         currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
@@ -1200,7 +1252,7 @@ const confirmNewModel = async () => {
                     }
 
 
-              
+
                 }
 
                 break;
@@ -1281,17 +1333,9 @@ const ReloadModels = async () => {
 
 }
 
-const iconsArray = [
-    'text-white fas fa-landmark',
-    'text-white fas fa-kiwi-bird',
-    'text-white fas fa-laptop-code',
-    'text-white fas fa-laugh-wink',
-]; // 替换为你的图标数组
 
-const getRandomIcon = () => {
-    const randomIndex = Math.floor(Math.random() * iconsArray.length);
-    return iconsArray[randomIndex];
-};
+
+
 
 const selectedModellingType = ref(null);
 const chooseModellingType = (type) => {

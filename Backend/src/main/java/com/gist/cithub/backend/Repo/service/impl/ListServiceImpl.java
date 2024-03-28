@@ -1,15 +1,21 @@
 package com.gist.cithub.backend.Repo.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gist.cithub.backend.Repo.dao.authorAndscholarDao;
+import com.gist.cithub.backend.Repo.entity.authorAndscholarEntity;
 import com.gist.cithub.backend.common.utils.PageUtils;
 import com.gist.cithub.backend.common.utils.Query;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
 import com.gist.cithub.backend.Repo.dao.ListDao;
 import com.gist.cithub.backend.Repo.service.ListService;
+import com.github.yulichang.base.MPJBaseServiceImpl;
+import com.github.yulichang.query.MPJQueryWrapper;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -31,9 +37,13 @@ import java.util.UUID;
 
 
 @Service("listService")
-public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements ListService {
+//public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements ListService {
+public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> implements ListService {
     @Autowired
     private ListDao listDao;
+
+    @Autowired
+    private com.gist.cithub.backend.Repo.dao.authorAndscholarDao authorAndscholarDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -46,7 +56,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     }
 
     @Override
-    public Page<ListEntity> listAllPapers(Integer pagenum, Integer pagesize, String typerofPapers) {
+    public Page<ListEntity> listAllPapers(Integer pagenum, Integer pagesize) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("year");
         Page<ListEntity> listEntityPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
@@ -55,10 +65,10 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     }
 
     @Override
-    public Page<ListEntity> listBy(Integer pagenum, Integer pagesize, String typerofPapers,String listByKey, String listByValue) {
+    public List<ListEntity> listBy(String column, String value) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(listByKey,listByValue);
-        Page<ListEntity> listEntityPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
+        queryWrapper.like(column,value);
+        List<ListEntity> listEntityPage = listDao.selectList(queryWrapper);
         return listEntityPage;
 
     }
@@ -230,6 +240,31 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     }
 
     @Override
+    public Page<ListEntity> searchBy(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(column,searchkeywords);
+        queryWrapper.orderByDesc("year");
+        Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
+        return selectPage;
+    }
+
+    @Override
+    public Page<ListEntity> searchByInstitutionPages(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.apply("EXISTS (SELECT 1 FROM repository_scholar p WHERE repository_list.author LIKE CONCAT('%', p.name, '%') AND p.institution = {0})", searchkeywords);
+        queryWrapper.orderByDesc("year");
+        Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
+        return selectPage;
+    }
+
+    @Override
+    public Page<ListEntity> searchByCountryPages(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
+
+//        Page<ListEntity> selectPage = listDao.searchByCountry( searchkeywords);
+        return null;
+    }
+
+    @Override
     public String savaUploadFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         String prefix = fileName.lastIndexOf(".") != -1 ? fileName.substring(fileName.lastIndexOf(".")) : ".jpg";
@@ -250,7 +285,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     }
 
     @Override
-    public Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords,String typeofPapers) {
+    public Page<ListEntity> searchByKeywords(Integer pagenum, Integer pagesize, String searchKeywords) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("author", searchKeywords).or().like("title", searchKeywords).or().like("booktitle", searchKeywords).or().like("tag", searchKeywords).or().like("abbr", searchKeywords).or().like("year", searchKeywords);
         queryWrapper.orderByDesc("year");
@@ -270,9 +305,9 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
     }
 
     @Override
-    public Page<ListEntity> searchByField(Integer pagenum, Integer pagesize, String searchKeywords, String typeofPapers) {
+    public Page<ListEntity> searchByField(Integer pagenum, Integer pagesize, String searchKeywords) {
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("field",searchKeywords);
+        queryWrapper.eq("field",searchKeywords);
         queryWrapper.orderByDesc("year");
         Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return selectPage;

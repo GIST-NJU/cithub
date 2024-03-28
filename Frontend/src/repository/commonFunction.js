@@ -8,6 +8,7 @@ import { useUserStore } from '../store/userStore';
 import { useCountryStore } from '../store/CountryStore'
 import { useTagStore } from '../store/TagStore'
 import { useModuleStore } from '../store/module';
+import {usePaginationStore} from '../store/paginationStore'
 import { request } from '../request';
 const userStore = useUserStore(pinia)
 const moduleStore = useModuleStore(pinia)
@@ -17,30 +18,31 @@ const CountryStore = useCountryStore(pinia)
 const TagStore = useTagStore(pinia)
 const InstitutionStore = useInstitutionStore(pinia)
 const VenueStore = useVenueStore(pinia)
+const PaginationStore=usePaginationStore(pinia)
 
-const listAllPapers = (paginationObj) => {
-    // 获取所有文章的数据
-    request({
+const listAllPapers = async () => {
+    try {
+      const res = await request({
         url: '/repo/list/listAllpapers',
         method: 'POST',
-        data: paginationObj
-    }).then((res) => {
-        // console.log("listAllPapers",res)
-        PaperInfoStore.paperinfos.length = 0
-        PaperInfoStore.searchKeyWords = ''
-        PaperInfoStore.paperinfos.push(...res.listEntityPage.records)
-
-        paginationObj.total = res.listEntityPage.total
-        // console.log("paginationObj.total",paginationObj.total)
-
-        PaperInfoStore.total = paginationObj.total
-
-        // console.log("paginationObj.total",paginationObj.total)
-
-    }).catch((error) => {
-        console.log("错误是", error)
-    })
-}
+        data: {
+            pagenum: PaginationStore.pagenum,
+            pagesize: PaginationStore.pagesize
+        }
+      });
+  
+    //   console.log("listAllPapers", res);
+      PaperInfoStore.paperinfos.length = 0;
+      PaperInfoStore.searchKeyWords = '';
+      PaperInfoStore.paperinfos.push(...res.listEntityPage.records);
+  
+      PaginationStore.total = res.listEntityPage.total;
+      PaperInfoStore.total = PaginationStore.total;
+    } catch (error) {
+      console.error("错误是", error);
+    }
+  }
+  
 
 const listAllScholars = () => {
 

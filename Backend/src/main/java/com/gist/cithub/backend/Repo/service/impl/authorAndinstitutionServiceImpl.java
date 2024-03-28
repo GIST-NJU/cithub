@@ -9,6 +9,7 @@ import com.gist.cithub.backend.Repo.entity.authorAndscholarEntity;
 import com.gist.cithub.backend.Repo.service.authorAndinstitutionService;
 import com.gist.cithub.backend.Repo.dao.ListDao;
 import com.gist.cithub.backend.Repo.dao.authorAndscholarDao;
+import com.github.yulichang.base.MPJBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("authorService")
-public class authorAndinstitutionServiceImpl extends ServiceImpl<authorAndscholarDao, authorAndscholarEntity> implements authorAndinstitutionService {
+//public class authorAndinstitutionServiceImpl extends ServiceImpl<authorAndscholarDao, authorAndscholarEntity> implements authorAndinstitutionService {
+public class authorAndinstitutionServiceImpl extends MPJBaseServiceImpl<authorAndscholarDao, authorAndscholarEntity> implements authorAndinstitutionService {
 
     @Autowired
     private authorAndscholarDao authorAndscholarDao;

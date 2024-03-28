@@ -52,7 +52,6 @@
 
                         <div class="card-header">
                             <TestSuitesTable :testSuitesResArray="testSuitesStore.testSuitesList"></TestSuitesTable>
-
                         </div>
 
                     </div>

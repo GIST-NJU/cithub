@@ -52,19 +52,17 @@ import SideNav from './components/SideNav.vue'
 import pinia from '../store/store'
 import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
-import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { ElNotification } from 'element-plus'
 import { CheckLoginStatus, getUserInfoByToken } from '../common'
 import { useRouter } from 'vue-router';
-
 const router = useRouter();
 const userStore = useUserStore(pinia)
-
+const projectsStore = useProjectsStore(pinia)
 const modelLists = reactive([]);
 const CALists = reactive([]);
 const projectList = reactive([]);
-const projectsStore = useProjectsStore(pinia)
+
 
 // testAPI通过userID查询该User下所有的projects
 // 又遍历每一个project，得到每一个project对应的多个models

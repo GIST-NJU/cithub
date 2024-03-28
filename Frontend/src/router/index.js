@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
 import Cithub from '../CithubHomeView.vue'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { useAuthorStore } from '../store/authorStore'
@@ -21,10 +21,12 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
 import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import ToolsHome from '../ToolsViews/ToolsHome.vue'
+import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
 import LLMModelDetails from '../ToolsViews/LLMModelDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
+import TestSuitesHomeNew from '../ToolsViews/TestSuiteHomeNew.vue'
 import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
@@ -110,6 +112,13 @@ const routes = [
         meta: { title: 'ToolsHome' }
       },
       {
+        // HelpCenter
+        path: "HelpCenter",
+        name: 'HelpCenter',
+        component: HelpCenter,
+        meta: { title: 'HelpCenter' }
+      },
+      {
         // ProjectsHome
         path: "ProjectsHome",
         name: 'ProjectsHome',
@@ -143,6 +152,13 @@ const routes = [
         name: 'TestSuitesHome',
         component: TestSuitesHome,
         meta: { title: 'TestSuitesHome' }
+      },
+      {
+        // TestSuitesHome
+        path: "TestSuitesHomeNew",
+        name: 'TestSuitesHomeNew',
+        component: TestSuitesHomeNew,
+        meta: { title: 'TestSuitesHomeNew' }
       },
       {
         // TestSuiteDetails
@@ -200,19 +216,21 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(), 
+  // history: createWebHistory(), //去掉路径中的 # 号，不行，打包之后会白屏
   routes,
   linkActiveClass: "active",
 });
 
 router.beforeEach((to, from, next) => {
 
-  const userStore = useUserStore()
-  const moduleStore = useModuleStore()
-  const PaperInfoStore = usePaperInfoStore()
-  const AuthorStore = useAuthorStore()
-  const InstitutionStore = useInstitutionStore()
-  const VenueStore = useVenueStore()
+  // const userStore = useUserStore()
+  // const moduleStore = useModuleStore()
+  // const PaperInfoStore = usePaperInfoStore()
+  // const AuthorStore = useAuthorStore()
+  // const InstitutionStore = useInstitutionStore()
+  // const VenueStore = useVenueStore()
 
   window.document.title = to.meta.title
   next()

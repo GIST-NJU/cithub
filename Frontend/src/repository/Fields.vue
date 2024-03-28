@@ -67,8 +67,8 @@ import { request } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import pinia from '../store/store'
-
-
+import { usePaginationStore } from '../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
 const router = useRouter();
 const moduleStore = useModuleStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
@@ -97,7 +97,12 @@ const FiledsInfo = reactive([
   {
     "name": "Application",
     "description": "Studies on applying, improving, and popularizing CT and its procedures in real world."
-  }
+  },
+  {
+    "name": "Other",
+    "description": "Studies that do not belong to any of the above categories."
+  },
+
 ])
 const TagsInfo = [
   {
@@ -151,68 +156,87 @@ const TagsInfo = [
   },
 ]
 
-let searchObj = reactive({
-  pagesize: 1000,
-  total: '',
-  pagercount: 15,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: PaperInfoStore.TypeofPapers,
 
-})
+
 
 const selectCategory = (category) => {
-  console.log("category", category)
+  // console.log("category", category)
   if (category == "Fault Diagnosis") category = "Diagnosis"
-  searchObj.searchkeywords = category
+  moduleStore.CurrentModuleDetails = category
+
+  PaginationStore.pagenum = 1
+  PaginationStore.pagesize = 25
+  PaginationStore.searchkeywords = category
+  PaginationStore.column = 'field'
+
+
+  PaperInfoStore.paginationOffset = 0
   PaperInfoStore.searchKeyWords = category
   PaperInfoStore.paperinfos.length = 0
   request({
-    url: 'repo/list/searchByField',
+    url: 'repo/list/searchBy',
     method: 'POST',
-    data: searchObj
+    data: {
+      pagesize: PaginationStore.pagesize,
+      searchkeywords: PaginationStore.searchkeywords,
+      column: PaginationStore.column,
+      pagenum: PaginationStore.pagenum,
+    }
   }).then((res) => {
-    // console.log("searchByInstitutions", res)
+    // console.log("selectCategory", res)
     PaperInfoStore.paperinfos.push(...res.res.records)
     PaperInfoStore.total = res.res.total
+    PaginationStore.total = res.res.total
   }).catch(() => { })
 
   router.push({
     path: '/repository/papers',
     query: {
-      paginationActive: '关闭'
+      module: 'Fields'
     }
   })
 }
 
-const searchByTag = async (tag) => {
 
+const searchByTag = async (tag) => {
+  // console.log("tag", tag)
+  moduleStore.CurrentModule = 'Topics'
+  moduleStore.CurrentModuleDetails = tag
   try {
-    searchObj.searchkeywords = tag;
-    PaperInfoStore.paperinfos.length = 0
+    PaginationStore.pagenum = 1
+    PaginationStore.pagesize = 25
+    PaginationStore.searchkeywords = tag
+    PaginationStore.column = 'tag'
+
+
+    PaperInfoStore.paginationOffset = 0
     PaperInfoStore.searchKeyWords = tag
+    PaperInfoStore.paperinfos.length = 0
 
     const searchByTagRes = await request({
-      url: 'repo/list/searchByTag',
+      url: 'repo/list/searchBy',
       method: 'POST',
-      data: searchObj
+      data: {
+        pagesize: PaginationStore.pagesize,
+        searchkeywords: PaginationStore.searchkeywords,
+        column: PaginationStore.column,
+        pagenum: PaginationStore.pagenum,
+      }
     })
-    PaperInfoStore.paperinfos.push(...searchByTagRes.res)
-    PaperInfoStore.total = searchByTagRes.res.length
+    // console.log("searchByTagRes", searchByTagRes)
+    PaperInfoStore.paperinfos.push(...searchByTagRes.res.records)
+    PaperInfoStore.total = searchByTagRes.total
+    PaginationStore.total = searchByTagRes.total
 
     router.push({
       path: '/repository/papers',
       query: {
-        paginationActive: '关闭',
-        searchType: 'tag',
+        module: 'Topics',
       }
     })
 
-
-
-
   } catch (error) {
-
+    console.log("error", error)
   }
 }
 
@@ -229,4 +253,5 @@ onMounted(async () => {
 .card-fields:hover {
   transform: scale(1.03);
   cursor: pointer;
-}</style>
+}
+</style>

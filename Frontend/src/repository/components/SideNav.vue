@@ -10,11 +10,11 @@
       </div>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main">
+    <div class="w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
-        <li class="nav-item" @click="jumpToHome" style="cursor:pointer;">
-          <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
-            @mouseout="handleMouseOutHome">
+        <li class="nav-item" style="cursor:pointer;">
+          <a @click.prevent="jumpToHome" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]">
+            <!-- <a href="/repository/home" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]"> -->
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
@@ -23,9 +23,8 @@
           </a>
         </li>
 
-        <li class="nav-item" @click="jumpToPapers" style=" cursor:pointer;">
-          <a :class="['nav-link', isActivePapers ? 'active' : '']" @mouseover="handleMouseOverPapers"
-            @mouseout="handleMouseOutPapers">
+        <li class="nav-item" style="cursor:pointer;">
+          <a @click.prevent="jumpToPapers" :class="['nav-link', { 'active': isRouteActive('Repository_Papers') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-success text-lg opacity-10"></i>
@@ -33,9 +32,9 @@
             <span class="nav-link-text ms-1 p">Papers</span>
           </a>
         </li>
-        <li class="nav-item" @click="jumpToScholars" style=" cursor:pointer;">
-          <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
-            @mouseout="handleMouseOutScholars">
+
+        <li class="nav-item" style=" cursor:pointer;">
+          <a @click.prevent="jumpToScholars" :class="['nav-link', { 'active': isRouteActive('Repository_Scholars') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-bag-17 text-warning text-lg opacity-10"></i>
@@ -43,9 +42,9 @@
             <span class="nav-link-text ms-1 p">Scholars</span>
           </a>
         </li>
-        <li class="nav-item" @click="jumpToFields" style=" cursor:pointer;">
-          <a :class="['nav-link', isActiveFields ? 'active' : '']" @mouseover="handleMouseOverFields"
-            @mouseout="handleMouseOutFields">
+
+        <li class="nav-item" style=" cursor:pointer;">
+          <a @click.prevent="jumpToFields" :class="['nav-link', { 'active': isRouteActive('Repository_Fields') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-danger text-lg opacity-10"></i>
@@ -53,9 +52,8 @@
             <span class="nav-link-text ms-1 p">Topics</span>
           </a>
         </li>
-        <li class="nav-item" @click="jumpToVenues" style=" cursor:pointer;">
-          <a :class="['nav-link', isActiveVenues ? 'active' : '']" @mouseover="handleMouseOverVenues"
-            @mouseout="handleMouseOutVenues">
+        <li class="nav-item" style=" cursor:pointer;">
+          <a @click.prevent="jumpToVenues" :class="['nav-link', { 'active': isRouteActive('Repository_Venues') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 
@@ -65,9 +63,9 @@
           </a>
         </li>
 
-        <li class="nav-item" @click="jumpToStatistics" style=" cursor:pointer;">
-          <a :class="['nav-link', isActiveStatistics ? 'active' : '']" @mouseover="handleMouseOverStatistics"
-            @mouseout="handleMouseOutStatistics">
+        <li class="nav-item" style=" cursor:pointer;">
+          <a @click.prevent="jumpToStatistics"
+            :class="['nav-link', { 'active': isRouteActive('Repository_Statistics') }]">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 
@@ -77,7 +75,7 @@
           </a>
         </li>
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link " href="#">
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -85,7 +83,9 @@
             </div>
             <span class="nav-link-text ms-1 p">Ranks</span>
           </a>
-        </li>
+        </li> -->
+
+
       </ul>
     </div>
   </aside>
@@ -93,60 +93,96 @@
 
 <script  setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, reactive, watch } from 'vue';
+import pinia from '../../store/store'
+import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from '../commonFunction';
+import { useModuleStore } from '../../store/module';
+import { usePaperInfoStore } from '../../store/paperinfoStore'
+import { usePaginationStore } from '../../store/paginationStore'
+const PaginationStore = usePaginationStore(pinia)
+const moduleStore = useModuleStore(pinia)
+const PaperInfoStore = usePaperInfoStore(pinia)
 const router = useRouter();
 
-const isActiveHome = ref(false)
-const isActivePapers = ref(false)
-const isActiveScholars = ref(false)
-const isActiveFields = ref(false)
-const isActiveVenues = ref(false)
-const isActiveStatistics = ref(false)
 
-const jumpToHome = () => {
-  router.push({
-    name: 'Repository_Home',
-  })
+// 监听 moduleStore.CurrentRoute 的变化
+watch(() => moduleStore.CurrentRoute, (newRoute, oldRoute) => {
+  // 每次路由变化时触发 isRouteActive 方法
+  // console.log("moduleStore.CurrentRoute sideNav", moduleStore.CurrentRoute);
+  isRouteActive(newRoute);
+});
+
+const isRouteActive = (routeName) => {
+  return moduleStore.CurrentRoute === routeName;
 }
 
-const jumpToPapers = () => {
-  router.push({ path: '/repository/papers' })
+const jumpToHome = () => {
+  moduleStore.CurrentModule = 'Repository'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Home'
+  router.push({ name: 'Repository_Home' });
+}
+
+const jumpToPapers = async () => {
+  // 每次点击进入Papers都显示所有论文的信息。
+  moduleStore.CurrentModule = 'Complete Paper List'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Papers'
+  PaginationStore.pagenum = 1
+  PaginationStore.pagesize = 25
+  PaginationStore.searchkeywords=''
+  PaginationStore.column = ''
+  PaperInfoStore.paperinfos.length = 0
+  // 计算偏移量
+  const paginationOffset = (PaginationStore.pagenum - 1) * PaginationStore.pagesize;
+  // 更新全局偏移量
+  PaperInfoStore.paginationOffset = paginationOffset;
+  await listAllPapers()
+  router.push({ path: '/repository/papers' });
 }
 
 const jumpToScholars = () => {
+  moduleStore.CurrentModule = 'Scholars'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Scholars'
+
   router.push({ name: 'Repository_Scholars' })
 }
 
 const jumpToFields = () => {
+  moduleStore.CurrentModule = 'Fields'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Fields'
+
   router.push({ name: 'Repository_Fields' })
 }
 
 const jumpToVenues = () => {
+  moduleStore.CurrentModule = 'Venues'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Venues'
+
+
   router.push({ name: 'Repository_Venues' })
 }
 
 const jumpToStatistics = () => {
+  moduleStore.CurrentModule = 'Statistics'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Statistics'
+
   router.push({ name: 'Repository_Statistics' })
 }
 
-const handleMouseOverHome = () => { isActiveHome.value = true; }
-const handleMouseOutHome = () => { isActiveHome.value = false }
 
-const handleMouseOverPapers = () => { isActivePapers.value = true; }
-const handleMouseOutPapers = () => { isActivePapers.value = false }
-
-const handleMouseOverFields = () => { isActiveFields.value = true; }
-const handleMouseOutFields = () => { isActiveFields.value = false }
-
-const handleMouseOverScholars = () => { isActiveScholars.value = true; }
-const handleMouseOutScholars = () => { isActiveScholars.value = false }
-
-const handleMouseOverVenues = () => { isActiveVenues.value = true; }
-const handleMouseOutVenues = () => { isActiveVenues.value = false }
-
-const handleMouseOverStatistics = () => { isActiveStatistics.value = true; }
-const handleMouseOutStatistics = () => { isActiveStatistics.value = false }
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.sidenav {
+  height: 100vh;
+  /* 将侧边栏高度设置为屏幕的高度 */
+  overflow-y: hidden;
+  /* 隐藏纵向滚动条 */
+}
+</style>

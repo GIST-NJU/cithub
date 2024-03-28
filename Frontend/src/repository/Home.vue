@@ -82,7 +82,7 @@
               <h5>Find Papers</h5>
               <div class="row pt-2">
                 <div class="col-10">
-                  <input v-model="searchObj.searchkeywords" type="text" class="form-control"
+                  <input v-model="PaginationStore.searchkeywords" type="text" class="form-control"
                     placeholder="Name of paper, scholar, publication venue, ...">
                 </div>
                 <div class="col-2">
@@ -116,8 +116,7 @@
         </div>
 
         <!-- 3.2 recent papers -->
-        <!-- TODO: js does not work -->
-        <div class="col-lg-4">
+        <!-- <div class="col-lg-4">
           <div class="card card-carousel overflow-hidden h-100 p-0">
             <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
               <div class="carousel-inner border-radius-lg h-100">
@@ -127,8 +126,8 @@
                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                       <i class="ni ni-camera-compact text-dark opacity-10"></i>
                     </div>
-                    <h5 class="text-black  mb-1">Get started with Argon</h5>
-                    <p class="text-black mb-1">There’s nothing I really wanted to do in life that I
+                    <h5 class="text-white  mb-1">Recent Papers</h5>
+                    <p class="text-white mb-1">There’s nothing I really wanted to do in life that I
                       wasn’t able to get good at.
                     </p>
                   </div>
@@ -159,7 +158,43 @@
               </button>
             </div>
           </div>
+        </div> -->
+
+        <div class="col-lg-4">
+          <div class="card card-carousel overflow-hidden h-100 p-0">
+            <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
+              <div class="carousel-inner border-radius-lg h-100">
+
+                <div v-for="(item, index) in carouselItems" :key="index"
+                  :class="{ 'carousel-item': true, 'h-100': true, 'active': index === 0 }"
+                  :style="{ 'background-image': 'url(' + item.image + ')', 'background-size': 'cover' }">
+                  <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                    <h4 class="text-white ">Recent paper # {{ index + 1 }}</h4>
+                    <h6 :class="item.titleClass">{{ item.title }}</h6>
+                    <p :class="item.titleClass">{{ item.abbr }} {{ item.year }}</p>
+                    <p :class="item.titleClass">
+                      <ArgonBadge color="primary">{{ item.field }}</ArgonBadge>
+                    </p>
+                  </div>
+                </div>
+                
+
+              </div>
+              <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
         </div>
+
+
       </div>
 
       <Foot></Foot>
@@ -172,6 +207,7 @@ import * as echarts from 'echarts'
 import SideNav from './components/SideNav.vue';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
+import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import { onMounted, reactive, ref, } from 'vue';
 import { request } from '../request';
 import { useRouter } from 'vue-router';
@@ -183,9 +219,10 @@ import { useAuthorStore } from '../store/authorStore'
 import { useInstitutionStore } from '../store/institutionStore'
 import { useVenueStore } from '../store/venueStore'
 import { useUserStore } from '../store/userStore';
-import { CheckLoginStatus, getUserInfoByToken } from '../common'
+import { ElLoading } from 'element-plus'
+import { usePaginationStore } from '../store/paginationStore'
 
-
+const PaginationStore = usePaginationStore(pinia)
 const userStore = useUserStore(pinia)
 const moduleStore = useModuleStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
@@ -194,15 +231,7 @@ const InstitutionStore = useInstitutionStore(pinia)
 const VenueStore = useVenueStore(pinia)
 const router = useRouter();
 
-// 分页查询的传递的对象  
-let paginationObj = reactive({
-  pagesize: 30,
-  total: 0,
-  pagercount: 8,
-  pagenum: 1,
-  searchkeywords: "",
-  typerofPapers: "Combinatorial Testing",
-})
+
 
 // 搜索查询对象
 let searchObj = reactive({
@@ -307,19 +336,37 @@ const resizeChart = () => {
 
 
 const searchPapers = async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  PaginationStore.pagenum = 1
+  PaginationStore.pagesize = 25
+
+  PaperInfoStore.paginationOffset = 0
+  PaperInfoStore.paperinfos.length = 0
+  PaperInfoStore.searchKeyWords = PaginationStore.searchkeywords
+
+  moduleStore.CurrentModule = 'Search'
+  moduleStore.CurrentModuleDetails=PaginationStore.searchkeywords
+
   const searchRes = await request({
     url: "/repo/list/searchPapers",
     method: 'POST',
-    data: searchObj
+    data: {
+      pagesize: PaginationStore.pagesize,
+      searchkeywords: PaginationStore.searchkeywords,
+      pagenum: PaginationStore.pagenum,
+    }
   })
-  PaperInfoStore.paperinfos.length = 0
+  // console.log("searchkeywords", searchRes)
   PaperInfoStore.paperinfos.push(...searchRes.res.records)
   PaperInfoStore.total = searchRes.res.total
+  PaginationStore.total = searchRes.res.total
 
+
+  loadingInstance.close()
   router.push({
     path: '/repository/papers',
     query: {
-      paginationActive: '关闭'
+      module: 'Search',
     }
   })
 }
@@ -327,8 +374,35 @@ const searchPapers = async () => {
 const totalPapersCount = ref(0)
 const totalScholarsCount = ref(0)
 const totalInstitutionsCounth = ref(0)
+
+
+const carouselItems = reactive([]);
+const listRecentPapers = async () => {
+  try {
+    const listRecentPapersRes = await request({
+      url: 'repo/list/listRecentPapers',
+      method: 'POST',
+      data: searchObj
+    })
+    // console.log("listRecentPapers", listRecentPapersRes)
+    carouselItems.push(...listRecentPapersRes.res)
+    for (let i = 0; i < carouselItems.length; i++) {
+      carouselItems[i].image = 'images/carousel-' + ((i) % 3 + 1) + '.jpg'
+      carouselItems[i].titleClass = 'text-white mb-1'
+
+    }
+  } catch (error) {
+
+  }
+}
+
 onMounted(async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  
+  try {
+    
   moduleStore.CurrentModule = 'Repository'
+  if(PaginationStore.searchkeywords!="") {PaginationStore.searchkeywords=""}
 
   // 首页折线图
   initChart()
@@ -367,7 +441,13 @@ onMounted(async () => {
   // console.log("countTotalInstitutionsRes", countTotalInstitutionsRes)
   totalInstitutionsCounth.value = countTotalInstitutionsRes.total
 
-
+  await listRecentPapers()
+  loadingInstance.close()
+    
+  } catch (error) {
+  loadingInstance.close()
+    
+  }
 
 
 })
