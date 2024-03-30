@@ -83,6 +83,7 @@ onMounted(() => {
     if (moduleStore.CurrentModule == 'Fields') { moduleStore.CurrentRoute = 'Repository_Fields' }
     if (moduleStore.CurrentModule == 'Venues') { moduleStore.CurrentRoute = 'Repository_Venues' }
     if (moduleStore.CurrentModule == 'Statistics') { moduleStore.CurrentRoute = 'Repository_Statistics' }
+    if (moduleStore.CurrentModule == 'Benchmark') { moduleStore.CurrentRoute = 'Benchmark_Home' }
   }
 
   else {
@@ -102,7 +103,7 @@ onMounted(() => {
     }
   }
 
-  console.log("得到的moduleStore.CurrentRoute是", moduleStore.CurrentRoute)
+  // console.log("得到的moduleStore.CurrentRoute是", moduleStore.CurrentRoute)
 
 })
 </script>

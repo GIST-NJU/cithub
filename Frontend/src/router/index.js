@@ -20,7 +20,7 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
 import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
-import ToolsHome from '../ToolsViews/ToolsHome.vue'
+import AlgorithmsAvailableHome from '../ToolsViews/AlgorithmsAvailableHome.vue'
 import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
@@ -106,10 +106,10 @@ const routes = [
     children: [
       {
         // ToolsHome
-        path: "ToolsHome",
-        name: 'ToolsHome',
-        component: ToolsHome,
-        meta: { title: 'ToolsHome' }
+        path: "AlgorithmsAvailableHome",
+        name: 'AlgorithmsAvailableHome',
+        component: AlgorithmsAvailableHome,
+        meta: { title: 'AlgorithmsAvailableHome' }
       },
       {
         // HelpCenter
@@ -180,9 +180,9 @@ const routes = [
       {
         // BenchmarkHome
         path: "home",
-        name: 'benchmarkHome',
+        name: 'Benchmark_Home',
         component: BenchmarkHome,
-        meta: { title: 'Benchmark' }
+        meta: { title: 'Benchmark Home' }
       },
 
     ]

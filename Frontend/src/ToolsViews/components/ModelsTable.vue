@@ -55,23 +55,30 @@
                 <p class="text-xs font-weight-bold mb-0">{{ model.lastupdatedtimeFortmat }}</p>
               </td>
               <td class="align-middle text-center">
-                <a class="btn btn-link text-dark px-3 mb-0" @click="EnterModels(model)">
-                  <i class="fas fa-book-open text-primary me-2" aria-hidden="true"></i>Model Details
-                </a>
-
-                <a v-if="model.modeltype != 'LLM'" class="btn btn-link text-dark px-3 mb-0" @click="Generation(model)">
-                  <i class="fas fa-print text-success  me-2" aria-hidden="true"></i>Generated Test Suites
-                </a>
-
-                <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
-                  @confirm="confirmDelete(model)">
-                  <template #reference>
-                    <!-- <el-button>Delete</el-button> -->
-                    <a class="btn btn-link text-danger text-gradient px-3 mb-0">
-                      <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete
-                    </a>
-                  </template>
-                </el-popconfirm>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <ArgonButton color="primary" variant="gradient" @click="EnterModels(props.model)">
+                      <span class="fas fa-book-open text-white me-2" />
+                      Edit Model
+                    </ArgonButton>
+                    <ArgonButton color="success" variant="gradient" style="margin-left: 10px;"
+                      @click="TestSuite(props.model)">
+                      <span class="fas fa-print text-white me-2" />
+                      TestSuite
+                    </ArgonButton>
+                  </div>
+                  <div>
+                    <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
+                      @confirm="confirmDelete(props.model)">
+                      <template #reference>
+                        <ArgonButton color="danger" variant="gradient" @click="confirmDelete(props.model)">
+                          <span class="far fa-trash-alt text-white me-2" />
+                          Delete
+                        </ArgonButton>
+                      </template>
+                    </el-popconfirm>
+                  </div>
+                </div>
               </td>
             </tr>
 
@@ -92,6 +99,7 @@ import { useCurrentModel } from '../../store/currentModel'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../../request';
 import { ElNotification } from 'element-plus'
+import {listAllModelsByUserID} from '../../ToolsViews/common'
 import pinia from '../../store/store'
 
 const props = defineProps({
@@ -101,54 +109,24 @@ const route = useRoute()
 const router = useRouter()
 const modelStore = useModelsStore(pinia)
 const currentModel = useCurrentModel(pinia)
+
 const EnterModels = (model) => {
-  // 记录下当前的model
-  currentModel.currentModel = {}
-  currentModel.currentModel = model
-  switch (model.modeltype) {
-    case "Manual":
-      // 将model转成Cithub格式的model,并添加到currentModel中
-      if (currentModel.currentModel.paramsvalues != null) { loadModel(model) }
-      router.push({
-        path: '/tools/modelsDetails',
-        query:
-          { modelid: model.modelid }
-      })
-      break;
-
-    case "LLM":
-      router.push({
-        path: '/tools/LLMModelDetails',
-        query:
-          { modelid: model.modelid }
-      })
-      break;
-
-    case "Imported":
-      // 将model转成Cithub格式的model,并添加到currentModel中
-      if (currentModel.currentModel.paramsvalues != null) { loadModel(model) }
-      router.push({
-        path: '/tools/modelsDetails',
-        query:
-          { modelid: model.modelid }
-      })
-      break;
-
-  }
-
-
-
+  router.push({
+    path: '/tools/modelsDetails',
+    query:
+      { modelid: model.modelid }
+  })
 }
 
-const Generation = (model) => {
-  // 记录下当前的model
+const TestSuite =(model)=>{
+    // 记录下当前的model
   currentModel.currentModel = {}
   currentModel.currentModel = model
   if (currentModel.currentModel.paramsvalues != null) {
     // 将model转成Cithub格式的model,并添加到currentModel中
     loadModel(model)
     router.push({
-      path: '/tools/TestSuitesHome',
+      path: '/tools/TestSuitesHomeNew',
       query:
         { modelid: model.modelid }
     })
@@ -160,8 +138,38 @@ const Generation = (model) => {
       type: 'error',
     })
   }
-
 }
+
+const confirmDelete = (model) => {
+
+request({
+  url: '/tools/models/DeleteByModelID',
+  method: 'POST',
+  data: {
+    modelid: model.modelid
+  }
+}).then((res) => {
+  if (res.DeleteStatus == 'success!') {
+
+    // 实时更新页面数据
+    listAllModelsByUserID()
+    ElNotification({
+      title: 'Delete Success!',
+      message: 'please check the results',
+      type: 'success',
+    })
+
+  }
+}).catch((error) => {
+  // console.log(error)
+  ElNotification({
+    title: 'Delete Error!',
+    message: 'please check the results',
+    type: 'error',
+  })
+})
+}
+
 // 返回parameterName在tableData中的索引
 // value在该parameterName中的索引
 const findPosition = (parameterName, value, tableData) => {
@@ -256,85 +264,13 @@ const loadModel = (model) => {
   // 将模型数据转换成cithub格式
   currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
 }
-const confirmDelete = (model) => {
-
-
-  console.log("model", model)
-  request({
-    url: '/tools/models/DeleteByModelID',
-    method: 'POST',
-    data: {
-      modelid: model.modelid
-    }
-  }).then((res) => {
-    if (res.DeleteStatus == 'success!') {
-
-      // 实时更新页面数据
-      ReloadModels()
-      ElNotification({
-        title: 'Delete Success!',
-        message: 'please check the results',
-        type: 'success',
-      })
-
-    }
-  }).catch((error) => {
-    // console.log(error)
-    ElNotification({
-      title: 'Delete Error!',
-      message: 'please check the results',
-      type: 'error',
-    })
-  })
-}
-const ReloadModels = async () => {
-  try {
-    // 获取当前Project的所有的models
-    const modelsRes = await request({
-      method: "POST",
-      url: '/tools/models/listModelsByProjectID',
-      data: {
-        projectid: route.query.projectid
-      }
-    });
-
-    modelStore.modelsList.length = 0
-    modelStore.modelsList = modelsRes.models
-    for (let i = 0; i < modelStore.modelsList.length; i++) {
-
-      const timestamp_created = modelStore.modelsList[i].createdtime
-      const timestamp_lastupdated = modelStore.modelsList[i].lastupdatedtime
-      const dateObject_created = new Date(timestamp_created);
-      const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-      // 获取可读的时间字符串
-      modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
-      modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
-    }
 
 
 
-
-
-
-  } catch (error) {
-    console.error("发生错误", error);
-  }
-
-};
-
-
-onMounted(()=>{
+onMounted(() => {
   console.log()
 })
 </script>
 
 <style scoped>
-.cardTR {
-  transition: transform 0.3s ease-in-out;
-}
-
-.cardTR:hover {
-  transform: scale(1.015);
-  cursor: pointer;
-}</style>
+</style>

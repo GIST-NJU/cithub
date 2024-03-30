@@ -125,7 +125,6 @@
         </div>
       </div>
 
-
       <!-- 通用的card -->
       <div class="row">
         <div class="col-12">
@@ -171,6 +170,19 @@
               <!-- search Keywords -->
               <div v-if="route.query.module == 'Search'">
                 <h4>Search KeyWords : <span style="color: #2dce89">{{ PaperInfoStore.searchKeyWords }}</span>
+                </h4>
+              </div>
+
+              <!-- Benchmark -->
+
+              <div  v-if="route.query.module == 'Benchmark'" style="margin: 0px 0px 5px 5px; display: flex; align-items: center;">
+                <ArgonButton color="secondary" size="sm" @click="goBack">
+                  <span class="ni ni-bold-left  me-1"> Back To Benchmark  </span>
+                </ArgonButton>
+              </div>
+
+              <div v-if="route.query.module == 'Benchmark'">
+                <h4>Papers related to Benchmark Set <span style="color: #2dce89">{{ PaperInfoStore.searchKeyWords }}</span>
                 </h4>
               </div>
 
@@ -248,9 +260,10 @@ import { useCurrentAuthorStore } from '../store/currentAuthorStore'
 import { useModuleStore } from '../store/module';
 import { usePaginationStore } from '../store/paginationStore'
 const PaginationStore = usePaginationStore(pinia)
-const currentAuthorStore = useCurrentAuthorStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
 const moduleStore = useModuleStore(pinia)
+const currentAuthorStore = useCurrentAuthorStore(pinia)
+
 
 // 接收参数
 const route = useRoute()
@@ -588,7 +601,7 @@ const calculateSymbolSize = (weight) => {
 const goBack = () => {
   window.history.back();
 }
-const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository']
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Benchmark']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)
   let loadingInstance = ElLoading.service({ fullscreen: true })

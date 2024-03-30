@@ -38,30 +38,7 @@ public class ModelsController {
     }
 
 
-    @RequestMapping("/listModelsByProjectID")
-    public R listModelsByProjectID(@RequestBody Map<String, Object> info) {
-        Object projectid = info.get("projectid");
-        if (projectid instanceof Integer) {
-            List<ModelsEntity> modelsList = modelsService.listModelsByProjectId((Integer) projectid);
-            return R.ok().put("models", modelsList);
-        } else if (projectid instanceof String) {
-            // 如果是字符串，尝试将其转换为整数
-            try {
-                List<ModelsEntity> modelsList = modelsService.listModelsByProjectId(Integer.parseInt((String) projectid));
-                return R.ok().put("models", modelsList);
-            } catch (NumberFormatException e) {
-                // 处理转换失败的情况，例如记录日志或抛出异常
-                e.printStackTrace();
-                return R.ok().put("msg", "error");
 
-            }
-        } else {
-            // 处理其他类型的情况，例如记录日志或抛出异常
-            System.err.println("Unsupported type for strength: " + projectid.getClass());
-            return R.ok().put("msg", "error");
-        }
-
-    }
 
     @RequestMapping("/updateModel")
     public R updatePaper(@RequestBody ModelsEntity modelsEntity) {
@@ -137,11 +114,11 @@ public class ModelsController {
         modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
         modelsEntity.setModeltype((String) info.get("modeltype"));
 
-        Object projectid = info.get("projectID");
-        if (projectid instanceof String) {
-            modelsEntity.setProjectid(Integer.parseInt((String) projectid));
-        } else if (projectid instanceof Integer) {
-            modelsEntity.setProjectid((Integer) projectid);
+        Object modelid = info.get("modelid");
+        if (modelid instanceof String) {
+            modelsEntity.setModelid(Integer.parseInt((String) modelid));
+        } else if (modelid instanceof Integer) {
+            modelsEntity.setModelid((Integer) modelid);
         }
 
 

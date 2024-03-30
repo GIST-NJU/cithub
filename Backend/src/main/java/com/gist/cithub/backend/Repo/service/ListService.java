@@ -18,8 +18,8 @@ import java.util.Map;
  * @email 1223564154@qq.com
  * @date 2022-09-08 21:44:17
  */
-//public interface ListService extends IService<ListEntity> {
-public interface ListService extends MPJBaseService<ListEntity> {
+public interface ListService extends IService<ListEntity> {
+//public interface ListService extends MPJBaseService<ListEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 

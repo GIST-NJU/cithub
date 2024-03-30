@@ -54,7 +54,6 @@ import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { ElNotification } from 'element-plus'
-import { CheckLoginStatus, getUserInfoByToken } from '../common'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const userStore = useUserStore(pinia)
@@ -144,38 +143,7 @@ const chunkedArray = computed(() => {
 });
 
 onMounted(async () => {
-    // 先检查用户是否登录
-    let obj = await CheckLoginStatus()
-    if (obj.loginStatus) {
 
-        // 若用户已登录，则获取用户信息！
-        let userobj = await getUserInfoByToken(obj.token)
-        userStore.userID = userobj.userid
-        userStore.account = userobj.account
-        userStore.userToken = userobj.userToken
-        userStore.usertype = userobj.usertype
-        userStore.name = userobj.name
-        userStore.email = userobj.email
-        userStore.institution = userobj.institution
-
-        // 若用户已登录则正常运行
-        // 列出该用户的所有project
-        listAllProjectsByUserID()
-        ElNotification({
-            title: 'Choose a Project.',
-            message: 'Choose a project to continue.',
-            type: 'success',
-        })
-
-    }
-    else {
-        // 若用户未登录则跳转到登录页面
-        router.push(
-            {
-                name: 'UserLogin'
-            }
-        )
-    }
 
 
 })

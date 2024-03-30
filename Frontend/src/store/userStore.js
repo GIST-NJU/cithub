@@ -9,6 +9,7 @@ export const useUserStore = defineStore("UserStore", {
             name:'',
             email:'',
             institution:'',
+            loginFlag:false,
 
         }
     },

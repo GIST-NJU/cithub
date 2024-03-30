@@ -35,9 +35,9 @@ const listAllPapers = async () => {
       PaperInfoStore.paperinfos.length = 0;
       PaperInfoStore.searchKeyWords = '';
       PaperInfoStore.paperinfos.push(...res.listEntityPage.records);
+      PaperInfoStore.total = PaginationStore.total;
   
       PaginationStore.total = res.listEntityPage.total;
-      PaperInfoStore.total = PaginationStore.total;
     } catch (error) {
       console.error("错误是", error);
     }

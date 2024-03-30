@@ -35,6 +35,7 @@ export function requestAuth(config) {
   return instance(config)
 }
 
+// 检查用户登录状态
 export const CheckLoginStatus = async () => {
   let tokenForVerify = localStorage.getItem("userToken");
 
@@ -54,7 +55,6 @@ export const CheckLoginStatus = async () => {
         return { "loginStatus": true, "token": tokenForVerify };
       } else {
         // console.log("该token无效，返回false");
-
         return { "loginStatus": false, "token": tokenForVerify }
       }
     } catch (error) {
@@ -98,6 +98,38 @@ export const getUserInfoByToken = async (token) => {
   }
 };
 
+// 封装用户登录判断逻辑的函数
+export const CheckLogin = async () => {
+  // 逻辑：
+  // 使用 userToken 检查用户是否处于登录状态，由服务器检查。
+  // 若处于登录状态则加载用户信息！
+  // 若未登录则直接push到登录界面
+
+  let LoginStatusObj = await CheckLoginStatus()
+  userStore.loginFlag = LoginStatusObj.loginStatus
+  if (userStore.loginFlag) {
+    // console.log("已登录！加载用户信息！")
+    let userobj = await getUserInfoByToken(LoginStatusObj.token)
+    userStore.userID = userobj.userid
+    userStore.account = userobj.account
+    userStore.userToken = userobj.userToken
+    userStore.usertype = userobj.usertype
+    userStore.name = userobj.name
+    userStore.email = userobj.email
+    userStore.institution = userobj.institution
+    // console.log("userStore",userStore)
+  }
+  else {
+    console.log("未登录！")
+    router.push(
+      {
+        name: 'UserLogin'
+      }
+    )
+
+  }
+}
+
 export function request(config) {
   // 1.创建axios的实例
   const instance = axios.create({
@@ -108,13 +140,13 @@ export function request(config) {
   })
 
   // 2.1.请求拦截的作用
-  instance.interceptors.request.use(async config  => {
+  instance.interceptors.request.use(async config => {
     // 获取用户登录状态,CheckLoginStatus通过另一个axios实例发送请求，避免了循环调用
     let isLoggedIn = await CheckLoginStatus();
     // console.log("请求拦截器",isLoggedIn)
     // 如果用户已登录，则正常发送请求
     if (isLoggedIn.loginStatus) {
-      let userobj= await getUserInfoByToken(isLoggedIn.token)
+      let userobj = await getUserInfoByToken(isLoggedIn.token)
       // console.log("用户已登录！获取用户信息！",userobj)
       userStore.userID = userobj.userid
       userStore.account = userobj.account

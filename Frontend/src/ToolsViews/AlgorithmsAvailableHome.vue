@@ -14,7 +14,10 @@
                         <p style="margin-left: 45px;" class="text-muted text-md mb-0"> Cithub Provides a variety of tools of
                             Combinatorial Testing for using. Following are the categories of tools
                             available now.</p>
-                        <p style="margin-left: 45px;" class="text-muted text-md mb-0">Don't know how to use? <a style="cursor:pointer" @click="jumpToHelps"><i class="ni ni-send text-info text-lg opacity-10"></i><span class="nav-link-text ms-1 p">Help</span></a></p>
+                        <p style="margin-left: 45px;" class="text-muted text-md mb-0">Don't know how to use? <a
+                                style="cursor:pointer" @click="jumpToHelps"><i
+                                    class="ni ni-send text-info text-lg opacity-10"></i><span
+                                    class="nav-link-text ms-1 p">Help</span></a></p>
                         <div class="row" style="margin:10px 0px 0px 20px">
                             <div class="col-lg-3 col-md-6 col-12">
                                 <CategoryCard class="category" :class="{ 'borderGlow': showGenerationFlag }"
@@ -121,20 +124,15 @@
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import { request } from '../request';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import ToolsInfoCard from './components/ToolsInfoCard.vue'
 import CategoryCard from './components/CategoryCard.vue'
 import toolsInfo from "../ComponentCommon/tools_info.json"
-import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
 import pinia from '../store/store';
-import { usePaperInfoStore } from '../store/paperinfoStore';
-import { useProjectsStore } from '../store/projectsStore'
-import { ElNotification } from 'element-plus'
-import { CheckLoginStatus, getUserInfoByToken } from '../common'
+
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const userStore = useUserStore(pinia)
@@ -197,40 +195,21 @@ const jumpToHelps = () => {
 
 onMounted(async () => {
 
-    if (userStore.userID == '') {
-        // Tools的Home页面由于没有发送request请求，特殊处理一下
-        // userStore.userID初始化为空，只有登录之后才会被赋值
-        console.log("用户未登录！跳转到登录界面！")
-        ElNotification({
-            title: 'Please Sign in',
-            message: 'please Sign in for using cithub',
-            type: 'warning',
-            position: 'top-left',
-        })
-        router.push(
-            {
-                name: 'UserLogin'
-            }
-        )
-    }
-    else {
-        console.log("用户已登录！")
-        // 加载工具信息
-        LoadToolsInfo()
 
-        const addClickHandler = (ref, flag) => {
+    // 加载工具信息
+    LoadToolsInfo()
+    
+    const addClickHandler = (ref, flag) => {
             ref.value.addEventListener('click', () => {
                 flag.value = !flag.value;
             });
         };
-
         addClickHandler(generationRef, showGenerationFlag);
         addClickHandler(formatConversionRef, showFormatConversionFlag);
         addClickHandler(EvaluationRef, showEvaluationFlag);
         addClickHandler(PrioritisationRef, showPrioritisationFlag);
         addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
         addClickHandler(OtherRef, showOtherFlag);
-    }
 
 
 
@@ -256,5 +235,4 @@ onMounted(async () => {
     /* 设置边框样式，这里使用蓝色边框作为示例 */
     box-shadow: 0 0 10px #2dce89;
     /* 设置阴影效果，使边框发光 */
-}
-</style>
+}</style>
