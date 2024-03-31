@@ -154,9 +154,10 @@
 
 
                                                     <td class="align-middle text-center">
-                                                        <ArgonButton color="info" class="  mb-0">
-                                                            <span class="bi bi-caret-left-fill"></span>
+                                                        <ArgonButton color="info" class="  mb-0"
+                                                            @click="BenchmarkDetails(ben.benchmarkset)">
                                                             Details
+                                                            <span class="bi bi-caret-right-fill"></span>
                                                         </ArgonButton>
                                                     </td>
 
@@ -194,6 +195,7 @@ import { useRouter } from 'vue-router';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import SideNav from './components/SideNav.vue'
+import { searchModel } from './commonFunction'
 import { useModuleStore } from '../store/module';
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore'
@@ -231,7 +233,7 @@ const initBenchMarkHome = async () => {
         UnConsModelCount.value = initBenchMarkHomeRes.unconstrainedCount
         TableData.push(...initBenchMarkHomeRes.BenchmarkStats)
         // TableData 按maxReferenceYear 倒序排列
-        
+
         TableData.sort((a, b) => b.maxReferenceYear - a.maxReferenceYear)
 
 
@@ -241,7 +243,7 @@ const initBenchMarkHome = async () => {
 }
 
 const showReference = async (benchmark) => {
-    console.log("benchmark", benchmark)
+    // console.log("benchmark", benchmark)
     moduleStore.CurrentModuleDetails = benchmark
     moduleStore.CurrentRoute = 'Benchmark_Home'
     let loadingInstance = ElLoading.service({ fullscreen: true })
@@ -285,6 +287,26 @@ const showReference = async (benchmark) => {
         console.log(error)
         loadingInstance.close()
 
+    }
+
+}
+
+const BenchmarkDetails = async (benchmarkset) => {
+
+    PaginationStore.searchkeywords = benchmarkset
+    console.log(" PaginationStore.searchkeywords", PaginationStore.searchkeywords)
+    try {
+        await searchModel();
+
+        router.push({
+            path: '/benchmark/models',
+            query: {
+                module: 'Benchmark Search',
+            }
+        })
+        
+    } catch (error) {
+        console.log("Home 错误", error)
     }
 
 }

@@ -101,6 +101,12 @@ onMounted(() => {
     if (route.query.module == 'Venues') {
       moduleStore.CurrentRoute = 'Repository_Venues';
     }
+
+    if(route.query.module == 'Benchmark Search' || route.query.module == 'Benchmark Models')
+    {
+      moduleStore.CurrentRoute = 'Benchmark_Models';
+
+    }
   }
 
   // console.log("得到的moduleStore.CurrentRoute是", moduleStore.CurrentRoute)

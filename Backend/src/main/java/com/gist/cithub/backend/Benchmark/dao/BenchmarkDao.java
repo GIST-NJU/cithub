@@ -21,4 +21,16 @@ public interface BenchmarkDao extends BaseMapper<BenchmarkEntity> {
             "FROM benchmark b " +
             "GROUP BY b.benchmarkset")
     List<Map<String, Object>> getBenchmarkStats();
+
+
+    @Select("SELECT *\n" +
+            "FROM benchmark AS t1\n" +
+            "JOIN (\n" +
+            "    SELECT benchmarkset, MAX(referenceyear) AS max_referenceyear\n" +
+            "    FROM benchmark\n" +
+            "    GROUP BY benchmarkset\n" +
+            ") AS t2\n" +
+            "ON t1.benchmarkset = t2.benchmarkset\n" +
+            "ORDER BY t2.max_referenceyear DESC, t1.benchmarkset, t1.referenceyear DESC;")
+    List<BenchmarkEntity> listAllBenchmarkModels();
 }

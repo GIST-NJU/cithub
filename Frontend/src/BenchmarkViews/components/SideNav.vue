@@ -25,8 +25,9 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link " href="../repository/venue.html">
+                <li class="nav-item" style="cursor:pointer;">
+                    <a @click.prevent="jumpToBenchmarkModels"
+                        :class="['nav-link', { 'active': isRouteActive('Benchmark_Models') }]">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-building text-success text-lg opacity-10"></i>
@@ -35,10 +36,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="../repository/rank.html">
+                    <a @click.prevent="jumpToBenchmarkEvaluation"
+                        :class="['nav-link', { 'active': isRouteActive('Benchmark_Evaluation') }]">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-chart-bar-32 text-info text-lg opacity-10"></i>
+                            <i class="ni ni-chart-bar-32 text-danger text-lg opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1 p">Evaluation</span>
                     </a>
@@ -50,9 +52,13 @@
 
 <script  setup>
 import { useRouter } from 'vue-router';
-import { ref,watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useModuleStore } from '../../store/module';
 import pinia from '../../store/store'
+import { ElLoading } from 'element-plus'
+import {listAllBenchmarkModels} from '../commonFunction'
+
+
 const router = useRouter();
 const moduleStore = useModuleStore(pinia)
 // 监听 moduleStore.CurrentRoute 的变化
@@ -72,6 +78,18 @@ const jumpToHome = () => {
     moduleStore.CurrentRoute = 'Benchmark_Home'
     router.push({ name: 'Benchmark_Home' });
 }
+
+const jumpToBenchmarkModels = async () => {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+
+    await listAllBenchmarkModels()
+
+    loadingInstance.close()
+    router.push({ name: 'Benchmark_Models' });
+
+}
+
+const jumpToBenchmarkEvaluation = () => { }
 </script>
 
 

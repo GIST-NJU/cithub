@@ -1,7 +1,7 @@
 <template>
 	<!-- Header -->
 	<div id="header">
-		<span class="logo icon fa-cube"></span>
+		<span class="logo bi bi-boxes"></span>
 		<h1>CitHub</h1>
 		<p>An open platform for the study and use<br>
 			of Combinatorial Interaction Testing (CIT)</p>
