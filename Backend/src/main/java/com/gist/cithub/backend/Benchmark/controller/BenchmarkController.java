@@ -4,7 +4,9 @@ package com.gist.cithub.backend.Benchmark.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gist.cithub.backend.Benchmark.dao.BenchmarkDao;
+import com.gist.cithub.backend.Benchmark.dao.BenchmarkResultDao;
 import com.gist.cithub.backend.Benchmark.entity.BenchmarkEntity;
+import com.gist.cithub.backend.Benchmark.entity.BenchmarkResultEntity;
 import com.gist.cithub.backend.Benchmark.service.BenchmarkService;
 import com.gist.cithub.backend.Repo.dao.ListDao;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
@@ -29,7 +31,12 @@ public class BenchmarkController {
     private BenchmarkDao benchmarkDao;
 
     @Autowired
+    private BenchmarkResultDao benchmarkResultDao;
+
+    @Autowired
     private ListDao listDao;
+
+
 
     @RequestMapping(value = "/initBenchMarkHome", method = RequestMethod.POST)
     public R initBenchMarkHome() {
@@ -133,12 +140,32 @@ pagesize每页有几项
         Integer pagenum = (Integer) searchinfo.get("pagenum");
         Integer pagesize = (Integer) searchinfo.get("pagesize");
         String searchkeywords = (String) searchinfo.get("searchkeywords");
+        String column = (String) searchinfo.get("column");
         QueryWrapper<BenchmarkEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("modelname", searchkeywords).or().like("benchmarkset", searchkeywords).or().like("reference", searchkeywords).or().like("referenceyear", searchkeywords).or().like("modeltype", searchkeywords).or().like("field", searchkeywords);
+        if (column.equals("benchmarkset") || column.equals("modelid")) {
+            System.out.println("精准搜索");
+            queryWrapper.eq(column, searchkeywords);
+        } else {
+            System.out.println("模糊搜索");
+            queryWrapper.like("modelname", searchkeywords).or().like("benchmarkset", searchkeywords).or().like("reference", searchkeywords).or().like("referenceyear", searchkeywords).or().like("modeltype", searchkeywords).or().like("field", searchkeywords);
+        }
         queryWrapper.orderByDesc("referenceyear");
         Page<BenchmarkEntity> selectPage = benchmarkDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
         return R.ok().put("res", selectPage);
     }
+
+    @RequestMapping(value = "/getModelResult", method = RequestMethod.POST)
+    public R getModelResult(@RequestBody Map<String, Object> searchinfo) {
+
+        String modelname = (String) searchinfo.get("modelname");
+        Integer strength = (Integer) searchinfo.get("strength");
+        QueryWrapper<BenchmarkResultEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("modelname",modelname);
+        queryWrapper.eq("strength",strength);
+
+        return R.ok().put("res",benchmarkResultDao.selectList(queryWrapper));
+    }
+
 
 
 }

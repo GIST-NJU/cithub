@@ -1,0 +1,22 @@
+[System]
+Name:Banking2
+[Parameter]
+p0(int):0,1,2,3
+p1(int):0,1
+p2(int):0,1
+p3(int):0,1
+p4(int):0,1
+p5(int):0,1
+p6(int):0,1
+p7(int):0,1
+p8(int):0,1
+p9(int):0,1
+p10(int):0,1
+p11(int):0,1
+p12(int):0,1
+p13(int):0,1
+p14(int):0,1
+[Constraint]
+p0!= 2 || p9!= 0
+p0!= 1 || p9!= 0
+p0!= 3 || p9!= 0

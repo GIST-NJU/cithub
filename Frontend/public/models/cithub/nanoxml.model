@@ -1,0 +1,11 @@
+[System] nanoxml
+[Strength] 2
+[Parameter] 7
+[Values] 2 2 2 2 2 4 2 
+[Constraints] 6
+p4 = 0 && p5 = 0
+p4 = 0 && p5 = 1
+p4 = 0 && p5 = 2
+p4 = 0 && p6 = 0
+p4 = 1 && p5 = 3
+p4 = 1 && p6 = 1

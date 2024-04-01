@@ -1,0 +1,6 @@
+[System] make
+[Strength] 2
+[Parameter] 10
+[Values] 2 2 2 2 2 2 2 2 2 2 
+[Constraints] 1
+p2 = 1 && p3 = 1

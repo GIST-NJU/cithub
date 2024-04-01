@@ -292,8 +292,10 @@ const showReference = async (benchmark) => {
 }
 
 const BenchmarkDetails = async (benchmarkset) => {
-
+    moduleStore.CurrentModule = 'Benchmark Set'
     PaginationStore.searchkeywords = benchmarkset
+    // 精准搜索
+    PaginationStore.column="benchmarkset"
     console.log(" PaginationStore.searchkeywords", PaginationStore.searchkeywords)
     try {
         await searchModel();
@@ -301,10 +303,10 @@ const BenchmarkDetails = async (benchmarkset) => {
         router.push({
             path: '/benchmark/models',
             query: {
-                module: 'Benchmark Search',
+                module: 'Benchmark Set',
             }
         })
-        
+
     } catch (error) {
         console.log("Home 错误", error)
     }

@@ -1,0 +1,15 @@
+[System]
+Name:dsi-rax1
+[Parameter]
+p0(int):0,1,2,3,4
+p1(int):0,1,2
+p2(int):0,1,2
+p3(int):0,1,2
+p4(int):0,1,2
+p5(int):0,1,2
+p6(int):0,1,2
+p7(int):0,1,2
+p8(int):0,1,2
+p9(int):0,1
+p10(int):0,1
+[Constraint]

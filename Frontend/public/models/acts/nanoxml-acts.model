@@ -1,0 +1,17 @@
+[System]
+Name:nanoxml
+[Parameter]
+p0(int):0,1
+p1(int):0,1
+p2(int):0,1
+p3(int):0,1
+p4(int):0,1
+p5(int):0,1,2,3
+p6(int):0,1
+[Constraint]
+p4!= 0 || p5!= 0
+p4!= 0 || p5!= 1
+p4!= 0 || p5!= 2
+p4!= 0 || p6!= 0
+p4!= 1 || p5!= 3
+p4!= 1 || p6!= 1

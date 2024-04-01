@@ -1,0 +1,14 @@
+[System]
+Name:M32_V1
+[Parameter]
+p0(int):0,1,2,3
+p1(int):0,1
+p2(int):0,1,2,3
+p3(int):0,1,2
+p4(int):0,1,2
+p5(int):0,1
+p6(int):0
+p7(int):0
+p8(int):0,1
+p9(int):0,1
+[Constraint]

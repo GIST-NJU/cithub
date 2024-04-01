@@ -1,0 +1,8 @@
+[System] M47_V1
+[Strength] 2
+[Parameter] 9
+[Values] 2 4 4 2 3 5 2 2 2
+[Constraints] 3
+p0 = 1 && p1 = 1
+p0 = 1 && p1 = 2
+p1 = 3 && p2 = 3 && p3 = 1 && p4 = 2 && p5 = 4 && p6 = 1 && p7 = 1

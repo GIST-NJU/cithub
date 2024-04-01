@@ -1,0 +1,184 @@
+p1:0,1
+p2:0,1
+p3:0,1
+p4:0,1
+p5:0,1
+p6:0,1
+p7:0,1
+p8:0,1
+p9:0,1
+p10:0,1
+p11:0,1
+p12:0,1
+p13:0,1
+p14:0,1
+p15:0,1
+p16:0,1
+p17:0,1
+p18:0,1
+p19:0,1
+p20:0,1
+p21:0,1
+p22:0,1
+p23:0,1
+p24:0,1
+p25:0,1
+p26:0,1
+p27:0,1
+p28:0,1
+p29:0,1
+p30:0,1
+p31:0,1
+p32:0,1
+p33:0,1
+p34:0,1
+p35:0,1
+p36:0,1
+p37:0,1
+p38:0,1
+p39:0,1
+p40:0,1
+p41:0,1
+p42:0,1
+p43:0,1
+p44:0,1
+p45:0,1
+p46:0,1
+p47:0,1
+p48:0,1
+p49:0,1
+p50:0,1
+p51:0,1
+p52:0,1
+p53:0,1
+p54:0,1
+p55:0,1
+p56:0,1
+p57:0,1
+p58:0,1
+p59:0,1
+p60:0,1
+p61:0,1
+
+IF ([p6] = 1 AND [p7] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 0 AND [p7] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p22] = 0 AND [p23] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p52] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p28] = 1 AND [p30] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p24] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p43] = 1 AND [p47] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 0 AND [p24] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p43] = 0 AND [p47] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p8] = 0 AND [p12] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p28] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p18] = 0 AND [p23] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p30] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p22] = 0 AND [p26] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p37] = 1 AND [p43] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p29] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p16] = 0 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p48] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p32] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p37] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 1 AND [p40] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p20] = 0 AND [p26] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p36] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 0 AND [p40] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 1 AND [p25] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 1 AND [p11] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p29] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p13] = 0 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p34] = 1 AND [p43] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 0 AND [p12] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p32] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p45] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p34] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 1 AND [p23] = 1 AND [p50] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p13] = 0 AND [p23] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p47] = 1 AND [p58] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p11] = 0 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p43] = 1 AND [p55] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p39] = 0 AND [p50] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p42] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p43] = 0 AND [p55] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p40] = 1 AND [p53] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p20] = 0 AND [p33] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 1 AND [p15] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 0 AND [p23] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 0 AND [p40] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 1 AND [p16] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 0 AND [p17] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p38] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p27] = 1 AND [p43] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p38] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p43] = 1 AND [p60] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p27] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 1 AND [p50] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 0 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 0 AND [p50] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 1 AND [p31] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p41] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p28] = 1 AND [p46] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 0 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p44] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p8] = 0 AND [p26] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 0 AND [p40] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p41] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p46] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 1 AND [p33] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 1 AND [p55] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 0 AND [p33] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p33] = 0 AND [p55] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p24] = 0 AND [p47] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 0 AND [p28] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p31] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p19] = 1 AND [p43] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 1 AND [p42] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p48] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p19] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 0 AND [p50] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 1 AND [p45] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p52] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p14] = 1 AND [p43] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p56] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p14] = 0 AND [p43] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 1 AND [p8] = 1 AND [p12] = 0 AND [p31] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p54] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p57] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 1 AND [p33] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 1 AND [p58] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 0 AND [p33] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p35] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p56] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p28] = 1 AND [p61] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p26] = 0 AND [p58] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p54] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 0 AND [p50] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p35] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 1 AND [p51] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p23] = 1 AND [p57] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 0 AND [p51] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p18] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p59] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p9] = 0 AND [p47] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p15] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p61] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 1 AND [p49] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 1 AND [p50] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 1 AND [p44] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 0 AND [p49] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 0 AND [p50] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p9] = 1 AND [p53] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p9] = 1 AND [p24] = 1 AND [p47] = 0 AND [p58] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p47] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p9] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p47] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p55] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 1 AND [p59] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p21] = 1 AND [p26] = 1 AND [p40] = 0 AND [p53] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 0 AND [p11] = 1 AND [p59] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 0 AND [p15] = 1 AND [p16] = 1 AND [p44] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 1 AND [p17] = 0 AND [p25] = 1 AND [p42] = 1 AND [p45] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 1 AND [p28] = 0 AND [p30] = 1 AND [p46] = 1 AND [p61] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 1 AND [p13] = 1 AND [p18] = 1 AND [p22] = 1 AND [p23] = 0 AND [p29] = 1 AND [p32] = 1 AND [p38] = 1 AND [p41] = 1 AND [p48] = 1 AND [p52] = 1 AND [p54] = 1 AND [p56] = 1 AND [p57] = 1) THEN ([p1] = 0 and not [p1] = 0);

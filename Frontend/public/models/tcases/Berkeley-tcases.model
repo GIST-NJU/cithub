@@ -1,0 +1,2469 @@
+{
+  "system": "Berkeley",
+  "find": {
+    "args": {
+      "p0": {
+        "values": {
+          "0": {
+            "properties": [
+              "p0_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p71_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p63_1",
+                      "p69_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p0_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p63_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p69_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p71_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p1": {
+        "values": {
+          "0": {
+            "properties": [
+              "p1_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p45_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p1_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p7_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p14_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p27_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p43_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p77_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p2": {
+        "values": {
+          "0": {
+            "properties": [
+              "p2_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p16_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p2_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p16_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p3": {
+        "values": {
+          "0": {
+            "properties": [
+              "p3_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p3_1"
+            ]
+          }
+        }
+      },
+      "p4": {
+        "values": {
+          "0": {
+            "properties": [
+              "p4_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p36_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p47_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p4_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p17_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p19_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p21_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p25_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p40_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p43_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p47_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p9_1",
+                      "p11_1",
+                      "p36_0",
+                      "p56_1",
+                      "p65_1",
+                      "p74_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p5": {
+        "values": {
+          "0": {
+            "properties": [
+              "p5_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p8_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p11_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p14_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p26_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p27_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p30_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p54_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p61_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p62_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p75_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p5_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p26_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p8_0",
+                      "p18_1",
+                      "p22_1",
+                      "p30_1",
+                      "p62_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p6": {
+        "values": {
+          "0": {
+            "properties": [
+              "p6_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p45_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p6_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p45_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p7": {
+        "values": {
+          "0": {
+            "properties": [
+              "p7_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p16_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p7_1"
+            ]
+          }
+        }
+      },
+      "p8": {
+        "values": {
+          "0": {
+            "properties": [
+              "p8_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p8_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p18_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p30_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p62_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p9": {
+        "values": {
+          "0": {
+            "properties": [
+              "p9_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p36_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p9_1"
+            ]
+          }
+        }
+      },
+      "p10": {
+        "values": {
+          "0": {
+            "properties": [
+              "p10_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p16_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p18_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p10_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p16_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p11": {
+        "values": {
+          "0": {
+            "properties": [
+              "p11_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p36_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p11_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p30_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p12": {
+        "values": {
+          "0": {
+            "properties": [
+              "p12_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p31_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p12_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p20_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p31_0",
+                      "p41_1",
+                      "p44_1",
+                      "p59_1",
+                      "p67_1",
+                      "p75_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p13": {
+        "values": {
+          "0": {
+            "properties": [
+              "p13_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p57_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p23_1",
+                      "p71_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p13_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p23_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p57_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p71_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p14": {
+        "values": {
+          "0": {
+            "properties": [
+              "p14_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p15_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p26_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p14_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p18_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p61_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p15_0",
+                      "p61_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p15": {
+        "values": {
+          "0": {
+            "properties": [
+              "p15_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p15_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p61_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p16": {
+        "values": {
+          "0": {
+            "properties": [
+              "p16_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p16_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p20_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p33_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p42_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p46_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p52_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p55_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p60_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p68_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p17": {
+        "values": {
+          "0": {
+            "properties": [
+              "p17_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p17_1"
+            ]
+          }
+        }
+      },
+      "p18": {
+        "values": {
+          "0": {
+            "properties": [
+              "p18_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p22_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p61_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p18_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p33_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p56_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p19": {
+        "values": {
+          "0": {
+            "properties": [
+              "p19_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p19_1"
+            ]
+          }
+        }
+      },
+      "p20": {
+        "values": {
+          "0": {
+            "properties": [
+              "p20_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p26_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p20_1"
+            ]
+          }
+        }
+      },
+      "p21": {
+        "values": {
+          "0": {
+            "properties": [
+              "p21_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p62_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p21_1"
+            ]
+          }
+        }
+      },
+      "p22": {
+        "values": {
+          "0": {
+            "properties": [
+              "p22_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p22_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p56_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p23": {
+        "values": {
+          "0": {
+            "properties": [
+              "p23_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p70_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p71_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p23_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p70_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p76_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p24": {
+        "values": {
+          "0": {
+            "properties": [
+              "p24_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p24_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p25": {
+        "values": {
+          "0": {
+            "properties": [
+              "p25_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p26_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p25_1"
+            ]
+          }
+        }
+      },
+      "p26": {
+        "values": {
+          "0": {
+            "properties": [
+              "p26_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p26_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p35_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p50_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p27": {
+        "values": {
+          "0": {
+            "properties": [
+              "p27_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p45_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p54_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p27_1"
+            ]
+          }
+        }
+      },
+      "p28": {
+        "values": {
+          "0": {
+            "properties": [
+              "p28_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p32_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p28_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p32_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p50_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p53_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p77_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p29": {
+        "values": {
+          "0": {
+            "properties": [
+              "p29_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p41_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p51_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p29_1"
+            ]
+          }
+        }
+      },
+      "p30": {
+        "values": {
+          "0": {
+            "properties": [
+              "p30_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p30_1"
+            ]
+          }
+        }
+      },
+      "p31": {
+        "values": {
+          "0": {
+            "properties": [
+              "p31_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p57_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p31_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p41_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p44_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p59_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p67_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p75_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p32": {
+        "values": {
+          "0": {
+            "properties": [
+              "p32_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p45_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p32_1"
+            ]
+          }
+        }
+      },
+      "p33": {
+        "values": {
+          "0": {
+            "properties": [
+              "p33_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p33_1"
+            ]
+          }
+        }
+      },
+      "p34": {
+        "values": {
+          "0": {
+            "properties": [
+              "p34_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p63_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p34_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p63_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p35": {
+        "values": {
+          "0": {
+            "properties": [
+              "p35_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p59_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p35_1"
+            ]
+          }
+        }
+      },
+      "p36": {
+        "values": {
+          "0": {
+            "properties": [
+              "p36_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p36_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p56_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p65_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p74_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p37": {
+        "values": {
+          "0": {
+            "properties": [
+              "p37_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p37_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p64_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p38": {
+        "values": {
+          "0": {
+            "properties": [
+              "p38_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p71_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p38_1"
+            ]
+          }
+        }
+      },
+      "p39": {
+        "values": {
+          "0": {
+            "properties": [
+              "p39_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p39_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p39_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p40": {
+        "values": {
+          "0": {
+            "properties": [
+              "p40_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p40_1"
+            ]
+          }
+        }
+      },
+      "p41": {
+        "values": {
+          "0": {
+            "properties": [
+              "p41_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p41_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p48_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p51_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p42": {
+        "values": {
+          "0": {
+            "properties": [
+              "p42_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p42_1"
+            ]
+          }
+        }
+      },
+      "p43": {
+        "values": {
+          "0": {
+            "properties": [
+              "p43_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p43_1"
+            ]
+          }
+        }
+      },
+      "p44": {
+        "values": {
+          "0": {
+            "properties": [
+              "p44_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p44_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p68_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p45": {
+        "values": {
+          "0": {
+            "properties": [
+              "p45_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p45_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p54_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p46": {
+        "values": {
+          "0": {
+            "properties": [
+              "p46_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p46_1"
+            ]
+          }
+        }
+      },
+      "p47": {
+        "values": {
+          "0": {
+            "properties": [
+              "p47_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p47_1"
+            ]
+          }
+        }
+      },
+      "p48": {
+        "values": {
+          "0": {
+            "properties": [
+              "p48_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p48_1"
+            ]
+          }
+        }
+      },
+      "p49": {
+        "values": {
+          "0": {
+            "properties": [
+              "p49_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p49_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p58_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p50": {
+        "values": {
+          "0": {
+            "properties": [
+              "p50_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p50_1"
+            ]
+          }
+        }
+      },
+      "p51": {
+        "values": {
+          "0": {
+            "properties": [
+              "p51_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p51_1"
+            ]
+          }
+        }
+      },
+      "p52": {
+        "values": {
+          "0": {
+            "properties": [
+              "p52_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p52_1"
+            ]
+          }
+        }
+      },
+      "p53": {
+        "values": {
+          "0": {
+            "properties": [
+              "p53_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p53_1"
+            ]
+          }
+        }
+      },
+      "p54": {
+        "values": {
+          "0": {
+            "properties": [
+              "p54_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p54_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p74_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p55": {
+        "values": {
+          "0": {
+            "properties": [
+              "p55_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p55_1"
+            ]
+          }
+        }
+      },
+      "p56": {
+        "values": {
+          "0": {
+            "properties": [
+              "p56_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p56_1"
+            ]
+          }
+        }
+      },
+      "p57": {
+        "values": {
+          "0": {
+            "properties": [
+              "p57_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p66_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p57_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p66_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p58": {
+        "values": {
+          "0": {
+            "properties": [
+              "p58_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p66_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p58_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p66_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p59": {
+        "values": {
+          "0": {
+            "properties": [
+              "p59_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p59_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p72_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p60": {
+        "values": {
+          "0": {
+            "properties": [
+              "p60_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p60_1"
+            ]
+          }
+        }
+      },
+      "p61": {
+        "values": {
+          "0": {
+            "properties": [
+              "p61_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p61_1"
+            ]
+          }
+        }
+      },
+      "p62": {
+        "values": {
+          "0": {
+            "properties": [
+              "p62_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p62_1"
+            ]
+          }
+        }
+      },
+      "p63": {
+        "values": {
+          "0": {
+            "properties": [
+              "p63_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p69_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p63_1"
+            ]
+          }
+        }
+      },
+      "p64": {
+        "values": {
+          "0": {
+            "properties": [
+              "p64_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p64_1"
+            ]
+          }
+        }
+      },
+      "p65": {
+        "values": {
+          "0": {
+            "properties": [
+              "p65_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p65_1"
+            ]
+          }
+        }
+      },
+      "p66": {
+        "values": {
+          "0": {
+            "properties": [
+              "p66_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p66_1"
+            ]
+          }
+        }
+      },
+      "p67": {
+        "values": {
+          "0": {
+            "properties": [
+              "p67_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p67_1"
+            ]
+          }
+        }
+      },
+      "p68": {
+        "values": {
+          "0": {
+            "properties": [
+              "p68_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p68_1"
+            ]
+          }
+        }
+      },
+      "p69": {
+        "values": {
+          "0": {
+            "properties": [
+              "p69_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p73_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p69_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p73_0"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p70": {
+        "values": {
+          "0": {
+            "properties": [
+              "p70_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p70_1"
+            ]
+          }
+        }
+      },
+      "p71": {
+        "values": {
+          "0": {
+            "properties": [
+              "p71_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p71_1"
+            ]
+          }
+        }
+      },
+      "p72": {
+        "values": {
+          "0": {
+            "properties": [
+              "p72_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p72_1"
+            ]
+          }
+        }
+      },
+      "p73": {
+        "values": {
+          "0": {
+            "properties": [
+              "p73_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p73_1"
+            ]
+          }
+        }
+      },
+      "p74": {
+        "values": {
+          "0": {
+            "properties": [
+              "p74_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p74_1"
+            ]
+          }
+        }
+      },
+      "p75": {
+        "values": {
+          "0": {
+            "properties": [
+              "p75_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p75_1"
+            ]
+          }
+        }
+      },
+      "p76": {
+        "values": {
+          "0": {
+            "properties": [
+              "p76_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p76_1"
+            ]
+          }
+        }
+      },
+      "p77": {
+        "values": {
+          "0": {
+            "properties": [
+              "p77_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p77_1"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

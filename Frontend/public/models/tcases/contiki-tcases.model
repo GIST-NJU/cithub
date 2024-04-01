@@ -1,0 +1,233 @@
+{
+  "system": "contiki",
+  "find": {
+    "args": {
+      "p0": {
+        "values": {
+          "0": {
+            "properties": [
+              "p0_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p0_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p0_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p0_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p0_4"
+            ]
+          },
+          "5": {
+            "properties": [
+              "p0_5"
+            ]
+          },
+          "6": {
+            "properties": [
+              "p0_6"
+            ]
+          },
+          "7": {
+            "properties": [
+              "p0_7"
+            ]
+          },
+          "8": {
+            "properties": [
+              "p0_8"
+            ]
+          },
+          "9": {
+            "properties": [
+              "p0_9"
+            ]
+          }
+        }
+      },
+      "p1": {
+        "values": {
+          "0": {
+            "properties": [
+              "p1_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p1_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p1_2"
+            ]
+          }
+        }
+      },
+      "p2": {
+        "values": {
+          "0": {
+            "properties": [
+              "p2_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p2_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p2_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p2_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p2_4"
+            ]
+          },
+          "5": {
+            "properties": [
+              "p2_5"
+            ]
+          }
+        }
+      },
+      "p3": {
+        "values": {
+          "0": {
+            "properties": [
+              "p3_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p3_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p3_2"
+            ]
+          }
+        }
+      },
+      "p4": {
+        "values": {
+          "0": {
+            "properties": [
+              "p4_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p4_1"
+            ]
+          }
+        }
+      },
+      "p5": {
+        "values": {
+          "0": {
+            "properties": [
+              "p5_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p5_1"
+            ]
+          }
+        }
+      },
+      "p6": {
+        "values": {
+          "0": {
+            "properties": [
+              "p6_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p6_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p6_2"
+            ]
+          }
+        }
+      },
+      "p7": {
+        "values": {
+          "0": {
+            "properties": [
+              "p7_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p7_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p7_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p7_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p7_4"
+            ]
+          },
+          "5": {
+            "properties": [
+              "p7_5"
+            ]
+          },
+          "6": {
+            "properties": [
+              "p7_6"
+            ]
+          }
+        }
+      },
+      "p8": {
+        "values": {
+          "0": {
+            "properties": [
+              "p8_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p8_1"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+[System] contiki
+[Strength] 2
+[Parameter] 9
+[Values] 10 3 6 3 2 2 3 7 2 
+[Constraints] 0

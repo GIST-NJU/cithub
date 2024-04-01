@@ -1,0 +1,11 @@
+[System]
+Name:file_display
+[Parameter]
+p0(int):0,1,2,3,4,5
+p1(int):0,1
+p2(int):0,1
+p3(int):0,1,2
+p4(int):0,1,2
+p5(int):0,1
+p6(int):0,1
+[Constraint]

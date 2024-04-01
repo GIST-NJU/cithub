@@ -20,10 +20,10 @@
                   <div class="row pt-2">
                     <div class="col-8">
                       <input v-model="PaginationStore.searchkeywords" type="text" class="form-control"
-                        placeholder="Name of Models, Benchmark Set, Reference , ...">
+                        placeholder="Fuzzy search by Name of Models, Benchmark Set, Reference , ...">
                     </div>
                     <div class="col-3">
-                      <ArgonButton color="success" full-width @click="searchModel">
+                      <ArgonButton color="success" full-width @click="FuzzySearch">
                         <span class="bi bi-search"></span>
                         Search
                       </ArgonButton>
@@ -39,7 +39,8 @@
                 </div>
               </div>
 
-              <h4  class="mb-4" v-if="moduleStore.CurrentModule == 'Benchmark Models' && BenchmarkModels.searchKeyWords == ''">Complete
+              <h4 class="mb-4"
+                v-if="moduleStore.CurrentModule == 'Benchmark Models' && BenchmarkModels.searchKeyWords == ''">Complete
                 Benchmark Models List</h4>
               <div v-if="BenchmarkModels.searchKeyWords != ''" class="mb-2">
                 <!-- <ArgonButton color="secondary" size="sm" @click="goBack">
@@ -53,7 +54,7 @@
 
               <p class="text-muted "><span class="badge bg-info">{{ BenchmarkModels.total }}</span> Combinatorial
                 Testing Models found</p>
-              
+
             </div>
 
             <div class="card-body ps-1">
@@ -120,7 +121,7 @@ import pinia from '../store/store';
 import { useModuleStore } from '../store/module';
 import { usePaginationStore } from '../store/paginationStore'
 import { useBenchmarkModelsStore } from '../store/BenchmarkModelsStore'
-import { listAllBenchmarkModels,searchModel,clearSearch } from './commonFunction'
+import { listAllBenchmarkModels, searchModel, clearSearch } from './commonFunction'
 const PaginationStore = usePaginationStore(pinia)
 const BenchmarkModels = useBenchmarkModelsStore(pinia)
 
@@ -208,6 +209,17 @@ const handleCurrentPageChange = async (val) => {
     }
 
   }
+}
+
+
+// 模糊搜索
+const FuzzySearch = async() => {
+  let loadingInstance = ElLoading.service({ fullscreen: true });
+  PaginationStore.column = ''
+  moduleStore.CurrentModule = 'Benchmark Search'
+
+  await searchModel();
+  loadingInstance.close();
 }
 
 onMounted(async () => {

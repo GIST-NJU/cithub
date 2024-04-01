@@ -33,6 +33,7 @@ import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
 import BenchmarkHome from '../BenchmarkViews/BenchmarkHome.vue'
 import BenchmarkModels from '../BenchmarkViews/BenchmarkModels.vue'
+import BenchmarkModelInfo from '../BenchmarkViews/components/ModelInfomation.vue'
 
 // User
 import UserRouterView from '../UserViews/UserRouterView.vue'
@@ -191,6 +192,13 @@ const routes = [
         name: 'Benchmark_Models',
         component: BenchmarkModels,
         meta: { title: 'Benchmark Models' }
+      },
+      // Benchmark Model Details
+      {
+        path: "modelinfo",
+        name: "Benchmark_ModelInfo",
+        component: BenchmarkModelInfo,
+        meta: { title: 'ModelInfo' },
       },
 
     ]

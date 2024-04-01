@@ -1,0 +1,10 @@
+[System] credit
+[Strength] 2
+[Parameter] 21
+[Values] 2 2 2 2 2 2 7 2 2 4 3 2 4 2 2 4 2 2 2 15 3 
+[Constraints] 5
+p13 = 0 && p9 = 2
+p13 = 0 && p9 = 3
+p17 = 0 && p9 = 1
+p17 = 1 && p9 = 3
+p17 = 1 && p9 = 2

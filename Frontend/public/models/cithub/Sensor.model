@@ -1,0 +1,20 @@
+[System] Sensor
+[Strength] 2
+[Parameter] 8
+[Values] 4 3 4 3 8 4 2 3 
+[Constraints] 15
+p0 = 2 && p4 = 7
+p0 = 3 && p4 = 7
+p0 = 0 && p2 = 0
+p0 = 1 && p2 = 0
+p0 = 0 && p2 = 2
+p0 = 1 && p2 = 2
+p2 = 0 && p6 = 1
+p2 = 2 && p6 = 1
+p2 = 0 && p5 = 3
+p2 = 1 && p5 = 3
+p2 = 2 && p5 = 3
+p2 = 0 && p7 = 2
+p2 = 1 && p7 = 2
+p2 = 2 && p7 = 2
+p5 = 0 && p7 = 1

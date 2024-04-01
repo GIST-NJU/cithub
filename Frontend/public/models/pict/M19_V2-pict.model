@@ -1,0 +1,24 @@
+p1:0,1
+p2:0,1,2,3,4
+p3:0,1,2,3,4,5,6,7
+p4:0,1,2
+p5:0,1,2,3
+p6:0,1,2,3,4,5
+
+IF ([p2] = 2 AND [p5] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p5] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p5] = 2) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p5] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 4 AND [p5] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 4 AND [p5] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p5] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 2 AND [p6] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 2 AND [p5] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p5] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p5] = 2) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p5] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p5] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 4 AND [p5] = 2) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p5] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 2 AND [p5] = 1) THEN ([p1] = 0 and not [p1] = 0);

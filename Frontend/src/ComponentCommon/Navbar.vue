@@ -107,6 +107,12 @@ onMounted(() => {
       moduleStore.CurrentRoute = 'Benchmark_Models';
 
     }
+
+    if(route.query.module == 'Benchmark Set')
+    {
+      moduleStore.CurrentRoute = 'Benchmark_Home';
+
+    }
   }
 
   // console.log("得到的moduleStore.CurrentRoute是", moduleStore.CurrentRoute)

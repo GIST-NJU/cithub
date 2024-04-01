@@ -1,0 +1,5 @@
+[System] niu_gcc
+[Strength] 2
+[Parameter] 10
+[Values] 2 2 2 2 2 2 2 2 2 6
+[Constraints] 0
