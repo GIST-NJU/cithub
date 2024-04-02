@@ -56,7 +56,7 @@ import { ref, watch } from 'vue';
 import { useModuleStore } from '../../store/module';
 import pinia from '../../store/store'
 import { ElLoading } from 'element-plus'
-import {listAllBenchmarkModels} from '../commonFunction'
+import { listAllBenchmarkModels } from '../commonFunction'
 
 
 const router = useRouter();
@@ -89,7 +89,15 @@ const jumpToBenchmarkModels = async () => {
 
 }
 
-const jumpToBenchmarkEvaluation = () => { }
+const jumpToBenchmarkEvaluation = () => {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+
+    moduleStore.CurrentModule = 'Benchmark Evaluation'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Benchmark_Evaluation'
+    loadingInstance.close()
+    router.push({ name: 'Benchmark_Evaluation' });
+}
 </script>
 
 

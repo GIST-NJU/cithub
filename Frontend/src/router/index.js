@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import Cithub from '../CithubHomeView.vue'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { useAuthorStore } from '../store/authorStore'
@@ -32,6 +32,7 @@ import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
 import BenchmarkHome from '../BenchmarkViews/BenchmarkHome.vue'
+import BenchmarkEvaluation from '../BenchmarkViews/BenchmarkEvaluation.vue'
 import BenchmarkModels from '../BenchmarkViews/BenchmarkModels.vue'
 import BenchmarkModelInfo from '../BenchmarkViews/components/ModelInfomation.vue'
 
@@ -200,6 +201,13 @@ const routes = [
         component: BenchmarkModelInfo,
         meta: { title: 'ModelInfo' },
       },
+      // Benchmark Evaluation
+      {
+        path: "evaluation",
+        name: "Benchmark_Evaluation",
+        component: BenchmarkEvaluation,
+        meta: { title: 'Evaluation' },
+      },
 
     ]
   },
@@ -233,7 +241,7 @@ const routes = [
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
-  history: createWebHashHistory(), 
+  history: createWebHashHistory(),
   // history: createWebHistory(), //去掉路径中的 # 号，不行，打包之后会白屏
   routes,
   linkActiveClass: "active",

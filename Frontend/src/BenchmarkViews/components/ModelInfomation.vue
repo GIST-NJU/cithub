@@ -31,7 +31,7 @@
                                     </div>
 
                                     <el-dialog v-model="DownLoadDialogTableVisible"
-                                        title="Select Model type for downloading">
+                                        title="Select Model Format for downloading">
                                         <el-checkbox-group v-model="chosenModels" @change="handleModelFormatChange">
                                             <el-checkbox v-for="model in ModelFormats" :key="model" :label="model"
                                                 :value="model">{{
@@ -306,14 +306,15 @@ const DownloadModel = () => {
 
 
         }
-        // let fileUrls = [
-        //     '/models/acts/Apl-acts.model',
-        //     '/models/casa/2-way/Apl-casa-2-way.model',
-        //     '/models/casa/2-way/Apl-casa-2-way.constraint',
-        // ];
+
         downloadAndZipFiles(fileUrls, currentBenchmarkModel.model.modelname)
         DownLoadDialogTableVisible.value = false
         loadingInstance.close()
+        ElNotification({
+            title: 'We are downloading',
+            message: 'Please wait a while....',
+            type: 'success',
+        })
     } catch (error) {
         console.log("下载错误", error)
         DownLoadDialogTableVisible.value = false
