@@ -1,0 +1,59 @@
+p1:0,1
+p2:0,1
+p3:0,1
+p4:0,1
+p5:0,1
+p6:0,1
+p7:0,1
+p8:0,1
+p9:0,1
+p10:0,1
+p11:0,1
+p12:0,1
+p13:0,1
+p14:0,1
+p15:0,1
+p16:0,1
+p17:0,1
+p18:0,1
+p19:0,1
+p20:0,1
+p21:0,1
+
+IF ([p4] = 1 AND [p5] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 1 AND [p8] = 1 AND [p14] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 0 AND [p5] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p17] = 0 AND [p18] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p3] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 0 AND [p13] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 1 AND [p9] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 1 AND [p15] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 1 AND [p8] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p8] = 1 AND [p13] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 1 AND [p18] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 0 AND [p12] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 0 AND [p8] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p8] = 0 AND [p13] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p13] = 1 AND [p19] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 1 AND [p12] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p8] = 0 AND [p14] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p12] = 0 AND [p18] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 0 AND [p12] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 1 AND [p14] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 0 AND [p14] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p11] = 0 AND [p18] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p5] = 0 AND [p14] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 1 AND [p16] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 1 AND [p12] = 0 AND [p15] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 0 AND [p8] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 1 AND [p21] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p3] = 1 AND [p20] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p1] = 0 AND [p18] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 1 AND [p13] = 0 AND [p19] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p3] = 0 AND [p20] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 0 AND [p20] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p7] = 0 AND [p15] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p10] = 0 AND [p19] = 0) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 0 AND [p16] = 1 AND [p21] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p16] = 0 AND [p21] = 0) THEN ([p1] = 0 and not [p1] = 0);

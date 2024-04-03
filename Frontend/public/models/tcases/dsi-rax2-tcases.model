@@ -1,0 +1,423 @@
+{
+  "system": "dsi-rax2",
+  "find": {
+    "args": {
+      "p0": {
+        "values": {
+          "0": {
+            "properties": [
+              "p0_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p0_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p0_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p0_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p0_4"
+            ]
+          },
+          "5": {
+            "properties": [
+              "p0_5"
+            ]
+          },
+          "6": {
+            "properties": [
+              "p0_6"
+            ]
+          }
+        }
+      },
+      "p1": {
+        "values": {
+          "0": {
+            "properties": [
+              "p1_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p1_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p1_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p1_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p1_4"
+            ]
+          },
+          "5": {
+            "properties": [
+              "p1_5"
+            ]
+          }
+        }
+      },
+      "p2": {
+        "values": {
+          "0": {
+            "properties": [
+              "p2_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p2_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p2_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p2_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p2_4"
+            ]
+          }
+        }
+      },
+      "p3": {
+        "values": {
+          "0": {
+            "properties": [
+              "p3_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p3_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p3_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p3_3"
+            ]
+          }
+        }
+      },
+      "p4": {
+        "values": {
+          "0": {
+            "properties": [
+              "p4_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p4_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p4_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p4_3"
+            ]
+          }
+        }
+      },
+      "p5": {
+        "values": {
+          "0": {
+            "properties": [
+              "p5_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p5_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p5_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p5_3"
+            ]
+          }
+        }
+      },
+      "p6": {
+        "values": {
+          "0": {
+            "properties": [
+              "p6_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p6_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p6_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p6_3"
+            ]
+          }
+        }
+      },
+      "p7": {
+        "values": {
+          "0": {
+            "properties": [
+              "p7_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p7_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p7_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p7_3"
+            ]
+          }
+        }
+      },
+      "p8": {
+        "values": {
+          "0": {
+            "properties": [
+              "p8_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p8_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p8_2"
+            ]
+          }
+        }
+      },
+      "p9": {
+        "values": {
+          "0": {
+            "properties": [
+              "p9_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p9_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p9_2"
+            ]
+          }
+        }
+      },
+      "p10": {
+        "values": {
+          "0": {
+            "properties": [
+              "p10_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p10_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p10_2"
+            ]
+          }
+        }
+      },
+      "p11": {
+        "values": {
+          "0": {
+            "properties": [
+              "p11_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p11_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p11_2"
+            ]
+          }
+        }
+      },
+      "p12": {
+        "values": {
+          "0": {
+            "properties": [
+              "p12_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p12_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p12_2"
+            ]
+          }
+        }
+      },
+      "p13": {
+        "values": {
+          "0": {
+            "properties": [
+              "p13_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p13_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p13_2"
+            ]
+          }
+        }
+      },
+      "p14": {
+        "values": {
+          "0": {
+            "properties": [
+              "p14_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p14_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p14_2"
+            ]
+          }
+        }
+      },
+      "p15": {
+        "values": {
+          "0": {
+            "properties": [
+              "p15_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p15_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p15_2"
+            ]
+          }
+        }
+      },
+      "p16": {
+        "values": {
+          "0": {
+            "properties": [
+              "p16_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p16_1"
+            ]
+          }
+        }
+      },
+      "p17": {
+        "values": {
+          "0": {
+            "properties": [
+              "p17_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p17_1"
+            ]
+          }
+        }
+      },
+      "p18": {
+        "values": {
+          "0": {
+            "properties": [
+              "p18_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p18_1"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

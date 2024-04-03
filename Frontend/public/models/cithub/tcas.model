@@ -1,0 +1,8 @@
+[System] tcas
+[Strength] 2
+[Parameter] 12
+[Values] 2 2 2 2 2 2 2 3 3 4 10 10 
+[Constraints] 3
+p3 = 0 && p6 = 1
+p0 = 0 && p7 = 0
+p0 = 1 && p6 = 0

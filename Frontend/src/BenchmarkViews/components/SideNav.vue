@@ -8,80 +8,41 @@
             <div class="navbar-brand m-0">
                 <img src="../../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
 
-                <span class="ms-1 font-weight-bold text-lg">CitHub Repositoy</span>
+                <span class="ms-1 font-weight-bold text-lg">CitHub Benchmark</span>
             </div>
         </div>
         <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+        <div class="w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
 
-                <li class="nav-item" @click="jumpToHome" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
-                        @mouseout="handleMouseOutHome">
+                <li class="nav-item" style="cursor:pointer;">
+                    <a @click.prevent="jumpToHome" :class="['nav-link', { 'active': isRouteActive('Benchmark_Home') }]">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
+                            <i class="ni ni-tv-2 text-info text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Home</span>
+                        <span class="nav-link-text ms-1 p">Benchmark Home</span>
                     </a>
                 </li>
 
-                <li class="nav-item" @click="jumpToPapers" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActivePapers ? 'active' : '']" @mouseover="handleMouseOverPapers"
-                        @mouseout="handleMouseOutPapers">
+                <li class="nav-item" style="cursor:pointer;">
+                    <a @click.prevent="jumpToBenchmarkModels"
+                        :class="['nav-link', { 'active': isRouteActive('Benchmark_Models') }]">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-lg opacity-10"></i>
+                            <i class="ni ni-building text-success text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Papers</span>
+                        <span class="nav-link-text ms-1 p">Models</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="../repository/category.html">
+                    <a @click.prevent="jumpToBenchmarkEvaluation"
+                        :class="['nav-link', { 'active': isRouteActive('Benchmark_Evaluation') }]">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-credit-card text-success text-lg opacity-10"></i>
+                            <i class="ni ni-chart-bar-32 text-danger text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">Category</span>
-                    </a>
-                </li>
-                <li class="nav-item" @click="jumpToScholars" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
-                        @mouseout="handleMouseOutScholars">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-bag-17 text-danger text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Scholars</span>
-                    </a>
-                </li>
-                <li class="nav-item" @click="jumpToInstitutions" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
-                        @mouseout="handleMouseOutInstitutions">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-
-                            <i class="ni ni-atom  text-primary text-lg opacity-10" aria-hidden="true"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Institutions</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="../repository/venue.html">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-building text-warning text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Venue</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="../repository/rank.html">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-chart-bar-32 text-info text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Rank</span>
+                        <span class="nav-link-text ms-1 p">Evaluation</span>
                     </a>
                 </li>
             </ul>
@@ -91,44 +52,52 @@
 
 <script  setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useModuleStore } from '../../store/module';
+import pinia from '../../store/store'
+import { ElLoading } from 'element-plus'
+import { listAllBenchmarkModels } from '../commonFunction'
+
+
 const router = useRouter();
+const moduleStore = useModuleStore(pinia)
+// 监听 moduleStore.CurrentRoute 的变化
 
-
-const isActiveHome = ref(false)
-const isActivePapers = ref(false)
-const isActiveScholars = ref(false)
-const isActiveInstitutions = ref(false)
-
-
+watch(() => moduleStore.CurrentRoute, (newRoute, oldRoute) => {
+    // 每次路由变化时触发 isRouteActive 方法
+    // console.log("moduleStore.CurrentRoute sideNav", moduleStore.CurrentRoute);
+    isRouteActive(newRoute);
+});
+const isRouteActive = (routeName) => {
+    return moduleStore.CurrentRoute === routeName;
+}
 
 const jumpToHome = () => {
-    router.push({ path: '/' })
+    moduleStore.CurrentModule = 'Benchmark'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Benchmark_Home'
+    router.push({ name: 'Benchmark_Home' });
 }
 
-const jumpToPapers = () => {
-    // console.log("123")
-    router.push({ path: '/Papers' })
+const jumpToBenchmarkModels = async () => {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+
+    await listAllBenchmarkModels()
+
+    loadingInstance.close()
+    router.push({ name: 'Benchmark_Models' });
+
 }
-const jumpToScholars = () => {
-    router.push({ path: '/Scholars' })
+
+const jumpToBenchmarkEvaluation = () => {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+
+    moduleStore.CurrentModule = 'Benchmark Evaluation'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Benchmark_Evaluation'
+    loadingInstance.close()
+    router.push({ name: 'Benchmark_Evaluation' });
 }
-const jumpToInstitutions = () => {
-    router.push({ path: '/Institutions' })
-}
-
-const handleMouseOverHome = () => { isActiveHome.value = true; }
-const handleMouseOutHome = () => { isActiveHome.value = false }
-
-const handleMouseOverPapers = () => { isActivePapers.value = true; }
-const handleMouseOutPapers = () => { isActivePapers.value = false }
-
-
-const handleMouseOverScholars = () => { isActiveScholars.value = true; }
-const handleMouseOutScholars = () => { isActiveScholars.value = false }
-
-const handleMouseOverInstitutions = () => { isActiveInstitutions.value = true; }
-const handleMouseOutInstitutions = () => { isActiveInstitutions.value = false }
 </script>
 
 

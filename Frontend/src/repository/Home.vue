@@ -209,7 +209,7 @@ import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import { onMounted, reactive, ref, } from 'vue';
-import { request } from '../request';
+import { request,CheckLogin } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import pinia from '../store/store';
@@ -398,7 +398,7 @@ const listRecentPapers = async () => {
 
 onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
-  
+  await  CheckLogin()
   try {
     
   moduleStore.CurrentModule = 'Repository'

@@ -1,0 +1,8 @@
+[System] Banking2
+[Strength] 2
+[Parameter] 15
+[Values] 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+[Constraints] 3
+p0 = 2 && p9 = 0
+p0 = 1 && p9 = 0
+p0 = 3 && p9 = 0

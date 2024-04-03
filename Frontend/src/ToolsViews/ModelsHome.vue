@@ -272,7 +272,7 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                         </el-dialog>
                         <div class="card-body px-0 pt-0 pb-2">
 
-
+                            <!-- 废弃ModelCard方案，使用Table方案 -->
                             <div v-for="(chunk, rowIndex) in chunkedArray" :key="rowIndex" class="row"
                                 style="margin: 0 0 0 20px;">
                                 <div class="col" v-for="(model, colIndex) in chunk" :key="colIndex">
@@ -284,10 +284,10 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                                 <div v-if="isLastRow(rowIndex) && chunk.length === 1" class="col"></div>
                             </div>
 
-                            <!-- 废弃Table显示 -->
-                            <!-- <div class="card-header">
+                            <!-- 使用Table显示Models -->
+                            <div class="card-header">
                                 <ModelsTable :model="modelStore.modelsList"></ModelsTable>
-                            </div> -->
+                            </div>
 
                         </div>
 
@@ -305,7 +305,7 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
 <script  setup>
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
-import { request } from '../request';
+import { request,CheckLogin } from '../request';
 import Foot from '../ComponentCommon/Foot.vue';
 import Navbar from '../ComponentCommon/Navbar.vue';
 import ArgonButton from '../ComponentCommon/ArgonButton.vue';
@@ -314,7 +314,6 @@ import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
 import ModelCard from './components/ModelCard.vue'
 import pinia from '../store/store'
-import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { useModelsStore } from '../store/modelsStore'
@@ -322,10 +321,8 @@ import { useCurrentProject } from '../store/currentProject';
 import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
+import {listAllModelsByUserID} from './common'
 import toolsInfo from "../ComponentCommon/tools_info.json";
-
-
-// import ModelCard from './components/ModelCard.vue'
 
 
 const route = useRoute()
@@ -340,6 +337,7 @@ const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
 const dateObject_created = ref()
 const dateObject_lastupdated = ref()
+
 
 const ModelConversionForm = reactive({})
 const LLMModellingForm = reactive({
@@ -394,89 +392,9 @@ const LLMmodelOptions = [
         label: 'gpt-4-32k'
     }
 ]
-const listAllModelsByProjectID = async () => {
-    if (currentProjectStore.projectid) {
-        try {
-
-            const modelsRes = await request({
-                method: "POST",
-                url: '/tools/models/listModelsByProjectID',
-                data: {
-                    projectid: currentProjectStore.projectid
-                }
-            });
 
 
-            modelStore.modelsList = modelsRes.models
 
-            for (let i = 0; i < modelStore.modelsList.length; i++) {
-
-                const timestamp_created = modelStore.modelsList[i].createdtime
-                const timestamp_lastupdated = modelStore.modelsList[i].lastupdatedtime
-                const dateObject_created = new Date(timestamp_created);
-                const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-                // 获取可读的时间字符串
-                modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
-                modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
-
-
-                modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
-                modelStore.modelsList[i].ConsOBJ = JSON.parse(modelStore.modelsList[i].cons)
-                modelStore.modelsList[i].NumofParams = modelStore.modelsList[i].PandVOBJ.length
-                modelStore.modelsList[i].NumofCons = modelStore.modelsList[i].ConsOBJ.length
-                let transformedData = modelStore.modelsList[i].PandVOBJ.map(item => {
-                    // 将逗号分隔的字符串转换为数组
-                    const valueArray = item.Value.split(',');
-
-                    // 更新对象的Value字段为数组
-                    return {
-                        ...item,
-                        Value: valueArray
-                    };
-                });
-                modelStore.modelsList[i].PandVOBJ = transformedData
-                // 移除 row_index 属性
-                let tableDataTmp = modelStore.modelsList[i].PandVOBJ.map(item => {
-                    const { row_index, ...rest } = item;
-                    return rest;
-                });
-                modelStore.modelsList[i].PandVOBJ = tableDataTmp
-            }
-
-
-            ElNotification({
-                title: 'Choose a Model',
-                message: 'Please choose a model to continue.',
-                type: 'success',
-            })
-
-        } catch (error) {
-            console.error("发生错误", error);
-            ElNotification({
-                title: 'Need to Choose a Project first',
-                message: 'Please choose a Project to continue.',
-                type: 'error',
-            })
-            // router.push({
-            //     name: 'ProjectsHome'
-            // })
-        }
-
-    }
-    else {
-        // console.log("currentProjectStore.projectid是", currentProjectStore.projectid)
-        ElNotification({
-            title: 'Need to Choose a Project first',
-            message: 'Please choose a Project to continue.',
-            type: 'error',
-        })
-        router.push({
-            name: 'ProjectsHome'
-        })
-    }
-
-};
 
 const itemsPerRow = ref(2);
 const chunkedArray = computed(() => {
@@ -534,7 +452,7 @@ const confirmNewModel = async () => {
                     });
                     if (res.NewStatus == 'success!') {
 
-                        await listAllModelsByProjectID()
+                        await listAllModelsByUserID()
 
                         ElNotification({
                             title: 'New Model Success!',
@@ -676,7 +594,7 @@ const confirmNewModel = async () => {
                                                     title: 'New Model Success!',
                                                     type: 'success',
                                                 })
-                                                await listAllModelsByProjectID()
+                                                await listAllModelsByUserID()
                                                 dialogFormVisibleNew.value = false
                                                 currentModel.currentModel.modelid = route.query.modelid
                                                 currentModel.currentModel.modelname = dialogformNewModel.modelname
@@ -826,7 +744,7 @@ const confirmNewModel = async () => {
                                                 title: 'New Model Success!',
                                                 type: 'success',
                                             })
-                                            await listAllModelsByProjectID()
+                                            await listAllModelsByUserID()
                                             dialogFormVisibleNew.value = false
                                             currentModel.currentModel.modelid = route.query.modelid
                                             currentModel.currentModel.modelname = dialogformNewModel.modelname
@@ -1003,7 +921,7 @@ const confirmNewModel = async () => {
                                                     title: 'New Model Success!',
                                                     type: 'success',
                                                 })
-                                                await listAllModelsByProjectID()
+                                                await listAllModelsByUserID()
                                                 dialogFormVisibleNew.value = false
 
                                                 currentModel.currentModel.modelid = route.query.modelid
@@ -1145,7 +1063,7 @@ const confirmNewModel = async () => {
                                                     title: 'New Model Success!',
                                                     type: 'success',
                                                 })
-                                                await listAllModelsByProjectID()
+                                                await listAllModelsByUserID()
                                                 dialogFormVisibleNew.value = false
 
                                                 currentModel.currentModel.modelid = route.query.modelid
@@ -1229,7 +1147,7 @@ const confirmNewModel = async () => {
                             title: 'New LLM Model Success!',
                             type: 'success',
                         })
-                        await listAllModelsByProjectID()
+                        await listAllModelsByUserID()
                         dialogFormVisibleNew.value = false
 
                         currentModel.currentModel.modelid = route.query.modelid
@@ -1250,7 +1168,6 @@ const confirmNewModel = async () => {
                             type: 'error',
                         })
                     }
-
 
 
                 }
@@ -1287,53 +1204,6 @@ const getParameterValue = (indexArray, parameterData) => {
 }
 
 
-const ReloadModels = async () => {
-
-    try {
-
-
-        const modelsRes = await request({
-            method: "POST",
-            url: '/tools/models/listModelsByProjectID',
-            data: {
-                projectid: route.query.projectid
-            }
-        });
-
-        modelStore.modelsList = []
-        modelStore.modelsList = modelsRes.models
-        for (let i = 0; i < modelStore.modelsList.length; i++) {
-
-            const timestamp_created = modelStore.modelsList[i].createdtime
-            const timestamp_lastupdated = modelStore.modelsList[i].lastupdatedtime
-            const dateObject_created = new Date(timestamp_created);
-            const dateObject_lastupdated = new Date(timestamp_lastupdated);
-
-            // 获取可读的时间字符串
-            modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
-            modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
-
-            // 统计每个Model下拥有的TestSuites的数量
-            const testSuitesRes = await request({
-                method: "POST",
-                url: '/tools/testSuites/listTestSuitesByModelID',
-                data: {
-                    modelid: modelStore.modelsList[i].modelid
-                }
-            });
-            modelStore.modelsList[i].NumOfTestSuites = testSuitesRes.TestSuites.length
-        }
-
-
-
-
-    } catch (error) {
-        console.error("发生错误", error);
-    }
-
-}
-
-
 
 
 
@@ -1353,13 +1223,15 @@ const listAllModelReaderAlgorithm = () => {
     }
 
 }
-onMounted(() => {
-    listAllModelsByProjectID()
 
+onMounted(async () => {
+    // 检查登录状态
+    await CheckLogin()
+    // 加载当前用户的所有模型
+    await listAllModelsByUserID()
     // 获取所有的模型转换工具
     listAllModelReaderAlgorithm()
 })
-
 
 </script>
 

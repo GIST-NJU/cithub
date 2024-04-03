@@ -1,16 +1,16 @@
 <template>
 	<!-- Header -->
 	<div id="header">
-		<span class="logo icon fa-cube"></span>
+		<span class="logo bi bi-boxes"></span>
 		<h1>CitHub</h1>
 		<p>An open platform for the study and use<br>
 			of Combinatorial Interaction Testing (CIT)</p>
 		<br>
-		<div v-if="loginFlag == false">
+		<div v-if="userStore.loginFlag == false">
 			<input @click="jumpToUser('login')" type="submit" value="Sign in" />&nbsp;&nbsp;
 			<input @click="jumpToUser('register')" type="submit" value="Sign Up" />
 		</div>
-		<div v-if="loginFlag == true">
+		<div v-if="userStore.loginFlag == true">
 
 			<h3>Welcome {{ userStore.name }} from {{ userStore.institution }}, enjoy cithub~</h3>
 
@@ -111,7 +111,7 @@
 import { useModuleStore } from './store/module';
 import { useRouter, useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import { CheckLoginStatus, getUserInfoByToken } from './request';
+import { CheckLogin } from './request';
 import pinia from './store/store'
 
 import { ElNotification } from 'element-plus'
@@ -123,18 +123,24 @@ const moduleStore = useModuleStore(pinia)
 
 const jumpToRepo = () => {
 	moduleStore.CurrentModule = 'Repository'
+	moduleStore.CurrentModuleDetails = '',
+	moduleStore.CurrentRoute = 'Repository_Home'
 	router.push({
 		name: 'Repository_Home'
 	})
 }
 const jumpToTools = () => {
 	moduleStore.CurrentModule = 'Tools'
+	moduleStore.CurrentModuleDetails = '',
+	moduleStore.CurrentRoute = ''
 	router.push({
-		path: '/tools/ToolsHome'
+		path: '/tools/models'
 	})
 }
 const jumpToBenchmark = () => {
 	moduleStore.CurrentModule = 'Benchmark'
+	moduleStore.CurrentModuleDetails = '',
+	moduleStore.CurrentRoute = 'Benchmark_Home'
 	router.push({
 		path: '/benchmark/home'
 	})
@@ -154,34 +160,12 @@ const jumpToUser = (value) => {
 		})
 	}
 }
-const loginFlag = ref(false)
-const userToken = ref('')
+
 
 onMounted(async () => {
 
-	// 逻辑：
-	// 每次到该界面，都要使用 userToken 检查用户是否处于登录状态，由服务器检查。
-	// 若处于登录状态则加载用户信息！
 
-	let LoginStatusObj = await CheckLoginStatus()
-	loginFlag.value =LoginStatusObj.loginStatus
-	if (loginFlag.value) {
-		// console.log("已登录！加载用户信息！")
-		let userobj = await getUserInfoByToken(LoginStatusObj.token)
-		userStore.userID = userobj.userid
-		userStore.account = userobj.account
-		userStore.userToken = userobj.userToken
-		userStore.usertype = userobj.usertype
-		userStore.name = userobj.name
-		userStore.email = userobj.email
-		userStore.institution = userobj.institution
-		// console.log("userStore",userStore)
-	}
-	else {
-		console.log("未登录！")
-
-	}
-
+	await CheckLogin()
 
 
 })

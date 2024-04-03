@@ -1,0 +1,686 @@
+{
+  "system": "M42_V1",
+  "find": {
+    "args": {
+      "p0": {
+        "values": {
+          "0": {
+            "properties": [
+              "p0_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p0_1"
+            ]
+          }
+        }
+      },
+      "p1": {
+        "values": {
+          "0": {
+            "properties": [
+              "p1_0"
+            ]
+          }
+        }
+      },
+      "p2": {
+        "values": {
+          "0": {
+            "properties": [
+              "p2_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p2_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_3"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "2": {
+            "properties": [
+              "p2_2"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_4"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_2"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "3": {
+            "properties": [
+              "p2_3"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_3"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "4": {
+            "properties": [
+              "p2_4"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_4"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_4"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "5": {
+            "properties": [
+              "p2_5"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_3"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p4_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p6_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p3": {
+        "values": {
+          "0": {
+            "properties": [
+              "p3_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p3_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p3_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p3_3"
+            ]
+          }
+        }
+      },
+      "p4": {
+        "values": {
+          "0": {
+            "properties": [
+              "p4_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p4_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p4_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p4_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p4_4"
+            ]
+          }
+        }
+      },
+      "p5": {
+        "values": {
+          "0": {
+            "properties": [
+              "p5_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p5_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p5_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p5_3"
+            ]
+          }
+        }
+      },
+      "p6": {
+        "values": {
+          "0": {
+            "properties": [
+              "p6_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p6_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p6_2"
+            ]
+          },
+          "3": {
+            "properties": [
+              "p6_3"
+            ]
+          },
+          "4": {
+            "properties": [
+              "p6_4"
+            ]
+          }
+        }
+      },
+      "p7": {
+        "values": {
+          "0": {
+            "properties": [
+              "p7_0"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

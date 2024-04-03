@@ -125,7 +125,6 @@
         </div>
       </div>
 
-
       <!-- 通用的card -->
       <div class="row">
         <div class="col-12">
@@ -174,6 +173,28 @@
                 </h4>
               </div>
 
+              <!-- Benchmark -->
+
+              <div v-if="route.query.module == 'Benchmark'"
+                style="margin: 0px 0px 5px 5px; display: flex; align-items: center;">
+                <ArgonButton color="secondary" size="sm" @click="goBack">
+                  <span class="ni ni-bold-left  me-1"> Back To Benchmark </span>
+                </ArgonButton>
+              </div>
+
+              <div v-if="route.query.module == 'Benchmark'">
+                <div v-if="moduleStore.CurrentRoute == 'Benchmark_Home'">
+                  <h4>Papers related to Benchmark Set <span style="color: #2dce89">{{
+                    PaperInfoStore.searchKeyWords }}</span>
+                  </h4>
+                </div>
+                <div v-if="moduleStore.CurrentRoute == 'Benchmark_Models'">
+                  <h4>Papers related to Model <span style="color: #2dce89">{{ moduleStore.CurrentModuleDetails }}</span>
+                  </h4>
+                </div>
+
+              </div>
+
               <p class="text-muted mb-0"><span class="badge bg-success">{{
                 PaperInfoStore.total }}</span> papers found
               </p>
@@ -207,16 +228,18 @@
             </div>
 
             <div style="margin-top: 30px;"></div>
+
+
+            <div style="width:100%;height: 100%;"
+              v-if="PaperInfoStore.paperinfos.length == 0 && PaginationStore.searchkeywords != ''">
+              <el-result style="width:100%;height: 100%;" icon="warning" :title="'No Papers Found.'"
+                sub-title="please check your search keywords">
+              </el-result>
+            </div>
           </div>
         </div>
       </div>
 
-      <div style="width:100%;height: 100%;"
-        v-if="PaperInfoStore.paperinfos.length == 0 && PaginationStore.searchkeywords != ''">
-        <el-result style="width:100%;height: 100%;" icon="warning" :title="'No Papers Found.'"
-          sub-title="please check your search keywords">
-        </el-result>
-      </div>
 
 
 
@@ -248,9 +271,10 @@ import { useCurrentAuthorStore } from '../store/currentAuthorStore'
 import { useModuleStore } from '../store/module';
 import { usePaginationStore } from '../store/paginationStore'
 const PaginationStore = usePaginationStore(pinia)
-const currentAuthorStore = useCurrentAuthorStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
 const moduleStore = useModuleStore(pinia)
+const currentAuthorStore = useCurrentAuthorStore(pinia)
+
 
 // 接收参数
 const route = useRoute()
@@ -588,13 +612,13 @@ const calculateSymbolSize = (weight) => {
 const goBack = () => {
   window.history.back();
 }
-const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository']
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Benchmark','Benchmark Models']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)
-  let loadingInstance = ElLoading.service({ fullscreen: true })
 
   if (DetailedModule.includes(moduleStore.CurrentModule) && moduleStore.CurrentModuleDetails != '') {
-    // console.log("moduleStore.CurrentModule的值不变依然是", moduleStore.CurrentModule)
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    console.log("moduleStore.CurrentModule", moduleStore.CurrentModule)
 
     // 获取当前学者的所有研究领域
     if (route.query.module == 'Scholars') {
@@ -606,9 +630,12 @@ onMounted(async () => {
       await initScholarYearChart()
       await initPartnershipChart()
     }
+
+    loadingInstance.close()
   }
   else {
-    // console.log("设置为Complete Paper List")
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    console.log("设置为Complete Paper List")
     moduleStore.CurrentModule = 'Complete Paper List'
     moduleStore.CurrentModuleDetails = ''
     moduleStore.CurrentRoute = 'Repository_Papers'
@@ -623,10 +650,12 @@ onMounted(async () => {
     PaperInfoStore.paginationOffset = paginationOffset;
     await listAllPapers()
 
-    // console.log(" moduleStore.CurrentModule", moduleStore.CurrentModule)
+    loadingInstance.close()
+
+
   }
 
-  loadingInstance.close()
+
 
 
 })

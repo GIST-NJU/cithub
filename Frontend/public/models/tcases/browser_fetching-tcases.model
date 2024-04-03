@@ -1,0 +1,218 @@
+{
+  "system": "browser_fetching",
+  "find": {
+    "args": {
+      "p0": {
+        "values": {
+          "0": {
+            "properties": [
+              "p0_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p1_2"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p0_1"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p1_2"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "2": {
+            "properties": [
+              "p0_2"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p1_2"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "3": {
+            "properties": [
+              "p0_3"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p1_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p1_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p3_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "p1": {
+        "values": {
+          "0": {
+            "properties": [
+              "p1_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p1_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p1_2"
+            ]
+          }
+        }
+      },
+      "p2": {
+        "values": {
+          "0": {
+            "properties": [
+              "p2_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p2_1"
+            ]
+          },
+          "2": {
+            "properties": [
+              "p2_2"
+            ]
+          }
+        }
+      },
+      "p3": {
+        "values": {
+          "0": {
+            "properties": [
+              "p3_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p3_1"
+            ]
+          }
+        }
+      },
+      "p4": {
+        "values": {
+          "0": {
+            "properties": [
+              "p4_0"
+            ],
+            "when": {
+              "allOf": [
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_0",
+                      "p6_1"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1",
+                      "p6_0"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "hasAll": [
+                      "p5_1",
+                      "p6_1"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "1": {
+            "properties": [
+              "p4_1"
+            ]
+          }
+        }
+      },
+      "p5": {
+        "values": {
+          "0": {
+            "properties": [
+              "p5_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p5_1"
+            ]
+          }
+        }
+      },
+      "p6": {
+        "values": {
+          "0": {
+            "properties": [
+              "p6_0"
+            ]
+          },
+          "1": {
+            "properties": [
+              "p6_1"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

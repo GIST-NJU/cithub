@@ -1,0 +1,7 @@
+[System] mysql-small
+[Strength] 2
+[Parameter] 12
+[Values] 3 3 3 2 2 2 2 2 2 2 2 2 
+[Constraints] 2
+p8 = 0
+p4 = 0 && p6 = 0

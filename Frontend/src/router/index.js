@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import Cithub from '../CithubHomeView.vue'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import { useAuthorStore } from '../store/authorStore'
@@ -20,7 +20,7 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
 import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
-import ToolsHome from '../ToolsViews/ToolsHome.vue'
+import AlgorithmsAvailableHome from '../ToolsViews/AlgorithmsAvailableHome.vue'
 import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
@@ -32,6 +32,9 @@ import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 // Benchmark
 import BenchmarkRouterView from '../BenchmarkViews/BenchmarkRouterView.vue'
 import BenchmarkHome from '../BenchmarkViews/BenchmarkHome.vue'
+import BenchmarkEvaluation from '../BenchmarkViews/BenchmarkEvaluation.vue'
+import BenchmarkModels from '../BenchmarkViews/BenchmarkModels.vue'
+import BenchmarkModelInfo from '../BenchmarkViews/components/ModelInfomation.vue'
 
 // User
 import UserRouterView from '../UserViews/UserRouterView.vue'
@@ -106,10 +109,10 @@ const routes = [
     children: [
       {
         // ToolsHome
-        path: "ToolsHome",
-        name: 'ToolsHome',
-        component: ToolsHome,
-        meta: { title: 'ToolsHome' }
+        path: "AlgorithmsAvailableHome",
+        name: 'AlgorithmsAvailableHome',
+        component: AlgorithmsAvailableHome,
+        meta: { title: 'AlgorithmsAvailableHome' }
       },
       {
         // HelpCenter
@@ -180,9 +183,30 @@ const routes = [
       {
         // BenchmarkHome
         path: "home",
-        name: 'benchmarkHome',
+        name: 'Benchmark_Home',
         component: BenchmarkHome,
-        meta: { title: 'Benchmark' }
+        meta: { title: 'Benchmark Home' }
+      },
+      {
+        // BenchmarkModels
+        path: "models",
+        name: 'Benchmark_Models',
+        component: BenchmarkModels,
+        meta: { title: 'Benchmark Models' }
+      },
+      // Benchmark Model Details
+      {
+        path: "modelinfo",
+        name: "Benchmark_ModelInfo",
+        component: BenchmarkModelInfo,
+        meta: { title: 'ModelInfo' },
+      },
+      // Benchmark Evaluation
+      {
+        path: "evaluation",
+        name: "Benchmark_Evaluation",
+        component: BenchmarkEvaluation,
+        meta: { title: 'Evaluation' },
       },
 
     ]
@@ -217,7 +241,7 @@ const routes = [
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
-  history: createWebHashHistory(), 
+  history: createWebHashHistory(),
   // history: createWebHistory(), //去掉路径中的 # 号，不行，打包之后会白屏
   routes,
   linkActiveClass: "active",

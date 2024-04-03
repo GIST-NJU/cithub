@@ -1,0 +1,15 @@
+[System] slider
+[Strength] 2
+[Parameter] 6
+[Values] 2 2 4 2 9 8 
+[Constraints] 10
+p4 = 2 && p5 = 3
+p4 = 2 && p5 = 5
+p4 = 6 && p5 = 1
+p4 = 6 && p5 = 3
+p4 = 6 && p5 = 0
+p4 = 6 && p5 = 5
+p4 = 0 && p5 = 1
+p4 = 0 && p5 = 3
+p4 = 0 && p5 = 0
+p4 = 0 && p5 = 5

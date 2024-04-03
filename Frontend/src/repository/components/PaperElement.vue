@@ -47,14 +47,14 @@
           <p :class="getResearchFieldColor(props.item.field)"> {{ props.item.field }}</p>
         </div>
 
-        <div style="display: flex;">
+        <div class="d-flex justify-content-between mt-3">
           <div style="margin: 0px 5px 0px 0px;"> <argon-button @click="JumpToDoi(props.item.doi)" size="sm"
               color="success"> doi</argon-button></div>
-
           <div> <argon-button @click="enterPaperInfo(props.item)" size="sm" color="primary"> detailed </argon-button>
           </div>
-
         </div>
+
+
 
       </div>
 

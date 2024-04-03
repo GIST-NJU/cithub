@@ -1,0 +1,23 @@
+p1:0,1,2,3,4,5,6,7,8,9,10,11,12
+p2:0,1,2,3
+p3:0,1,2,3,4,5,6,7,8,9
+p4:0,1,2,3
+p5:0,1,2,3,4
+p6:0,1,2,3
+p7:0,1,2
+p8:0,1,2,3,4,5,6,7,8,9,10,11,12
+p9:0,1,2,3
+p10:0,1,2
+
+IF ([p2] = 1 AND [p4] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p6] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 1 AND [p9] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 1 AND [p6] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 1 AND [p9] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 1 AND [p9] = 1) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p4] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p6] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 3 AND [p9] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 3 AND [p6] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p4] = 3 AND [p9] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p6] = 3 AND [p9] = 3) THEN ([p1] = 0 and not [p1] = 0);

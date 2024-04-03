@@ -8,7 +8,7 @@ import { useUserStore } from '../store/userStore';
 import { useCountryStore } from '../store/CountryStore'
 import { useTagStore } from '../store/TagStore'
 import { useModuleStore } from '../store/module';
-import {usePaginationStore} from '../store/paginationStore'
+import { usePaginationStore } from '../store/paginationStore'
 import { request } from '../request';
 const userStore = useUserStore(pinia)
 const moduleStore = useModuleStore(pinia)
@@ -18,31 +18,31 @@ const CountryStore = useCountryStore(pinia)
 const TagStore = useTagStore(pinia)
 const InstitutionStore = useInstitutionStore(pinia)
 const VenueStore = useVenueStore(pinia)
-const PaginationStore=usePaginationStore(pinia)
+const PaginationStore = usePaginationStore(pinia)
 
 const listAllPapers = async () => {
     try {
-      const res = await request({
-        url: '/repo/list/listAllpapers',
-        method: 'POST',
-        data: {
-            pagenum: PaginationStore.pagenum,
-            pagesize: PaginationStore.pagesize
-        }
-      });
-  
-    //   console.log("listAllPapers", res);
-      PaperInfoStore.paperinfos.length = 0;
-      PaperInfoStore.searchKeyWords = '';
-      PaperInfoStore.paperinfos.push(...res.listEntityPage.records);
-  
-      PaginationStore.total = res.listEntityPage.total;
-      PaperInfoStore.total = PaginationStore.total;
+        const res = await request({
+            url: '/repo/list/listAllpapers',
+            method: 'POST',
+            data: {
+                pagenum: PaginationStore.pagenum,
+                pagesize: PaginationStore.pagesize
+            }
+        });
+
+        //   console.log("listAllPapers", res);
+        PaperInfoStore.paperinfos.length = 0;
+        PaperInfoStore.searchKeyWords = '';
+        PaperInfoStore.paperinfos.push(...res.listEntityPage.records);
+        //   PaperInfoStore.total = PaginationStore.total;
+        PaperInfoStore.total = res.listEntityPage.total
+        PaginationStore.total = res.listEntityPage.total;
     } catch (error) {
-      console.error("错误是", error);
+        console.error("错误是", error);
     }
-  }
-  
+}
+
 
 const listAllScholars = () => {
 

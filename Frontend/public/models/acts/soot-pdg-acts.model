@@ -1,0 +1,10 @@
+[System]
+Name:soot-pdg
+[Parameter]
+p0(int):0,1,2
+p1(int):0,1,2,3
+p2(int):0,1,2,3
+p3(int):0,1,2,3
+p4(int):0,1,2,3
+p5(int):0,1,2,3
+[Constraint]

@@ -1,0 +1,13 @@
+p1:0
+p2:0,1,2,3,4,5,6
+p3:0
+p4:0
+p5:0
+p6:0
+p7:0,1,2,3
+p8:0,1,2,3,4
+
+IF ([p2] = 6 AND [p7] = 3) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 6 AND [p7] = 2) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 5 AND [p7] = 2) THEN ([p1] = 0 and not [p1] = 0);
+IF ([p2] = 5 AND [p7] = 3) THEN ([p1] = 0 and not [p1] = 0);

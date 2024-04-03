@@ -88,16 +88,7 @@
                 </div>
               </div>
 
-              <!-- <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-body pb-0">
-          <h5>Paper Citation Relationships</h5>
-          <p>...</p>
-        </div>
-      </div>
-    </div>
-  </div> -->
+
 
               <div class="row">
                 <div class="col-12">

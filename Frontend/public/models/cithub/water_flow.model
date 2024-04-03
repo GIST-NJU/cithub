@@ -1,0 +1,5 @@
+[System] water_flow
+[Strength] 2
+[Parameter] 10
+[Values] 3 2 1 2 6 2 8 2 2 3
+[Constraints] 0

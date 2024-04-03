@@ -1,0 +1,8 @@
+[System] M25_V1
+[Strength] 2
+[Parameter] 17
+[Values] 2 3 3 3 3 2 2 3 3 3 2 2 2 2 6 4 3
+[Constraints] 3
+p12 = 0 && p13 = 0
+p0 = 1 && p13 = 0
+p11 = 0 && p13 = 0

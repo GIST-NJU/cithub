@@ -1,0 +1,18 @@
+[System] ProcessorComm1
+[Strength] 2
+[Parameter] 15
+[Values] 2 2 3 3 3 3 3 2 3 4 4 4 4 4 4
+[Constraints] 13
+p0 = 1 && p14 = 2
+p0 = 1 && p8 = 1
+p0 = 1 && p13 = 3
+p0 = 1 && p14 = 1
+p0 = 1 && p8 = 0
+p0 = 1 && p14 = 3
+p0 = 1 && p13 = 2
+p0 = 1 && p13 = 1
+p0 = 1 && p12 = 3
+p1 = 1 && p2 = 1
+p0 = 1 && p12 = 1
+p1 = 0 && p2 = 0
+p0 = 1 && p12 = 2

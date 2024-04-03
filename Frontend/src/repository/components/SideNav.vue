@@ -14,7 +14,6 @@
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor:pointer;">
           <a @click.prevent="jumpToHome" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]">
-            <!-- <a href="/repository/home" :class="['nav-link', { 'active': isRouteActive('Repository_Home') }]"> -->
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>

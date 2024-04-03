@@ -1,0 +1,6 @@
+[System] apache-small
+[Strength] 2
+[Parameter] 13
+[Values] 2 2 2 2 2 2 2 2 2 2 2 2 2 
+[Constraints] 1
+p11 = 0 && p12 = 1

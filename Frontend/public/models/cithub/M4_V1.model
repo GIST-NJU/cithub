@@ -1,0 +1,8 @@
+[System] M4_V1
+[Strength] 2
+[Parameter] 10
+[Values] 3 2 3 2 3 2 2 2 2 2
+[Constraints] 3
+p0 = 2 && p6 = 1
+p2 = 2 && p6 = 1
+p5 = 0 && p6 = 1

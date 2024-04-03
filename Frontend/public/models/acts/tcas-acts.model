@@ -1,0 +1,19 @@
+[System]
+Name:tcas
+[Parameter]
+p0(int):0,1
+p1(int):0,1
+p2(int):0,1
+p3(int):0,1
+p4(int):0,1
+p5(int):0,1
+p6(int):0,1
+p7(int):0,1,2
+p8(int):0,1,2
+p9(int):0,1,2,3
+p10(int):0,1,2,3,4,5,6,7,8,9
+p11(int):0,1,2,3,4,5,6,7,8,9
+[Constraint]
+p3!= 0 || p6!= 1
+p0!= 0 || p7!= 0
+p0!= 1 || p6!= 0

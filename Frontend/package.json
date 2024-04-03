@@ -2,16 +2,16 @@
   "name": "vue-argon-dashboard-2",
   "version": "3.0.0",
   "private": true,
-  "author": "Creative Tim",
-  "license": "SEE LICENSE IN <https://www.creative-tim.com/license>",
-  "description": "VueJS version of Argon Dashboard 2 by Creative Tim",
-  "homepage": "https://demos.creative-tim.com/vue-argon-dashboard/",
+  "author": "JianTu Xiang",
+  "license": "",
+  "description": "CitHub: A Combinatorial Interaction Testing Service System",
+  "homepage": "https://gist.nju.edu.cn/cithub/#/",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/vue-argon-dashboard/issues"
+    "url": "https://github.com/GIST-NJU/cithub/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/vue-argon-dashboard.git"
+    "url": "git+https://github.com/GIST-NJU/cithub.git"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -28,6 +28,8 @@
     "dropzone": "6.0.0-beta.2",
     "echarts": "^4.9.0",
     "element-plus": "^2.5.2",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "openai": "^4.11.1",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",

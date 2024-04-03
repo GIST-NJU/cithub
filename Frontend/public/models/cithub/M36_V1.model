@@ -1,0 +1,10 @@
+[System] M36_V1
+[Strength] 2
+[Parameter] 8
+[Values] 1 8 2 2 1 1 5 5
+[Constraints] 5
+p1 = 6 && p6 = 3
+p1 = 6 && p6 = 2
+p1 = 7 && p6 = 2
+p1 = 3 && p6 = 0
+p1 = 7 && p6 = 3

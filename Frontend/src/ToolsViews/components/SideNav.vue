@@ -12,21 +12,12 @@
             </div>
         </div>
         <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+        <div class="w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
 
-                <li class="nav-item" @click="jumpToToolsHome" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
-                        @mouseout="handleMouseOutHome">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1 p">Tools Home</span>
-                    </a>
-                </li>
 
-                <li class="nav-item" @click="jumpToProjects" style=" cursor:pointer;">
+
+                <!-- <li class="nav-item" @click="jumpToProjects" style=" cursor:pointer;">
                     <a :class="['nav-link', isActivePapers ? 'active' : '']" @mouseover="handleMouseOverPapers"
                         @mouseout="handleMouseOutPapers">
                         <div
@@ -35,8 +26,8 @@
                         </div>
                         <span class="nav-link-text ms-1 p">Projects</span>
                     </a>
-                </li>
-                <!-- <li v-if="currentProjectStore.projectid" class="nav-item" @click="jumpToModels" style=" cursor:pointer;"> -->
+                </li> -->
+                
                 <li class="nav-item" @click="jumpToModels" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveCategory ? 'active' : '']" @mouseover="handleMouseOverCategory"
                         @mouseout="handleMouseOutCategory">
@@ -93,6 +84,17 @@
                     </a>
                 </li> -->
 
+                <li class="nav-item" @click="jumpToAlgorithmsAvailableHome" style=" cursor:pointer;">
+                    <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
+                        @mouseout="handleMouseOutHome">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1 p">Algorithms Available</span>
+                    </a>
+                </li>
+
                 <li class="nav-item" @click="jumpToHelps" style=" cursor:pointer;">
                     <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
                         @mouseout="handleMouseOutInstitutions">
@@ -131,48 +133,30 @@ const isActiveCharts = ref(false)
 
 
 
-const jumpToToolsHome = () => {
-    router.push({ name: 'ToolsHome' })
+const jumpToAlgorithmsAvailableHome = () => {
+    router.push({ name: 'AlgorithmsAvailableHome' })
 }
 
-const jumpToProjects = () => {
-    router.push({ name: 'ProjectsHome' })
+// const jumpToProjects = () => {
+//     router.push({ name: 'ProjectsHome' })
+// }
 
-}
 const jumpToModels = () => {
-    if (currentProjectStore.projectid) {
-        router.push({ name: 'modelsHome' })
-    }
 
-    else {
-        ElNotification({
-            title: 'Need to Choose a Project first',
-            message: 'Please choose a Project to continue.',
-            type: 'error',
-        })
-        router.push({
-            name: 'ProjectsHome'
-        })
-    }
+        router.push({ name: 'modelsHome' })
+
 
 }
 
 const jumpToTestSuite = () => {
-    if (currentModel.currentModel.modelid) {
+
         router.push({
             path: '/tools/TestSuitesHomeNew',
             query:
                 { modelid: currentModel.currentModel.modelid }
         })
-    }
-    else {
-        ElNotification({
-            title: 'Need to Choose a Model first',
-            message: 'Please choose a Model to continue.',
-            type: 'error',
-        })
-        router.push({ name: 'modelsHome' })
-    }
+
+
 
 }
 const jumpToTestSuitesDetails = () => {

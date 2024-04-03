@@ -1,0 +1,7 @@
+[System] browser_audio
+[Strength] 2
+[Parameter] 13
+[Values] 3 3 4 2 4 2 2 2 3 3 3 2 2 
+[Constraints] 2
+p0 = 1 && p2 = 3 && p3 = 1
+p0 = 2 && p2 = 3 && p10 = 2

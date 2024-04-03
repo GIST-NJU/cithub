@@ -18,8 +18,8 @@ import java.util.List;
  * @date 2022-09-08 21:44:17
  */
 @Mapper
-//public interface ListDao extends BaseMapper<ListEntity> {
-public interface ListDao extends MPJBaseMapper<ListEntity> {
+public interface ListDao extends BaseMapper<ListEntity> {
+//public interface ListDao extends MPJBaseMapper<ListEntity> {
 
     List<ListEntity> searchByInstitution(@Param("institution") String institution);
 
@@ -27,4 +27,16 @@ public interface ListDao extends MPJBaseMapper<ListEntity> {
 
     List<ListEntity> searchByTag(@Param("tag") String tag);
 
+
+//    根据标题数组查询Papers，用于BenchmarkHome页面点击References按钮
+    @Select("<script>" +
+            "SELECT * " +
+            "FROM repository_list " +
+            "WHERE title IN " +
+            "<foreach collection='titles' item='title' open='(' separator=',' close=')'>" +
+            "#{title}" +
+            "</foreach>" +
+            "ORDER BY year DESC" +
+            "</script>")
+    List<ListEntity> getByTitleList(@Param("titles") List<String> titles);
 }

@@ -1,0 +1,5 @@
+[System] findstr
+[Strength] 2
+[Parameter] 9
+[Values] 2 3 3 3 3 4 5 5 25 
+[Constraints] 0

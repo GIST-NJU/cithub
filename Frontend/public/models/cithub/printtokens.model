@@ -1,0 +1,17 @@
+[System] printtokens
+[Strength] 2
+[Parameter] 10
+[Values] 13 4 10 4 5 4 3 13 4 3 
+[Constraints] 12
+p1 = 1 && p3 = 1
+p1 = 1 && p5 = 1
+p1 = 1 && p8 = 1
+p3 = 1 && p5 = 1
+p3 = 1 && p8 = 1
+p5 = 1 && p8 = 1
+p1 = 3 && p3 = 3
+p1 = 3 && p5 = 3
+p1 = 3 && p8 = 3
+p3 = 3 && p5 = 3
+p3 = 3 && p8 = 3
+p5 = 3 && p8 = 3

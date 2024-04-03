@@ -37,8 +37,8 @@ import java.util.UUID;
 
 
 @Service("listService")
-//public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements ListService {
-public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> implements ListService {
+public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements ListService {
+//public class ListServiceImpl extends MPJBaseServiceImpl<ListDao, ListEntity> implements ListService {
     @Autowired
     private ListDao listDao;
 
