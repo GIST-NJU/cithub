@@ -14,8 +14,8 @@ export function requestAuth(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    baseURL: "http://localhost:8090/api",
-    // baseURL: "http://210.28.135.32/CitHubAPI",
+    // baseURL: "http://localhost:8090/api",
+    baseURL: "http://210.28.135.32/CitHubAPI",
 
   })
   // 2.1.请求拦截的作用
@@ -134,8 +134,8 @@ export function request(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    baseURL: "http://localhost:8090/api",
-    // baseURL: "http://210.28.135.32/CitHubAPI",
+    // baseURL: "http://localhost:8090/api",
+    baseURL: "http://210.28.135.32/CitHubAPI",
 
   })
 

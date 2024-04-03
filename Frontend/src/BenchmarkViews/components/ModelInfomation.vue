@@ -13,7 +13,7 @@
                             <div class="row">
 
                                 <div class="row">
-                                    <div class="col-1">
+                                    <div class="col-2">
 
                                         <ArgonButton full-width class="mb-2" color="secondary" size="sm" @click="goBack">
                                             <span class="ni ni-bold-left  me-1"> Back </span>
@@ -38,7 +38,9 @@
                                                     model }}</el-checkbox>
                                         </el-checkbox-group>
                                         <p>Note: </p>
-                                        <p>1. <b>acts</b> format is used by Tools acts, cagen, ctlog, coffee4j and jcunit. <b>casa</b> format is used by Tool medici.   </p>
+                                        <p>1. <b>acts</b> format is used by Tools acts, cagen, ctlog, coffee4j and jcunit.
+                                            <b>casa</b> format is used by Tool medici.
+                                        </p>
                                         <p>2. <b>casa</b> and <b>jenny</b> format use 2 files to describe CT model
                                             respectively.</p>
                                         <template #footer>
@@ -146,26 +148,23 @@
                         <div class="col-6">
                             <div class="card mb-4">
                                 <div class="card-body pb-0 mb-4">
-                                    <div class="row  align-items-center mb-2">
-                                        <div class="col-1 p-0 m-0">
-
-                                            <span>Strength: </span>
-
-                                        </div>
-
+                                    <div class="row  ">
                                         <div class="col-4 p-0 m-0">
+                                            <div style="display:flex" class="align-items-center mb-2">
+                                                <div><span>Strength: </span></div>
 
-                                            <el-select v-model="strength" class="m-2" @change="showTable"
-                                                placeholder="Select a covering strength">
-                                                <el-option v-for="item in StrengthOptions" :key="item.value"
-                                                    :label="item.label" :value="item.value" />
-                                            </el-select>
+                                                <div class="col-6"> <el-select v-model="strength" class="m-2" @change="showTable"
+                                                        placeholder="Select a covering strength">
+                                                        <el-option v-for="item in StrengthOptions" :key="item.value"
+                                                            :label="item.label" :value="item.value" />
+                                                    </el-select></div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <h5>Size/Time of 9 Greedy tools for generating {{ strength }}-way covering array on
-                                            this model </h5>
+                                        <h6>Size/Time of 9 Greedy tools for generating {{ strength }}-way covering array on
+                                            this model </h6>
                                         <el-table :data="tableData" border style="width: 100%">
                                             <el-table-column prop="Tool" label="Tool" />
                                             <el-table-column prop="Size" label="Size" />
@@ -286,20 +285,20 @@ const DownloadModel = () => {
             let tempUrl = ''
             if (chosenModels.value[i] == 'casa' || chosenModels.value[i] == 'jenny') {
                 for (let j = 2; j <= 6; j++) {
-                    tempUrl = '/models/' + chosenModels.value[i] + '/' + j + '-way/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '-' + j + '-way' + '.model'
+                    tempUrl = 'models/' + chosenModels.value[i] + '/' + j + '-way/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '-' + j + '-way' + '.model'
                     fileUrls.push(tempUrl)
-                    tempUrl = '/models/' + chosenModels.value[i] + '/' + j + '-way/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '-' + j + '-way' + '.constraint'
+                    tempUrl = 'models/' + chosenModels.value[i] + '/' + j + '-way/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '-' + j + '-way' + '.constraint'
                     fileUrls.push(tempUrl)
                 }
             }
             else if (chosenModels.value[i] == 'cithub') {
 
-                tempUrl = '/models/' + chosenModels.value[i] + '/' + currentBenchmarkModel.model.modelname + '.model'
+                tempUrl = 'models/' + chosenModels.value[i] + '/' + currentBenchmarkModel.model.modelname + '.model'
                 fileUrls.push(tempUrl)
             }
             else {
                 console.log("chosenModels.value[i]", chosenModels.value[i])
-                tempUrl = '/models/' + chosenModels.value[i] + '/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '.model'
+                tempUrl = 'models/' + chosenModels.value[i] + '/' + currentBenchmarkModel.model.modelname + '-' + chosenModels.value[i] + '.model'
                 console.log("tempUrl", tempUrl)
                 fileUrls.push(tempUrl)
             }
