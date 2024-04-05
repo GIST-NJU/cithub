@@ -100,9 +100,9 @@
 </template>
   
 <script setup>
-import Foot from '../ComponentCommon/Foot.vue';
-import ArgonInput from "../ComponentCommon/ArgonInput.vue";
-import ArgonButton from "../ComponentCommon/ArgonButton.vue";
+import Foot from '../CustomizedComponents/Foot.vue';
+import ArgonInput from "../CustomizedComponents/ArgonInput.vue";
+import ArgonButton from "../CustomizedComponents/ArgonButton.vue";
 import { useRouter } from 'vue-router';
 import { reactive, ref } from 'vue';
 import { requestAuth } from '../request'
@@ -141,6 +141,7 @@ const login = () => {
             userStore.name = res.name
             userStore.email = res.useremail
             userStore.institution = res.institution
+            userStore.loginFlag = true
 
             // console.log("userStore", userStore.userID,
             // userStore.account ,
@@ -171,11 +172,6 @@ const login = () => {
 
             router.push({
                 path: '/',
-                query: {
-                    loginFlag: true
-                }
-
-
             })
 
         }

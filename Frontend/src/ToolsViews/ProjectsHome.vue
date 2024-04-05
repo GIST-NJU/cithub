@@ -46,8 +46,8 @@
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
 import { request } from '../request';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import pinia from '../store/store'
 import ProjectCard from "./components/ProjectCard.vue"

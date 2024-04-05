@@ -141,8 +141,8 @@
 </div></template>
 
 <script setup>
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import { ref } from 'vue';
 

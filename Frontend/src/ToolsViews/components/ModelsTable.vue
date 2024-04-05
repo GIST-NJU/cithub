@@ -92,8 +92,8 @@
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import ArgonBadge from '../../ComponentCommon/ArgonBadge.vue'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
+import ArgonBadge from '../../CustomizedComponents/ArgonBadge.vue'
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import { useModelsStore } from '../../store/modelsStore'
 import { useCurrentModel } from '../../store/currentModel'
 import { useRoute, useRouter } from 'vue-router';

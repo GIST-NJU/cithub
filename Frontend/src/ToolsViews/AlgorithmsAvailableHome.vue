@@ -124,12 +124,12 @@
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import ToolsInfoCard from './components/ToolsInfoCard.vue'
 import CategoryCard from './components/CategoryCard.vue'
-import toolsInfo from "../ComponentCommon/tools_info.json"
+import toolsInfo from "../CustomizedComponents/tools_info.json"
 import { useUserStore } from '../store/userStore';
 import pinia from '../store/store';
 

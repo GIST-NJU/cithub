@@ -1,97 +1,204 @@
-# 前端
+# [Vue Argon Dashboard 2](http://demos.creative-tim.com/vue-argon-dashboard/?ref=readme-vad) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https://www.creative-tim.com/product/vue-argon-dashboard&text=Check%20Vue%Argon%20Dashboard%20made%20by%20@CreativeTim%20#webdesign%20#dashboard%20#argondesign%20#vue%20https://www.creative-tim.com/product/vue-argon-dashboard)
 
-## 前端技术栈
+![version](https://img.shields.io/badge/version-4.0.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/vue-argon-dashboard.svg)](https://github.com/creativetimofficial/vue-argon-dashboard/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/vue-argon-dashboard.svg)](https://github.com/creativetimofficial/vue-argon-dashboard/issues?q=is%3Aissue+is%3Aclosed)
 
-Vue3
+![Image](https://s3.amazonaws.com/creativetim_bucket/products/156/original/vue-argon-dashboard.jpg)
 
-Vue-router（用于路由导航）
+Start your Development with an Innovative Admin Template for Bootstrap 5 and VueJS 3. If you like the look & feel of the hottest design trend right now, you will fall in love with this dashboard! It features a huge number of components built to fit together and look amazing.
 
-Vuex（用于状态管理）
+**Fully Coded Components**<br />
+Vue Argon Dashboard 2 is built with over 70 frontend individual elements, like buttons, inputs, navbars, nav tabs, cards, or alerts, giving you the freedom of choosing and combining. All components can take variations in color, which you can easily modify using SASS files and classes. You will save a lot of time going from prototyping to full-functional code because all elements are implemented.
 
-axios （用于发送请求，进行前后端交互）
+This free Bootstrap 5 & VueJS 3 Dashboard is coming with prebuilt design blocks, so the development process is seamless,
+switching from our pages to the real website is very easy to be done.
 
-## 前端运行方法
+View [all components here](https://www.creative-tim.com/learning-lab/vue/alerts/argon-dashboard/).
 
-1. 打开CMD切换到Frontend目录下
-2. npm install
-3. npm run serve
-4. 浏览器访问 localhost:8090
+**Documentation built by Developers**<br />
+Each element is well presented in very complex documentation.
+You can read more about the [documentation here](https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/).
 
-## 前端项目结构
+**Example Pages**<br />
+If you want to get inspiration or just show something directly to your clients, you can jump-start your development with our pre-built example pages. Every page is spaced well, with attractive layouts and pleasing shapes. Vue Argon Dashboard 2 has everything you need to quickly set up an amazing project.
 
-在src内写代码，src文件夹内的目录结构与功能如下：
+View [example pages here](https://demos.creative-tim.com/vue-argon-dashboard/).
+
+**HELPFUL LINKS**
+
+- View [Github Repository](https://github.com/creativetimofficial/vue-argon-dashboard)
+- Check [FAQ Page](https://www.creative-tim.com/faq)
+
+#### Special thanks
+
+During the development of this dashboard, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source:
+
+- [Popper.js](https://popper.js.org/) - Kickass library used to manage poppers
+
+Let us know your thoughts below. And good luck with development!
+
+## Table of Contents
+
+- [Versions](#versions)
+- [Demo](#demo)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [File Structure](#file-structure)
+- [Browser Support](#browser-support)
+- [Resources](#resources)
+- [Reporting Issues](#reporting-issues)
+- [Technical Support or Questions](#technical-support-or-questions)
+- [Licensing](#licensing)
+- [Useful Links](#useful-links)
+
+## Versions
+
+[<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-dashboard?ref=readme-vad)
+
+| VueJS |
+| ----- |
+
+| [![Vue Argon Dashboard 2](https://s3.amazonaws.com/creativetim_bucket/products/156/orginal/vue-argon-dashboard.jpg)](http://demos.creative-tim.com/vue-argon-dashboard/?ref=readme-vad)
+
+## Demo
+
+- [Profile](https://demos.creative-tim.com/vue-argon-dashboard/#/profile?ref=readme-vad)
+- [Sign In](https://demos.creative-tim.com/vue-argon-dashboard/#/sign-in?ref=readme-vad)
+- [Sign Up](https://demos.creative-tim.com/vue-argon-dashboard/#/sign-up?ref=readme-vad)
+
+[View More](https://demos.creative-tim.com/vue-argon-dashboard/#/dashboard-default?ref=readme-vad).
+
+## Quick start
+
+Quick start options:
+
+- Download from [Creative Tim](https://www.creative-tim.com/product/vue-argon-dashboard?ref=readme-vad).
+
+## Terminal Commands
+
+1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
+2. Navigate to the root ./ directory of the product and run `npm install` to install our local dependencies.
+
+## Documentation
+
+The documentation for the Vue Argon Dashboard 2 is hosted at our [website](https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/?ref=readme-vad).
+
+### What's included
+
+Within the download you'll find the following directories and files:
 
 ```
-src
-├─assets（存放静态文件）
-│  ├─css
-│  ├─fonts
-│  ├─img
-│  │  ├─icons
-│  │  │  └─flags
-│  │  ├─illustrations
-│  │  ├─logos
-│  │  ├─shapes
-│  │  └─small-logos
-│  ├─js
-│  └─scss
-│      └─argon-dashboard
-│          ├─badges
-│          ├─bootstrap
-│          │  ├─forms
-│          │  ├─helpers
-│          │  ├─mixins
-│          │  ├─utilities
-│          │  └─vendor
-│          ├─cards
-│          ├─custom
-│          ├─forms
-│          ├─mixins
-│          ├─plugins
-│          │  ├─free
-│          │  └─pro
-│          └─variables
-├─components（Vue Argon的组件，可直接使用，文档参见）
-├─examples （使用Vue Argon组件的例子，用于参考）
-├─router
-   └─index.js（定义项目的路由）
-├─store（定义Vuex的状态仓库）
-└─views（在此写自己的代码：在components文件夹中写组件代码，在components文件夹外写视图代码）
-    ├─components
-    └─HelloWorld.vue
-├─request.js（用于发送axios请求，跨域问题已配置好，直接使用即可）
-└─vue.config.js（用于配置vue-cli脚手架）
+vue-argon-dashboard
+    ├── public
+    │   ├── favicon.png
+    │   └── index.html
+    ├── src
+    │   ├── assets
+    │   │   ├── css
+    │   │   ├── fonts
+    │   │   ├── img
+    │   │   ├── js
+    │   │   └── scss
+    │   ├── components
+    │   │   ├── ArgonAlert.vue
+    │   │   ├── ArgonAvatar.vue
+    │   │   ├── ArgonBadge.vue
+    │   │   ├── ArgonButton.vue
+    │   │   ├── ArgonCheckbox.vue
+    │   │   ├── ArgonInput.vue
+    │   │   ├── ArgonPagination.vue
+    │   │   ├── ArgonPaginationItem.vue
+    │   │   ├── ArgonProgress.vue
+    │   │   ├── ArgonRadio.vue
+    │   │   ├── ArgonSnackbar.vue
+    │   │   ├── ArgonSocialButton.vue
+    │   │   ├── ArgonSwitch.vue
+    │   │   └── ArgonTextarea.vue
+    │   ├── examples
+    │   │   ├── Cards
+    │   │   ├── Charts
+    │   │   ├── Navbars
+    │   │   ├── PageLayout
+    │   │   ├── Sidenav
+    │   │   ├── Breadcrumbs.vue
+    │   │   ├── Configurator.vue
+    │   │   └── Footer.vue
+    │   ├── router
+    │   ├── store
+    │   ├── views
+    │   │   ├── components
+    │   │   ├── Billing.vue
+    │   │   ├── Dashboard.vue
+    │   │   ├── Home.vue
+    │   │   ├── Profile.vue
+    │   │   ├── Rtl.vue
+    │   │   ├── Signin.vue
+    │   │   ├── Signup.vue
+    │   │   ├── Tables.vue
+    │   │   └── VirtualReality.vue
+    │   ├── App.vue
+    │   ├── argon-dashboard.js
+    │   └── main.js
+    ├── .browserslistrc
+    ├── .eslintrc.js
+    ├── .gitignore
+    ├── babel.config.js
+    ├── CHANGELOG.md
+    ├── ISSUE_TEMPLATE.md
+    ├── LICENSE
+    ├── package.json
+    └── README.md
 ```
 
-其中，Vue Argon的文档参见[Overview | Vue Argon Dashboard @ Creative Tim (creative-tim.com)](https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/)
+## Browser Support
 
-# 后端
+At present, we officially aim to support the last two versions of the following browsers:
 
-## 后端技术栈
+<img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/chrome.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/firefox.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/edge.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/safari.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/opera.png" width="64" height="64">
 
-fastapi
+## Resources
 
-sqlite
+- [Live Preview](https://demos.creative-tim.com/vue-argon-dashboard/#/dashboard-default?ref=readme-vad)
+- [Download Page](https://www.creative-tim.com/product/vue-argon-dashboard?ref=readme-vad)
+- Documentation is [here](https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/?ref=readme-vad)
+- [License Agreement](https://www.creative-tim.com/license?ref=readme-vad)
+- [Support](https://www.creative-tim.com/contact-us?ref=readme-vad)
+- Issues: [Github Issues Page](https://github.com/creativetimofficial/vue-argon-dashboard/issues)
 
-## 后端运行方法
+## Reporting Issues
 
-1. 打开main.py，然后在终端分别执行2~4
-2. pip install fastapi
-3. pip install uvicorn 
-4. python -m uvicorn main:app --reload
+We use GitHub Issues as the official bug tracker for the Vue Argon Dashboard 2. Here are some advices for our users that want to report an issue:
 
-## 后端项目结构
+1. Make sure that you are using the latest version of the Vue Argon Dashboard 2. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/product/vue-argon-dashboard?ref=readme-vad).
+2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
+3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
 
-```
-Backend
-├─db.py（数据库操作类）
-├─main.py（内有fastapi接口）
-└─test.db（数据库文件）
-```
+## Technical Support or Questions
 
-# 前后端交互逻辑
+If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us?ref=readme-vad) instead of opening an issue.
 
-1. 前端axios发出请求给代理服务器
-2. 代理服务器（vue.config.js内配置）收到请求后，将请求重写，然后转发给后端服务器
-3. 后端服务器处理请求，并返回结果
-4. 前端收到结果后展示到视图上
+## Licensing
+
+- Copyright 2023 [Creative Tim](https://www.creative-tim.com?ref=readme-vad)
+- Creative Tim [license](https://www.creative-tim.com/license?ref=readme-vad)
+
+## Useful Links
+
+- [More products](https://www.creative-tim.com/templates?ref=readme-vad) from Creative Tim
+
+- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
+
+- [Freebies](https://www.creative-tim.com/bootstrap-themes/free?ref=readme-vad) from Creative Tim
+
+- [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=readme-vad) (earn money)
+
+##### Social Media
+
+Twitter: <https://twitter.com/CreativeTim>
+
+Facebook: <https://www.facebook.com/CreativeTim>
+
+Dribbble: <https://dribbble.com/creativetim>
+
+Google+: <https://plus.google.com/+CreativetimPage>
+
+Instagram: <https://instagram.com/creativetimofficial>

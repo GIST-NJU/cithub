@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     hideConfigButton: false,
-    isPinned: false,
+    isPinned: true,
     showConfig: false,
     sidebarType: "bg-white",
     isRTL: false,
@@ -16,22 +16,23 @@ export default createStore({
     showNavbar: true,
     showFooter: true,
     showMain: true,
-    layout: "default",
+    layout: "default"
   },
   mutations: {
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
     },
-    sidebarMinimize(state) {
-      let sidenav_show = document.querySelector("#app");
-      if (state.isPinned) {
+    navbarMinimize(state) {
+      const sidenav_show = document.querySelector(".g-sidenav-show");
+
+      if (sidenav_show.classList.contains("g-sidenav-hidden")) {
+        sidenav_show.classList.remove("g-sidenav-hidden");
+        sidenav_show.classList.add("g-sidenav-pinned");
+        state.isPinned = true;
+      } else {
         sidenav_show.classList.add("g-sidenav-hidden");
         sidenav_show.classList.remove("g-sidenav-pinned");
         state.isPinned = false;
-      } else {
-        sidenav_show.classList.add("g-sidenav-pinned");
-        sidenav_show.classList.remove("g-sidenav-hidden");
-        state.isPinned = true;
       }
     },
     sidebarType(state, payload) {
@@ -43,12 +44,12 @@ export default createStore({
       } else {
         state.isNavFixed = false;
       }
-    },
+    }
   },
   actions: {
     toggleSidebarColor({ commit }, payload) {
       commit("sidebarType", payload);
-    },
+    }
   },
-  getters: {},
+  getters: {}
 });

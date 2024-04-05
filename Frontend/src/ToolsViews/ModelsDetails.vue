@@ -234,12 +234,12 @@
 </template>
 
 <script  setup>
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import { request } from '../request';
 import { onMounted, reactive, ref, computed, defineProps, watch, onUnmounted, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

@@ -218,9 +218,9 @@ import { useModelsStore } from '../store/modelsStore'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../request';
 import { ElNotification } from 'element-plus'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import EvaluationsTable from './components/EvaluationsTable.vue'
 import ConversionTable from './components/ConversionTable.vue'
 import PrioritisationTable from './components/PrioritisationTable.vue'
@@ -229,8 +229,8 @@ import pinia from '../store/store'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 import { useCurrentModel } from '../store/currentModel'
 import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 
 

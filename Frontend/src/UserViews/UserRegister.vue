@@ -85,10 +85,10 @@
 </template>
 
 <script  setup>
-import Foot from '../ComponentCommon/Foot.vue';
-import ArgonInput from "../ComponentCommon/ArgonInput.vue";
-import ArgonButton from "../ComponentCommon/ArgonButton.vue";
-import ArgonCheckbox from "../ComponentCommon/ArgonCheckbox.vue";
+import Foot from '../CustomizedComponents/Foot.vue';
+import ArgonInput from "../CustomizedComponents/ArgonInput.vue";
+import ArgonButton from "../CustomizedComponents/ArgonButton.vue";
+import ArgonCheckbox from "../CustomizedComponents/ArgonCheckbox.vue";
 import { ref, reactive, watch } from 'vue'
 import { requestAuth } from '../request'
 import { useRouter } from 'vue-router';

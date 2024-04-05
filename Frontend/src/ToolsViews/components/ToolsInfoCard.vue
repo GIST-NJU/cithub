@@ -57,7 +57,7 @@
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import ArgonBadge from '../../ComponentCommon/ArgonBadge.vue'
+import ArgonBadge from '../../CustomizedComponents/ArgonBadge.vue'
 onMounted(() => {
   // console.log("props.toolsArray", props.toolsArray)
 })

@@ -137,15 +137,15 @@
 <script setup>
 
 import { onMounted, reactive, ref, computed, defineProps } from 'vue';
-import ArgonBadge from '../../ComponentCommon/ArgonBadge.vue'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
+import ArgonBadge from '../../CustomizedComponents/ArgonBadge.vue'
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import { useModelsStore } from '../../store/modelsStore'
 import { routerKey, useRoute, useRouter } from 'vue-router';
 import { request } from '../../request';
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../../store/testSuitesStore'
 import { usePrioritisationStore } from '../../store/prioritisationStore'
-import toolsInfo from "../../ComponentCommon/tools_info.json";
+import toolsInfo from "../../CustomizedComponents/tools_info.json";
 import { useCurrentModel } from '../../store/currentModel'
 import { useCurrentTestSuitesStore } from '../../store/currentTestSuite'
 import pinia from '../../store/store'

@@ -205,9 +205,9 @@
 <script setup>
 import * as echarts from 'echarts'
 import SideNav from './components/SideNav.vue';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import { onMounted, reactive, ref, } from 'vue';
 import { request,CheckLogin } from '../request';
 import { useRouter } from 'vue-router';

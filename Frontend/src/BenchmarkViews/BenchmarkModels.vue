@@ -109,13 +109,13 @@ import { onMounted, reactive, ref, watch } from 'vue';
 import { Search } from '@element-plus/icons-vue'
 import { ElLoading } from 'element-plus'
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import Foot from '../ComponentCommon/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
 import { request } from '../request'
 import { useRoute, useRouter } from 'vue-router'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue'
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue'
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import Model from './components/ModelCard.vue'
 import pinia from '../store/store';
 import { useModuleStore } from '../store/module';

@@ -211,11 +211,11 @@ import { defineProps, reactive, ref, onMounted } from 'vue'
 import * as echarts from 'echarts'
 import { useRoute, useRouter } from 'vue-router';
 import SideNav from './SideNav.vue';
-import Navbar from '../../ComponentCommon/Navbar.vue';
-import Foot from '../../ComponentCommon/Foot.vue';
+import Navbar from '../../CustomizedComponents/Navbar.vue';
+import Foot from '../../CustomizedComponents/Foot.vue';
 import { useCurrentPaper } from '../../store/currentPaper'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
-import ArgonInput from '../../ComponentCommon/ArgonInput.vue';
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
+import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
 import pinia from '../../store/store'
 import { request } from '../../request'
 import { ElLoading } from 'element-plus'

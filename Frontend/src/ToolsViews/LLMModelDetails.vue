@@ -144,11 +144,11 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { request } from '../request';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
 import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
@@ -159,8 +159,8 @@ import { useCurrentProject } from '../store/currentProject';
 import { useLLMmodellingStore } from '../store/LLMmodellingStore';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
-import toolsInfo from "../ComponentCommon/tools_info.json";
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import toolsInfo from "../CustomizedComponents/tools_info.json";
 import {
     systemContent,
     prompt_Cons_4_ConvertToJson,

@@ -479,24 +479,24 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed, watch } from 'vue';
 import { request } from '../request';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import TestSuitesTable from './components/TestSuitesTable.vue'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue'
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue'
 import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';
 import { useProjectsStore } from '../store/projectsStore'
 import { useModelsStore } from '../store/modelsStore'
 import { useCurrentProject } from '../store/currentProject';
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
 import { useCurrentModel } from '../store/currentModel'
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/testSuitesStore'
 import { useCurrentTestSuitesStore } from '../store/currentTestSuite'
-import toolsInfo from "../ComponentCommon/tools_info.json";
+import toolsInfo from "../CustomizedComponents/tools_info.json";
 import * as echarts from 'echarts'
 const testSuitesStore = useTestSuitesStore(pinia)
 const currentModel = useCurrentModel(pinia)
