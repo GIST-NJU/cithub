@@ -3,12 +3,14 @@
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
     id="sidenav-main">
     <div class="sidenav-header">
-      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-        aria-hidden="true" id="iconSidenav"></i>
-      <div class="navbar-brand m-0">
-        <span class="ms-1 font-weight-bold text-lg">CitHub Repositoy</span>
-      </div>
-    </div>
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+                aria-hidden="true" id="iconSidenav"></i>
+            <div class="navbar-brand m-0">
+                <img src="../../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+
+                <span class="ms-1 font-weight-bold text-lg">CitHub Repository</span>
+            </div>
+        </div>
     <hr class="horizontal dark mt-0">
     <div class="w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">

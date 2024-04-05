@@ -191,10 +191,10 @@
 
 <script setup>
 import { defineProps, reactive, ref, onMounted } from 'vue'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import SideNav from '../components/SideNav.vue';
-import Navbar from '../../ComponentCommon/Navbar.vue';
-import Foot from '../../ComponentCommon/Foot.vue';
+import Navbar from '../../CustomizedComponents/Navbar.vue';
+import Foot from '../../CustomizedComponents/Foot.vue';
 import pinia from '../../store/store'
 import { useCurrentPaper } from '../../store/currentPaper'
 import { useRoute, useRouter } from 'vue-router';

@@ -127,7 +127,7 @@ import { defineProps, reactive, ref } from 'vue'
 import { request } from '../../request';
 import { useCurrentProject } from '../../store/currentProject';
 import { ElNotification } from 'element-plus'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import { useUserStore } from '../../store/userStore'
 import { useProjectsStore } from '../../store/projectsStore'
 import { useRouter } from 'vue-router';

@@ -47,8 +47,8 @@
 import { defineProps, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentPaper } from '../../store/currentPaper'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
-import ArgonInput from '../../ComponentCommon/ArgonInput.vue';
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
+import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
 import pinia from '../../store/store'
 import { request } from '../../request'
 import { ElLoading } from 'element-plus'

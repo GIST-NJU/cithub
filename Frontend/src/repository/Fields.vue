@@ -56,8 +56,8 @@
 
 <script  setup>
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import Foot from '../ComponentCommon/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
 import ArgonBadge from './components/ArgonBadge.vue';
 import { useInstitutionStore } from '../store/institutionStore'
 import { onMounted } from 'vue';

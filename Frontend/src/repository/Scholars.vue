@@ -112,9 +112,9 @@
 
 <script  setup>
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import Foot from '../ComponentCommon/Foot.vue';
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import { onMounted } from 'vue';
 import { ref, computed, reactive, watch } from 'vue';
 import { usePaperInfoStore } from '../store/paperinfoStore'

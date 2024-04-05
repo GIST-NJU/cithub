@@ -94,8 +94,8 @@
 <script  setup>
 import * as echarts from 'echarts'
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import Foot from '../ComponentCommon/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
 import "echarts/map/js/world.js";
 import { useInstitutionStore } from '../store/institutionStore'
 import { onMounted } from 'vue';

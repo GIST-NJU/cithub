@@ -248,14 +248,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-
-  // const userStore = useUserStore()
-  // const moduleStore = useModuleStore()
-  // const PaperInfoStore = usePaperInfoStore()
-  // const AuthorStore = useAuthorStore()
-  // const InstitutionStore = useInstitutionStore()
-  // const VenueStore = useVenueStore()
-
   window.document.title = to.meta.title
   next()
 })

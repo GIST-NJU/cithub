@@ -46,9 +46,9 @@
 
 <script  setup>
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 
-import Foot from '../ComponentCommon/Foot.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
 import { useInstitutionStore } from '../store/institutionStore'
 import { onMounted } from 'vue';
 import { ref, computed, reactive } from 'vue';

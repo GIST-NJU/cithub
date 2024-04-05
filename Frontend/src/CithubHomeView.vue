@@ -113,7 +113,6 @@ import { useRouter, useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { CheckLogin } from './request';
 import pinia from './store/store'
-
 import { ElNotification } from 'element-plus'
 import { useUserStore } from './store/userStore';
 const userStore = useUserStore(pinia)
@@ -165,7 +164,7 @@ const jumpToUser = (value) => {
 onMounted(async () => {
 
 
-	await CheckLogin()
+	// await CheckLogin()
 
 
 })

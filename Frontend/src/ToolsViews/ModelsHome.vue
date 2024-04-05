@@ -306,11 +306,11 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { request,CheckLogin } from '../request';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
 import ModelCard from './components/ModelCard.vue'
 import pinia from '../store/store'
@@ -322,7 +322,7 @@ import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
 import {listAllModelsByUserID} from './common'
-import toolsInfo from "../ComponentCommon/tools_info.json";
+import toolsInfo from "../CustomizedComponents/tools_info.json";
 
 
 const route = useRoute()

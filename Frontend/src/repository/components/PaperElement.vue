@@ -66,7 +66,7 @@
 import { defineProps, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentPaper } from '../../store/currentPaper'
-import ArgonButton from '../../ComponentCommon/ArgonButton.vue';
+import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import pinia from '../../store/store'
 import { useModuleStore } from '../../store/module';
 import { ElNotification } from 'element-plus'

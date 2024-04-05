@@ -257,14 +257,14 @@ import { ElLoading } from 'element-plus'
 import Paper from './components/PaperElement.vue';
 import PaperInfo from './components/PaperInformation.vue';
 import SideNav from './components/SideNav.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
-import Foot from '../ComponentCommon/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
 import { request } from '../request'
 import { useRoute } from 'vue-router'
 import { usePaperInfoStore } from '../store/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
-import ArgonInput from '../ComponentCommon/ArgonInput.vue';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
 import { useCurrentAuthorStore } from '../store/currentAuthorStore'

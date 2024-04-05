@@ -189,11 +189,11 @@
 <script setup>
 import { reactive, onMounted, ref } from 'vue';
 import { request, CheckLogin } from '../request';
-import ArgonButton from '../ComponentCommon/ArgonButton.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import { ElLoading } from 'element-plus'
 import { useRouter } from 'vue-router';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import { searchModel } from './commonFunction'
 import { useModuleStore } from '../store/module';

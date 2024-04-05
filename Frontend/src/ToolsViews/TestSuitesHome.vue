@@ -69,11 +69,11 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { request } from '../request';
-import Foot from '../ComponentCommon/Foot.vue';
-import Navbar from '../ComponentCommon/Navbar.vue';
+import Foot from '../CustomizedComponents/Foot.vue';
+import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import TestSuitesTable from './components/TestSuitesTable.vue'
-import ArgonBadge from '../ComponentCommon/ArgonBadge.vue';
+import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import pinia from '../store/store'
 import { useUserStore } from '../store/userStore';
 import { usePaperInfoStore } from '../store/paperinfoStore';

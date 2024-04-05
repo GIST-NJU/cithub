@@ -117,6 +117,7 @@ export const CheckLogin = async () => {
     userStore.name = userobj.name
     userStore.email = userobj.email
     userStore.institution = userobj.institution
+    userStore.loginFlag=true
     // console.log("userStore",userStore)
   }
   else {
