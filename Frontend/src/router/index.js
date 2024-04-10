@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
-import Cithub from '../CithubHomeView.vue'
-import { usePaperInfoStore } from '../store/paperinfoStore'
-import { useAuthorStore } from '../store/authorStore'
-import { useInstitutionStore } from '../store/institutionStore'
-import { useVenueStore } from '../store/venueStore'
-import { useUserStore } from '../store/userStore';
-import { useModuleStore } from '../store/module';
+import CitHubHome from '../CitHubHome.vue'
 
 // Repository
 import Repository_Router from '../repository/RepositoryRouter.vue'
@@ -38,17 +32,16 @@ import BenchmarkModelInfo from '../BenchmarkViews/components/ModelInfomation.vue
 
 // User
 import UserRouterView from '../UserViews/UserRouterView.vue'
-import UserHome from '../UserViews/UserHome.vue'
-import UserLogin from '../UserViews/UserLogin.vue'
-import UserRegister from '../UserViews/UserRegister.vue'
+import UserLogin from '../UserViews/Login.vue'
+import UserRegister from '../UserViews/Signup.vue'
 
 
 const routes = [
   {
     path: "/",
-    name: "Cithub",
-    component: Cithub,
-    meta: { title: 'Cithub' }
+    name: "CitHub Home",
+    component: CitHubHome,
+    meta: { title: 'CitHub Home' }
   },
   // Repository
   {

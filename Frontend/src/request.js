@@ -16,7 +16,6 @@ export function requestAuth(config) {
     // baseURL: "http://159.75.80.154/api",
     // baseURL: "http://localhost:8090/api",
     baseURL: "http://210.28.135.32/CitHubAPI",
-
   })
   // 2.1.请求拦截的作用
   instance.interceptors.request.use(config => {
