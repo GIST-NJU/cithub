@@ -5,7 +5,7 @@
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-          <router-link :to="{ name: 'Cithub' }" class="breadcrumb-item text-sm text-white" aria-current="page">
+          <router-link :to="{ name: 'CitHub_Home' }" class="breadcrumb-item text-sm text-white" aria-current="page">
             CitHub
           </router-link>
 
@@ -35,7 +35,7 @@
           </li>
           <li class="nav-item d-flex align-items-center">
             <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
-              <span @click="SignOut" class="d-sm-inline d-none"> / Sign Out</span>
+              <span @click="SignOut" class="d-sm-inline d-none"> / Log Out</span>
             </a>
           </li>
         </ul>

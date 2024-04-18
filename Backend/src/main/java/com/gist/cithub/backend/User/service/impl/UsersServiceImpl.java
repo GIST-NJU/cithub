@@ -39,6 +39,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersDao, UsersEntity> impleme
         usersEntity.setInstitution(userinfo.get("institution").toString());
         usersEntity.setPassword(userinfo.get("password").toString());
         usersEntity.setUseremail(userinfo.get("email").toString());
+        usersEntity.setCountry(userinfo.get("country").toString());
         if(usersdao.insert(usersEntity)!=0)
         {
             return true;

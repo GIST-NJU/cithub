@@ -63,7 +63,6 @@
                             <div v-auto-animate>
                                 <span v-if="registerFlag == 'success'" style="margin:0px;font:14px;color: green;">Sign up
                                     Success! Rendering into SignIn Page in {{ timecountdown }}s~</span>
-
                             </div>
                             <div class="text-center">
                                 <argon-button @click="register" class="mt-4" variant="gradient" color="primary" fullWidth
@@ -112,11 +111,9 @@ const jumpToLogin = () => {
 const usernamecheckResult = ref('')
 
 watch(async () => registerform.account, async (newVal, oldVal) => {
-
     try {
         const resolvedVal = await newVal;
         // console.log('Account changed:', resolvedVal);
-
         const res = await requestAuth({
             url: 'user/users/CheckUnique',
             method: 'POST',

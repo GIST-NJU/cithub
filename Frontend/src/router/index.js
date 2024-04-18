@@ -39,7 +39,7 @@ import UserRegister from '../UserViews/Signup.vue'
 const routes = [
   {
     path: "/",
-    name: "CitHub Home",
+    name: "CitHub_Home",
     component: CitHubHome,
     meta: { title: 'CitHub Home' }
   },
@@ -216,13 +216,13 @@ const routes = [
         path: "login",
         name: 'UserLogin',
         component: UserLogin,
-        meta: { title: 'UserLogin' }
+        meta: { title: 'Log In' }
       },
       {
         path: "register",
         name: 'UserRegister',
         component: UserRegister,
-        meta: { title: 'UserRegister' }
+        meta: { title: 'Sign Up' }
       },
 
     ]
