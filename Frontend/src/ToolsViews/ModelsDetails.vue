@@ -74,51 +74,57 @@
                                     <!-- 输入参数 -->
 
 
-                                    <el-table :data="tableData" border style="width: 100%;margin-top:10px" :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick">
-    <!-- 第一列索引列 -->
-    <el-table-column v-if="columnList.length > 0" type="index" :label="'index'" :width="80" />
+                                    <el-table :data="tableData" border style="width: 100%;margin-top:10px"
+                                        :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick">
+                                        <!-- 第一列索引列 -->
+                                        <el-table-column v-if="columnList.length > 0" type="index" :label="'index'"
+                                            :width="80" />
 
-    <!-- 参数和参数取值列 -->
-    <el-table-column v-for="(col, idx) in columnList" :key="col.prop" :prop="col.prop" :label="col.label" :index="idx" :width="getColumnWidth(idx)">
-        <template #default="{ row }">
-            <!-- 根据当前单元格是否处于编辑状态显示不同内容 -->
-            <template v-if="!row.editing">
-                <!-- 绑定整个单元格容器的点击事件 -->
-                <div @click="startEditing(row, col)">
-                    <span>{{ row[col.prop] }}</span>
-                </div>
-            </template>
-            <template v-else>
-                <div>
-                    <el-input v-model="row[col.prop]" clearable></el-input>
-                    <div style="margin-top: 8px;">
-                    <ArgonButton   size="sm" color="success" @click="finishEditing(row, col)">Change</ArgonButton>
-                    <ArgonButton  style="margin-left: 5px;" size="sm"  color="danger" @click="cancelEditing(row, col)">Cancel</ArgonButton>
+                                        <!-- 参数和参数取值列 -->
+                                        <el-table-column v-for="(col, idx) in columnList" :key="col.prop" :prop="col.prop"
+                                            :label="col.label" :index="idx" :width="getColumnWidth(idx)">
+                                            <template #default="{ row }">
+                                                <!-- 根据当前单元格是否处于编辑状态显示不同内容 -->
+                                                <template v-if="!row.editing">
+                                                    <!-- 绑定整个单元格容器的点击事件 -->
+                                                    <div @click="startEditing(row, col)">
+                                                        <span>{{ row[col.prop] }}</span>
+                                                    </div>
+                                                </template>
+                                                <template v-else>
+                                                    <div>
+                                                        <el-input v-model="row[col.prop]" clearable 
+                                                            :placeholder="col.prop == 'Parameter' ? 'Please Input Parameter' : 'Please Input Values, using `,` to seperate each value.'"></el-input>
+                                                        <div style="margin-top: 8px;">
+                                                            <ArgonButton size="sm" color="success"
+                                                                @click="finishEditing(row, col)">Change</ArgonButton>
+                                                            <ArgonButton style="margin-left: 5px;" size="sm" color="danger"
+                                                                @click="cancelEditing(row, col)">Cancel</ArgonButton>
 
-                    </div>
+                                                        </div>
 
-                </div>
-            </template>
-        </template>
-    </el-table-column>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </el-table-column>
 
-    <!-- Operation 列 -->
-    <el-table-column label="Operation" :index="2">
-    <template #default="{ row }">
-        <el-popconfirm title="Delete this Param?" @confirm="() => deleteParam(row)">
-            <template #reference>
-                <ArgonButton size="sm" color="danger" variant="gradient"> 
-                <span class="far fa-trash-alt me-2"></span>
-                    Delete Parameter
-                </ArgonButton>
-                <!-- <a class="btn btn-link text-danger text-gradient px-3 mb-0">
+                                        <!-- Operation 列 -->
+                                        <el-table-column label="Operation" :index="2">
+                                            <template #default="{ row }">
+                                                <el-popconfirm title="Delete this Param?" @confirm="() => deleteParam(row)">
+                                                    <template #reference>
+                                                        <ArgonButton size="sm" color="danger" variant="gradient">
+                                                            <span class="far fa-trash-alt me-2"></span>
+                                                            Delete Parameter
+                                                        </ArgonButton>
+                                                        <!-- <a class="btn btn-link text-danger text-gradient px-3 mb-0">
                     <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete Parameter
                 </a> -->
-            </template>
-        </el-popconfirm>
-    </template>
-</el-table-column>
-</el-table>
+                                                    </template>
+                                                </el-popconfirm>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
 
 
 
@@ -130,9 +136,9 @@
                                         New Parameter</argon-button>
 
 
-           
 
-        
+
+
 
                                     <hr class="my-3 horizontal dark" />
 
@@ -293,7 +299,7 @@ const tableData = ref([]);
 const startEditing = (row, col) => {
     // 如果单元格处于编辑状态，则不做任何操作
     if (row.editing) return;
-    
+
     // 设置该单元格为编辑状态
     row.editing = true;
     // 保存编辑前的值，用于取消编辑时恢复原始值
@@ -310,6 +316,7 @@ const finishEditing = (row, col) => {
     row.editing = false;
     // 更新单元格内容
     updTbCellOrHeader(row[col.prop]);
+
 };
 
 const cancelEditing = (row, col) => {
@@ -317,7 +324,7 @@ const cancelEditing = (row, col) => {
     row.editing = false;
     // 恢复原始值
     row[col.prop] = row.originalValue;
-    
+
     // 如果是新行，设置 isNew 属性为 false
     if (row.isNew) {
         row.isNew = false;
@@ -367,9 +374,9 @@ const updTbCellOrHeader = (val) => {
 };
 
 const handleRowDoubleClick = (row) => {
-    console.log("handleRowDoubleClick",row)
+    console.log("handleRowDoubleClick", row)
     // 检查当前行是否为空行（即 Parameter 和 Value 属性都为空）
-    if (row.Parameter=="") {
+    if (row.Parameter == "") {
         // 如果该行是新行且不处于编辑状态，则启动编辑
         if (!row.editing) {
             startEditing(row, columnList.value[0]); // 这里假设默认编辑第一列
@@ -379,10 +386,10 @@ const handleRowDoubleClick = (row) => {
 
 
 const deleteParam = (row) => {
-    console.log("row",row)
+    console.log("row", row)
     // 找到要删除的行的索引
     const index = tableData.value.findIndex(item => item === row);
-    
+
     // 如果未找到索引，则返回
     if (index === -1) {
         console.error('Row not found in tableData');
@@ -529,7 +536,7 @@ const curColumn = computed(() => {
 
 // 原始的cellDblclick
 const cellDblclick = (row, column, cell, $event) => {
-    console.log("双击！","row:", row, "column:", column, "cell", cell, "$event", $event)
+    console.log("双击！", "row:", row, "column:", column, "cell", cell, "$event", $event)
 
     if (column.index != 2) {
         showEditInput.value = false;
@@ -1090,4 +1097,5 @@ onMounted(async () => {
     background-color: red;
     color: white;
     /* 设置文本颜色，以确保可见性 */
-}</style>
+}
+</style>

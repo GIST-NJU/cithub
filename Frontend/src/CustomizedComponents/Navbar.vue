@@ -9,12 +9,17 @@
             CitHub
           </router-link>
 
+          <router-link :to="{ name: moduleStore.CurrentSubSystemRoute }" @click="handleRouterLinkClick" :exact="true"
+            class="breadcrumb-item text-sm text-white" aria-current="page">
+            {{ moduleStore.CurrentSubSystem }}
+          </router-link>
+
           <router-link :to="{ name: moduleStore.CurrentRoute }" @click="handleRouterLinkClick" :exact="true"
             class="breadcrumb-item text-sm text-white" aria-current="page">
             {{ moduleStore.CurrentModule }}
           </router-link>
 
-  
+          
 
 
           <li v-if="moduleStore.CurrentModuleDetails != ''" class="breadcrumb-item text-sm text-white active"

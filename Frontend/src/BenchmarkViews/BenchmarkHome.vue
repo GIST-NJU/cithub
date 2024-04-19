@@ -295,7 +295,7 @@ const BenchmarkDetails = async (benchmarkset) => {
     moduleStore.CurrentModule = 'Benchmark Set'
     PaginationStore.searchkeywords = benchmarkset
     // 精准搜索
-    PaginationStore.column="benchmarkset"
+    PaginationStore.column = "benchmarkset"
     console.log(" PaginationStore.searchkeywords", PaginationStore.searchkeywords)
     try {
         await searchModel();
@@ -317,7 +317,11 @@ onMounted(async () => {
     let loadingInstance = ElLoading.service({ fullscreen: true })
     // 检查用户登录状态
     await CheckLogin()
-    moduleStore.CurrentModule = 'Benchmark'
+
+
+    moduleStore.CurrentSubSystem = 'Benchmark'
+    moduleStore.CurrentSubSystemRoute = 'Benchmark_Home'
+    moduleStore.CurrentModule = 'Home'
     moduleStore.CurrentModuleDetails = ''
     moduleStore.CurrentRoute = 'Benchmark_Home'
     try {

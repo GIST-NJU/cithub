@@ -183,7 +183,7 @@
               </div>
 
               <div v-if="route.query.module == 'Benchmark'">
-                <div v-if="moduleStore.CurrentRoute == 'Benchmark_Home'">
+                <div v-if="moduleStore.CurrentRoute == 'Home' && moduleStore.CurrentSubSystem=='Benchmark'">
                   <h4>Papers related to Benchmark Set <span style="color: #2dce89">{{
                     PaperInfoStore.searchKeyWords }}</span>
                   </h4>
@@ -612,7 +612,7 @@ const calculateSymbolSize = (weight) => {
 const goBack = () => {
   window.history.back();
 }
-const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Benchmark','Benchmark Models']
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Home','Benchmark Models']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)
 

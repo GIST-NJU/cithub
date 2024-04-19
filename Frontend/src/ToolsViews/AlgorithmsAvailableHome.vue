@@ -132,8 +132,12 @@ import CategoryCard from './components/CategoryCard.vue'
 import toolsInfo from "../CustomizedComponents/tools_info.json"
 import { useUserStore } from '../store/userStore';
 import pinia from '../store/store';
-
 import { useRouter } from 'vue-router';
+import { ElLoading } from 'element-plus'
+import { useModuleStore } from '../store/module';
+
+
+const moduleStore = useModuleStore(pinia)
 const router = useRouter();
 const userStore = useUserStore(pinia)
 
@@ -153,12 +157,7 @@ const showPrioritisationFlag = ref(false)
 const showSelectionReductionFlag = ref(false)
 const showOtherFlag = ref(false)
 
-const generationRef = ref(null);
-const formatConversionRef = ref(null);
-const EvaluationRef = ref(null);
-const PrioritisationRef = ref(null);
-const SelectionReductionRef = ref(null);
-const OtherRef = ref(null);
+
 
 const LoadToolsInfo = () => {
     for (const tool of toolsInfo.RECORDS) {
@@ -195,21 +194,23 @@ const jumpToHelps = () => {
 
 onMounted(async () => {
 
+    let loadingInstance = ElLoading.service({ fullscreen: true })
 
-    // 加载工具信息
-    LoadToolsInfo()
-    
-    const addClickHandler = (ref, flag) => {
-            ref.value.addEventListener('click', () => {
-                flag.value = !flag.value;
-            });
-        };
-        addClickHandler(generationRef, showGenerationFlag);
-        addClickHandler(formatConversionRef, showFormatConversionFlag);
-        addClickHandler(EvaluationRef, showEvaluationFlag);
-        addClickHandler(PrioritisationRef, showPrioritisationFlag);
-        addClickHandler(SelectionReductionRef, showSelectionReductionFlag);
-        addClickHandler(OtherRef, showOtherFlag);
+    try {
+
+        // 加载工具信息
+        LoadToolsInfo()
+
+        moduleStore.CurrentModule = 'Tools'
+        moduleStore.CurrentModuleDetails = 'Algorithms Available'
+        moduleStore.CurrentRoute = 'AlgorithmsAvailableHome'
+        loadingInstance.close()
+
+    } catch (error) {
+
+        loadingInstance.close()
+
+    }
 
 
 
@@ -235,4 +236,5 @@ onMounted(async () => {
     /* 设置边框样式，这里使用蓝色边框作为示例 */
     box-shadow: 0 0 10px #2dce89;
     /* 设置阴影效果，使边框发光 */
-}</style>
+}
+</style>

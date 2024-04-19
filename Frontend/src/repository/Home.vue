@@ -400,8 +400,11 @@ onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
   await  CheckLogin()
   try {
-    
-  moduleStore.CurrentModule = 'Repository'
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  moduleStore.CurrentModule = 'Home'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Home'
   if(PaginationStore.searchkeywords!="") {PaginationStore.searchkeywords=""}
 
   // 首页折线图

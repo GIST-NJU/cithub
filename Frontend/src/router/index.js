@@ -101,7 +101,7 @@ const routes = [
     meta: { title: 'Tools' },
     children: [
       {
-        // ToolsHome
+        // AlgorithmsAvailableHome
         path: "AlgorithmsAvailableHome",
         name: 'AlgorithmsAvailableHome',
         component: AlgorithmsAvailableHome,
@@ -124,7 +124,7 @@ const routes = [
       {
         // modelsHome
         path: "models",
-        name: 'modelsHome',
+        name: 'Tools_Models',
         component: ModelsHome,
         meta: { title: 'Models' }
       },

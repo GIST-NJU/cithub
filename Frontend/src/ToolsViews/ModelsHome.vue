@@ -273,16 +273,17 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                         <div class="card-body px-0 pt-0 pb-2">
 
                             <!-- 废弃ModelCard方案，使用Table方案 -->
-                            <div v-for="(chunk, rowIndex) in chunkedArray" :key="rowIndex" class="row"
+                            <!-- 在最后一行添加一个空白的col，确保最后一行只有一个元素时也只占用一个位置 -->
+
+                            <!-- <div v-for="(chunk, rowIndex) in chunkedArray" :key="rowIndex" class="row"
                                 style="margin: 0 0 0 20px;">
                                 <div class="col" v-for="(model, colIndex) in chunk" :key="colIndex">
                                     <ModelCard style="margin:5px 5px 5px 5px" :model="model"
                                         :index="calculateOriginalIndex(rowIndex, colIndex)">
                                     </ModelCard>
                                 </div>
-                                <!-- 在最后一行添加一个空白的col，确保最后一行只有一个元素时也只占用一个位置 -->
                                 <div v-if="isLastRow(rowIndex) && chunk.length === 1" class="col"></div>
-                            </div>
+                            </div> -->
 
                             <!-- 使用Table显示Models -->
                             <div class="card-header">
@@ -305,7 +306,7 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
 <script  setup>
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, reactive, ref, computed } from 'vue';
-import { request,CheckLogin } from '../request';
+import { request, CheckLogin } from '../request';
 import Foot from '../CustomizedComponents/Foot.vue';
 import Navbar from '../CustomizedComponents/Navbar.vue';
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
@@ -321,10 +322,14 @@ import { useCurrentProject } from '../store/currentProject';
 import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
 import { useCurrentModel } from '../store/currentModel';
 import { ElNotification } from 'element-plus'
-import {listAllModelsByUserID} from './common'
+import { listAllModelsByUserID } from './common'
 import toolsInfo from "../CustomizedComponents/tools_info.json";
+import { useUserStore } from '../store/userStore';
+import { ElLoading } from 'element-plus'
+import { useModuleStore } from '../store/module';
 
 
+const moduleStore = useModuleStore(pinia)
 const route = useRoute()
 const router = useRouter()
 const modelStore = useModelsStore(pinia)
@@ -332,12 +337,14 @@ const projectsStore = useProjectsStore(pinia)
 const currentProjectStore = useCurrentProject(pinia)
 const currentModel = useCurrentModel(pinia)
 const llmFormStore = useLLMmodellingStore(pinia)
+const userStore = useUserStore(pinia)
+
+
 const modelLists = reactive([]);
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
 const dateObject_created = ref()
 const dateObject_lastupdated = ref()
-
 
 const ModelConversionForm = reactive({})
 const LLMModellingForm = reactive({
@@ -420,12 +427,11 @@ const dialogformNewModel = reactive({
     modeltype: '',
     lastupdatedtime: '',
     createdtime: '',
-    projectID: route.query.projectid
+    userid: userStore.userID
 })
 const showdialogNew = () => {
 
     dialogFormVisibleNew.value = true
-    dialogformNewModel.projectID = route.query.projectid
 }
 
 const confirmNewModel = async () => {
@@ -445,7 +451,7 @@ const confirmNewModel = async () => {
             case 'Manual':
                 try {
                     const res = await request({
-                        url: '/tools/models/NewModel',
+                        url: '/tools/NewModel',
                         method: 'POST',
                         data: dialogformNewModel
 
@@ -574,10 +580,10 @@ const confirmNewModel = async () => {
                                         if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
                                             const currentDate = new Date();
                                             const NewModelRes = await request({
-                                                url: '/tools/models/NewModel',
+                                                url: '/tools/NewModel',
                                                 method: 'POST',
                                                 data: {
-                                                    projectID: dialogformNewModel.projectID,
+                                                    userid: userStore.userID,
                                                     modelname: dialogformNewModel.modelname,
                                                     modeldescriptions: dialogformNewModel.modeldescriptions,
                                                     modeltype: dialogformNewModel.modeltype,
@@ -724,10 +730,10 @@ const confirmNewModel = async () => {
                                     if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
                                         const currentDate = new Date();
                                         const NewModelRes = await request({
-                                            url: '/tools/models/NewModel',
+                                            url: '/tools/NewModel',
                                             method: 'POST',
                                             data: {
-                                                projectID: dialogformNewModel.projectID,
+                                                userid: userStore.userID,
                                                 modelname: dialogformNewModel.modelname,
                                                 modeldescriptions: dialogformNewModel.modeldescriptions,
                                                 modeltype: dialogformNewModel.modeltype,
@@ -901,10 +907,10 @@ const confirmNewModel = async () => {
                                         if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
                                             const currentDate = new Date();
                                             const NewModelRes = await request({
-                                                url: '/tools/models/NewModel',
+                                                url: '/tools/NewModel',
                                                 method: 'POST',
                                                 data: {
-                                                    projectID: dialogformNewModel.projectID,
+                                                    userid: userStore.userID,
                                                     modelname: dialogformNewModel.modelname,
                                                     modeldescriptions: dialogformNewModel.modeldescriptions,
                                                     modeltype: dialogformNewModel.modeltype,
@@ -1043,10 +1049,10 @@ const confirmNewModel = async () => {
                                         if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
                                             const currentDate = new Date();
                                             const NewModelRes = await request({
-                                                url: '/tools/models/NewModel',
+                                                url: '/tools/NewModel',
                                                 method: 'POST',
                                                 data: {
-                                                    projectID: dialogformNewModel.projectID,
+                                                    userid: userStore.userID,
                                                     modelname: dialogformNewModel.modelname,
                                                     modeldescriptions: dialogformNewModel.modeldescriptions,
                                                     modeltype: dialogformNewModel.modeltype,
@@ -1123,10 +1129,10 @@ const confirmNewModel = async () => {
                 else {
 
                     const NewModelRes = await request({
-                        url: '/tools/models/NewModel',
+                        url: '/tools/NewModel',
                         method: 'POST',
                         data: {
-                            projectID: dialogformNewModel.projectID,
+                            userid: userStore.userID,
                             modelname: dialogformNewModel.modelname,
                             modeldescriptions: dialogformNewModel.modeldescriptions,
                             modeltype: dialogformNewModel.modeltype,
@@ -1225,12 +1231,32 @@ const listAllModelReaderAlgorithm = () => {
 }
 
 onMounted(async () => {
-    // 检查登录状态
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    // 检查用户登录状态
     await CheckLogin()
-    // 加载当前用户的所有模型
-    await listAllModelsByUserID()
-    // 获取所有的模型转换工具
-    listAllModelReaderAlgorithm()
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = 'Models'
+    moduleStore.CurrentRoute = 'Tools_Models'
+    try {
+
+
+        // 检查登录状态
+        await CheckLogin()
+        // 加载当前用户的所有模型
+        await listAllModelsByUserID()
+        // 获取所有的模型转换工具
+        listAllModelReaderAlgorithm()
+
+        loadingInstance.close()
+
+    } catch (error) {
+
+        loadingInstance.close()
+
+    }
+
+
+
 })
 
 </script>

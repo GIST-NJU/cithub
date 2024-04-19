@@ -128,7 +128,9 @@ const route = useRoute()
 const moduleStore = useModuleStore(pinia)
 
 const jumpToRepo = () => {
-  moduleStore.CurrentModule = 'Repository'
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  moduleStore.CurrentModule = 'Home'
   moduleStore.CurrentModuleDetails = ''
   moduleStore.CurrentRoute = 'Repository_Home'
   router.push({
@@ -144,9 +146,11 @@ const jumpToTools = () => {
   })
 }
 const jumpToBenchmark = () => {
-  moduleStore.CurrentModule = 'Benchmark'
+  moduleStore.CurrentSubSystem='Benchmark'
+  moduleStore.CurrentSubSystemRoute='Benchmark_Home'
+  moduleStore.CurrentModule = 'Home'
   moduleStore.CurrentModuleDetails = ''
-      moduleStore.CurrentRoute = 'Benchmark_Home'
+  moduleStore.CurrentRoute = 'Benchmark_Home'
   router.push({
     path: '/benchmark/home'
   })
