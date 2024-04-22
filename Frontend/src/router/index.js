@@ -13,14 +13,13 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
-import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
+// import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import AlgorithmsAvailableHome from '../ToolsViews/AlgorithmsAvailableHome.vue'
 import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
 import LLMModelDetails from '../ToolsViews/LLMModelDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
-import TestSuitesHomeNew from '../ToolsViews/TestSuiteHomeNew.vue'
 import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
@@ -114,13 +113,13 @@ const routes = [
         component: HelpCenter,
         meta: { title: 'HelpCenter' }
       },
-      {
-        // ProjectsHome
-        path: "ProjectsHome",
-        name: 'ProjectsHome',
-        component: ProjectsHome,
-        meta: { title: 'ProjectsHome' }
-      },
+      // {
+      //   // ProjectsHome
+      //   path: "ProjectsHome",
+      //   name: 'ProjectsHome',
+      //   component: ProjectsHome,
+      //   meta: { title: 'ProjectsHome' }
+      // },
       {
         // modelsHome
         path: "models",
@@ -145,16 +144,9 @@ const routes = [
       {
         // TestSuitesHome
         path: "TestSuitesHome",
-        name: 'TestSuitesHome',
+        name: 'TestSuites_Home',
         component: TestSuitesHome,
         meta: { title: 'TestSuitesHome' }
-      },
-      {
-        // TestSuitesHome
-        path: "TestSuitesHomeNew",
-        name: 'TestSuitesHomeNew',
-        component: TestSuitesHomeNew,
-        meta: { title: 'TestSuitesHomeNew' }
       },
       {
         // TestSuiteDetails
@@ -163,6 +155,7 @@ const routes = [
         component: TestSuiteDetails,
         meta: { title: 'TestSuiteDetails' }
       },
+
 
 
     ]

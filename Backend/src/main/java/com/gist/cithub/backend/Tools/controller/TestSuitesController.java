@@ -64,14 +64,14 @@ public class TestSuitesController {
         ModelsEntity modelsEntity = modelsService.getOne(queryWrapper);
         Object strength = info.get("strength");
 
-        if (strength != null) {
-            if (strength instanceof Integer) {
-                modelsEntity.setStrength((Integer) strength);
-            } else if (strength instanceof String) {
-                modelsEntity.setStrength(Integer.parseInt((String) strength));
-            }
-            modelsService.updateById(modelsEntity);
-        }
+//        if (strength != null) {
+//            if (strength instanceof Integer) {
+//                modelsEntity.setStrength((Integer) strength);
+//            } else if (strength instanceof String) {
+//                modelsEntity.setStrength(Integer.parseInt((String) strength));
+//            }
+//            modelsService.updateById(modelsEntity);
+//        }
 
 
         TestSuitesEntity testSuitesEntity = new TestSuitesEntity();

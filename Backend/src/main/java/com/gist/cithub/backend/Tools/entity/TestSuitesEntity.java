@@ -38,6 +38,7 @@ public class TestSuitesEntity implements Serializable {
     private Integer modelid;
     private Integer size;
     private Integer time;
+    private Integer strength;
 
     private Date createdtime;
 

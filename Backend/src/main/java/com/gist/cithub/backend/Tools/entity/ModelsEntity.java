@@ -42,7 +42,6 @@ public class ModelsEntity implements Serializable {
 	 * 
 	 */
 	private Integer userid;
-	private Integer strength;
 
 	private Date createdtime;
 

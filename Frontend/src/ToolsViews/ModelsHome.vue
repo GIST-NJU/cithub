@@ -11,10 +11,8 @@
                 <div class="col-12">
                     <div class="card mb-4">
                         <div class="card-header pb-0">
-                            <h3>Models List</h3>
-
-                            <h6>{{ modelStore.modelsList.length }} Models
-                                found in project {{ route.query.projectname }}</h6>
+                            <h4>Complete Models List</h4>
+                            <h6>{{ modelStore.modelsList.length }} Models Found</h6>
 
                         </div>
 
@@ -315,14 +313,12 @@ import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import ModelsTable from './components/ModelsTable.vue'
 import ModelCard from './components/ModelCard.vue'
 import pinia from '../store/store'
-import { usePaperInfoStore } from '../store/paperinfoStore';
-import { useProjectsStore } from '../store/projectsStore'
-import { useModelsStore } from '../store/modelsStore'
-import { useCurrentProject } from '../store/currentProject';
-import { useLLMmodellingStore } from '../store/LLMmodellingStore.js';
-import { useCurrentModel } from '../store/currentModel';
+
+import { useModelsStore } from '../store/ToolsStore/modelsStore'
+import { useLLMmodellingStore } from '../store/ToolsStore/LLMmodellingStore.js';
+import { useCurrentModel } from '../store/ToolsStore/currentModel';
 import { ElNotification } from 'element-plus'
-import { listAllModelsByUserID } from './common'
+import { listAllModelsByUserID } from './commonFunction.js'
 import toolsInfo from "../CustomizedComponents/tools_info.json";
 import { useUserStore } from '../store/userStore';
 import { ElLoading } from 'element-plus'
@@ -333,8 +329,6 @@ const moduleStore = useModuleStore(pinia)
 const route = useRoute()
 const router = useRouter()
 const modelStore = useModelsStore(pinia)
-const projectsStore = useProjectsStore(pinia)
-const currentProjectStore = useCurrentProject(pinia)
 const currentModel = useCurrentModel(pinia)
 const llmFormStore = useLLMmodellingStore(pinia)
 const userStore = useUserStore(pinia)
@@ -1234,8 +1228,10 @@ onMounted(async () => {
     let loadingInstance = ElLoading.service({ fullscreen: true })
     // 检查用户登录状态
     await CheckLogin()
-    moduleStore.CurrentModule = 'Tools'
-    moduleStore.CurrentModuleDetails = 'Models'
+    moduleStore.CurrentSubSystem="Tools"
+    moduleStore.CurrentSubSystemRoute="Tools_Models"
+    moduleStore.CurrentModule = 'Models'
+    moduleStore.CurrentModuleDetails = ''
     moduleStore.CurrentRoute = 'Tools_Models'
     try {
 

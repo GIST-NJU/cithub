@@ -1,4 +1,18 @@
+
 <template>
+
+</template>
+
+<script  setup>
+
+</script>
+
+
+<style scoped>
+
+</style>
+
+<!-- <template>
   <div class="card">
     <div class="p-3 mx-4 card-body">
       <h6 class="mb-0">Model#{{ props.index }} : {{ props.model.modelname }}</h6>
@@ -307,4 +321,4 @@ onMounted(() => {
   border: 2px solid #2dce89;
   transform: scale(1.02);
 }
-</style>
+</style> -->

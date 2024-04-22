@@ -149,18 +149,14 @@ import Navbar from '../CustomizedComponents/Navbar.vue';
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import SideNav from './components/SideNav.vue'
 import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
-import ModelsTable from './components/ModelsTable.vue'
+
 import pinia from '../store/store'
-import { useUserStore } from '../store/userStore';
-import { usePaperInfoStore } from '../store/paperinfoStore';
-import { useProjectsStore } from '../store/projectsStore'
-import { useModelsStore } from '../store/modelsStore'
-import { useCurrentProject } from '../store/currentProject';
-import { useLLMmodellingStore } from '../store/LLMmodellingStore';
-import { useCurrentModel } from '../store/currentModel';
+
+import { useLLMmodellingStore } from '../store/ToolsStore/LLMmodellingStore';
+import { useCurrentModel } from '../store/ToolsStore/currentModel';
 import { ElNotification } from 'element-plus'
 import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
-import toolsInfo from "../CustomizedComponents/tools_info.json";
+
 import {
     systemContent,
     prompt_Cons_4_ConvertToJson,

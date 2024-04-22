@@ -138,11 +138,13 @@ const jumpToRepo = () => {
   })
 }
 const jumpToTools = () => {
-  moduleStore.CurrentModule = 'Tools'
+  moduleStore.CurrentSubSystem='Tools'
+  moduleStore.CurrentSubSystemRoute='Tools_Models'
+  moduleStore.CurrentModule = 'Home'
   moduleStore.CurrentModuleDetails = ''
-  moduleStore.CurrentRoute = ''
+  moduleStore.CurrentRoute = 'Tools_Models'
   router.push({
-    path: '/tools/models'
+   name:'Tools_Models'
   })
 }
 const jumpToBenchmark = () => {

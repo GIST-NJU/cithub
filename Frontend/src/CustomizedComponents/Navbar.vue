@@ -88,7 +88,7 @@ const handleRouterLinkClick = () => {
 
 
 onMounted(() => {
-  console.log("route.query.module", route.query.module)
+  // console.log("route.query.module", route.query.module)
   if (typeof route.query.module === 'undefined') {
     if (moduleStore.CurrentModule == 'Repository') { moduleStore.CurrentRoute = 'Repository_Home' }
     if (moduleStore.CurrentModule == 'Complete Paper List') { moduleStore.CurrentRoute = 'Repository_Papers' }

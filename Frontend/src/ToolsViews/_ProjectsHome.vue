@@ -50,14 +50,12 @@ import Foot from '../CustomizedComponents/Foot.vue';
 import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
 import pinia from '../store/store'
-import ProjectCard from "./components/ProjectCard.vue"
+// import ProjectCard from "./components/ProjectCard.vue"
 import { useUserStore } from '../store/userStore';
-import { useProjectsStore } from '../store/projectsStore'
 import { ElNotification } from 'element-plus'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const userStore = useUserStore(pinia)
-const projectsStore = useProjectsStore(pinia)
 const modelLists = reactive([]);
 const CALists = reactive([]);
 const projectList = reactive([]);

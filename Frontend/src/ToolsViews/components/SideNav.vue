@@ -40,7 +40,7 @@
                 </li>
 
                 <li class="nav-item"  style=" cursor:pointer;">
-                    <a  @click.prevent="jumpToTestSuite" :class="['nav-link', { 'active': isRouteActive('Benchmark_Home') }]" >
+                    <a  @click.prevent="jumpToTestSuites" :class="['nav-link', { 'active': isRouteActive('TestSuites_Home') }]" >
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-print text-success text-lg opacity-10"></i>
@@ -112,15 +112,12 @@
 <script  setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { useCurrentModel } from '../../store/currentModel'
-import { useCurrentProject } from '../../store/currentProject';
-import { useCurrentTestSuitesStore } from '../../store/currentTestSuite';
 import { ElNotification } from 'element-plus'
 import pinia from '../../store/store'
 import { useModuleStore } from '../../store/module';
 
 const router = useRouter();
-const currentModel = useCurrentModel(pinia)
+
 const moduleStore = useModuleStore(pinia)
 
 
@@ -146,12 +143,12 @@ const jumpToModels = () => {
 
 }
 
-const jumpToTestSuite = () => {
-
+const jumpToTestSuites = () => {
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Tools_Models'
         router.push({
-            path: '/tools/TestSuitesHomeNew',
-            query:
-                { modelid: currentModel.currentModel.modelid }
+            path: '/tools/TestSuitesHome',
         })
 
 
