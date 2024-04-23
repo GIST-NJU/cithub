@@ -6,22 +6,23 @@
       <h6>Model Name: {{ props.model.modelname }}</h6>
       <h7>Model Description: {{ props.model.modeldescriptions }}</h7>
       <h7>{{ props.model.NumOfTestSuites }} testsuties found.</h7>
+      <h4 class="text-center">TestSuites List of Model <i> {{ props.model.modelname }}</i></h4>
 
       <!-- <div class="row">
 
         <div class="col-2">
           <h6>Model Name</h6>
-          <argon-input v-model="props.model.modelname" type="text" :disabled="'disabled'" />
+          <argon-input v-model="props.model.modelname" type="text" readonly />
         </div>
 
         <div class="col-2">
           <h6> Num of params</h6>
-          <argon-input v-model="props.model.NumofParams" type="text" :disabled="'disabled'" />
+          <argon-input v-model="props.model.NumofParams" type="text" readonly />
         </div>
 
         <div class="col-2">
           <h6> Num of Cons</h6>
-          <argon-input v-model="props.model.NumofCons" type="text" :disabled="'disabled'" />
+          <argon-input v-model="props.model.NumofCons" type="text" readonly />
         </div>
 
       </div>
@@ -29,7 +30,7 @@
       <div class="row">
         <div class="col-12">
           <h6>Model Description</h6>
-          <argon-input v-model="props.model.modeldescriptions" type="text" :disabled="'disabled'" />
+          <argon-input v-model="props.model.modeldescriptions" type="text" readonly />
         </div>
       </div>
 
@@ -90,7 +91,7 @@
               <th class=" text-center  text-secondary  font-weight-bolder opacity-7 ps-2">
                 <ArgonBadge color="danger">Strength</ArgonBadge>
               </th>
-              
+
               <th class="text-center  text-secondary  font-weight-bolder opacity-7">
                 <ArgonBadge color="info">Size</ArgonBadge>
               </th>
@@ -120,7 +121,7 @@
                 </div>
               </td>
               <td>
-                <p class=" text-center font-weight-bold mb-0">{{ testSuite.algorithm }}</p>
+                <p class=" text-center font-weight-bold mb-0">{{ testSuite.generationtool }}</p>
               </td>
 
               <td>
@@ -131,7 +132,7 @@
                 <p class=" font-weight-bold mb-0">{{ testSuite.size }}</p>
               </td>
               <td class="align-middle text-center text-sm">
-                <p class=" font-weight-bold mb-0">{{ testSuite.time }}</p>
+                <p class=" font-weight-bold mb-0">{{ testSuite.generationtime }}</p>
               </td>
               <td class="align-middle text-center text-sm">
                 <p class=" font-weight-bold mb-0">{{ testSuite.createdtimeFormat }}</p>
@@ -222,8 +223,9 @@ const getActionButtonText = (routeName) => {
     case 'TestSuites_Home':
       return 'Enter';
     case 'TestSuiteDetails':
+
       return 'Choose';
-    // 更多情况省略
+    // 更多情况
     default:
       return 'Enter';
   }
@@ -233,19 +235,23 @@ const EnterTestSuiteDetails = (testsuite, index) => {
   // console.log("testsuite",testsuite)
   let loadingInstance = ElLoading.service({ fullscreen: true })
 
-  currentTestSuite.currentTestSuites.testsuitesid = testsuite.testsuitesid
-  currentTestSuite.currentTestSuites.testsuitesname = testsuite.testsuitesname
-  currentTestSuite.currentTestSuites.testsuitesdescriptions = testsuite.testsuitesdescriptions
-  currentTestSuite.currentTestSuites.testsuitescontents = testsuite.testsuitescontents
-  currentTestSuite.currentTestSuites.algorithm = testsuite.algorithm
-  currentTestSuite.currentTestSuites.strength = testsuite.strength
-  currentTestSuite.currentTestSuites.modelid = testsuite.modelid
-  currentTestSuite.currentTestSuites.size = testsuite.size
-  currentTestSuite.currentTestSuites.time = testsuite.time
-  currentTestSuite.currentTestSuites.createdtime = testsuite.createdtime
-  currentTestSuite.currentTestSuites.lastupdatedtime = testsuite.lastupdatedtime
-  currentTestSuite.currentTestSuites.createdtimeFortmat = testsuite.createdtimeFortmat
-  currentTestSuite.currentTestSuites.lastupdatedtimeFortmat = testsuite.lastupdatedtimeFortmat
+  // 在进入 TestSuite Detail时 给 currentTestSuite.currentTestSuites 赋值
+  for (let key in testsuite) {
+    if (testsuite.hasOwnProperty(key)) {
+      currentTestSuite.currentTestSuites[key] = testsuite[key];
+    }
+  }
+// console.log(" EnterTestSuiteDetails currentTestSuite.currentTestSuites",currentTestSuite.currentTestSuites)
+
+  if (route.name == 'TestSuiteDetails') {
+    ElNotification({
+      title: 'Switch Success!',
+      message: 'Now working on TestSuite <br>' + currentTestSuite.currentTestSuites.testsuitesname,
+      type: 'success',
+      dangerouslyUseHTMLString: true
+    })
+
+  }
 
   // 在 TestSuites_Home 才 切换页面，在 Details 页面 只切换数据 ，不切换页面
   if (route.name == 'TestSuites_Home') {
@@ -255,7 +261,7 @@ const EnterTestSuiteDetails = (testsuite, index) => {
         query: {
           testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
           modelid: currentTestSuite.currentTestSuites.modelid,
-          index:index
+          index: index
         }
       }
     )

@@ -1023,7 +1023,6 @@
 
 <script  setup>
 import { reactive, onMounted, ref } from 'vue';
-import { request, CheckLogin } from '../request';
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import { ElLoading } from 'element-plus'
 import { useRouter } from 'vue-router';

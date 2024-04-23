@@ -3,7 +3,6 @@ export const useCurrentModel = defineStore("CurrentModel", {
     state: () => {
         return {
             currentModel: {},
-            currentModelTestSuites:{}
             
         }
     },

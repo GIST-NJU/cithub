@@ -1235,9 +1235,6 @@ onMounted(async () => {
     moduleStore.CurrentRoute = 'Tools_Models'
     try {
 
-
-        // 检查登录状态
-        await CheckLogin()
         // 加载当前用户的所有模型
         await listAllModelsByUserID()
         // 获取所有的模型转换工具

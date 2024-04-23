@@ -14,6 +14,7 @@
         :placeholder="placeholder"
         :isRequired="isRequired"
         :disabled="disabled"
+        :readonly="readonly" 
         @input="$emit('update:modelValue', $event.target.value)" 
       />
       <span v-if="iconDir === 'right'" class="input-group-text">
@@ -44,7 +45,8 @@ export default {
     placeholder: String,
     type: String,
     isRequired: Boolean,
-    disabled:String
+    disabled:String,
+    readonly: Boolean // 添加 readonly prop
   },
   methods: {
     getClasses: (size, valid) => {

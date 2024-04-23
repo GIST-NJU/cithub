@@ -62,28 +62,28 @@
                                 <div class="col-2">
                                     <h6> Model Name</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.modelname" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
                                 <div class="col-2">
                                     <h6> Num of Parameters</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.parameter" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
                                 <div class="col-2">
                                     <h6> Max Value Domain</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.maximumvalue" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
                                 <div class="col-2">
                                     <h6> Num of Constraints</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.cons" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
 
                                 <div class="col-2">
                                     <h6>Benchmark Set</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.benchmarkset" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
                             </div>
 
@@ -91,14 +91,14 @@
                                 <div class="col-10">
                                     <h6> Model Description</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.modeldescription" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
                                     <h6> Reference</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.reference" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
 
 
@@ -106,7 +106,7 @@
                                 <div class="col-2">
                                     <h6> Reference Year</h6>
                                     <argon-input v-model="currentBenchmarkModel.model.referenceyear" type="text"
-                                        :disabled="'disabled'" />
+                                        readonly />
                                 </div>
 
                                 <div class="col-2">

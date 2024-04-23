@@ -27,12 +27,12 @@
 
                 <div class="col-md-4">
                   <h6>Name</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.name" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.name" type="text" readonly />
                 </div>
 
                 <div class="col-md-3">
                   <h6>Institution Category</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.category" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.category" type="text" readonly />
                 </div>
 
               </div>
@@ -42,12 +42,12 @@
                 <div class="col-md-6">
                   <h6>Institution</h6>
                   <argon-input v-model="currentAuthorStore.CurrentAuthor.institution" type="text"
-                    :disabled="'disabled'" />
+                    readonly />
                 </div>
 
                 <div class="col-md-4">
                   <h6>Country</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.country" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.country" type="text" readonly />
                 </div>
               </div>
 
@@ -56,12 +56,12 @@
 
                 <div v-if="currentAuthorStore.CurrentAuthor.email != ''" class="col-md-6">
                   <h6>Email</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.email" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.email" type="text" readonly />
                 </div>
 
                 <div v-if="currentAuthorStore.CurrentAuthor.homepage != ''" class="col-md-6">
                   <h6>homepage</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.homepage" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.homepage" type="text" readonly />
                 </div>
 
               </div>
@@ -69,7 +69,7 @@
               <div class="row">
                 <div class="col-md-2">
                   <h6>Total Papers: </h6>
-                  <argon-input v-model="PaperInfoStore.total" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="PaperInfoStore.total" type="text" readonly />
                 </div>
 
                 <div class="col-md-6">

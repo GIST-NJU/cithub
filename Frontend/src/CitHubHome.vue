@@ -122,6 +122,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import pinia from './store/store'
 import { useUserStore } from './store/userStore';
+import {CheckLogin} from './request'
 const userStore = useUserStore(pinia)
 const router = useRouter()
 const route = useRoute()
@@ -188,7 +189,7 @@ const SignOut = () => {
 }
 
 onMounted(async () => {
-  // await CheckLogin()
+  await CheckLogin()
 })
 </script>
 

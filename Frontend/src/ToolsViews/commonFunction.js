@@ -36,8 +36,8 @@ const listAllModelsByUserID = async () => {
             const dateObject_lastupdated = new Date(timestamp_lastupdated);
 
             // 获取可读的时间字符串
-            modelStore.modelsList[i].createdtimeFortmat = dateObject_created.toLocaleString();
-            modelStore.modelsList[i].lastupdatedtimeFortmat = dateObject_lastupdated.toLocaleString();
+            modelStore.modelsList[i].createdtimeFormat = dateObject_created.toLocaleString();
+            modelStore.modelsList[i].lastupdatedtimeFormat = dateObject_lastupdated.toLocaleString();
 
 
             modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
@@ -102,7 +102,7 @@ const listModelInfoByModelID = async (modelid) => {
         // console.log("res ModelInfo",res)
         currentModel.currentModel={}
         currentModel.currentModel.modelid = res.ModelRES.modelid
-        currentModel.currentModel.strength = res.ModelRES.strength
+        // currentModel.currentModel.strength = res.ModelRES.strength
         currentModel.currentModel.modelname = res.ModelRES.modelname
         currentModel.currentModel.modeldescriptions = res.ModelRES.modeldescriptions
         currentModel.currentModel.paramsvalues = res.ModelRES.paramsvalues
@@ -151,6 +151,7 @@ const listAllTestSuitesByModelID = async (ModelList) => {
                     column: "modelid"
                 }
             })
+            // console.log("listAllTestSuitesByModelID",res)
             let obj = {
                 "model": model,
                 "testSuites": res.TestSutiesRES
@@ -261,12 +262,20 @@ const CitHubModel = (model, strength) => {
             }
         }
         APIObj.constraints = consArrayToAPI
-        return JSON.stringify(APIObj).replace(/"/g, '')
+        // 这里先返回对象，在实际调用API时再转为Json 
+        // return JSON.stringify(APIObj).replace(/"/g, '')
+        return  APIObj
 
     } catch (error) {
         console.log("error", error)
     }
 }
 
+// 读取 CitHubModel 和 CurrentTestSuite 构造 CitHub Testsuite
+const CitHubTestSuite=(CitHubModel,testsuite) =>{
+    CitHubModel.testsuite = testsuite
+    return CitHubModel
+}
 
-export { listAllModelsByUserID, listAllTestSuitesByModelID, listModelInfoByModelID, CitHubModel }
+
+export { listAllModelsByUserID, listAllTestSuitesByModelID, listModelInfoByModelID, CitHubModel, CitHubTestSuite }

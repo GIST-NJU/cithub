@@ -10,423 +10,602 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="col-2">
+                    <div class="row">
+                        <div class="col-2">
 
-                        <ArgonButton class="mb-2" color="secondary" size="sm" @click="goBack">
-                            <span class="ni ni-bold-left  me-1"> Back </span>
-                        </ArgonButton>
+                            <ArgonButton class="mb-2" color="secondary" size="sm" @click="goBack" full-width>
+                                <span class="ni ni-bold-left  me-1"> </span>Back
+                            </ArgonButton>
 
+                        </div>
+
+                        <div class="col-2">
+
+                            <ArgonButton class="mb-2" color="info" size="sm" full-width
+                                @click="TestTableListFlag = !TestTableListFlag">
+                                Model {{ currentModel.currentModel.modelname }}'s TestSuites List
+                            </ArgonButton>
+
+                        </div>
                     </div>
+
                     <!-- TestSuite Table for current model -->
 
 
-                    <div class="card">
-                        <div v-for="(obj, index) in testSuitesStore.testSuitesList" class="card-body px-0 pt-0 pb-2">
-                            <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']">
-                            </TestSuitesTable>
+                    <div>
+                        <div v-if="TestTableListFlag" class="card">
+                            <div v-for="(obj, index) in testSuitesStore.testSuitesList" class="card-body px-0 pt-0 pb-0">
+                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']">
+                                </TestSuitesTable>
+                            </div>
                         </div>
                     </div>
-
-
-
-
-                    <hr class="my-3 horizontal dark" />
-                    <div class="card" v-if="currentTestSuite.currentTestSuites.testsuitesname">
-                        <div class="card-header pb-0">
-                            <div class="row">
-                                <h3 class="text-center">TestSuite info</h3>
-
-                                <div class="col-md-3">
-                                    <h6> TestSuite Name</h6>
-                                    <argon-input v-model="currentTestSuite.currentTestSuites.testsuitesname" type="text"
-                                        :disabled="'disabled'" />
-                                </div>
-
-                                <div class="col-md-2">
-                                    <h6> Algorithm</h6>
-                                    <argon-input v-model="currentTestSuite.currentTestSuites.algorithm" type="text"
-                                        :disabled="'disabled'" />
-                                </div>
-
-                                <div class="col-md-2">
-                                    <h6> Strength</h6>
-                                    <argon-input v-model="currentTestSuite.currentTestSuites.strength" type="text"
-                                        :disabled="'disabled'" />
-                                </div>
-
-                                <div class="col-md-2">
-                                    <h6> Size</h6>
-                                    <argon-input v-model="currentTestSuite.currentTestSuites.size" type="text"
-                                        :disabled="'disabled'" />
-                                </div>
-
-                                <div class="col-md-2">
-                                    <h6> Time</h6>
-                                    <argon-input v-model="currentTestSuite.currentTestSuites.time" type="text"
-                                        :disabled="'disabled'" />
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <h6>TestSuite Description</h6>
-                                    <argon-input type="text"
-                                        v-model="currentTestSuite.currentTestSuites.testsuitesdescriptions"
-                                        :disabled="'disabled'" />
-                                </div>
-                            </div>
-                            <hr class="my-3 horizontal white" />
-                            <div class="row">
-
-                                <!-- show testsuite in the form of table -->
-                                <div class="col-3">
-                                    <ArgonButton :class="{ 'borderGlow': !TestSuitePreviewFlag }"
-                                        :color="TestSuitePreviewFlag ? 'success' : 'danger'"
-                                        @click="TestSuitePreviewFlag = !TestSuitePreviewFlag">
-                                        {{ TestSuitePreviewFlag ? 'Show TestSuite' : 'Hide TestSuite' }}
-                                    </ArgonButton>
-                                </div>
-
-                                <!-- Regenerate test suite -->
-                                <div class="col-3">
-                                    <ArgonButton :class="{ 'borderGlow': !TestSuitePreviewFlag }" color="success"
-                                        @click="showdialogNew">
-                                        <span class="bi bi-arrow-clockwise"></span>Regeneration
-                                    </ArgonButton>
-                                </div>
-
-                                <!-- prioritize test suite  -->
-                                <div class="col-3">
-                                    <ArgonButton :class="{ 'borderGlow': !TestSuitePreviewFlag }" color="success"
-                                        @click="showdialogNewPrioritization">Prioritisation
-                                    </ArgonButton>
-                                </div>
-
-                                <!-- reduct test suite  -->
-                                <div class="col-3">
-                                    <ArgonButton :class="{ 'borderGlow': !TestSuitePreviewFlag }" color="success"
-                                        @click="showdialogNewReduction">Reduction
-                                    </ArgonButton>
-                                </div>
-                            </div>
-
-                            <hr class="my-3 horizontal white" />
-
-
-                            <div v-auto-animate>
-
-                                <div v-if="!TestSuitePreviewFlag">
-                                    <hr class="my-3 horizontal white" />
-
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <!-- Caption -->
-                                                <div>
-                                                    <h5 class="mb-0">TestSutie of
-                                                        {{ currentTestSuite.currentTestSuites.testsuitesname }}</h5>
-                                                </div>
-
-                                                <!-- 下拉框 -->
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Operations
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" @click="ExportTestSuite">Export
-                                                                TestSuite</a></li>
-                                                        <li><a class="dropdown-item"
-                                                                @click="showdialogNewConversion">Convert into Test Plan</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                @click="showdialogNewEvaluation">Evaluation</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <!-- 表格 -->
-                                            <table class="table-secondary table-bordered" style="width: 100%;">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">#</th>
-                                                        <th v-for="(parameter, index) in currentModel.currentModel.PandVOBJ"
-                                                            :key="index" class="text-center">
-                                                            {{ parameter.Parameter }}
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(row, rowIndex) in result" :key="rowIndex">
-                                                        <td class="text-center">{{ rowIndex + 1 }}</td>
-                                                        <td v-for="(value, colIndex) in row" :key="colIndex"
-                                                            class="text-center">
-                                                            {{ value }}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-
-
-
-                            </div>
-
-                        </div>
-                    </div>
-
 
                     <div class="card" v-if="!currentTestSuite.currentTestSuites.testsuitesname">
 
 
-                        <div class="card-header pb-0">
+                        <div class="card-body pb-0">
                             <div class="row">
-                                <h3 class="text-center">Please Choose one of the testsuites above.</h3>
-                                <!-- <ArgonButton color="success" @click="showdialogNew">Generation
-                                </ArgonButton>
-                                <hr class="my-3 horizontal white" /> -->
+                                <h3 class="text-center">Please Choose one of the testsuites From the above TestSuites Table.
+                                </h3>
                             </div>
                         </div>
 
                     </div>
 
-                    <!-- Regenerate test suites -->
-                    <el-dialog v-model="dialogFormVisibleNew" title="Generate a new testSuite based on current model">
-                        <el-form :model="dialogformNewTestSuites" label-position="left" label-width="170px">
+                    <div class="row my-2" v-if="currentTestSuite.currentTestSuites.testsuitesname">
+                        <div class="col-6">
 
-                            <el-form-item label="Test Suite Name:">
-                                <el-input v-model="dialogformNewTestSuites.testsuitesname" />
-                            </el-form-item>
-                            <el-form-item label="Test Suite Description:">
-                                <el-input autosize type="textarea"
-                                    v-model="dialogformNewTestSuites.testsuitesdescriptions" />
-                            </el-form-item>
-                            <el-form-item label="Strength: ">
-                                <el-select clearable style="margin: 0 0 0 0;padding: 0;width: 250px" v-model="strength"
-                                    class="m-2" placeholder="Select a covering strength">
-                                    <el-option v-for="item in StrengthOptions" :key="item.value" :label="item.label"
-                                        :value="item.value" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="Algorithm: ">
-                                <el-select v-model="AlgorithmChosed" class="m-2"
-                                    placeholder="Select an Algorithm for generating" @change="handleAlgorithmChange">
-                                    <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label"
-                                        :value="item.value" />
-                                </el-select>
-                            </el-form-item>
+                            <!-- Basic Info -->
+                            <div class="card">
+                                <div class="card-header pb-0">
+                                    <h3 class="text-center">TestSuite Info</h3>
+                                </div>
+                                <div class="card-body">
 
-                            <!-- 在此显示 对应 AlgorithmChosed 的 tool.description -->
+                                    <div class="row">
+                                        <h5>Basic Info</h5>
+                                        <div class="col-4">
+                                            <h6> TestSuite Name</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.testsuitesname"
+                                                type="text" readonly />
+                                        </div>
 
-                            <el-form-item label="Algo Description: ">
-                                <el-input readonly v-model="AlgorithmDescription" :autosize="{ minRows: 2, maxRows: 12 }"
-                                    type="textarea"
-                                    placeholder="The Description of Algorithm Choosen Will Be Displayed Here"  />
-                            </el-form-item>
+                                        <div class="col-8">
+                                            <h6>TestSuite Description</h6>
+                                            <argon-input type="text"
+                                                v-model="currentTestSuite.currentTestSuites.testsuitesdescriptions"
+                                                readonly />
+                                        </div>
+                                    </div>
 
-                        </el-form>
+                                    <hr class="my-3 horizontal white" />
 
-                        <div v-if="inAPIcall" class="row" style="margin: 0px 0px 0px 30px;">
-                            <div class="spinner-border  text-success col-4" role="status">
-                            </div>
-                            <div class="col-8" style="margin: 5px 0px 0px 0px;">
-                                <h6>CitHub is calling the API of {{ AlgorithmChosed }}, Please wait a while...</h6>
+                                    <div class="row">
+                                        <h5>Generation Info</h5>
+                                        <div class="col-3">
+                                            <h6> Generation Tool</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.generationtool"
+                                                type="text" readonly />
+                                        </div>
+
+
+                                        <div class="col-2">
+                                            <h6>TestSuite Size</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.size" type="text"
+                                                readonly />
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h6>Generation Time</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.generationtime"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-4 mt-4 pt-2">
+                                            <ArgonButton full-width color="success" @click="showdialogNew">
+                                                <span class="bi bi-arrow-clockwise"></span>Re-Generation
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+                                    <hr class="my-3 horizontal white" />
+
+                                    <div class="row" v-if="currentTestSuite.currentTestSuites.reductiontool">
+                                        <h5>Reduction Info</h5>
+                                        <div class="col-3">
+                                            <h6> Reduction Tool</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.reductiontool"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h6>Size after Reduction</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.sizeafterreduction"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h6>Reduction Time</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.reductiontime"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-3  mt-4 pt-2">
+                                            <ArgonButton full-width color="primary" @click="showdialogNewReduction">
+                                                {{ getButtonName('Reduction') }}
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" v-else>
+                                        <h6>TestSuite {{ currentTestSuite.currentTestSuites.testsuitesname }} has not been
+                                            Reducted, Click the Button below to Reduct.
+                                        </h6>
+                                        <div class="col-12 mt-4 pt-2">
+                                            <ArgonButton full-width color="primary" @click="showdialogNewReduction">
+                                                {{ getButtonName('Reduction') }}
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+                                    <hr class="my-3 horizontal white" />
+
+                                    <div class="row" v-if="currentTestSuite.currentTestSuites.prioritisationtool">
+                                        <h5>Prioritisation Info</h5>
+                                        <div class="col-4">
+                                            <h6> Prioritisation Tool</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.prioritisationtool"
+                                                type="text" readonly />
+                                        </div>
+
+
+                                        <div class="col-4">
+                                            <h6>Prioritisation Time</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.prioritisationtime"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-4 mt-4 pt-2">
+                                            <ArgonButton full-width color="warning" @click="showdialogNewPrioritization">
+                                                {{ getButtonName('Prioritisation') }}
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row" v-else>
+                                        <h6>TestSuite {{ currentTestSuite.currentTestSuites.testsuitesname }} has not been
+                                            Prioritised, Click the Button below to Prioritise.</h6>
+                                        <div class="col-12 mt-4 pt-2">
+                                            <ArgonButton full-width color="warning" @click="showdialogNewPrioritization">
+                                                {{ getButtonName('Prioritisation') }}
+
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <hr class="my-3 horizontal white" />
+
+
+                                    <div class="row" v-if="currentTestSuite.currentTestSuites.evaluationtool">
+                                        <h5>Evaluation Info</h5>
+                                        <div class="col-4">
+                                            <h6> Evaluation Tool</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.evaluationtool"
+                                                type="text" readonly />
+                                        </div>
+
+
+                                        <div class="col-4">
+                                            <h6>Evaluation Time</h6>
+                                            <argon-input v-model="currentTestSuite.currentTestSuites.evaluationtime"
+                                                type="text" readonly />
+                                        </div>
+
+                                        <div class="col-4  mt-4 pt-2">
+                                            <ArgonButton full-width color="info" @click="showdialogNewEvaluation">Evaluation
+                                            </ArgonButton>
+                                        </div>
+
+
+                                        <div class="col-12  mt-4 pt-2">
+                                            <h1>coverage checker chart</h1>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" v-else>
+                                        <h6> TestSuite {{ currentTestSuite.currentTestSuites.testsuitesname }} has not been
+                                            Evaluated, Click the Button below to Evaluate
+                                        </h6>
+                                        <div class="col-12 mt-4 pt-2">
+                                            <ArgonButton full-width color="info" @click="showdialogNewEvaluation">Evaluation
+                                            </ArgonButton>
+                                        </div>
+
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
 
-                        <template #footer>
-                            <span class="dialog-footer">
-                                <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
-                                <el-button type="primary" @click="confirmGenerateNewTestSuites">
-                                    Confirm
-                                </el-button>
-                            </span>
-                        </template>
-                    </el-dialog>
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="card-body">
 
 
-                    <!-- New Prioritisation -->
-                    <el-dialog v-model="dialogFormVisibleNewPrioritization" title="Choose a Tool for Prioritization:">
-                        <el-form :model="dialogformNewTestSuites" label-position="left" label-width="80px">
-                            <el-form-item label="Algorithm:">
-                                <el-select v-model="AlgorithmChosedPrioritization" class="m-2"
-                                    placeholder="Select a tool for prioritising current testsuite." clearable>
-                                    <el-option v-for="item in AlgorithmOptionsPrioritization" :key="item.value"
-                                        :label="item.label" :value="item.value" />
-                                </el-select>
-                            </el-form-item>
+                                    <h1>测试活动调用顺序图</h1>
 
 
-                            <div v-if="AlgorithmChosedPrioritization == 'SortArray'">
-                                <el-form-item label="Weight:">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TestSuite Card -->
+                    <!-- show testsuite in the form of table -->
+                    <hr class="my-3 horizontal dark" />
+
+                    <div class="card" v-if="currentTestSuite.currentTestSuites.testsuitesname">
+                        <div class="card-header pb-0">
+                            <h5 class="mb-0">TestSutie of
+                                {{ currentTestSuite.currentTestSuites.testsuitesname }}</h5>
+                        </div>
+
+
+                        <div class="card-body">
+
+
+                            <hr class="my-3 horizontal white" />
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <!-- Caption -->
+                                        <div>
+
+                                        </div>
+
+                                        <!-- 下拉框 -->
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Operations
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" @click="ExportTestSuite">Export
+                                                        TestSuite</a></li>
+                                                <li><a class="dropdown-item" @click="showdialogNewConversion">Convert
+                                                        into Test Plan</a>
+                                                </li>
+                                                <li><a class="dropdown-item" @click="showdialogNewEvaluation">Evaluation</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- 表格 -->
+                                    <table class="table-secondary table-bordered" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th v-for="(parameter, index) in currentModel.currentModel.PandVOBJ"
+                                                    :key="index" class="text-center">
+                                                    {{ parameter.Parameter }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, rowIndex) in result" :key="rowIndex">
+                                                <td class="text-center">{{ rowIndex + 1 }}</td>
+                                                <td v-for="(value, colIndex) in row" :key="colIndex" class="text-center">
+                                                    {{ value }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 点击按钮展开的对话框 -->
+                <!-- Regenerate test suites -->
+                <el-dialog v-model="dialogFormVisibleNew" title="Generate a new testSuite based on current model">
+                    <el-form :model="dialogformNewTestSuites" label-position="left" label-width="170px">
+
+                        <!-- <el-form-item label="Test Suite Name:">
+                            <el-input v-model="dialogformNewTestSuites.testsuitesname" />
+                        </el-form-item>
+                        <el-form-item label="Test Suite Description:">
+                            <el-input autosize type="textarea" v-model="dialogformNewTestSuites.testsuitesdescriptions" />
+                        </el-form-item> -->
+
+                        <el-form-item label="Strength: ">
+                            <el-select clearable style="margin: 0 0 0 0;padding: 0;width: 250px" v-model="strength"
+                                class="m-2" placeholder="Select a covering strength">
+                                <el-option v-for="item in StrengthOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="Generation Tool: ">
+                            <el-select v-model="AlgorithmChosed" class="m-2" placeholder="Select an Tool for generating"
+                                @change="handleAlgorithmChange">
+                                <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+
+                        <!-- 在此显示 对应 AlgorithmChosed 的 tool.description -->
+
+                        <el-form-item label="Tool Description: ">
+                            <el-input readonly v-model="AlgorithmDescription" :autosize="{ minRows: 2, maxRows: 12 }"
+                                type="textarea" placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+                        </el-form-item>
+
+                    </el-form>
+
+                    <div v-if="inAPIcall" class="row" style="margin: 0px 0px 0px 30px;">
+                        <div class="spinner-border  text-success col-4" role="status">
+                        </div>
+                        <div class="col-8" style="margin: 5px 0px 0px 0px;">
+                            <h6>CitHub is calling the API of {{ AlgorithmChosed }}, Please wait a while...</h6>
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
+                            <el-button type="primary" @click="confirmGenerateNewTestSuites">
+                                Confirm
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
+
+
+                <!-- New Prioritisation -->
+                <el-dialog v-model="dialogFormVisibleNewPrioritization" title="Choose a Tool for Prioritization:">
+                    <el-form :model="dialogformNewTestSuites" label-position="left" label-width="170px">
+                        <el-form-item label="Tool:">
+                            <el-select v-model="AlgorithmChosedPrioritization" class="m-2"
+                                @change="handleAlgorithmOptionsPrioritizationChange"
+                                placeholder="Select a tool for prioritising current testsuite." clearable>
+                                <el-option v-for="item in AlgorithmOptionsPrioritization" :key="item.value"
+                                    :label="item.label" :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+
+                        <!-- 在此显示 对应 AlgorithmChosed 的 tool.description -->
+
+                        <el-form-item label="Tool Description: ">
+                            <el-input readonly v-model="AlgorithmDescriptionPrioritization"
+                                :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
+                                placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+                        </el-form-item>
+
+                        <div v-if="AlgorithmChosedPrioritization == 'SortArray'">
+                            <!-- <el-form-item label="Weight:">
                                     <el-input v-model="Weight" type="textarea" :autosize="{ minRows: 4 }" placeholder="Note:
 1.Please input the Weight of parameters using `,`  to split each Weight, eg: 3,1,2 for three parameters.
 2.For each parameter, you need to input a corresponding weight.eg: three parameters have to input three weight
                                     ">
                                     </el-input>
-                                </el-form-item>
-                            </div>
+                                </el-form-item> -->
 
-                        </el-form>
+                            <el-form-item>
+                                <div class=row>
+                                    <h5>Please input a corresponding Weight for each Parameter</h5>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h6>Parameter</h6>
+                                        </div>
+                                        <div class="col-2">
+                                            <h6>Weight</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row " v-for="(Param, index) in currentModel.currentModel.PandVOBJ">
+                                        <div class="col-4">
+                                            <el-input readonly v-model="Param.Parameter"></el-input>
+                                        </div>
+                                        <div class="col-4">
+                                            <el-input-number v-model="Weight[index]" :min="0" placeholder="Integer" />
+                                        </div>
+                                    </div>
+                                    <!-- {{ Weight }} -->
 
-                        <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
-                            <div class="spinner-border  text-success col-4" role="status">
-                            </div>
-                            <div class="col-8" style="margin: 5px 0px 0px 0px;">
-
-                                <h6>CitHub is calling the API of {{ AlgorithmChosedPrioritization }}, Please wait a while...
-                                </h6>
-
-                            </div>
-                        </div>
-
-                        <template #footer>
-                            <span class="dialog-footer">
-                                <el-button @click="dialogFormVisibleNewPrioritization = false">Cancel</el-button>
-                                <el-button type="primary" @click="confirmNewPrioritisation">
-                                    Confirm
-                                </el-button>
-                            </span>
-                        </template>
-                    </el-dialog>
-
-
-                    <!-- New Reduction -->
-                    <el-dialog v-model="dialogFormVisibleNewReduction" title="New Reduction:">
-                        <el-form :model="dialogformNewTestSuites" label-position="right" label-width="140px">
-                            <el-form-item label="Algorithm:">
-                                <el-select v-model="AlgorithmChosedReduction" class="m-2"
-                                    placeholder="Select a tool for reducting current testsuite." clearable>
-                                    <el-option v-for="item in AlgorithmOptionsReduction" :key="item.value"
-                                        :label="item.label" :value="item.value" />
-                                </el-select>
+                                </div>
                             </el-form-item>
-                        </el-form>
 
-                        <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
-                            <div class="spinner-border  text-success col-4" role="status">
-                            </div>
-                            <div class="col-8" style="margin: 5px 0px 0px 5px;">
-                                <h6>CitHub is calling the API of {{ AlgorithmChosedReduction }}, Please wait a while...
-                                </h6>
-                            </div>
                         </div>
 
 
-                        <template #footer>
-                            <span class="dialog-footer">
-                                <el-button @click="dialogFormVisibleNewReduction = false">Cancel</el-button>
-                                <el-button type="primary" @click="confirmNewReduction">
-                                    Confirm
-                                </el-button>
-                            </span>
-                        </template>
-                    </el-dialog>
+
+                    </el-form>
+
+                    <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
+                        <div class="spinner-border  text-success col-4" role="status">
+                        </div>
+                        <div class="col-8" style="margin: 5px 0px 0px 0px;">
+
+                            <h6>CitHub is calling the API of {{ AlgorithmChosedPrioritization }}, Please wait a while...
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="dialogFormVisibleNewPrioritization = false">Cancel</el-button>
+                            <el-button type="primary" @click="confirmNewPrioritisation">
+                                Confirm
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
 
 
-                    <!-- New Test Plan -->
-                    <el-dialog v-model="dialogFormVisibleNewConversion" title="Convert TestSuite into:">
-                        <el-form :model="dialogformNewTestSuites" label-position="left" label-width="150px">
-                            <el-form-item label="Tools of Conversion">
-                                <el-select v-model="AlgorithmChosedConversion" class="m-2"
-                                    placeholder="Select a tool for converting test suite into." clearable>
-                                    <el-option v-for="item in AlgorithmOptionsConversion" :key="item.value"
-                                        :label="item.label" :value="item.value" />
-                                </el-select>
+                <!-- New Reduction -->
+                <el-dialog v-model="dialogFormVisibleNewReduction" title="Choose a Tool for Reduction:">
+                    <el-form :model="dialogformNewTestSuites" label-position="right" label-width="140px">
+                        <el-form-item label="Tool:">
+                            <el-select v-model="AlgorithmChosedReduction" class="m-2"
+                                @change="handleAlgorithmOptionsReductionChange"
+                                placeholder="Select a tool for reducting current testsuite." clearable>
+                                <el-option v-for="item in AlgorithmOptionsReduction" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="Tool Description: ">
+                            <el-input readonly v-model="AlgorithmDescriptionReduction"
+                                :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
+                                placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+                        </el-form-item>
+                    </el-form>
+
+                    <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
+                        <div class="spinner-border  text-success col-4" role="status">
+                        </div>
+                        <div class="col-8" style="margin: 5px 0px 0px 5px;">
+                            <h6>CitHub is calling the API of {{ AlgorithmChosedReduction }}, Please wait a while...
+                            </h6>
+                        </div>
+                    </div>
+
+
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="dialogFormVisibleNewReduction = false">Cancel</el-button>
+                            <el-button type="primary" @click="confirmNewReduction">
+                                Confirm
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
+
+
+                <!-- New Test Plan -->
+                <el-dialog v-model="dialogFormVisibleNewConversion" title="Convert TestSuite into:">
+                    <el-form :model="dialogformNewTestSuites" label-position="left" label-width="150px">
+                        <el-form-item label="Tools of Conversion">
+                            <el-select v-model="AlgorithmChosedConversion" class="m-2"
+                                placeholder="Select a tool for converting test suite into." clearable>
+                                <el-option v-for="item in AlgorithmOptionsConversion" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+                        <div v-if="AlgorithmChosedConversion == 'JUnit Test Plan'">
+                            <el-form-item label="Function Head">
+                                <el-input v-model="functionHead" type="textarea" autosize
+                                    placeholder="Please input function Head right here, eg:'public void test()'"></el-input>
                             </el-form-item>
-                            <div v-if="AlgorithmChosedConversion == 'JUnit Test Plan'">
-                                <el-form-item label="Function Head">
-                                    <el-input v-model="functionHead" type="textarea" autosize
-                                        placeholder="Please input function Head right here, eg:'public void test()'"></el-input>
-                                </el-form-item>
-                                <el-form-item label="Function Body">
-                                    <el-input v-model="functionBody" type="textarea" autosize
-                                        placeholder="Please input function Body right here, eg:''CIT cit= new CIT(&p2) cit.execuse(&p3) cit.process(&p1)'">
-                                    </el-input>
-                                </el-form-item>
-                            </div>
-
-
-                            <div v-if="AlgorithmChosedConversion == 'NL Test Plan'">
-
-                                <el-form-item label="Output Model Format">
-                                    <el-input v-model="outputModel" type="textarea" :autosize="{ minRows: 4 }"
-                                        placeholder="Please input the Output Model format you want right here and use `&#` as placeholder, eg:'first,we should do &#,then open &#,finally,enter in the browser address bar with &#'. All the `&#` will be replaced by the actual value of parameters.">
-                                    </el-input>
-                                </el-form-item>
-
-                            </div>
-
-
-                        </el-form>
-
-                        <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
-                            <div class="spinner-border  text-success col-4" role="status">
-                            </div>
-                            <div class="col-8" style="margin: 5px 0px 0px 5px;width: 100%;">
-                                <h6>CitHub is calling the API of {{ AlgorithmChosedConversion }} to convert the testsuite
-                                    into test plan, Please wait a while...
-                                </h6>
-                            </div>
-                        </div>
-
-                        <template #footer>
-                            <span class="dialog-footer">
-                                <el-button @click="dialogFormVisibleNewConversion = false">Cancel</el-button>
-                                <el-button type="primary" @click="confirmNewConversion">
-                                    Confirm
-                                </el-button>
-                            </span>
-                        </template>
-                    </el-dialog>
-
-
-                    <!-- New Evaluation -->
-                    <el-dialog v-model="dialogFormVisibleNewEvaluation" title="New Evaluation">
-                        <el-form :model="dialogformNewTestSuites">
-                            <el-form-item label="Algorithm: ">
-                                <el-select v-model="AlgorithmChosedEvaluation" class="m-2"
-                                    placeholder="Select an Algorithm for evaluating">
-                                    <el-option v-for="item in AlgorithmOptionsEvaluation" :key="item.value"
-                                        :label="item.label" :value="item.value" />
-                                </el-select>
+                            <el-form-item label="Function Body">
+                                <el-input v-model="functionBody" type="textarea" autosize
+                                    placeholder="Please input function Body right here, eg:''CIT cit= new CIT(&p2) cit.execuse(&p3) cit.process(&p1)'">
+                                </el-input>
                             </el-form-item>
-                        </el-form>
-
-
-                        <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 20px;">
-                            <div class="spinner-border text-success col-1" role="status">
-                            </div>
-                            <div class="col-11" style="margin: 5px 0px 0px 5px;">
-                                <h6>Cithub is calling the API of {{ AlgorithmChosedEvaluation }} to evaluate, Please wait a
-                                    while...
-                                </h6>
-                            </div>
                         </div>
 
-                        <div ref="lineChartContainer" class="line-chart-container">
-                            <div ref="lineChart" style="width: 600px; height: 400px;"></div>
+
+                        <div v-if="AlgorithmChosedConversion == 'NL Test Plan'">
+
+                            <el-form-item label="Output Model Format">
+                                <el-input v-model="outputModel" type="textarea" :autosize="{ minRows: 4 }"
+                                    placeholder="Please input the Output Model format you want right here and use `&#` as placeholder, eg:'first,we should do &#,then open &#,finally,enter in the browser address bar with &#'. All the `&#` will be replaced by the actual value of parameters.">
+                                </el-input>
+                            </el-form-item>
+
                         </div>
 
-                        <template #footer>
-                            <span class="dialog-footer">
-                                <el-button @click="dialogFormVisibleNewEvaluation = false">Cancel</el-button>
-                                <el-button type="primary" @click="confirmNewEvaluation">
-                                    Confirm
-                                </el-button>
-                            </span>
-                        </template>
-                    </el-dialog>
+
+                    </el-form>
+
+                    <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 40px;">
+                        <div class="spinner-border  text-success col-4" role="status">
+                        </div>
+                        <div class="col-8" style="margin: 5px 0px 0px 5px;width: 100%;">
+                            <h6>CitHub is calling the API of {{ AlgorithmChosedConversion }} to convert the testsuite
+                                into test plan, Please wait a while...
+                            </h6>
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="dialogFormVisibleNewConversion = false">Cancel</el-button>
+                            <el-button type="primary" @click="confirmNewConversion">
+                                Confirm
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
+
+
+                <!-- New Evaluation -->
+                <el-dialog v-model="dialogFormVisibleNewEvaluation" title="New Evaluation">
+                    <el-form :model="dialogformNewTestSuites">
+                        <el-form-item label="Tool: ">
+                            <el-select v-model="AlgorithmChosedEvaluation" class="m-2"
+                                placeholder="Select an Tool for evaluating">
+                                <el-option v-for="item in AlgorithmOptionsEvaluation" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+
+
+                    <div v-if="inAPIcall" class="row" style="margin: 15px 0px 0px 20px;">
+                        <div class="spinner-border text-success col-1" role="status">
+                        </div>
+                        <div class="col-11" style="margin: 5px 0px 0px 5px;">
+                            <h6>Cithub is calling the API of {{ AlgorithmChosedEvaluation }} to evaluate, Please wait a
+                                while...
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div ref="lineChartContainer" class="line-chart-container">
+                        <div ref="lineChart" style="width: 600px; height: 400px;"></div>
+                    </div>
+
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="dialogFormVisibleNewEvaluation = false">Cancel</el-button>
+                            <el-button type="primary" @click="confirmNewEvaluation">
+                                Confirm
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
 
 
 
 
 
-                </div>
             </div>
             <Foot></Foot>
         </div>
@@ -451,7 +630,7 @@ import { useCurrentModel } from '../store/ToolsStore/currentModel'
 import { ElNotification } from 'element-plus'
 import { useTestSuitesStore } from '../store/ToolsStore/testSuitesStore'
 import { useCurrentTestSuitesStore } from '../store/ToolsStore/currentTestSuite'
-import { listAllTestSuitesByModelID, listModelInfoByModelID, CitHubModel } from './commonFunction.js';
+import { listAllTestSuitesByModelID, listModelInfoByModelID, CitHubModel, CitHubTestSuite } from './commonFunction.js';
 import toolsInfo from "../CustomizedComponents/tools_info.json";
 import * as echarts from 'echarts'
 import { ElLoading } from 'element-plus'
@@ -464,17 +643,12 @@ const router = useRouter();
 const route = useRoute()
 
 
-
-
-
-
-
-const TestSuitePreviewFlag = ref(false)
+const TestTableListFlag = ref(false)
 
 
 // 将覆盖表显示为Html表格
 const result = ref([]);
-const getValueFromArrays = (objArray, indexArray) => {
+const getValueFromArrays = async (objArray, indexArray) => {
     // console.log("objArray",objArray)
     // console.log("indexArray",indexArray)
     result.value.length = 0
@@ -494,10 +668,6 @@ const getValueFromArrays = (objArray, indexArray) => {
     });
 };
 const StrengthOptions = [
-    {
-        value: '1',
-        label: '1',
-    },
     {
         value: '2',
         label: '2',
@@ -566,7 +736,7 @@ const confirmGenerateNewTestSuites = async () => {
     const currentDate = new Date();
     dialogformNewTestSuites.lastupdatedtime = currentDate
     dialogformNewTestSuites.createdtime = currentDate
-    console.log("currentModel.currentModel", currentModel.currentModel)
+    // console.log("currentModel.currentModel", currentModel.currentModel)
 
     if (currentModel.currentModel.modelname == "") {
         ElNotification({
@@ -594,7 +764,8 @@ const confirmGenerateNewTestSuites = async () => {
                         headers: {
                             'Content-Type': 'text/plain'
                         },
-                        data: currentModel.currentModel.CitHubModel
+                        // 转为Json
+                        data: JSON.stringify(currentModel.currentModel.CitHubModel).replace(/"/g, '')
                     })
 
                     // console.log("TestSuitesRes", TestSuitesRes)
@@ -604,17 +775,17 @@ const confirmGenerateNewTestSuites = async () => {
                         data:
                         {
 
-                            column: 'testsuite',
-                            testsuitesname: dialogformNewTestSuites.testsuitesname,
-                            testsuitesdescriptions: dialogformNewTestSuites.testsuitesdescriptions,
+                            column: 'generation',
+                            // testsuitesname: dialogformNewTestSuites.testsuitesname,
+                            // testsuitesdescriptions: dialogformNewTestSuites.testsuitesdescriptions,
                             lastupdatedtime: dialogformNewTestSuites.lastupdatedtime,
-                            createdtime: dialogformNewTestSuites.createdtime,
+                            // createdtime: dialogformNewTestSuites.createdtime,
                             modelid: currentTestSuite.currentTestSuites.modelid,
                             testsuiteid: currentTestSuite.currentTestSuites.testsuitesid,
                             testsuitescontents: JSON.stringify(TestSuitesRes.testsuite),
-                            time: TestSuitesRes.time,
+                            generationtime: TestSuitesRes.time,
                             size: TestSuitesRes.size,
-                            algorithm: AlgorithmChosed.value,
+                            generationtool: AlgorithmChosed.value,
                             strength: strength.value
                         }
                     })
@@ -622,23 +793,9 @@ const confirmGenerateNewTestSuites = async () => {
 
                     if (newTestSuitesRes.NewStatus == 'success!') {
 
-                        // 重新加载模型信息
-                        await listModelInfoByModelID(currentTestSuite.currentTestSuites.modelid)
-                        // 重新加载testsuite
-                        await listAllTestSuitesByModelID([currentModel.currentModel])
-
                         // 更新Testsuite Info区域的信息
+                        await UpdateTestSuiteInfo()
 
-                        currentTestSuite.currentTestSuites.testsuitesname = dialogformNewTestSuites.testsuitesname
-                        currentTestSuite.currentTestSuites.testsuitesdescriptions = dialogformNewTestSuites.testsuitesdescriptions
-                        currentTestSuite.currentTestSuites.strength = strength.value
-                        currentTestSuite.currentTestSuites.size = TestSuitesRes.size
-                        currentTestSuite.currentTestSuites.time = TestSuitesRes.time
-                        currentTestSuite.currentTestSuites.algorithm = AlgorithmChosed.value
-
-                        // 将 testsuite 转换成表格显示 TestSuitesRes.testsuite已经是对象，不用JSON.parse了
-                        currentTestSuite.currentTestSuites.testsuitescontents = TestSuitesRes.testsuite
-                        getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuitescontents)
                         ElNotification({
                             title: 'Generate Success!',
                             type: 'success',
@@ -647,9 +804,7 @@ const confirmGenerateNewTestSuites = async () => {
                         })
                         inAPIcall.value = false
                         dialogFormVisibleNew.value = false
-                        if (TestSuitePreviewFlag.value == true) {
-                            TestSuitePreviewFlag.value = !TestSuitePreviewFlag.value
-                        }
+
 
                     }
                     else {
@@ -696,69 +851,83 @@ const showdialogNewPrioritization = () => {
 
 const AlgorithmChosedPrioritization = ref('')
 const AlgorithmOptionsPrioritization = reactive([])
+const AlgorithmDescriptionPrioritization = ref('');
+
 const listAllPrioritisationOptions = () => {
     for (const tool of toolsInfo.RECORDS) {
         if (tool.type == "Prioritisation") {
-            AlgorithmOptionsPrioritization.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+            AlgorithmOptionsPrioritization.push({ "value": tool.title, "label": tool.title, "url": tool.url, "description": tool.description })
         }
     }
 }
-const Weight = ref('')
+
+const handleAlgorithmOptionsPrioritizationChange = () => {
+    const selectedAlgorithm = AlgorithmOptionsPrioritization.find(option => option.value === AlgorithmChosedPrioritization.value);
+    if (selectedAlgorithm) {
+        AlgorithmDescriptionPrioritization.value = selectedAlgorithm.description;
+    } else {
+        AlgorithmDescriptionPrioritization.value = '';
+    }
+};
+
+// MiniArray 工具的 权重 Weight
+let Weight = reactive([])
 const confirmNewPrioritisation = async () => {
+
+    Weight = Array(currentModel.currentModel.PandVOBJ.length).fill(0)
+
+    // console.log("currentModel", currentModel.currentModel)
+    // console.log("currentTestSuites", currentTestSuite.currentTestSuites)
     inAPIcall.value = true
-    // 获取当前时刻的Date对象
-    const currentDate = new Date();
-    dialogformNewTestSuites.lastupdatedtime = currentDate
 
-    // 构造发送给Prioritisation的data对象
-    let Obj = {}
-    let testsuite = JSON.parse(currentTestSuite.currentTestSuites.testsuitescontents).testsuite
-    Obj.testsuite = testsuite
-    Obj.parameter = JSON.parse(currentModel.currentModel.paramsvalues).length
 
-    let WeightArray = Weight.value.split(',').map(Number)
+    // 构造发送给Prioritisation的 CitHubTestSuite 对象
 
-    Obj.weight = WeightArray
-    Obj = JSON.stringify(Obj)
+    currentModel.currentModel.CitHubModel = CitHubModel(currentModel.currentModel, parseInt(currentTestSuite.currentTestSuites.strength))
+    currentTestSuite.currentTestSuites.CitHubTestSuite = CitHubTestSuite(currentModel.currentModel.CitHubModel, currentTestSuite.currentTestSuites.testsuitescontents)
+
+    // SortArray的特殊输入 Weight
+    let WeightArray = Weight.map(Number)
+    currentTestSuite.currentTestSuites.CitHubTestSuite.weight = WeightArray
+
+
+    // console.log("CithubTestSuite", JSON.stringify(currentTestSuite.currentTestSuites.CitHubTestSuite).replace(/"/g, ''))
     for (const tool of AlgorithmOptionsPrioritization) {
         if (tool.value == AlgorithmChosedPrioritization.value) {
             try {
                 const PrioritisationRes = await request({
+                    // url: tool.url,
                     // 这里记得改回去，在校外无法用校内服务器
-                    url: tool.url,
-                    // url: 'http://localhost:8304',
+                    url: 'http://localhost:8304',
                     method: 'POST',
                     // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                     headers: {
                         'Content-Type': 'text/plain'
                     },
-                    data: Obj
+                    data: JSON.stringify(currentTestSuite.currentTestSuites.CitHubTestSuite).replace(/"/g, '')
                 })
-                console.log("PrioritisationRes.testsuite", PrioritisationRes.testsuite)
+                // console.log("PrioritisationRes", PrioritisationRes)
 
                 const SavePrioritisationRes = await request({
-                    url: "/tools/testSuites/NewTestSuites",
+                    url: "/tools/Save",
                     method: "POST",
                     data:
                     {
-
-                        lastupdatedtime: dialogformNewTestSuites.lastupdatedtime,
-                        modelid: dialogformNewTestSuites.modelid,
-                        testsuitescontents: JSON.stringify({ "testsuite": PrioritisationRes.testsuite }),
-                        time: PrioritisationRes.time,
-                        algorithm: AlgorithmChosedPrioritization.value,
+                        column: 'prioritisation',
+                        lastupdatedtime: new Date(),
+                        modelid: currentTestSuite.currentTestSuites.modelid,
+                        testsuiteid: currentTestSuite.currentTestSuites.testsuitesid,
+                        testsuitescontents: JSON.stringify(PrioritisationRes.testsuite),
+                        prioritisationtime: PrioritisationRes.time,
+                        prioritisationtool: AlgorithmChosedPrioritization.value,
 
                     }
                 })
 
                 if (SavePrioritisationRes.NewStatus == 'success!') {
 
-                    // 重新加载模型信息
-                    await listModelInfoByModelID()
-                    // 重新加载testsuite
-                    await listAllTestSuitesByModelID()
-                    // 将 ca 转换成表格显示
-                    getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuite)
+                    // 更新Testsuite Info区域的信息
+                    await UpdateTestSuiteInfo()
 
                     ElNotification({
                         title: 'Prioritize Success!',
@@ -769,9 +938,7 @@ const confirmNewPrioritisation = async () => {
                     })
                     inAPIcall.value = false
                     dialogFormVisibleNewPrioritization.value = false
-                    if (TestSuitePreviewFlag.value == true) {
-                        TestSuitePreviewFlag.value = !TestSuitePreviewFlag.value
-                    }
+
                 }
                 else {
                     ElNotification({
@@ -810,79 +977,72 @@ const showdialogNewReduction = () => {
 }
 const AlgorithmChosedReduction = ref('')
 const AlgorithmOptionsReduction = reactive([])
+const AlgorithmDescriptionReduction = ref('');
+
 const listAllReductionOptions = () => {
     for (const tool of toolsInfo.RECORDS) {
         if (tool.type == "SelectionReduction") {
-            AlgorithmOptionsReduction.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+            AlgorithmOptionsReduction.push({ "value": tool.title, "label": tool.title, "url": tool.url, "description": tool.description })
         }
     }
 }
 
+const handleAlgorithmOptionsReductionChange = () => {
+    const selectedAlgorithm = AlgorithmOptionsReduction.find(option => option.value === AlgorithmChosedReduction.value);
+    if (selectedAlgorithm) {
+        AlgorithmDescriptionReduction.value = selectedAlgorithm.description;
+    } else {
+        AlgorithmDescriptionReduction.value = '';
+    }
+};
+
 const confirmNewReduction = async () => {
     inAPIcall.value = true
-    // 获取当前时刻的Date对象
-    const currentDate = new Date();
-    dialogformNewTestSuites.lastupdatedtime = currentDate
-    // 构造发送给Reduction的data对象
-    let Obj = {}
-    let testsuite = JSON.parse(currentTestSuite.currentTestSuites.testsuitescontents).testsuite
-    Obj.testsuite = testsuite
 
-    const parsedData = JSON.parse(currentModel.currentModel.paramsvalues)
-    // 移除 row_index 属性
-    const tableDataTmp = parsedData.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
-    let tempArray = []
-    let param_count = 0
-    for (let i = 0, len = tableDataTmp.length; i < len; i++) {
-        if (tableDataTmp[i].Value != '') { tempArray.push(tableDataTmp[i].Value.split(',').length) }
-        if (tableDataTmp[i].Parameter != '') { param_count = param_count + 1 }
-    }
-    Obj.parameter = param_count
-    Obj.values = tempArray.map(Number)
-    Obj.strength = strength.value
-    Obj = JSON.stringify(Obj)
+    // 构造发送给 Reduction 的 CitHubTestSuite 对象
+
+    currentModel.currentModel.CitHubModel = CitHubModel(currentModel.currentModel, parseInt(currentTestSuite.currentTestSuites.strength))
+    currentTestSuite.currentTestSuites.CitHubTestSuite = CitHubTestSuite(currentModel.currentModel.CitHubModel, currentTestSuite.currentTestSuites.testsuitescontents)
+    // console.log("CithubTestSuite", JSON.stringify(currentTestSuite.currentTestSuites.CitHubTestSuite).replace(/"/g, ''))
+
+
 
     for (const tool of AlgorithmOptionsReduction) {
         if (tool.value == AlgorithmChosedReduction.value) {
 
             try {
                 const ReductionRes = await request({
-                    // 这里记得改回去，在校外无法用校内服务器
-                    url: tool.url,
-                    // url: 'http://localhost:8305',
+                    // url: tool.url,
+                    url: 'http://localhost:8305',
                     method: 'POST',
                     // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                     headers: {
                         'Content-Type': 'text/plain'
                     },
-                    data: Obj
+                    data: JSON.stringify(currentTestSuite.currentTestSuites.CitHubTestSuite).replace(/"/g, '')
                 })
-                console.log("ReductionRes", ReductionRes)
+                // console.log("ReductionRes", ReductionRes)
                 const newReductionRes = await request({
-                    url: "/tools/testSuites/NewTestSuites",
+                    url: "/tools/Save",
                     method: "POST",
                     data:
                     {
-                        lastupdatedtime: dialogformNewTestSuites.lastupdatedtime,
-                        modelid: dialogformNewTestSuites.modelid,
-                        testsuitescontents: JSON.stringify(ReductionRes),
-                        time: ReductionRes.time,
-                        size: ReductionRes.size,
-                        algorithm: AlgorithmChosedReduction.value,
+                        column: 'reduction',
+                        lastupdatedtime: new Date(),
+                        modelid: currentTestSuite.currentTestSuites.modelid,
+                        testsuiteid: currentTestSuite.currentTestSuites.testsuitesid,
+                        testsuitescontents: JSON.stringify(ReductionRes.testsuite),
+                        reductiontime: ReductionRes.time,
+                        sizeafterreduction: ReductionRes.size,
+                        reductiontool: AlgorithmChosedReduction.value,
+
                     }
                 })
 
                 if (newReductionRes.NewStatus == 'success!') {
 
-                    // 重新加载模型信息
-                    await listModelInfoByModelID()
-                    // 重新加载testsuite
-                    await listAllTestSuitesByModelID()
-                    // 将 ca 转换成表格显示
-                    getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuite)
+                    // 更新Testsuite Info区域的信息
+                    await UpdateTestSuiteInfo()
 
 
                     ElNotification({
@@ -893,9 +1053,7 @@ const confirmNewReduction = async () => {
                     })
                     inAPIcall.value = false
                     dialogFormVisibleNewReduction.value = false
-                    if (TestSuitePreviewFlag.value == true) {
-                        TestSuitePreviewFlag.value = !TestSuitePreviewFlag.value
-                    }
+
 
                 }
                 else {
@@ -1261,15 +1419,70 @@ watch(() => currentTestSuite.currentTestSuites.testsuitescontents, (newValue, ol
     // console.log("newValue",newValue) 
     // console.log("oldValue",oldValue) 
     // 在值发生变化时执行 getValueFromArrays 函数
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+
     if (typeof newValue != "undefined") {
         getValueFromArrays(currentModel.currentModel.PandVOBJ, newValue);
-
     }
+
+    loadingInstance.close()
+
 });
 
-onBeforeMount(async () => {
+const UpdateTestSuiteInfo = async () => {
 
-})
+    // 重新加载模型信息
+    await listModelInfoByModelID(currentTestSuite.currentTestSuites.modelid)
+    // 重新加载testsuite
+    await listAllTestSuitesByModelID([currentModel.currentModel])
+
+    // 更新Testsuite Info区域的信息
+    for (let index = 0; index < testSuitesStore.testSuitesList[0].testSuites.length; index++) {
+        if (currentTestSuite.currentTestSuites.testsuitesid == testSuitesStore.testSuitesList[0].testSuites[index].testsuitesid) {
+            // console.log("相同的 testsuitesid", currentTestSuite.currentTestSuites.testsuitesid)
+            for (let key in testSuitesStore.testSuitesList[0].testSuites[index]) {
+
+                if (testSuitesStore.testSuitesList[0].testSuites[index].hasOwnProperty(key)) {
+                    currentTestSuite.currentTestSuites[key] = testSuitesStore.testSuitesList[0].testSuites[index][key];
+                    // console.log("testSuitesStore.testSuitesList[0].testSuites[index][key]",testSuitesStore.testSuitesList[0].testSuites[index][key])
+                    // console.log("currentTestSuite.currentTestSuites[key]",currentTestSuite.currentTestSuites[key])
+                }
+            }
+
+        }
+    }
+    // console.log("Generation之后的 currentTestSuite.currentTestSuites",currentTestSuite.currentTestSuites)
+
+    await getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuitescontents)
+}
+
+const getButtonName = (TestActivity) => {
+    switch (TestActivity) {
+        case 'Reduction':
+            if (currentTestSuite.currentTestSuites.reductiontool) {
+                return 'Re-Reduction'
+            }
+            if (!currentTestSuite.currentTestSuites.reductiontool) {
+                return 'New Reduction'
+            }
+
+            break;
+
+        case 'Prioritisation':
+            if (currentTestSuite.currentTestSuites.prioritisationtool) {
+                return 'Re-Prioritisation'
+            }
+            if (!currentTestSuite.currentTestSuites.prioritisationtool) {
+                return 'New Prioritisation'
+            }
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 onMounted(async () => {
 
     let loadingInstance = ElLoading.service({ fullscreen: true })
@@ -1277,7 +1490,7 @@ onMounted(async () => {
     // console.log("testsuitesid", route.query.testsuitesid)
     // console.log("modelid", route.query.modelid)
 
-    //  加载当前模型的 信息 和 
+    //  加载当前模型的 信息 
     await listModelInfoByModelID(route.query.modelid)
     // console.log("currentModel.currentModel", currentModel.currentModel)
 
@@ -1287,10 +1500,11 @@ onMounted(async () => {
     // 加载所有生成算法
     await listAllGenerationAlgorithm()
 
-    // // 加载所有Prioritisation算法
-    // await listAllPrioritisationOptions()
-    // // 加载所有Reduction算法
-    // await listAllReductionOptions()
+    // 加载所有Prioritisation算法
+    await listAllPrioritisationOptions()
+
+    // 加载所有Reduction算法
+    await listAllReductionOptions()
     // // 加载所有 Conversion 工具
     // await listAllConversionOptions()
     // // 加载所有 Evaluation 工具
@@ -1302,19 +1516,12 @@ onMounted(async () => {
             for (let i = 0; i < testSuitesStore.testSuitesList[index].testSuites.length; i++) {
                 if (testSuitesStore.testSuitesList[index].testSuites[i].testsuitesid == route.query.testsuitesid) {
 
-                    currentTestSuite.currentTestSuites.testsuitesid = testSuitesStore.testSuitesList[index].testSuites[i].testsuitesid
-                    currentTestSuite.currentTestSuites.testsuitesname = testSuitesStore.testSuitesList[index].testSuites[i].testsuitesname
-                    currentTestSuite.currentTestSuites.testsuitesdescriptions = testSuitesStore.testSuitesList[index].testSuites[i].testsuitesdescriptions
-                    currentTestSuite.currentTestSuites.testsuitescontents = testSuitesStore.testSuitesList[index].testSuites[i].testsuitescontents
-                    currentTestSuite.currentTestSuites.algorithm = testSuitesStore.testSuitesList[index].testSuites[i].algorithm
-                    currentTestSuite.currentTestSuites.strength = testSuitesStore.testSuitesList[index].testSuites[i].strength
-                    currentTestSuite.currentTestSuites.modelid = testSuitesStore.testSuitesList[index].testSuites[i].modelid
-                    currentTestSuite.currentTestSuites.size = testSuitesStore.testSuitesList[index].testSuites[i].size
-                    currentTestSuite.currentTestSuites.time = testSuitesStore.testSuitesList[index].testSuites[i].time
-                    currentTestSuite.currentTestSuites.createdtime = testSuitesStore.testSuitesList[index].testSuites[i].createdtime
-                    currentTestSuite.currentTestSuites.lastupdatedtime = testSuitesStore.testSuitesList[index].testSuites[i].lastupdatedtime
-                    currentTestSuite.currentTestSuites.createdtimeFortmat = testSuitesStore.testSuitesList[index].testSuites[i].createdtimeFortmat
-                    currentTestSuite.currentTestSuites.lastupdatedtimeFortmat = testSuitesStore.testSuitesList[index].testSuites[i].lastupdatedtimeFortmat
+                    for (let key in testSuitesStore.testSuitesList[index].testSuites[i]) {
+                        if (testSuitesStore.testSuitesList[index].testSuites[i].hasOwnProperty(key)) {
+                            currentTestSuite.currentTestSuites[key] = testSuitesStore.testSuitesList[index].testSuites[i][key];
+                        }
+                    }
+
 
                 }
 
@@ -1323,10 +1530,14 @@ onMounted(async () => {
         }
 
         getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuitescontents)
-
+        console.log("currentTestSuite.currentTestSuites", currentTestSuite.currentTestSuites)
     }
     else {
         currentTestSuite.currentTestSuites = {}
+    }
+    // 没有选择 TestSuite，TestSuites Table 展开
+    if (!currentTestSuite.currentTestSuites.testsuitesname) {
+        TestTableListFlag.value = !TestTableListFlag.value
     }
 
     loadingInstance.close()

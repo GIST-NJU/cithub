@@ -1,6 +1,7 @@
 package com.gist.cithub.backend.Tools.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gist.cithub.backend.Tools.entity.ProjectsEntity;
 import com.gist.cithub.backend.Tools.entity.TestSuitesEntity;
 import com.gist.cithub.backend.Tools.service.TestSuitesService;
@@ -160,53 +161,173 @@ public class ToolsController {
 
                 }
 
-                // Save TestSuite
-            case "testsuite":
 
-                TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
+                // Save TestSuite
+            case "generation":
+                UpdateWrapper<TestSuitesEntity> updateWrapper = new UpdateWrapper<>();
                 if (info.containsKey("testsuitesname")) {
-                    testSuitesEntity.setTestsuitesname((String) info.get("testsuitesname"));
+                    updateWrapper.set("TestSuitesName", (String) info.get("testsuitesname"));
                 }
                 if (info.containsKey("testsuitesdescriptions")) {
-                    testSuitesEntity.setTestsuitesdescriptions((String) info.get("testsuitesdescriptions"));
+                    updateWrapper.set("TestSuitesDescriptions", (String) info.get("testsuitesdescriptions"));
+
                 }
 
-                testSuitesEntity.setTestsuitescontents((String) info.get("testsuitescontents"));
-                testSuitesEntity.setTime((Integer) info.get("time"));
-                testSuitesEntity.setSize((Integer) info.get("size"));
-                testSuitesEntity.setAlgorithm((String) info.get("algorithm"));
+                updateWrapper.set("TestSuitesContents", (String) info.get("testsuitescontents"));
+                updateWrapper.set("GenerationTime", (Integer) info.get("generationtime"));
+                updateWrapper.set("size", (Integer) info.get("size"));
+                updateWrapper.set("GenerationTool", (String) info.get("generationtool"));
+
 //        将时间戳转为Date类型
                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-                LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
-                lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
 
+                if (info.containsKey("createdtime")) {
+                    LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
+                    updateWrapper.set("CreatedTime", java.sql.Timestamp.valueOf(createTime));
 
-                Object strength = info.get("strength");
-                if (strength instanceof String) {
-                    testSuitesEntity.setStrength(Integer.parseInt((String) strength));
-                } else if (strength instanceof Integer) {
-                    testSuitesEntity.setStrength((Integer) strength);
                 }
+
+                if (info.containsKey("lastupdatedtime")) {
+                    lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+                    updateWrapper.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                }
+
+
+                if (info.containsKey("strength")) {
+                    Object strength = info.get("strength");
+                    if (strength instanceof String) {
+                        updateWrapper.set("strength", Integer.parseInt((String) strength));
+
+                    } else if (strength instanceof Integer) {
+                        updateWrapper.set("strength", (Integer) strength);
+
+                    }
+                }
+
 
                 Object modelid = info.get("modelid");
                 if (modelid instanceof String) {
-                    testSuitesEntity.setModelid(Integer.parseInt((String) modelid));
-                } else if (strength instanceof Integer) {
-                    testSuitesEntity.setModelid((Integer) modelid);
+                    updateWrapper.eq("ModelID", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    updateWrapper.eq("ModelID", (Integer) modelid);
+
                 }
 
 
                 Object testsuiteid = info.get("testsuiteid");
                 if (testsuiteid instanceof String) {
-                    testSuitesEntity.setTestsuitesid(Integer.parseInt((String) testsuiteid));
+                    updateWrapper.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
+
                 } else if (testsuiteid instanceof Integer) {
-                    testSuitesEntity.setTestsuitesid((Integer) testsuiteid);
+                    updateWrapper.eq("TestSuitesID", (Integer) testsuiteid);
+
+                }
+
+//                每次Generation，都要把排序、约减、评估的结果置为空
+
+                updateWrapper.set("Prioritisationtool", null);
+                updateWrapper.set("PrioritisationTime", null);
+
+
+                updateWrapper.set("ReductionTool", null);
+                updateWrapper.set("ReductionTime", null);
+                updateWrapper.set("sizeAfterReduction", null);
+
+
+                updateWrapper.set("EvaluationTool", null);
+                updateWrapper.set("EvaluationContents", null);
+                updateWrapper.set("EvaluationTime", null);
+
+                Boolean flag = testSuitesService.update(updateWrapper);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
+
+
+
+            case "prioritisation":
+                UpdateWrapper<TestSuitesEntity> updateWrapperPrioritisation = new UpdateWrapper<>();
+
+                updateWrapperPrioritisation.set("TestSuitesContents", (String) info.get("testsuitescontents"));
+                updateWrapperPrioritisation.set("PrioritisationTime", (Integer) info.get("prioritisationtime"));
+                updateWrapperPrioritisation.set("PrioritisationTool", (String) info.get("prioritisationtool"));
+
+//        将时间戳转为Date类型
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+
+                if (info.containsKey("lastupdatedtime")) {
+                    lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+                    updateWrapperPrioritisation.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
+
                 }
 
 
-                testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
-                testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
-                Boolean flag = testSuitesService.updateById(testSuitesEntity);
+
+
+                modelid = info.get("modelid");
+                if (modelid instanceof String) {
+                    updateWrapperPrioritisation.eq("ModelID", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    updateWrapperPrioritisation.eq("ModelID", (Integer) modelid);
+
+                }
+
+
+                testsuiteid = info.get("testsuiteid");
+                if (testsuiteid instanceof String) {
+                    updateWrapperPrioritisation.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
+
+                } else if (testsuiteid instanceof Integer) {
+                    updateWrapperPrioritisation.eq("TestSuitesID", (Integer) testsuiteid);
+
+                }
+
+                flag = testSuitesService.update(updateWrapperPrioritisation);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
+
+
+            case "reduction":
+                UpdateWrapper<TestSuitesEntity> updateWrapperReduction = new UpdateWrapper<>();
+
+                updateWrapperReduction.set("TestSuitesContents", (String) info.get("testsuitescontents"));
+                updateWrapperReduction.set("ReductionTime", (Integer) info.get("reductiontime"));
+                updateWrapperReduction.set("sizeAfterReduction", (Integer) info.get("sizeafterreduction"));
+                updateWrapperReduction.set("ReductionTool", (String) info.get("reductiontool"));
+
+//        将时间戳转为Date类型
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+
+                if (info.containsKey("lastupdatedtime")) {
+                    lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+                    updateWrapperReduction.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                }
+
+
+
+
+                modelid = info.get("modelid");
+                if (modelid instanceof String) {
+                    updateWrapperReduction.eq("ModelID", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    updateWrapperReduction.eq("ModelID", (Integer) modelid);
+
+                }
+
+
+                testsuiteid = info.get("testsuiteid");
+                if (testsuiteid instanceof String) {
+                    updateWrapperReduction.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
+
+                } else if (testsuiteid instanceof Integer) {
+                    updateWrapperReduction.eq("TestSuitesID", (Integer) testsuiteid);
+
+                }
+
+                flag = testSuitesService.update(updateWrapperReduction);
                 if (flag) return R.ok().put("NewStatus", "success!");
                 else return R.ok().put("NewStatus", "failed!");
 

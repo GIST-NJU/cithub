@@ -54,8 +54,8 @@ import { useTestSuitesStore } from '../store/ToolsStore/testSuitesStore'
 const moduleStore = useModuleStore(pinia)
 const route = useRoute()
 const router = useRouter()
-const modelStore = useModelsStore(pinia)
 const testSuitesStore = useTestSuitesStore(pinia)
+const modelStore = useModelsStore(pinia)
 
 
 

@@ -116,19 +116,25 @@ export const CheckLogin = async () => {
     userStore.name = userobj.name
     userStore.email = userobj.email
     userStore.institution = userobj.institution
-    userStore.loginFlag=true
+    userStore.loginFlag = true
     // console.log("userStore",userStore)
+  }
+  // console.log("router.currentRoute.value.name ",router.currentRoute.value.name )
+  // 在这里添加条件判断，如果要跳转的页面是 'CitHub_Home' 则执行跳转
+  let PagesArray=['CitHub_Home','TestSuites_Home','Tools_Models','Repository_Home','Benchmark_Home']
+  if (PagesArray.includes(router.currentRoute.value.name)) {
+    router.push({
+      name: router.currentRoute.value.name
+    })
   }
   else {
     console.log("未登录！")
-    router.push(
-      {
-        name: 'UserLogin'
-      }
-    )
-
+    router.push({
+      name: 'UserLogin'
+    })
   }
 }
+
 
 export function request(config) {
   // 1.创建axios的实例
