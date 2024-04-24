@@ -415,6 +415,28 @@
       "paper": "0"
     },
     {
+      "id": "70",
+      "title": "Adaptive Diagnosis",
+      "type": "Diagnosis",
+      "tags": "Diagnosis,Testsuite",
+      "url": "http://127.0.0.1:9977/",
+      "healthcheck_url": "",
+      "img": "http://210.28.135.32:80/serviceImg/1/11/9fa74502-0113-4eae-adeb-0252d8f239b2evaOne.png",
+      "repository": "https://github.com/lejinWang/evaOne.git",
+      "license": "MIT",
+      "description": "Adaptive Diagnosis.\n",
+      "short_desc": "Coverage Checker is a service that evaluates combination coverage of a given test suite. It also provides support for estimating the coverage of a covering array generation algorithm.\n",
+      "date": "26/8/2019 10:53:01",
+      "docker_image": "https://hub.docker.com/r/xiangjt/coveragechecker",
+      "version": "1.0",
+      "original_version_id": "0",
+      "input_format": "strength;int;the covering strength;2\nparameter;int;the number of parameters;3\nvalues;int[];the number of choices of each parameter;[2,6,3]\ntestsuite;int[][];the generated covering array; [[0,0,0],[0,1,0],[1,0,0],[1,1,0]]",
+      "output_format": "coverArray;int[];the array of covered;[3,6,36]\ntime;string;computational cost (ms);12",
+      "docker_url": "",
+      "checkflag": "1",
+      "paper": "0"
+    },
+    {
       "id": "60",
       "title": "CitHub Generation",
       "type": "Generation",

@@ -11,7 +11,7 @@
                 <div class="col-12">
                     <div class="col-2">
 
-                        <ArgonButton class="mb-2" color="secondary" size="sm" @click="goBack">
+                        <ArgonButton full-width class="mb-2" color="secondary" size="sm" @click="goBack">
                             <span class="ni ni-bold-left  me-1"> Back </span>
                         </ArgonButton>
 

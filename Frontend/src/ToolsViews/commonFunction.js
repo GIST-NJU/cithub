@@ -180,11 +180,20 @@ const listAllTestSuitesByModelID = async (ModelList) => {
 
                 // 将字符串的testsuite转化为Json Obj
                 testSuitesStore.testSuitesList[index].testSuites[i].testsuitescontents = JSON.parse(testSuitesStore.testSuitesList[index].testSuites[i].testsuitescontents)
+
+                // 将EvaluationContents 转为Json obj
+                testSuitesStore.testSuitesList[index].testSuites[i].evaluationcontents = JSON.parse(testSuitesStore.testSuitesList[index].testSuites[i].evaluationcontents)
+                
+                // 将 Diagnosiscontents 转为Json obj
+                testSuitesStore.testSuitesList[index].testSuites[i].diagnosiscontents = JSON.parse(testSuitesStore.testSuitesList[index].testSuites[i].diagnosiscontents)
+
+
+
                 // console.log("testSuitesStore.testSuitesList[index].testSuites[i]",testSuitesStore.testSuitesList[index].testSuites[i])
             }
 
         }
-        // console.log("listAllTestSuitesByModelID testSuitesStore.testSuitesList",testSuitesStore.testSuitesList)
+        console.log("listAllTestSuitesByModelID testSuitesStore.testSuitesList",testSuitesStore.testSuitesList)
 
 
 

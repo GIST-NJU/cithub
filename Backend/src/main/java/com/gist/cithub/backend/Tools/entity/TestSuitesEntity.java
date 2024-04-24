@@ -36,10 +36,13 @@ public class TestSuitesEntity implements Serializable {
 
     private String evaluationcontents;
 
+    private String diagnosiscontents;
+
     private String generationtool;
     private String prioritisationtool;
     private String reductiontool;
     private String evaluationtool;
+    private String diagnosistool;
 
     private Integer size;
     private Integer sizeafterreduction;

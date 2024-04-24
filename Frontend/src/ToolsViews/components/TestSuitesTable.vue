@@ -180,7 +180,7 @@
 
 <script setup>
 
-import { onMounted, reactive, ref, computed, defineProps } from 'vue';
+import { onMounted, reactive, ref, computed, defineProps,defineEmits  } from 'vue';
 import ArgonBadge from '../../CustomizedComponents/ArgonBadge.vue'
 import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
@@ -194,7 +194,7 @@ import { useCurrentTestSuitesStore } from '../../store/ToolsStore/currentTestSui
 import { useCurrentModel } from '../../store/ToolsStore/currentModel'
 import pinia from '../../store/store'
 import { ElLoading } from 'element-plus'
-
+const emits = defineEmits(['scrollToTestSuiteInfo']);
 const router = useRouter();
 const route = useRoute()
 const props = defineProps({
@@ -241,9 +241,21 @@ const EnterTestSuiteDetails = (testsuite, index) => {
       currentTestSuite.currentTestSuites[key] = testsuite[key];
     }
   }
-// console.log(" EnterTestSuiteDetails currentTestSuite.currentTestSuites",currentTestSuite.currentTestSuites)
+  // console.log(" EnterTestSuiteDetails currentTestSuite.currentTestSuites",currentTestSuite.currentTestSuites)
 
   if (route.name == 'TestSuiteDetails') {
+    // 发送信号给父组件，通知其滚动屏幕
+    emits('scrollToTestSuiteInfo');
+    router.push(
+      {
+        path: '/tools/TestSuiteDetails',
+        query: {
+          testsuitesid: currentTestSuite.currentTestSuites.testsuitesid,
+          modelid: currentTestSuite.currentTestSuites.modelid,
+          index: index
+        }
+      }
+    )
     ElNotification({
       title: 'Switch Success!',
       message: 'Now working on TestSuite <br>' + currentTestSuite.currentTestSuites.testsuitesname,

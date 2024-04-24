@@ -224,7 +224,7 @@ public class ToolsController {
 
                 }
 
-//                每次Generation，都要把排序、约减、评估的结果置为空
+//                每次Generation，都要把排序、约减、评估 、 故障定位 的结果置为空
 
                 updateWrapper.set("Prioritisationtool", null);
                 updateWrapper.set("PrioritisationTime", null);
@@ -238,6 +238,9 @@ public class ToolsController {
                 updateWrapper.set("EvaluationTool", null);
                 updateWrapper.set("EvaluationContents", null);
                 updateWrapper.set("EvaluationTime", null);
+
+                updateWrapper.set("DiagnosisTool", null);
+                updateWrapper.set("DiagnosisContents", null);
 
                 Boolean flag = testSuitesService.update(updateWrapper);
                 if (flag) return R.ok().put("NewStatus", "success!");
@@ -283,6 +286,20 @@ public class ToolsController {
 
                 }
 
+//                每次排序，要把 约减、评估 、故障定位 置空
+
+                updateWrapperPrioritisation.set("ReductionTool", null);
+                updateWrapperPrioritisation.set("ReductionTime", null);
+                updateWrapperPrioritisation.set("sizeAfterReduction", null);
+
+
+                updateWrapperPrioritisation.set("EvaluationTool", null);
+                updateWrapperPrioritisation.set("EvaluationContents", null);
+                updateWrapperPrioritisation.set("EvaluationTime", null);
+
+                updateWrapperPrioritisation.set("DiagnosisTool", null);
+                updateWrapperPrioritisation.set("DiagnosisContents", null);
+
                 flag = testSuitesService.update(updateWrapperPrioritisation);
                 if (flag) return R.ok().put("NewStatus", "success!");
                 else return R.ok().put("NewStatus", "failed!");
@@ -307,8 +324,6 @@ public class ToolsController {
                 }
 
 
-
-
                 modelid = info.get("modelid");
                 if (modelid instanceof String) {
                     updateWrapperReduction.eq("ModelID", Integer.parseInt((String) modelid));
@@ -327,9 +342,112 @@ public class ToolsController {
 
                 }
 
+//                每次Reduction 要把 排序、评估的已有结果置空
+                updateWrapperReduction.set("Prioritisationtool", null);
+                updateWrapperReduction.set("PrioritisationTime", null);
+
+
+                updateWrapperReduction.set("EvaluationTool", null);
+                updateWrapperReduction.set("EvaluationContents", null);
+                updateWrapperReduction.set("EvaluationTime", null);
+
+                updateWrapperReduction.set("DiagnosisTool", null);
+                updateWrapperReduction.set("DiagnosisContents", null);
+
                 flag = testSuitesService.update(updateWrapperReduction);
                 if (flag) return R.ok().put("NewStatus", "success!");
                 else return R.ok().put("NewStatus", "failed!");
+
+            case "evaluation":
+                UpdateWrapper<TestSuitesEntity> updateWrapperEvaluation = new UpdateWrapper<>();
+
+                updateWrapperEvaluation.set("EvaluationContents", (String) info.get("EvaluationContents"));
+                updateWrapperEvaluation.set("EvaluationTime", (Integer) info.get("evaluationtime"));
+                updateWrapperEvaluation.set("EvaluationTool", (String) info.get("evaluationtool"));
+
+//        将时间戳转为Date类型
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+
+                if (info.containsKey("lastupdatedtime")) {
+                    lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+                    updateWrapperEvaluation.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                }
+
+
+                modelid = info.get("modelid");
+                if (modelid instanceof String) {
+                    updateWrapperEvaluation.eq("ModelID", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    updateWrapperEvaluation.eq("ModelID", (Integer) modelid);
+
+                }
+
+
+                testsuiteid = info.get("testsuiteid");
+                if (testsuiteid instanceof String) {
+                    updateWrapperEvaluation.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
+
+                } else if (testsuiteid instanceof Integer) {
+                    updateWrapperEvaluation.eq("TestSuitesID", (Integer) testsuiteid);
+
+                }
+
+                //    评估 执行不改变 testsuitecontent 无需置空其他测试活动的字段
+
+                flag = testSuitesService.update(updateWrapperEvaluation);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
+
+//                故障定位
+            case "diagnosis":
+                UpdateWrapper<TestSuitesEntity> updateWrapperDiagnosis = new UpdateWrapper<>();
+
+                updateWrapperDiagnosis.set("DiagnosisContents", (String) info.get("diagnosiscontents"));
+
+                updateWrapperDiagnosis.set("DiagnosisTool", (String) info.get("diagnosistool"));
+
+//        将时间戳转为Date类型
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+
+
+                if (info.containsKey("lastupdatedtime")) {
+                    lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+                    updateWrapperDiagnosis.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                }
+
+
+
+
+
+                 modelid = info.get("modelid");
+                if (modelid instanceof String) {
+                    updateWrapperDiagnosis.eq("ModelID", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    updateWrapperDiagnosis.eq("ModelID", (Integer) modelid);
+
+                }
+
+
+                 testsuiteid = info.get("testsuiteid");
+                if (testsuiteid instanceof String) {
+                    updateWrapperDiagnosis.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
+
+                } else if (testsuiteid instanceof Integer) {
+                    updateWrapperDiagnosis.eq("TestSuitesID", (Integer) testsuiteid);
+
+                }
+
+//                故障定位执行不改变 testsuitecontent 无需置空其他测试活动的字段
+
+
+                flag = testSuitesService.update(updateWrapperDiagnosis);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
+
 
         }
         return R.ok().put("res", "saveFail");
