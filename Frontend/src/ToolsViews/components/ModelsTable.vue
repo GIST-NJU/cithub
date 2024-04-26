@@ -78,7 +78,7 @@
                     <ArgonButton color="success" variant="gradient"  
                       @click="EnterTestSuite(model,index)">
                       <span class="fas fa-print text-white me-2" />
-                      TestSuite
+                      TestSuites
                     </ArgonButton>
                   </div>
                   <div style="margin-left: 10px;">

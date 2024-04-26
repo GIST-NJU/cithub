@@ -35,7 +35,8 @@
                     <div>
                         <div v-if="TestTableListFlag" class="card mb-2">
                             <div v-for="(obj, index) in testSuitesStore.testSuitesList" class="card-body px-0 pt-0 pb-0">
-                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']" @scrollToTestSuiteInfo="scrollToTestSuiteInfo">
+                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']"
+                                    @scrollToTestSuiteInfo="scrollToTestSuiteInfo">
                                 </TestSuitesTable>
                             </div>
                         </div>
@@ -59,7 +60,7 @@
                                 <div class="card-header pb-0">
                                     <h3 class="text-center" ref="TestSuiteInfo">TestSuite Info</h3>
                                 </div>
-                                <div class="card-body" >
+                                <div class="card-body">
 
                                     <div class="row">
                                         <h5>Basic Info</h5>
@@ -197,7 +198,7 @@
                                     <hr class="my-3 horizontal white" />
 
                                     <!-- Diagnosis -->
-                                    <div class="row"  v-if="currentTestSuite.currentTestSuites.diagnosiscontents">
+                                    <div class="row" v-if="currentTestSuite.currentTestSuites.diagnosiscontents">
                                         <h5>Dignosis Info</h5>
                                         <div class="col-6">
                                             <h6> Dignosis Tool</h6>
@@ -239,7 +240,8 @@
                                     </div>
 
                                     <div class="row" v-else>
-                                        <h6>There is no Diagnosis Result for TestSuite {{currentTestSuite.currentTestSuites.testsuitesname }},
+                                        <h6>There is no Diagnosis Result for TestSuite
+                                            {{ currentTestSuite.currentTestSuites.testsuitesname }},
                                             Click the Button below to Diagnosis.</h6>
                                         <div class="col-12 mt-4 pt-2">
                                             <ArgonButton full-width color="danger" @click="showdialogNewDiagnosis">
@@ -569,7 +571,7 @@
 
 
                         <div class="col-6 d-flex align-items-stretch">
-                        <!-- Evaluation -->
+                            <!-- Evaluation -->
 
                             <div class="card" v-if="currentTestSuite.currentTestSuites.testsuitesname">
                                 <div class="card-body">
@@ -682,13 +684,13 @@
                     <!-- show testsuite in the form of table -->
                     <hr class="my-3 horizontal dark" />
 
-                    <div class="card" v-if="currentTestSuite.currentTestSuites.testsuitesname"  ref="testSuiteTable">
+                    <div class="card" v-if="currentTestSuite.currentTestSuites.testsuitesname" ref="testSuiteTable">
                         <div class="card-header pb-0">
                             <div class="row align-items-center">
                                 <div class=col-3></div>
                                 <!-- Caption -->
                                 <div class="col-6 text-center">
-                                    <h3 class="mb-0" >TestSuite of {{ currentTestSuite.currentTestSuites.testsuitesname }}
+                                    <h3 class="mb-0">TestSuite of {{ currentTestSuite.currentTestSuites.testsuitesname }}
                                     </h3>
                                 </div>
 
@@ -724,14 +726,14 @@
                                             <div class="spinner-border  text-success col-4" role="status">
                                             </div>
                                             <div class="col-8 my-2">
-                                                <h6>Adaptive Dagnosis is running, Please select whether the test result of
-                                                    any one testcase is <b>Pass</b> or <b>Fail</b>.
+                                                <h6>Adaptive Dagnosis is running, Please select a failed testcase below to
+                                                    start interacting.
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- 表格 -->
+                                    <!-- 覆盖表的表格 -->
                                     <table class="table-secondary table-bordered" style="width: 100%;">
                                         <thead>
                                             <tr>
@@ -741,22 +743,21 @@
                                                     {{ parameter.Parameter }}
                                                 </th>
                                                 <!-- 使用Bootstrap的栅格系统调整Operation列的宽度 -->
-                                                <th v-if="DignosisRunFlag" class="text-center col-2"> Operation </th>
+                                                <th v-if="DignosisRunFlag" class="text-center col-2"> Result </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(row, rowIndex) in result" :key="rowIndex">
+                                            <tr v-for="(row, rowIndex) in CoveringArray" :key="rowIndex">
                                                 <td class="text-center">{{ rowIndex + 1 }}</td>
                                                 <td v-for="(value, colIndex) in row" :key="colIndex" class="text-center">
                                                     {{ value }}
                                                 </td>
-                                                <td v-if="DignosisRunFlag && shouldDisplayButton(row, displayCriteria)"
-                                                    class="text-center">
+                                                <td v-if="DignosisRunFlag" class="text-center">
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <!-- <div class="col">
                                                             <argon-button full-width color="success"
                                                                 @click="handleDiagnosisClick(row, true)">Pass</argon-button>
-                                                        </div>
+                                                        </div> -->
                                                         <div class="col">
                                                             <argon-button full-width color="danger"
                                                                 @click="handleDiagnosisClick(row, false)">Fail</argon-button>
@@ -772,7 +773,70 @@
 
 
 
+                            <el-dialog v-model="DiagnosisNextFlag" width="50%"
+                                title="Please select the result of the following testcases">
+                                <!-- 故障定位过程中 的表格 -->
+                                <div v-if="!DiagnosisTestCases[DiagnosisTestCases.length - 1].hasOwnProperty('testcaseResult')"
+                                    class="row mx-2">
+                                    <div class="spinner-border  text-success col-4" role="status">
+                                    </div>
+                                    <div class="col-8 my-2">
+                                        <h6>CitHub is waiting wether the result of the current testcase is Pass or Fail.
+                                        </h6>
+                                    </div>
+                                </div>
+                                <table class="table-secondary table-bordered" style="width: 100%;">
 
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th v-for="(parameter, index) in currentModel.currentModel.PandVOBJ"
+                                                :key="index" class="text-center">
+                                                {{ parameter.Parameter }}
+                                            </th>
+                                            <!-- 使用Bootstrap的栅格系统调整Operation列的宽度 -->
+                                            <th v-if="DignosisRunFlag && DiagnosisNextFlag" class="text-center col-2">
+                                                Result of TestCase </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex">
+                                            <td class="text-center">{{ rowIndex + 1 }}</td>
+                                            <td v-for="(value, colIndex) in row.testcase" :key="colIndex"
+                                                class="text-center">
+                                                {{ value }}
+                                            </td>
+                                            <td v-if="DignosisRunFlag && DiagnosisNextFlag && row.hasOwnProperty('testcaseResult')"
+                                                class="text-center">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <ArgonBadge :color="row.testcaseResult ? 'success' : 'danger'">{{
+                                                            row.testcaseResult ? ' Pass ' : 'Fail' }}</ArgonBadge>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td v-if="DignosisRunFlag && DiagnosisNextFlag && !row.hasOwnProperty('testcaseResult')"
+                                                class="text-center">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <argon-button full-width color="success"
+                                                            @click="handleDiagnosisClick(row.testcase, true)">Pass</argon-button>
+                                                    </div>
+                                                    <div class="col">
+                                                        <argon-button full-width color="danger"
+                                                            @click="handleDiagnosisClick(row.testcase, false)">Fail</argon-button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <template #footer>
+                                    <div class="dialog-footer">
+                                        <el-button @click="CloseDiagnosis()">Cancel</el-button>
+                                    </div>
+                                </template>
+                            </el-dialog>
 
 
 
@@ -829,11 +893,11 @@ const TestTableListFlag = ref(false)
 
 
 // 将覆盖表显示为Html表格
-const result = ref([]);
+const CoveringArray = ref([]);
 const getValueFromArrays = async (objArray, indexArray) => {
     // console.log("objArray",objArray)
     // console.log("indexArray",indexArray)
-    result.value.length = 0
+    CoveringArray.value.length = 0
     indexArray.forEach((indexes) => {
         let values = indexes.map((index, i) => {
             const parameter = objArray[i].Parameter;
@@ -846,7 +910,7 @@ const getValueFromArrays = async (objArray, indexArray) => {
             }
         });
 
-        result.value.push(values);
+        CoveringArray.value.push(values);
     });
 };
 const StrengthOptions = [
@@ -1656,12 +1720,21 @@ const testSuiteTable = ref()
 const TestSuiteInfo = ref()
 // 判断故障定位过程是否结束
 const DignosisRunFlag = ref(false)
+// 弹出工具执行过程中的 next testcase 的对话框
+const DiagnosisNextFlag = ref(false)
 // 弹出对话框，选择算法。
 const confirmNewDiagnosis = async () => {
 
     DignosisRunFlag.value = true
     dialogFormVisibleNewDiagnosis.value = false
     testSuiteTable.value.scrollIntoView({ behavior: 'smooth' });
+
+    ElNotification({
+        title: 'Diagnosis start.',
+        type: 'success',
+        message: 'Adaptive Dagnosis is running, Please select a failed testcase below to start interacting.',
+
+    })
 
 }
 
@@ -1697,8 +1770,10 @@ const FaultTuples = reactive([])
 const InitDiagnosisTool = ref(true)
 const displayCriteria = reactive([])
 const nextCriteriaArray = reactive([])
+const DiagnosisTestCases = reactive([])
 // 点击按钮进行自适应的故障定位
-const handleDiagnosisClick = async (testcase, result) => {
+const handleDiagnosisClick = async (testcase, testcaseResult) => {
+    // console.log("实际测试用例", testcase)
     let loadingInstance = ElLoading.service({ fullscreen: true })
     let OBJ = {
         init: '',
@@ -1708,12 +1783,20 @@ const handleDiagnosisClick = async (testcase, result) => {
     }
     if (InitDiagnosisTool.value) {
 
-        // console.log("第一次点击按钮，发送初始化请求，且所有行都显示按钮")
         OBJ.init = InitDiagnosisTool.value
         // 首次点击，映射为参数取值的索引
         OBJ.testcase = TestCaseToIndexesTestCase(currentModel.currentModel.PandVOBJ, testcase)
 
         InitDiagnosisTool.value = false
+
+        // 弹出next testcase 对话框
+        DiagnosisNextFlag.value = true
+
+        // 加载故障定位过程表格的第一行数据行
+        DiagnosisTestCases.length = 0
+        DiagnosisTestCases.push({ testcase, testcaseResult })
+
+
     }
     else {
         // console.log("余下的点击，发送过程请求")
@@ -1722,18 +1805,20 @@ const handleDiagnosisClick = async (testcase, result) => {
         OBJ.testcase.length = 0
         OBJ.testcase.push(...nextCriteriaArray)
         OBJ.init = InitDiagnosisTool.value
+
+        //    永远是更新最后一个数组元素！
+        // DiagnosisTestCases[DiagnosisTestCases.length - 1].testcaseResult = testcaseResult
+        let testCaseObj = DiagnosisTestCases.pop()
+        testCaseObj.testcaseResult = testcaseResult
+        DiagnosisTestCases.push(testCaseObj)
+        // console.log("更新最新的testcase的 DiagnosisTestCases", DiagnosisTestCases)
+
     }
     // 构造发送给 自适应故障定位工具的OBJ
 
-    // let TestCaseArrayIndex=convertArrayToIndexes(currentModel.currentModel.PandVOBJ,testcase)
-    // 将实际的测试用例映射为参数取值索引的测试用例
-
     OBJ.length = OBJ.testcase.length
-    OBJ.pass = result
-    // console.log("currentModel.currentModel.PandVOBJ", currentModel.currentModel.PandVOBJ)
-    // console.log("handleDiagnosisClick testcase",testcase,"result",result)
-    // console.log("TestCaseArrayIndex",TestCaseArrayIndex)
-    // console.log("json OBJ", JSON.stringify(OBJ))
+    OBJ.pass = testcaseResult
+
 
     for (const tool of AlgorithmOptionsDiagnosis) {
         if (tool.value == AlgorithmChosedDiagnosis.value) {
@@ -1750,11 +1835,7 @@ const handleDiagnosisClick = async (testcase, result) => {
                 // console.log("DiagnosisRes", DiagnosisRes)
                 // console.log("DiagnosisRes Json", JSON.stringify(DiagnosisRes))
                 if (DiagnosisRes.finished) {
-                    // 故障定位完成 关闭running的提示
-                    DignosisRunFlag.value = false
-                    // 置位为第一次发送请求
-                    InitDiagnosisTool.value = true
-                    // console.log("故障定位已完成", DiagnosisRes)
+
 
                     let ValuesArray = DiagnosisRes.result.map(FaultTuple => {
                         return IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, FaultTuple);
@@ -1785,6 +1866,13 @@ const handleDiagnosisClick = async (testcase, result) => {
                         // 更新Testsuite Info区域的信息
                         await UpdateTestSuiteInfo()
 
+                        // 故障定位完成 关闭running的提示
+                        DignosisRunFlag.value = false
+                        // 置位为第一次发送请求
+                        InitDiagnosisTool.value = true
+                        // 关闭定位过程对话框
+                        DiagnosisNextFlag.value = false
+                        // console.log("故障定位已完成", DiagnosisRes)
 
                         // 视窗滚动到显示故障定位的结果
                         TestSuiteInfo.value.scrollIntoView({ behavior: 'smooth' });
@@ -1822,18 +1910,15 @@ const handleDiagnosisClick = async (testcase, result) => {
                     displayCriteria.length = 0
                     displayCriteria.push(...IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, DiagnosisRes.next))
                     // console.log("交互过程中的 displayCriteria", displayCriteria)
-                    shouldDisplayButton(testcase, displayCriteria)
+
+                    // 根据故障定位表格中的点击情况，动态的更新表格
+                    DiagnosisTestCases.push({ "testcase": [...displayCriteria] })
+                    // console.log("等待test结果的 DiagnosisTestCases", DiagnosisTestCases)
+
 
                     // 记录下下一次发送的testcase
                     nextCriteriaArray.length = 0
                     nextCriteriaArray.push(...DiagnosisRes.next)
-
-                    ElNotification({
-                        title: 'Diagnosis is running.',
-                        type: 'warning',
-                        message: 'Please select the next test result of testcase.',
-
-                    })
 
                     loadingInstance.close()
 
@@ -1846,16 +1931,23 @@ const handleDiagnosisClick = async (testcase, result) => {
     }
 
 }
+const CloseDiagnosis = () => {
 
-// 根据按钮显示条件判断是否显示按钮
-const shouldDisplayButton = (row, criteria) => {
-    for (let i = 0; i < criteria.length; i++) {
-        if (criteria[i] !== null && row[i] !== criteria[i]) {
-            return false; // 如果对应列的值与条件不匹配，则不显示按钮
-        }
-    }
-    return true; // 如果所有条件都匹配，则显示按钮
-};
+    ElNotification({
+        title: 'Diagnosis is interrupted.',
+        type: 'warning',
+        message: 'Diagnosis has been cancelled.',
+
+    })
+
+    // 关闭running的提示
+    DignosisRunFlag.value = false
+    // 置位为第一次发送请求
+    InitDiagnosisTool.value = true
+    // 关闭定位过程对话框
+    DiagnosisNextFlag.value = false
+}
+
 
 // 将实际的参数取值数组，变为Parameter=Value的字符串数组的形式，以表示故障元组
 const convertTestcaseToFaultTuples = (testcaseArray, PandVOBJ) => {
@@ -1906,7 +1998,7 @@ const ExportTestSuite = () => {
 const generateCSV = () => {
     // 从表格数据生成CSV内容
     const header = ['#', ...currentModel.currentModel.PandVOBJ.map(parameter => parameter.Parameter)];
-    const rows = result.value.map((row, index) => [index + 1, ...row]);
+    const rows = CoveringArray.value.map((row, index) => [index + 1, ...row]);
     const allRows = [header, ...rows];
 
     return allRows.map(row => row.join(',')).join('\n');
@@ -2141,4 +2233,5 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
-} */</style>
+} */
+</style>
