@@ -776,7 +776,7 @@
 
 
 
-                            <el-dialog v-model="DiagnosisNextFlag" width="50%"
+                            <el-dialog v-model="DiagnosisNextFlag" width="50%" :show-close="false" :close-on-click-modal="false"
                                 title="Please select the result of the following testcases">
                                 <!-- 故障定位过程中 的表格 -->
                                 <div v-if="!DiagnosisTestCases[DiagnosisTestCases.length - 1].hasOwnProperty('testcaseResult')"
@@ -784,12 +784,13 @@
                                     <div class="spinner-border  text-success col-4" role="status">
                                     </div>
                                     <div class="col-10 my-1">
-                                        <p>CitHub is waiting for result. Any TestCase marked as <ArgonBadge color="info"> New </ArgonBadge>, just choose one of them is enough.
+                                        <p>CitHub is waiting for result. Any TestCase marked as <ArgonBadge color="info">
+                                                New </ArgonBadge>, just choose one of them is enough.
                                         </p>
                                     </div>
 
                                 </div>
-                                <table class="table-secondary table-bordered" style="width: 100%;">
+                                <table class="table table-bordered" style="width: 100%;">
 
                                     <thead>
                                         <tr>
@@ -804,11 +805,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex">
+                                        <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex" :class="{
+                                            'table-secondary': row.status == 'new',
+                                            'table-success': row.testcaseResult == true,
+                                            'table-danger': row.testcaseResult == false
+                                        }">
                                             <!-- 如果row.status为 new 则在对应的行前显示 new -->
                                             <td v-if="row.status != 'new'" class="text-center">{{ rowIndex + 1 }}</td>
                                             <td v-else class="text-center">
-                                                <ArgonBadge color="info"> New </ArgonBadge>
+                                                <ArgonBadge color="secondary"> New </ArgonBadge>
                                             </td>
                                             <td v-for="(value, colIndex) in row.testcase" :key="colIndex"
                                                 class="text-center">
@@ -837,6 +842,7 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        <tr class="border-0"></tr>
                                     </tbody>
                                 </table>
                                 <template #footer>
@@ -1957,6 +1963,12 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     });
                     // console.log("等待test结果的 DiagnosisTestCases", DiagnosisTestCases)
 
+                    // 对DiagnosisTestCases 去重，去掉那些testcase相同的对象 去重有Bug，暂时禁用了
+                    // let uniqueArray = removeDuplicates(DiagnosisTestCases);
+                    // // 更新DiagnosisTestCases数组
+                    // updateDiagnosisTestCases(DiagnosisTestCases, uniqueArray);
+                    // console.log("去重后的DiagnosisTestCases",DiagnosisTestCases)
+
 
                     // 记录下下一次发送的testcase
                     nextCriteriaArray.length = 0
@@ -2085,6 +2097,43 @@ const arraysAreEqual = (arr1, arr2) => {
     }
 
     return true;
+}
+
+
+// 对 DiagnosisTestCases 进行去重 
+function removeDuplicates(array) {
+    // 使用 reduce 方法进行去重
+    const uniqueArray = array.reduce((acc, current) => {
+        // 获取当前对象的 testcase 值
+        const testcase = JSON.stringify(current.testcase);
+
+        // 如果 Map 中已经存在相同的 testcase 值
+        if (acc.has(testcase)) {
+            // 如果当前对象有 testcaseResult key，则保留当前对象
+            if (current.hasOwnProperty('testcaseResult')) {
+                acc.set(testcase, current);
+            }
+        } else {
+            // 如果 Map 中不存在相同的 testcase 值，则添加到 Map 中
+            acc.set(testcase, current);
+        }
+
+        return acc;
+    }, new Map());
+
+    // 将 Map 转换回数组形式并返回
+    return Array.from(uniqueArray.values());
+}
+
+// 清空数组并将去重后的内容添加到原始数组中
+function updateDiagnosisTestCases(originalArray, uniqueArray) {
+    // 清空原始数组
+    originalArray.splice(0, originalArray.length);
+
+    // 将去重后的数组的内容添加到原始数组中
+    uniqueArray.forEach(item => {
+        originalArray.push(item);
+    });
 }
 
 
@@ -2342,4 +2391,5 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
-} */</style>
+} */
+</style>
