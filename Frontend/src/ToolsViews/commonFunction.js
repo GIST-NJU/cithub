@@ -100,7 +100,7 @@ const listModelInfoByModelID = async (modelid) => {
             }
         });
         // console.log("res ModelInfo",res)
-        currentModel.currentModel={}
+        currentModel.currentModel = {}
         currentModel.currentModel.modelid = res.ModelRES.modelid
         // currentModel.currentModel.strength = res.ModelRES.strength
         currentModel.currentModel.modelname = res.ModelRES.modelname
@@ -112,6 +112,25 @@ const listModelInfoByModelID = async (modelid) => {
 
         currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
         currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
+
+        // 将约束直接变为禁止元组的形式
+        let ForbiddenTuples = [];
+
+        currentModel.currentModel.ConsOBJ.forEach(constraintObj => {
+            let constraintValues = [];
+    
+            currentModel.currentModel.PandVOBJ.forEach(parameter => {
+                let constraintItem = constraintObj.Constraint.find(item => item.Parameter === parameter.Parameter);
+                constraintValues.push(constraintItem ? constraintItem.Value : null);
+            });
+    
+            ForbiddenTuples.push(constraintValues);
+        });
+    
+
+        currentModel.currentModel.ForbiddenTuples = ForbiddenTuples
+
+
         currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
         currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
 
@@ -183,7 +202,7 @@ const listAllTestSuitesByModelID = async (ModelList) => {
 
                 // 将EvaluationContents 转为Json obj
                 testSuitesStore.testSuitesList[index].testSuites[i].evaluationcontents = JSON.parse(testSuitesStore.testSuitesList[index].testSuites[i].evaluationcontents)
-                
+
                 // 将 Diagnosiscontents 转为Json obj
                 testSuitesStore.testSuitesList[index].testSuites[i].diagnosiscontents = JSON.parse(testSuitesStore.testSuitesList[index].testSuites[i].diagnosiscontents)
 
@@ -273,7 +292,7 @@ const CitHubModel = (model, strength) => {
         APIObj.constraints = consArrayToAPI
         // 这里先返回对象，在实际调用API时再转为Json 
         // return JSON.stringify(APIObj).replace(/"/g, '')
-        return  APIObj
+        return APIObj
 
     } catch (error) {
         console.log("error", error)
@@ -281,7 +300,7 @@ const CitHubModel = (model, strength) => {
 }
 
 // 读取 CitHubModel 和 CurrentTestSuite 构造 CitHub Testsuite
-const CitHubTestSuite=(CitHubModel,testsuite) =>{
+const CitHubTestSuite = (CitHubModel, testsuite) => {
     CitHubModel.testsuite = testsuite
     return CitHubModel
 }

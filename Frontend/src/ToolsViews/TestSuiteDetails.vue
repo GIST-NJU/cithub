@@ -776,16 +776,16 @@
 
 
 
-                            <el-dialog v-model="DiagnosisNextFlag" width="50%" :show-close="false" :close-on-click-modal="false"
-                                title="Please select the result of the following testcases">
+                            <el-dialog v-model="DiagnosisNextFlag" width="50%"  @close="CloseDiagnosis()"
+                                :close-on-click-modal="false" title="Please select the result of the following testcases">
                                 <!-- 故障定位过程中 的表格 -->
                                 <div v-if="!DiagnosisTestCases[DiagnosisTestCases.length - 1].hasOwnProperty('testcaseResult')"
                                     class="row">
                                     <div class="spinner-border  text-success col-4" role="status">
                                     </div>
                                     <div class="col-10 my-1">
-                                        <p>CitHub is waiting for result. Any TestCase marked as <ArgonBadge color="info">
-                                                New </ArgonBadge>, just choose one of them is enough.
+                                        <p>CitHub is waiting for interaction, Choose the result of one of the following
+                                            testcases.
                                         </p>
                                     </div>
 
@@ -806,14 +806,19 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex" :class="{
-                                            'table-secondary': row.status == 'new',
+                                            'table-info': row.status == 'new',
+                                            'table-primary': row.status == 'existed',
                                             'table-success': row.testcaseResult == true,
                                             'table-danger': row.testcaseResult == false
                                         }">
-                                            <!-- 如果row.status为 new 则在对应的行前显示 new -->
-                                            <td v-if="row.status != 'new'" class="text-center">{{ rowIndex + 1 }}</td>
-                                            <td v-else class="text-center">
-                                                <ArgonBadge color="secondary"> New </ArgonBadge>
+                                            <!-- 如果row.status为 new/existed 则在对应的行前显示 new/ existed ，否则显示行号 -->
+                                            <td v-if="row.status != 'new' && row.status != 'existed'" class="text-center">
+                                                {{ rowIndex + 1 }}</td>
+                                            <td v-if="row.status == 'new'" class="text-center">
+                                                <ArgonBadge color="info"> New </ArgonBadge>
+                                            </td>
+                                            <td v-if="row.status == 'existed'" class="text-center">
+                                                <ArgonBadge color="primary"> Existed </ArgonBadge>
                                             </td>
                                             <td v-for="(value, colIndex) in row.testcase" :key="colIndex"
                                                 class="text-center">
@@ -1782,7 +1787,7 @@ function IndexesTestCaseToTestCase(PandVOBJ, indexesArray) {
 const FaultTuples = reactive([])
 // 初始化故障定位工具
 const InitDiagnosisTool = ref(true)
-const displayCriteria = reactive([])
+const NextValues = reactive([])
 const nextCriteriaArray = reactive([])
 const DiagnosisTestCases = reactive([])
 const DiagnosisTestCasesRowIndex = ref()
@@ -1945,29 +1950,113 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     // 故障定位未完成，根据返回的result 重新渲染表格内容让用户点按钮
 
                     // 先 将 DiagnosisRes.next 数组映射为参数的实际取值的数组
-                    // 然后决定哪些行需要显示按钮
-                    displayCriteria.length = 0
-                    displayCriteria.push(...IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, DiagnosisRes.next))
-                    // console.log("交互过程中的 displayCriteria", displayCriteria)
-                    // console.log("参数和参数取值", currentModel.currentModel.PandVOBJ)
-                    // console.log("填充Null值后的结果", FillNull(currentModel.currentModel.PandVOBJ, displayCriteria))
-                    // console.log("CoveringArray 覆盖表", CoveringArray.value)
-                    // console.log("找到两个表中那些相同testcase ", findCommonArrays(CoveringArray.value, FillNull(currentModel.currentModel.PandVOBJ, displayCriteria)))
+                    NextValues.length = 0
+                    NextValues.push(...IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, DiagnosisRes.next))
+                    // console.log("下次交互需要知道Pass/Fail的测试用例 NextValues", NextValues)
+                    // console.log("参数和参数取值", currentModel.currentModel)
+                    // console.log("NextValues 填充Null值后的结果", FillNull(currentModel.currentModel.PandVOBJ, NextValues))
+
+
+                    // 下面想除掉 NextValues 填充Null之后 那些不满足约束的testcase
+                    let ForbiddenTuplesFilled = []
+                    // 首先将所有禁止元组填充Null
+                    currentModel.currentModel.ForbiddenTuples.forEach(ForbiddenTuple => {
+
+                        // console.log("对",ForbiddenTuple,"填充Null")
+                        // console.log("填充结果为",FillNull(currentModel.currentModel.PandVOBJ, ForbiddenTuple))
+                        // FillNull(currentModel.currentModel.PandVOBJ, ForbiddenTuple)
+                        ForbiddenTuplesFilled.push(...FillNull(currentModel.currentModel.PandVOBJ, ForbiddenTuple))
+
+                    });
+                    // ForbiddenTuplesFilled = Array.from(new Set(ForbiddenTuplesFilled.map(JSON.stringify)), JSON.parse);
+                    // console.log("禁止元组的填充结果为", ForbiddenTuplesFilled)
+                    // NextValues 减去 ForbiddenTuplesFilled
+                    let NextValuesSat = subtractArrays(FillNull(currentModel.currentModel.PandVOBJ, NextValues), ForbiddenTuplesFilled)
+                    // console.log("去除不满足约束之后的 NextValuesSat", NextValuesSat)
+
+
 
                     // 根据故障定位表格中的点击情况，动态的更新表格
-                    findCommonArrays(CoveringArray.value, FillNull(currentModel.currentModel.PandVOBJ, displayCriteria)).map((commonTestCases) => {
-                        DiagnosisTestCases.push({
-                            "testcase": commonTestCases,
-                            "status": "new"
-                        });
-                    });
-                    // console.log("等待test结果的 DiagnosisTestCases", DiagnosisTestCases)
 
-                    // 对DiagnosisTestCases 去重，去掉那些testcase相同的对象 去重有Bug，暂时禁用了
-                    // let uniqueArray = removeDuplicates(DiagnosisTestCases);
-                    // // 更新DiagnosisTestCases数组
-                    // updateDiagnosisTestCases(DiagnosisTestCases, uniqueArray);
-                    // console.log("去重后的DiagnosisTestCases",DiagnosisTestCases)
+
+                    // NextValuesSat 出现在覆盖表中的testcase的status标记为 original，未出现在覆盖表中的标记为 new
+                    NextValuesSat.forEach(nextTestCase => {
+                        let found = false;
+                        CoveringArray.value.forEach(CATestCase => {
+                            if (arraysAreEqual(nextTestCase, CATestCase)) {
+                                DiagnosisTestCases.push({
+                                    "testcase": nextTestCase,
+                                    "status": "existed"
+                                });
+                                found = true; // 标记为找到匹配的情况
+                            }
+                        });
+                        // 如果未找到匹配的CATestCase，则将nextTestCase标记为新的测试用例
+                        if (!found) {
+                            DiagnosisTestCases.push({
+                                "testcase": nextTestCase,
+                                "status": "new"
+                            });
+                        }
+                    });
+                    // console.log("区分得到的 DiagnosisTestCases", DiagnosisTestCases)
+                    // 对DiagnosisTestCases进行排序，已有结果的testcase在最前方，其次是覆盖表中已有的testcase，最后是新的testcase
+                    // 提取具有"status"键和没有"status"键的元素
+                    const TestCasesWithStatus = DiagnosisTestCases.filter(element => element.hasOwnProperty("status"));
+                    const TestCasesWithoutStatus = DiagnosisTestCases.filter(element => !element.hasOwnProperty("status"));
+
+                    // 对具有"status"键的元素进行排序
+                    TestCasesWithStatus.sort((a, b) => {
+                        // 提取a和b的status属性
+                        const statusA = a.status || "new"; // 默认为"new"
+                        const statusB = b.status || "new"; // 默认为"new"
+
+                        // 如果a的status为"existed"，b的status为"new"，则a排在b前面
+                        if (statusA === "existed" && statusB === "new") {
+                            return -1;
+                        }
+                        // 如果a的status为"new"，b的status为"existed"，则a排在b后面
+                        else if (statusA === "new" && statusB === "existed") {
+                            return 1;
+                        }
+                        // 其他情况保持原顺序
+                        else {
+                            return 0;
+                        }
+                    });
+
+                    // 将没有"status"键的元素插入到排序后的数组的开头
+                    const sortedDiagnosisTestCases = TestCasesWithoutStatus.concat(TestCasesWithStatus);
+                    DiagnosisTestCases.length = 0
+                    DiagnosisTestCases.push(...sortedDiagnosisTestCases)
+                    console.log("排序后的 DiagnosisTestCases", DiagnosisTestCases)
+
+                    // 优化DiagnosisTestCases，去掉testcase重复，且已有结果的那些元素
+                    let uniqueTestcases = DiagnosisTestCases.reduce((acc, current) => {
+                        // 检查是否已经存在具有相同"testcase"键的元素
+                        const existingIndex = acc.findIndex(item => JSON.stringify(item.testcase) === JSON.stringify(current.testcase));
+                        if (existingIndex !== -1) {
+                            // 如果已经存在，则判断是否已有元素具有"testcaseResult"键，若有，则保留该元素
+                            if (acc[existingIndex].hasOwnProperty("testcaseResult")) {
+                                // 保留具有 testcaseResult 这个key 的那个元素
+                                return acc;
+                            } else {
+                                // 若没有，则替换为当前元素
+                                
+                                acc.splice(existingIndex, 1, current);
+                                return acc;
+                            }
+                        }
+                        // 如果不存在具有相同"testcase"键的元素，则将当前元素添加到结果数组中。
+                         else {
+                            acc.push(current);
+                            return acc;
+                        }
+                    }, []);
+                    DiagnosisTestCases.length = 0
+                    DiagnosisTestCases.push(...uniqueTestcases)
+                    console.log("去重优化后的 DiagnosisTestCases", DiagnosisTestCases)
+
 
 
                     // 记录下下一次发送的testcase
@@ -2062,30 +2151,32 @@ const FillNull = (PandVOBJ, testCaseNull) => {
     return combinations;
 }
 
-const findCommonArrays = (array1, array2) => {
-    const commonArrays = [];
+function subtractArrays(arr1, arr2) {
+    const subtractedArray = [];
 
-    // 遍历第一个二维数组的每个一维数组
-    for (let i = 0; i < array1.length; i++) {
-        const array1Item = array1[i];
+    // 遍历arr1中的每个一维数组
+    for (let i = 0; i < arr1.length; i++) {
+        let found = false;
 
-        // 遍历第二个二维数组的每个一维数组
-        for (let j = 0; j < array2.length; j++) {
-            const array2Item = array2[j];
-
-            // 检查当前一维数组是否相同
-            if (arraysAreEqual(array1Item, array2Item)) {
-                commonArrays.push(array1Item);
-                break; // 如果找到相同的一维数组，跳出内层循环
+        // 在arr2中查找与当前arr1[i]相同的一维数组
+        for (let j = 0; j < arr2.length; j++) {
+            if (arraysAreEqual(arr1[i], arr2[j])) {
+                found = true;
+                break;
             }
+        }
+
+        // 如果arr1中的一维数组在arr2中没有找到相同的，则将其添加到结果数组中
+        if (!found) {
+            subtractedArray.push(arr1[i]);
         }
     }
 
-    return commonArrays;
+    return subtractedArray;
 }
 
 // 辅助函数：检查两个一维数组是否相等
-const arraysAreEqual = (arr1, arr2) => {
+function arraysAreEqual(arr1, arr2) {
     if (arr1.length !== arr2.length) {
         return false;
     }
@@ -2100,30 +2191,6 @@ const arraysAreEqual = (arr1, arr2) => {
 }
 
 
-// 对 DiagnosisTestCases 进行去重 
-function removeDuplicates(array) {
-    // 使用 reduce 方法进行去重
-    const uniqueArray = array.reduce((acc, current) => {
-        // 获取当前对象的 testcase 值
-        const testcase = JSON.stringify(current.testcase);
-
-        // 如果 Map 中已经存在相同的 testcase 值
-        if (acc.has(testcase)) {
-            // 如果当前对象有 testcaseResult key，则保留当前对象
-            if (current.hasOwnProperty('testcaseResult')) {
-                acc.set(testcase, current);
-            }
-        } else {
-            // 如果 Map 中不存在相同的 testcase 值，则添加到 Map 中
-            acc.set(testcase, current);
-        }
-
-        return acc;
-    }, new Map());
-
-    // 将 Map 转换回数组形式并返回
-    return Array.from(uniqueArray.values());
-}
 
 // 清空数组并将去重后的内容添加到原始数组中
 function updateDiagnosisTestCases(originalArray, uniqueArray) {
