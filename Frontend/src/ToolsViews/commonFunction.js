@@ -193,7 +193,7 @@ const listAllTestSuitesByModelID = async (ModelList) => {
             }
 
         }
-        console.log("listAllTestSuitesByModelID testSuitesStore.testSuitesList",testSuitesStore.testSuitesList)
+        // console.log("listAllTestSuitesByModelID testSuitesStore.testSuitesList",testSuitesStore.testSuitesList)
 
 
 

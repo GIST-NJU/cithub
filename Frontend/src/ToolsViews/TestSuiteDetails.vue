@@ -93,8 +93,7 @@
                                             <h6 v-if="currentTestSuite.currentTestSuites.sizeafterreduction">Original
                                                 Size
                                             </h6>
-                                            <h6 v-else="currentTestSuite.currentTestSuites.sizeafterreduction">TestSuite
-                                                Size</h6>
+                                            <h6 v-else="currentTestSuite.currentTestSuites.sizeafterreduction">Size</h6>
                                             <argon-input v-model="currentTestSuite.currentTestSuites.size" type="text"
                                                 readonly />
                                         </div>
@@ -214,7 +213,11 @@
 
 
                                         <!-- 用表格的形式 展示 故障元组 -->
-                                        <h5 class="text-center my-3">Fault Tuples</h5>
+                                        <h5 class="text-center my-3">Fault Tuples of TestCase Row #
+                                            {{
+                                                currentTestSuite.currentTestSuites.diagnosiscontents.DiagnosisTestCasesRowIndex
+                                                + 1 }}
+                                        </h5>
                                         <table class="table table-bordered">
                                             <thead class="table-light">
                                                 <tr>
@@ -224,7 +227,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="(tuple, index) in currentTestSuite.currentTestSuites.diagnosiscontents"
+                                                <tr v-for="(tuple, index) in currentTestSuite.currentTestSuites.diagnosiscontents.FaultTuples"
                                                     :key="index">
                                                     <td class="text-center">{{ index + 1 }}</td>
                                                     <td class="text-center">{{ tuple }}</td>
@@ -760,7 +763,7 @@
                                                         </div> -->
                                                         <div class="col">
                                                             <argon-button full-width color="danger"
-                                                                @click="handleDiagnosisClick(row, false)">Fail</argon-button>
+                                                                @click="handleDiagnosisClick(row, false, rowIndex)">Fail</argon-button>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -777,13 +780,14 @@
                                 title="Please select the result of the following testcases">
                                 <!-- 故障定位过程中 的表格 -->
                                 <div v-if="!DiagnosisTestCases[DiagnosisTestCases.length - 1].hasOwnProperty('testcaseResult')"
-                                    class="row mx-2">
+                                    class="row">
                                     <div class="spinner-border  text-success col-4" role="status">
                                     </div>
-                                    <div class="col-8 my-2">
-                                        <h6>CitHub is waiting wether the result of the current testcase is Pass or Fail.
-                                        </h6>
+                                    <div class="col-10 my-1">
+                                        <p>CitHub is waiting for result. Any TestCase marked as <ArgonBadge color="info"> New </ArgonBadge>, just choose one of them is enough.
+                                        </p>
                                     </div>
+
                                 </div>
                                 <table class="table-secondary table-bordered" style="width: 100%;">
 
@@ -801,7 +805,11 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex">
-                                            <td class="text-center">{{ rowIndex + 1 }}</td>
+                                            <!-- 如果row.status为 new 则在对应的行前显示 new -->
+                                            <td v-if="row.status != 'new'" class="text-center">{{ rowIndex + 1 }}</td>
+                                            <td v-else class="text-center">
+                                                <ArgonBadge color="info"> New </ArgonBadge>
+                                            </td>
                                             <td v-for="(value, colIndex) in row.testcase" :key="colIndex"
                                                 class="text-center">
                                                 {{ value }}
@@ -820,11 +828,11 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <argon-button full-width color="success"
-                                                            @click="handleDiagnosisClick(row.testcase, true)">Pass</argon-button>
+                                                            @click="handleDiagnosisClick(row.testcase, true, rowIndex)">Pass</argon-button>
                                                     </div>
                                                     <div class="col">
                                                         <argon-button full-width color="danger"
-                                                            @click="handleDiagnosisClick(row.testcase, false)">Fail</argon-button>
+                                                            @click="handleDiagnosisClick(row.testcase, false, rowIndex)">Fail</argon-button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1771,8 +1779,9 @@ const InitDiagnosisTool = ref(true)
 const displayCriteria = reactive([])
 const nextCriteriaArray = reactive([])
 const DiagnosisTestCases = reactive([])
+const DiagnosisTestCasesRowIndex = ref()
 // 点击按钮进行自适应的故障定位
-const handleDiagnosisClick = async (testcase, testcaseResult) => {
+const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
     // console.log("实际测试用例", testcase)
     let loadingInstance = ElLoading.service({ fullscreen: true })
     let OBJ = {
@@ -1792,6 +1801,9 @@ const handleDiagnosisClick = async (testcase, testcaseResult) => {
         // 弹出next testcase 对话框
         DiagnosisNextFlag.value = true
 
+        // 记录是对哪一行进行故障定位 即为首次点击的行
+        DiagnosisTestCasesRowIndex.value = rowIndex
+
         // 加载故障定位过程表格的第一行数据行
         DiagnosisTestCases.length = 0
         DiagnosisTestCases.push({ testcase, testcaseResult })
@@ -1806,11 +1818,27 @@ const handleDiagnosisClick = async (testcase, testcaseResult) => {
         OBJ.testcase.push(...nextCriteriaArray)
         OBJ.init = InitDiagnosisTool.value
 
-        //    永远是更新最后一个数组元素！
-        // DiagnosisTestCases[DiagnosisTestCases.length - 1].testcaseResult = testcaseResult
-        let testCaseObj = DiagnosisTestCases.pop()
-        testCaseObj.testcaseResult = testcaseResult
-        DiagnosisTestCases.push(testCaseObj)
+        //    更新点击的new行，删除其他没有点击的new行
+
+        // console.log("总的DiagnosisTestCases",DiagnosisTestCases)
+        // console.log("点击的行是",rowIndex)
+
+        DiagnosisTestCases[rowIndex].testcaseResult = testcaseResult
+        // 删除点击行的status key
+        delete DiagnosisTestCases[rowIndex].status
+        // console.log("删除点击行的stauts key之后的DiagnosisTestCases", DiagnosisTestCases)
+        // 循环删除所有包含 status key 的元素
+        while (true) {
+            const index = DiagnosisTestCases.findIndex(item => item.hasOwnProperty('status'));
+            if (index === -1) {
+                break; // 如果没有找到包含 status key 的元素，则退出循环
+            }
+            DiagnosisTestCases.splice(index, 1); // 删除找到的元素
+        }
+
+        // console.log("再删除所有有 status key 的元素之后的 DiagnosisTestCases", DiagnosisTestCases);
+
+
         // console.log("更新最新的testcase的 DiagnosisTestCases", DiagnosisTestCases)
 
     }
@@ -1842,6 +1870,11 @@ const handleDiagnosisClick = async (testcase, testcaseResult) => {
                     });
                     FaultTuples.length = 0
                     FaultTuples.push(...convertTestcaseToFaultTuples(ValuesArray, currentModel.currentModel.PandVOBJ))
+                    let diagnosiscontents =
+                    {
+                        DiagnosisTestCasesRowIndex: DiagnosisTestCasesRowIndex.value,
+                        FaultTuples,
+                    }
                     // console.log("FaultTuples", FaultTuples)
 
                     // 保存故障定位的结果
@@ -1855,7 +1888,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult) => {
                             lastupdatedtime: new Date(),
                             modelid: currentTestSuite.currentTestSuites.modelid,
                             testsuiteid: currentTestSuite.currentTestSuites.testsuitesid,
-                            diagnosiscontents: JSON.stringify(FaultTuples),
+                            diagnosiscontents: JSON.stringify(diagnosiscontents),
                             diagnosistool: AlgorithmChosedDiagnosis.value,
                         }
                     })
@@ -1910,9 +1943,18 @@ const handleDiagnosisClick = async (testcase, testcaseResult) => {
                     displayCriteria.length = 0
                     displayCriteria.push(...IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, DiagnosisRes.next))
                     // console.log("交互过程中的 displayCriteria", displayCriteria)
+                    // console.log("参数和参数取值", currentModel.currentModel.PandVOBJ)
+                    // console.log("填充Null值后的结果", FillNull(currentModel.currentModel.PandVOBJ, displayCriteria))
+                    // console.log("CoveringArray 覆盖表", CoveringArray.value)
+                    // console.log("找到两个表中那些相同testcase ", findCommonArrays(CoveringArray.value, FillNull(currentModel.currentModel.PandVOBJ, displayCriteria)))
 
                     // 根据故障定位表格中的点击情况，动态的更新表格
-                    DiagnosisTestCases.push({ "testcase": [...displayCriteria] })
+                    findCommonArrays(CoveringArray.value, FillNull(currentModel.currentModel.PandVOBJ, displayCriteria)).map((commonTestCases) => {
+                        DiagnosisTestCases.push({
+                            "testcase": commonTestCases,
+                            "status": "new"
+                        });
+                    });
                     // console.log("等待test结果的 DiagnosisTestCases", DiagnosisTestCases)
 
 
@@ -1978,6 +2020,73 @@ const convertTestcaseToFaultTuples = (testcaseArray, PandVOBJ) => {
 
     return resultArray;
 }
+
+// 将testcase中为null的元素 替换为对应索引位置的参数的参数取值
+
+const FillNull = (PandVOBJ, testCaseNull) => {
+    const combinations = [];
+
+    // 递归函数，用于生成所有可能的组合
+    function generate(index, currentCombination) {
+        if (index === testCaseNull.length) { // 如果已经填充完毕，将当前组合加入结果数组
+            combinations.push(currentCombination.slice());
+            return;
+        }
+
+        if (testCaseNull[index] !== null) { // 如果当前位置不是 null，则跳过
+            generate(index + 1, currentCombination);
+            return;
+        }
+
+        // 如果当前位置是 null，则遍历该参数的所有取值，进行组合
+        PandVOBJ[index].Value.forEach(value => {
+            currentCombination[index] = value;
+            generate(index + 1, currentCombination);
+        });
+    }
+
+    generate(0, testCaseNull.slice()); // 调用递归函数开始生成组合
+
+    return combinations;
+}
+
+const findCommonArrays = (array1, array2) => {
+    const commonArrays = [];
+
+    // 遍历第一个二维数组的每个一维数组
+    for (let i = 0; i < array1.length; i++) {
+        const array1Item = array1[i];
+
+        // 遍历第二个二维数组的每个一维数组
+        for (let j = 0; j < array2.length; j++) {
+            const array2Item = array2[j];
+
+            // 检查当前一维数组是否相同
+            if (arraysAreEqual(array1Item, array2Item)) {
+                commonArrays.push(array1Item);
+                break; // 如果找到相同的一维数组，跳出内层循环
+            }
+        }
+    }
+
+    return commonArrays;
+}
+
+// 辅助函数：检查两个一维数组是否相等
+const arraysAreEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 // ------------------------------------------------------------------------
 
@@ -2071,7 +2180,7 @@ const UpdateTestSuiteInfo = async () => {
 
     await getValueFromArrays(currentModel.currentModel.PandVOBJ, currentTestSuite.currentTestSuites.testsuitescontents)
 
-    console.log("UpdateTestSuiteInfo currentTestSuite.currentTestSuites", currentTestSuite.currentTestSuites)
+    // console.log("UpdateTestSuiteInfo currentTestSuite.currentTestSuites", currentTestSuite.currentTestSuites)
 
 
     await InitEvaluationChart()
@@ -2233,5 +2342,4 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
-} */
-</style>
+} */</style>
