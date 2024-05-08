@@ -16,7 +16,7 @@
                                 any questions remain, please don't hesitate to contact us.</p>
 
 
-                                      <!-- What is Combinatorial Testing? Section -->
+                            <!-- What is Combinatorial Testing? Section -->
                             <div class="accordion" id="combTestingAccordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="combTestingHeader">
@@ -97,7 +97,7 @@
                                     <div id="featureOverviewCollapse" class="accordion-collapse collapse"
                                         aria-labelledby="featureOverviewHeader" data-bs-parent="#featureOverviewAccordion">
                                         <div class="accordion-body">
-                                     
+
                                             <!-- Content for Feature Overview -->
                                             <!-- Add your content here -->
                                         </div>
@@ -122,35 +122,48 @@
                                         <div class="accordion-body">
                                             4
                                             <!-- Content for Web-GUI -->
-                                        <!-- Add your content here -->
+                                            <!-- Add your content here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
 
-                            
-                      
 
+
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <Foot></Foot>
-        </div>
-    </main>
-</div></template>
+                <Foot></Foot>
+            </div>
+        </main>
+    </div>
+</template>
 
 <script setup>
 import Foot from '../CustomizedComponents/Foot.vue';
 import Navbar from '../CustomizedComponents/Navbar.vue';
 import SideNav from './components/SideNav.vue'
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useModuleStore } from '../store/module';
+import pinia from '../store/store';
 
-
+const moduleStore = useModuleStore(pinia)
 const OverviewFlag = ref(false)
 const CombTestingFlag = ref(false)
 const FeatureOverviewFlag = ref(false);
 const WebGuiFlag = ref(false);
+
+onMounted(() => {
+
+    moduleStore.CurrentSubSystem = "Tools"
+    moduleStore.CurrentSubSystemRoute = "Tools_Models"
+    moduleStore.CurrentModule = 'Help Center'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'HelpCenter'
+})
+
 </script>
 
 <style scoped>/* Add any custom styles here */</style>

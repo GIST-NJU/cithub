@@ -1,5 +1,5 @@
 <template>
-    <!-- route.query.projectid :{{ route.query.projectid }} -->
+
     <div class="min-height-300 bg-success position-absolute w-100"></div>
     <SideNav></SideNav>
     <main class="main-content position-relative border-radius-lg ">
@@ -19,7 +19,7 @@
 
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-4">
 
                             <ArgonButton class="mb-2" color="info" size="sm" full-width
                                 @click="TestTableListFlag = !TestTableListFlag">
@@ -35,7 +35,7 @@
                     <div>
                         <div v-if="TestTableListFlag" class="card mb-2">
                             <div v-for="(obj, index) in testSuitesStore.testSuitesList" class="card-body px-0 pt-0 pb-0">
-                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']"
+                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']" :AlgorithmOptions="AlgorithmOptions"
                                     @scrollToTestSuiteInfo="scrollToTestSuiteInfo">
                                 </TestSuitesTable>
                             </div>
@@ -46,7 +46,7 @@
 
                         <div class="card-body pb-0">
                             <div class="row">
-                                <h3 class="text-center">Please Choose one of the testsuites From the above TestSuites Table.
+                                <h3 class="text-center">Please Choose one of the testsuites From the above TestSuites List.
                                 </h3>
                             </div>
                         </div>
@@ -508,11 +508,19 @@
                                     <el-form :model="dialogformNewTestSuites" label-position="left" label-width="150px">
                                         <el-form-item label="Tools of Conversion">
                                             <el-select v-model="AlgorithmChosedConversion" class="m-2"
-                                                placeholder="Select a tool for converting test suite into." clearable>
+                                            @change="handleAlgorithmOptionsConversionChange"
+                                                placeholder="Select a tool for converting test suite into Test Plan." clearable>
                                                 <el-option v-for="item in AlgorithmOptionsConversion" :key="item.value"
                                                     :label="item.label" :value="item.value" />
                                             </el-select>
                                         </el-form-item>
+
+                                        <el-form-item label="Description: ">
+                                                <el-input readonly v-model="AlgorithmDescriptionConversion"
+                                                    :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
+                                                    placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+                                        </el-form-item>
+
                                         <div v-if="AlgorithmChosedConversion == 'JUnit Test Plan'">
                                             <el-form-item label="Function Head">
                                                 <el-input v-model="functionHead" type="textarea" autosize
@@ -535,6 +543,8 @@
                                             </el-form-item>
 
                                         </div>
+
+
 
 
                                     </el-form>
@@ -705,11 +715,9 @@
                                             Operations
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" @click="ExportTestSuite">Export TestSuite</a></li>
-                                            <li><a class="dropdown-item" @click="showdialogNewConversion">Convert into Test
+                                            <li style="cursor:pointer"><a class="dropdown-item"  @click="ExportTestSuite">Export TestSuite</a></li>
+                                            <li style="cursor:pointer"><a class="dropdown-item" @click="showdialogNewConversion">Convert into Test
                                                     Plan</a></li>
-                                            <li><a class="dropdown-item" @click="showdialogNewEvaluation">Evaluation</a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -961,7 +969,7 @@ const inAPIcall = ref(false)
 
 
 
-// ---------------For generation-----------------------
+// ---------------For Re-generation-----------------------
 const AlgorithmChosed = ref('');
 const AlgorithmOptions = reactive([]);
 const AlgorithmDescription = ref('');
@@ -1005,7 +1013,7 @@ const confirmGenerateNewTestSuites = async () => {
 
     if (currentModel.currentModel.modelname == "") {
         ElNotification({
-            title: 'New TestSuites fail!',
+            title: 'Generate TestSuites fail!',
             message: 'Model Name can not be empty!',
             type: 'error',
         })
@@ -1022,8 +1030,8 @@ const confirmGenerateNewTestSuites = async () => {
 
                     const TestSuitesRes = await request({
                         // 这里记得改回去，在校外无法用校内服务器
-                        // url: tool.url,
-                        url: 'http://localhost:8300',
+                        url: tool.url,
+                        // url: 'http://localhost:8300',
                         method: 'POST',
                         // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                         headers: {
@@ -1162,9 +1170,9 @@ const confirmNewPrioritisation = async () => {
         if (tool.value == AlgorithmChosedPrioritization.value) {
             try {
                 const PrioritisationRes = await request({
-                    // url: tool.url,
+                    url: tool.url,
                     // 这里记得改回去，在校外无法用校内服务器
-                    url: 'http://localhost:8304',
+                    // url: 'http://localhost:8304',
                     method: 'POST',
                     // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                     headers: {
@@ -1278,8 +1286,8 @@ const confirmNewReduction = async () => {
 
             try {
                 const ReductionRes = await request({
-                    // url: tool.url,
-                    url: 'http://localhost:8305',
+                    url: tool.url,
+                    // url: 'http://localhost:8305',
                     method: 'POST',
                     // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                     headers: {
@@ -1360,35 +1368,37 @@ const showdialogNewConversion = () => {
 }
 const AlgorithmChosedConversion = ref('')
 const AlgorithmOptionsConversion = reactive([])
+const AlgorithmDescriptionConversion = ref('');
+const handleAlgorithmOptionsConversionChange = () => {
+    const selectedAlgorithm = AlgorithmOptionsConversion.find(option => option.value === AlgorithmChosedConversion.value);
+    if (selectedAlgorithm) {
+        AlgorithmDescriptionConversion.value = selectedAlgorithm.description;
+    } else {
+        AlgorithmDescriptionConversion.value = '';
+    }
+};
+
 const listAllConversionOptions = () => {
     for (const tool of toolsInfo.RECORDS) {
         if (tool.type == "FormatConversion" && !tool.title.includes("Reader")) {
-            AlgorithmOptionsConversion.push({ "value": tool.title, "label": tool.title, "url": tool.url })
+            AlgorithmOptionsConversion.push({ "value": tool.title, "label": tool.title, "url": tool.url, "description": tool.description })
         }
     }
 }
-const functionHead = ref('')
-const functionBody = ref('')
-const outputModel = ref('')
+const functionHead = ref('eg:`public void test()`')
+const functionBody = ref('eg:`CIT cit= new CIT(&p2) cit.execuse(&p3) cit.process(&p1)`')
+const outputModel = ref('eg:`first,we should do &#,then open &#,finally,enter in the browser address bar with &#`')
 const confirmNewConversion = async () => {
 
     inAPIcall.value = true
     // 构造发送给Conversion的data对象
     let conversionObj = {}
-    let testsuite = JSON.parse(currentTestSuite.currentTestSuites.testsuitescontents).testsuite
-    conversionObj.testsuite = testsuite
+    conversionObj.testsuite = currentTestSuite.currentTestSuites.testsuitescontents
+    // console.log("conversionObj.testsuite",conversionObj.testsuite)
+    // console.log("currentModel.currentModel",currentModel.currentModel)
     let actual_value = []
-    let ParamsAndValues = JSON.parse(currentModel.currentModel.paramsvalues)
-
-    // 移除 row_index 属性
-    ParamsAndValues = ParamsAndValues.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
-
-    for (const pv of ParamsAndValues) {
-        let tempArray = pv.Value.split(',')
-        actual_value.push(tempArray)
+    for (const pv of currentModel.currentModel.PandVOBJ) {
+        actual_value.push(pv.Value)
     }
     conversionObj.actual_value = actual_value
 
@@ -1436,7 +1446,7 @@ const confirmNewConversion = async () => {
 
                     })
 
-                    console.log("ConversionRes", ConversionRes)
+                    // console.log("ConversionRes", ConversionRes)
                     inAPIcall.value = false
                     dialogFormVisibleNewConversion.value = false
 
@@ -1466,7 +1476,7 @@ const confirmNewConversion = async () => {
                     const ConversionRes = await request({
                         // 这里记得改回去，在校外无法用校内服务器
                         url: tool.url,
-                        // url: 'http://localhost:8302',
+                        // url: 'http://localhost:8303',
                         method: 'POST',
                         // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                         headers: {
@@ -1637,8 +1647,8 @@ const confirmNewEvaluation = async () => {
             try {
                 const EvaluationRes = await request({
                     // 这里记得改回去，在校外无法用校内服务器
-                    // url: tool.url,
-                    url: 'http://localhost:8301',
+                    url: tool.url,
+                    // url: 'http://localhost:8301',
                     method: 'POST',
                     // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
                     headers: {
@@ -2029,7 +2039,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     const sortedDiagnosisTestCases = TestCasesWithoutStatus.concat(TestCasesWithStatus);
                     DiagnosisTestCases.length = 0
                     DiagnosisTestCases.push(...sortedDiagnosisTestCases)
-                    console.log("排序后的 DiagnosisTestCases", DiagnosisTestCases)
+                    // console.log("排序后的 DiagnosisTestCases", DiagnosisTestCases)
 
                     // 优化DiagnosisTestCases，去掉testcase重复，且已有结果的那些元素
                     let uniqueTestcases = DiagnosisTestCases.reduce((acc, current) => {
@@ -2055,7 +2065,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     }, []);
                     DiagnosisTestCases.length = 0
                     DiagnosisTestCases.push(...uniqueTestcases)
-                    console.log("去重优化后的 DiagnosisTestCases", DiagnosisTestCases)
+                    // console.log("去重优化后的 DiagnosisTestCases", DiagnosisTestCases)
 
 
 

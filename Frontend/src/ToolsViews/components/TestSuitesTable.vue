@@ -6,7 +6,7 @@
       <h6>Model Name: {{ props.model.modelname }}</h6>
       <h7>Model Description: {{ props.model.modeldescriptions }}</h7>
       <h7>{{ props.model.NumOfTestSuites }} testsuties found.</h7>
-      <h4 class="text-center">TestSuites List of Model <i> {{ props.model.modelname }}</i></h4>
+
 
       <!-- <div class="row">
 
@@ -51,34 +51,8 @@
 
 
 
-
-
-    <!-- New test suites -->
-    <el-dialog v-model="dialogFormVisibleNew" title="New Test Suite">
-      <el-form :model="dialogformNewTestSuites" label-position="right" label-width="170px">
-
-        <el-form-item label="Test Suite Name:">
-          <el-input v-model="dialogformNewTestSuites.testsuitesname" />
-        </el-form-item>
-        <el-form-item label="Test Suite Description:">
-          <el-input autosize type="textarea" v-model="dialogformNewTestSuites.testsuitesdescriptions" />
-        </el-form-item>
-        <el-form-item label="Algorithm: ">
-          <el-select v-model="AlgorithmChosed" class="m-2" placeholder="Select an Algorithm for generating">
-            <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
-          <el-button type="primary" @click="confirmGenerateNewTestSuites">
-            Confirm
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <div class="card-body px-0 pt-0 pb-2">
+    <div v-if="props.testSuites.length != 0" class="card-body px-0 pt-0 pb-2">
+      <h4 class="text-center">TestSuites List of Model <i> {{ props.model.modelname }}</i></h4>
       <div class="table-responsive p-0">
         <table class="table align-items-center mb-0">
           <thead>
@@ -152,7 +126,7 @@
 
                   </div>
                   <div>
-                    <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
+                    <el-popconfirm width="300" title="Are you sure to delete this TestSuite?" confirm-button-text="Yes"
                       @confirm="confirmDelete(testSuite)">
                       <template #reference>
                         <argon-button color="danger" variant="gradient"><i class="far fa-trash-alt me-2"
@@ -175,12 +149,85 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="card-body px-0 pt-0 pb-2">
+      <el-result icon="warning" title="No TestSuite for this Model"
+        sub-title="Please click the following button to create a TestSuite">
+      </el-result>
+      <div class="col-12 px-4 my-4">
+        <ArgonButton full-width color="success" variant="gradient" @click="showdialogNew">
+          <span class="ni ni-fat-add ni-lg me-1" />
+          Generate New TestSuite
+        </ArgonButton>
+      </div>
+
+    </div>
+
+
+
+
+    <!-- New test suites -->
+    <el-dialog v-model="dialogFormVisibleNew" title="Generate a new testSuite based on current model">
+      <el-form :model="dialogformNewTestSuites" label-position="left" label-width="170px">
+
+        <el-form-item label="TestSuite Name: ">
+          <el-input v-model="dialogformNewTestSuites.testsuitesname" clearable
+            placeholder="Please input the name of the new TestSuite " />
+        </el-form-item>
+
+        <el-form-item label="TestSutie Description: ">
+          <el-input v-model="dialogformNewTestSuites.testsuitesdescriptions" clearable
+            placeholder="Please input the Description for the new TestSuite " />
+        </el-form-item>
+
+        <el-form-item label="Strength: ">
+          <el-select clearable style="margin: 0 0 0 0;padding: 0;width: 250px" v-model="strength" class="m-2"
+            placeholder="Select a covering strength">
+            <el-option v-for="item in StrengthOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Generation Tool: ">
+          <el-select v-model="AlgorithmChosed" class="m-2" placeholder="Select an Tool for generating"
+            @change="handleAlgorithmChange">
+            <el-option v-for="item in AlgorithmOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+
+        <!-- 在此显示 对应 AlgorithmChosed 的 tool.description -->
+
+        <el-form-item label="Tool Description: ">
+          <el-input readonly v-model="AlgorithmDescription" :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
+            placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+        </el-form-item>
+
+      </el-form>
+
+      <div v-if="inAPIcall" class="row" style="margin: 0px 0px 0px 30px;">
+        <div class="spinner-border  text-success col-4" role="status">
+        </div>
+        <div class="col-8" style="margin: 5px 0px 0px 0px;">
+          <h6>CitHub is calling the API of {{ AlgorithmChosed }}, Please wait a while...
+          </h6>
+        </div>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
+          <el-button type="primary" @click="confirmGenerateNewTestSuites">
+            Confirm
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+
   </div>
 </template>
 
 <script setup>
 
-import { onMounted, reactive, ref, computed, defineProps,defineEmits  } from 'vue';
+import { onMounted, reactive, ref, computed, defineProps, defineEmits } from 'vue';
 import ArgonBadge from '../../CustomizedComponents/ArgonBadge.vue'
 import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
@@ -194,17 +241,70 @@ import { useCurrentTestSuitesStore } from '../../store/ToolsStore/currentTestSui
 import { useCurrentModel } from '../../store/ToolsStore/currentModel'
 import pinia from '../../store/store'
 import { ElLoading } from 'element-plus'
+import { listAllTestSuitesByModelID, CitHubModel } from '../commonFunction.js';
+
 const emits = defineEmits(['scrollToTestSuiteInfo']);
 const router = useRouter();
 const route = useRoute()
 const props = defineProps({
   model: Object,
   testSuites: Object,
-  index: Number
+  index: Number,
+  AlgorithmOptions: Object
 })
+// const testSuitesStore = useTestSuitesStore(pinia)
+// const currentModel = useCurrentModel(pinia)
 const testSuitesStore = useTestSuitesStore(pinia)
-const currentModel = useCurrentModel(pinia)
 const currentTestSuite = useCurrentTestSuitesStore(pinia)
+const modelStore = useModelsStore(pinia)
+const currentModel = useCurrentModel(pinia)
+
+const inAPIcall = ref(false)
+
+const strength = ref()
+const StrengthOptions = [
+  {
+    value: '2',
+    label: '2',
+  },
+  {
+    value: '3',
+    label: '3',
+  },
+  {
+    value: '4',
+    label: '4',
+  },
+  {
+    value: '5',
+    label: '5',
+  },
+  {
+    value: '6',
+    label: '6',
+  },
+]
+
+const AlgorithmChosed = ref('');
+const AlgorithmOptions = reactive([]);
+const AlgorithmDescription = ref('');
+
+const listAllGenerationAlgorithm = () => {
+  for (const tool of toolsInfo.RECORDS) {
+    if (tool.type == "Generation" && !tool.title.includes("GUI")) {
+      AlgorithmOptions.push({ "value": tool.title, "label": tool.title, "url": tool.url, "description": tool.description });
+    }
+  }
+};
+
+const handleAlgorithmChange = () => {
+  const selectedAlgorithm = AlgorithmOptions.find(option => option.value === AlgorithmChosed.value);
+  if (selectedAlgorithm) {
+    AlgorithmDescription.value = selectedAlgorithm.description;
+  } else {
+    AlgorithmDescription.value = '';
+  }
+};
 
 const dialogFormVisibleNew = ref(false)
 const dialogformNewTestSuites = reactive({
@@ -216,7 +316,195 @@ const dialogformNewTestSuites = reactive({
 })
 const showdialogNew = () => {
   dialogFormVisibleNew.value = true
+  dialogformNewTestSuites.modelid = route.query.modelid
 }
+
+
+
+const confirmGenerateNewTestSuites = async () => {
+  inAPIcall.value = true
+  // 获取当前时刻的Date对象
+  const currentDate = new Date();
+  dialogformNewTestSuites.lastupdatedtime = currentDate
+  dialogformNewTestSuites.createdtime = currentDate
+  // console.log("currentModel.currentModel", currentModel.currentModel)
+
+  if (currentModel.currentModel.modelname == "") {
+    ElNotification({
+      title: 'Generate TestSuites fail!',
+      message: 'Model Name can not be empty!',
+      type: 'error',
+    })
+  }
+
+  else {
+    // 发送请求，对 model 得到 test suites
+    for (const tool of AlgorithmOptions) {
+      if (tool.value == AlgorithmChosed.value) {
+        try {
+          // 构造CitHub Model，调用工具
+          currentModel.currentModel.CitHubModel = CitHubModel(currentModel.currentModel, parseInt(strength.value))
+          // console.log("generation cithub model", currentModel.currentModel.CitHubModel)
+
+          const TestSuitesRes = await request({
+            // 这里记得改回去，在校外无法用校内服务器
+            // url: tool.url,
+            url: 'http://localhost:8300',
+            method: 'POST',
+            // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            // 转为Json
+            data: JSON.stringify(currentModel.currentModel.CitHubModel).replace(/"/g, '')
+          })
+
+          // console.log("TestSuitesRes", TestSuitesRes)
+          const newTestSuitesRes = await request({
+            url: "/tools/New",
+            method: "POST",
+            data:
+            {
+              column: 'testsuite',
+              testsuitesname: dialogformNewTestSuites.testsuitesname,
+              testsuitesdescriptions: dialogformNewTestSuites.testsuitesdescriptions,
+              lastupdatedtime: dialogformNewTestSuites.lastupdatedtime,
+              createdtime: dialogformNewTestSuites.createdtime,
+              modelid: currentModel.currentModel.modelid,
+
+              testsuitescontents: JSON.stringify(TestSuitesRes.testsuite),
+              generationtime: TestSuitesRes.time,
+              size: TestSuitesRes.size,
+              generationtool: AlgorithmChosed.value,
+              strength: strength.value
+            }
+          })
+          // console.log("newTestSuitesRes", newTestSuitesRes)
+
+          if (newTestSuitesRes.NewStatus == 'success!') {
+
+            // 实时更新页面数据
+            console.log("当前路由", route.name)
+            if (route.name == "TestSuite_Details") {
+              // 在 TestSuite_Details 页面 更新数据
+              await listAllTestSuitesByModelID([currentModel.currentModel])
+
+              // 切换至新生成的 TestSuite Info
+              // console.log("testSuitesStore.testSuitesList", testSuitesStore.testSuitesList)
+              let CurrentModelTestSuitesLength=testSuitesStore.testSuitesList[0].testSuites.length
+              EnterTestSuiteDetails(testSuitesStore.testSuitesList[0].testSuites[CurrentModelTestSuitesLength-1])
+            }
+            if (route.name == "TestSuites_Home") {
+              // 在 TestSuites_Home 页面 更新数据
+              await listAllTestSuitesByModelID(modelStore.modelsList)
+
+            }
+
+
+            ElNotification({
+              title: 'Generate Success!',
+              type: 'success',
+              message: 'Strength ' + currentTestSuite.currentTestSuites.strength + ' test suite' + ' by ' + AlgorithmChosed.value + ' generated success! Please check the results.',
+
+            })
+            inAPIcall.value = false
+            dialogFormVisibleNew.value = false
+
+
+
+          }
+          else {
+            inAPIcall.value = false
+            dialogFormVisibleNew.value = false
+            ElNotification({
+              title: 'Generate fail!',
+              type: 'error',
+            })
+
+
+
+          }
+        }
+        catch (err) {
+          console.log("err", err)
+          inAPIcall.value = false
+          dialogFormVisibleNew.value = false
+          ElNotification({
+            title: 'Generate fail!',
+            type: 'error',
+          })
+
+
+
+        }
+      }
+    }
+  }
+
+
+}
+
+
+const confirmDelete = async (testSuites) => {
+
+  // console.log("删除testSuites", testSuites)
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+
+
+  try {
+    const DeleteTestSuiteRes = await request({
+      url: '/tools/Delete',
+      method: 'POST',
+      data: {
+        column: "testsuite",
+        testsuitesid: testSuites.testsuitesid
+      }
+    })
+
+    if (DeleteTestSuiteRes.DeleteStatus == 'success!') {
+      // console.log("当前路由", route.name)
+      if (route.name == "TestSuite_Details") {
+        // 在 TestSuite_Details 页面 更新数据
+        await listAllTestSuitesByModelID([currentModel.currentModel])
+        // 清空TestSuite Info 区域的信息
+        currentTestSuite.currentTestSuites={}
+      }
+      if (route.name == "TestSuites_Home") {
+        // 在 TestSuites_Home 页面 更新数据
+        await listAllTestSuitesByModelID(modelStore.modelsList)
+
+      }
+      ElNotification({
+        title: 'Delete Success!',
+        message: 'please check the results',
+        type: 'success',
+      })
+      loadingInstance.close()
+
+
+    }
+
+    else {
+      ElNotification({
+        title: 'Delete Failed!',
+        message: 'please check the results',
+        type: 'error',
+      })
+      loadingInstance.close()
+    }
+  } catch (error) {
+    console.log("error", error)
+    ElNotification({
+      title: 'Delete Failed!',
+      message: 'please check the results',
+      type: 'error',
+    })
+    loadingInstance.close()
+
+  }
+
+}
+
 
 const getActionButtonText = (routeName) => {
   switch (routeName) {
@@ -243,7 +531,7 @@ const EnterTestSuiteDetails = (testsuite, index) => {
   }
   // console.log(" EnterTestSuiteDetails currentTestSuite.currentTestSuites",currentTestSuite.currentTestSuites)
 
-  if (route.name == 'TestSuiteDetails') {
+  if (route.name == 'TestSuite_Details') {
     // 发送信号给父组件，通知其滚动屏幕
     emits('scrollToTestSuiteInfo');
     router.push(
@@ -285,138 +573,13 @@ const EnterTestSuiteDetails = (testsuite, index) => {
 
 }
 
-const confirmGenerateNewTestSuites = async () => {
-  // 获取当前时刻的Date对象
-  const currentDate = new Date();
-  dialogformNewTestSuites.lastupdatedtime = currentDate
-  dialogformNewTestSuites.createdtime = currentDate
-
-  if (props.model.modelname == "") {
-    ElNotification({
-      title: 'New TestSuites fail!',
-      message: 'Model Name can not be empty!',
-      type: 'error',
-    })
-  }
-  else {
-    // 发送请求，对 model 得到 test suites
-    for (const tool of AlgorithmOptions) {
-      if (tool.value == AlgorithmChosed.value) {
-        try {
-          const TestSuitesRes = await request({
-            // 这里记得改回去，在校外无法用校内服务器
-            url: tool.url,
-            // url: 'http://localhost:8300',
-            method: 'POST',
-            // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
-            headers: {
-              'Content-Type': 'text/plain'
-            },
-            data: props.model.modelCithub
-          })
-
-
-          const newTestSuitesRes = await request({
-            url: "/tools/testSuites/NewTestSuites",
-            method: "POST",
-            data:
-            {
-              testsuitesname: dialogformNewTestSuites.testsuitesname,
-              testsuitesdescriptions: dialogformNewTestSuites.testsuitesdescriptions,
-              lastupdatedtime: dialogformNewTestSuites.lastupdatedtime,
-              createdtime: dialogformNewTestSuites.createdtime,
-              modelid: dialogformNewTestSuites.modelid,
-              testsuitescontents: JSON.stringify(TestSuitesRes),
-              time: TestSuitesRes.time,
-              size: TestSuitesRes.size,
-              algorithm: AlgorithmChosed.value
-            }
-          })
-          // console.log("newTestSuitesRes", newTestSuitesRes)
-
-          if (newTestSuitesRes.NewStatus == 'success!') {
-
-            listAllTestSuitesByModelID()
-            ElNotification({
-              title: 'Save Success!',
-              type: 'success',
-            })
-            dialogFormVisibleNew.value = false
-          }
-          else {
-            ElNotification({
-              title: 'Save fail!',
-              type: 'error',
-            })
-            dialogFormVisibleNew.value = false
-
-          }
-        }
-        catch (err) {
-          console.log("err", err)
-          ElNotification({
-            title: 'Save fail!',
-            type: 'error',
-          })
-          dialogFormVisibleNew.value = false
-
-
-        }
-      }
-    }
-  }
-
-
-}
-const confirmDelete = (testSuites) => {
-  // console.log("testSuites", testSuites)
-  request({
-    url: '/tools/testSuites/DeleteByTestSuitesID',
-    method: 'POST',
-    data: {
-      testsuitesid: testSuites.testsuitesid
-    }
-  }).then((res) => {
-    if (res.DeleteStatus == 'success!') {
-      listAllTestSuitesByModelID()
-      // 实时更新页面数据
-      ElNotification({
-        title: 'Delete Success!',
-        message: 'please check the results',
-        type: 'success',
-      })
-
-    }
-  }).catch((error) => {
-    // console.log(error)
-    ElNotification({
-      title: 'Delete Error!',
-      message: 'please check the results',
-      type: 'error',
-    })
-  })
-}
-
 
 onMounted(async () => {
 
-  // 让选中的行高亮
-  try {
-    // console.log("TestSuiteTable的数据加载 testsuites", props.testSuites)
-    // console.log("props.model", props.model)
-
-  } catch (error) {
-    console.log("error in TestSuitesTable", error)
-
-  }
+  await listAllGenerationAlgorithm()
 
 })
 </script>
 
 
-<style scoped>
-.highlighted-row {
-  border: 2px solid red;
-  /* 定义高亮样式 */
-}
-</style>
+<style scoped></style>

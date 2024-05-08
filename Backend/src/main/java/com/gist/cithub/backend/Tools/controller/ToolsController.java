@@ -124,8 +124,6 @@ public class ToolsController {
             // Save Model
             case "model":
                 Object id = info.get("modelid");
-                // 有modelid 则 存储 Model
-
                 if (id instanceof Integer) {
                     id = (Integer) id;
                 } else if (id instanceof String) {
@@ -137,6 +135,47 @@ public class ToolsController {
                     return R.ok().put("msg", "error");
                 }
 
+//                先将该Model 下的所有 TestSuite 置空
+                // 查询特定modelid下的所有TestSuitesEntity
+                QueryWrapper<TestSuitesEntity> queryWrapperTestSuites = new QueryWrapper<>();
+                queryWrapperTestSuites.eq("ModelID", id);
+                List<TestSuitesEntity> testSuitesList = testSuitesService.list(queryWrapperTestSuites);
+
+// 对于每个TestSuitesEntity，仅保留name description id 其他信息都置空
+                for (TestSuitesEntity testSuitesEntity : testSuitesList) {
+                    UpdateWrapper<TestSuitesEntity> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.eq("ModelID", testSuitesEntity.getModelid());
+                    updateWrapper.eq("TestSuitesID", testSuitesEntity.getTestsuitesid());
+                    updateWrapper.set("TestSuitesName", testSuitesEntity.getTestsuitesname());
+                    updateWrapper.set("TestSuitesDescriptions", testSuitesEntity.getTestsuitesdescriptions());
+                    updateWrapper.set("TestSuitesContents", null);
+                    updateWrapper.set("GenerationTime", null);
+                    updateWrapper.set("size", null);
+                    updateWrapper.set("LastUpdatedTime", null);
+                    updateWrapper.set("CreatedTime", null);
+                    updateWrapper.set("GenerationTool", null);
+                    updateWrapper.set("strength", null);
+                    updateWrapper.set("PrioritisationTool", null);
+                    updateWrapper.set("ReductionTool", null);
+                    updateWrapper.set("EvaluationTool", null);
+                    updateWrapper.set("sizeAfterReduction", null);
+                    updateWrapper.set("PrioritisationTime", null);
+                    updateWrapper.set("ReductionTime", null);
+                    updateWrapper.set("EvaluationTime", null);
+                    updateWrapper.set("EvaluationContents", null);
+                    updateWrapper.set("DiagnosisTool", null);
+                    updateWrapper.set("DiagnosisContents", null);
+
+                    Boolean updateTestSuitesResult = testSuitesService.update(updateWrapper);
+
+                    if (!updateTestSuitesResult) {
+                        // 如果更新失败，记录日志或者抛出异常
+                        System.err.println("Failed to update TestSuitesEntity with id: " + testSuitesEntity.getTestsuitesid());
+                        throw new RuntimeException("Failed to update TestSuitesEntity");
+                    }
+                }
+
+//                再更新Model本身的信息
                 QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("ModelID", info.get("modelid"));
                 ModelsEntity modelsEntity = modelsService.getOne(queryWrapper);
@@ -247,7 +286,6 @@ public class ToolsController {
                 else return R.ok().put("NewStatus", "failed!");
 
 
-
             case "prioritisation":
                 UpdateWrapper<TestSuitesEntity> updateWrapperPrioritisation = new UpdateWrapper<>();
 
@@ -264,8 +302,6 @@ public class ToolsController {
                     updateWrapperPrioritisation.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
 
                 }
-
-
 
 
                 modelid = info.get("modelid");
@@ -412,7 +448,6 @@ public class ToolsController {
                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
 
-
                 if (info.containsKey("lastupdatedtime")) {
                     lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
                     updateWrapperDiagnosis.set("LastUpdatedTime", java.sql.Timestamp.valueOf(lastUpdateTime));
@@ -420,10 +455,7 @@ public class ToolsController {
                 }
 
 
-
-
-
-                 modelid = info.get("modelid");
+                modelid = info.get("modelid");
                 if (modelid instanceof String) {
                     updateWrapperDiagnosis.eq("ModelID", Integer.parseInt((String) modelid));
                 } else if (modelid instanceof Integer) {
@@ -432,7 +464,7 @@ public class ToolsController {
                 }
 
 
-                 testsuiteid = info.get("testsuiteid");
+                testsuiteid = info.get("testsuiteid");
                 if (testsuiteid instanceof String) {
                     updateWrapperDiagnosis.eq("TestSuitesID", Integer.parseInt((String) testsuiteid));
 
@@ -452,5 +484,125 @@ public class ToolsController {
         }
         return R.ok().put("res", "saveFail");
 
+    }
+
+    @RequestMapping(value = "/Delete", method = RequestMethod.POST)
+    public R Delete(@RequestBody Map<String, Object> info) {
+        System.out.println("删除");
+        System.out.println(info);
+        String column = (String) info.get("column");
+        switch (column) {
+            // Delete Model
+            case "model":
+                Object modelid = info.get("modelid");
+                QueryWrapper<ModelsEntity> modelsEntityQueryWrapper = new QueryWrapper<>();
+
+                if (modelid instanceof String) {
+                    modelsEntityQueryWrapper.eq("modelid", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    modelsEntityQueryWrapper.eq("modelid", (Integer) modelid);
+                }
+
+                Boolean flag = modelsService.remove(modelsEntityQueryWrapper);
+                if (flag) return R.ok().put("DeleteStatus", "success!");
+                else return R.ok().put("DeleteStatus", "failed!");
+
+            case "testsuite":
+                Object testsuitesid = info.get("testsuitesid");
+                QueryWrapper<TestSuitesEntity> testSuitesEntityQueryWrapper = new QueryWrapper<>();
+
+                if (testsuitesid instanceof String) {
+                    testSuitesEntityQueryWrapper.eq("TestSuitesID", Integer.parseInt((String) testsuitesid));
+                } else if (testsuitesid instanceof Integer) {
+                    testSuitesEntityQueryWrapper.eq("TestSuitesID", (Integer) testsuitesid);
+                }
+
+                flag = testSuitesService.remove(testSuitesEntityQueryWrapper);
+                if (flag) return R.ok().put("DeleteStatus", "success!");
+                else return R.ok().put("DeleteStatus", "failed!");
+        }
+        return R.ok();
+    }
+
+    @RequestMapping(value = "/New", method = RequestMethod.POST)
+    public R New(@RequestBody Map<String, Object> info) {
+        System.out.println("新建");
+        System.out.println(info);
+        String column = (String) info.get("column");
+        switch (column) {
+            // New Model
+            case "model":
+                Object modelid = info.get("modelid");
+                QueryWrapper<ModelsEntity> modelsEntityQueryWrapper = new QueryWrapper<>();
+
+                if (modelid instanceof String) {
+                    modelsEntityQueryWrapper.eq("modelid", Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    modelsEntityQueryWrapper.eq("modelid", (Integer) modelid);
+                }
+
+                Boolean flag = modelsService.remove(modelsEntityQueryWrapper);
+                if (flag) return R.ok().put("DeleteStatus", "success!");
+                else return R.ok().put("DeleteStatus", "failed!");
+
+//                New TestSuite
+            case "testsuite":
+                TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
+                testSuitesEntity.setTestsuitesname((String) info.get("testsuitesname"));
+                testSuitesEntity.setTestsuitesdescriptions((String) info.get("testsuitesdescriptions"));
+                testSuitesEntity.setTestsuitescontents((String) info.get("testsuitescontents"));
+                Object generationtime = info.get("generationtime");
+                if (generationtime != null) {
+                    testSuitesEntity.setGenerationtime((Integer) generationtime);
+                }
+
+                Object size = info.get("size");
+                if (size != null) {
+                    testSuitesEntity.setSize((Integer) size);
+                }
+
+                Object generationtool = info.get("generationtool");
+                if (generationtool != null) {
+                    testSuitesEntity.setGenerationtool((String) generationtool);
+                }
+
+                //        将时间戳转为Date类型
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+                Object createdtime = info.get("createdtime");
+                if (createdtime != null) {
+                    LocalDateTime createTime = LocalDateTime.parse((String) createdtime, formatter);
+                    testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+
+                }
+                Object lastupdatedtime = info.get("lastupdatedtime");
+                if (lastupdatedtime != null) {
+                    LocalDateTime lastUpdateTime = LocalDateTime.parse((String) lastupdatedtime, formatter);
+                    testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+                }
+
+
+                Object strength = info.get("strength");
+                if (strength instanceof String) {
+                    testSuitesEntity.setStrength(Integer.parseInt((String) strength));
+
+                } else if (strength instanceof Integer) {
+                    testSuitesEntity.setStrength((Integer) strength);
+                }
+
+
+                modelid = info.get("modelid");
+                if (modelid instanceof String) {
+                    testSuitesEntity.setModelid(Integer.parseInt((String) modelid));
+                } else if (modelid instanceof Integer) {
+                    testSuitesEntity.setModelid((Integer) modelid);
+                }
+                flag=testSuitesService.save(testSuitesEntity);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
+
+
+        }
+        return R.ok();
     }
 }

@@ -35,22 +35,44 @@
                             <div>
 
                                 <div class="tb-container" ref="tbContainerRef">
-                                    <h3 style="margin:0;text-align:center;">Model Content</h3>
+                                    <h3 style="margin:0;text-align:center;">Parameters and Values</h3>
+                                    <!-- 这里设置一个按钮，点击之后弹出动图+文字说明 -->
 
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Select a number as covering
-                                        `<b><i>Strength</i></b>`.</p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click the cell of table to input
-                                        `<b><i>Parameter</i></b>`.
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.For Column `<b><i>Value</i></b>`,
-                                        double click the cell to input , and use `<b><i>,</i></b>` to seperate each
-                                        value.</p>
 
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">4.The Model you create will be displayed
-                                        in
-                                        `<b><i>Model Preview</i></b>` area.</p>
+                                    <el-popover placement="right" :width="600" trigger="click">
+                                        <template #reference>
+                                            <ArgonButton size="sm"><i class="bi bi-question-circle-fill mx-1"></i>How to
+                                                input Model?</ArgonButton>
+                                        </template>
+                                        <div class="row ">
+                                            <img src="../../public/images/Edit Model.gif" alt="Edit Model">
+                                            <hr class="my-3 horizontal white" />
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);"><b>Input Model Steps:</b></p>
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">1.Click <argon-button
+                                                    color="success" size="sm">
+                                                    <span class="ni ni-fat-add  ni-lg me-1" />
+                                                    New Parameter</argon-button> to New a `<b><i>Parameter</i></b>`.
+                                            </p>
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click the cell of
+                                                table to input
+                                                `<b><i>Parameter</i></b>`.
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">3.For Column
+                                                `<b><i>Value</i></b>`,
+                                                double click the cell to input , and use `<b><i>,</i></b>` to seperate
+                                                each
+                                                value.</p>
+
+                                        </div>
+
+
+                                    </el-popover>
+
+
+
                                     <hr class="my-3 horizontal white" />
 
 
@@ -59,7 +81,6 @@
 
                                     <!---------------------------------- 参数和参数取值 table，col index 从 参数 col开始 ，index 的col不计算在内 ---------------------------------------------->
 
-                                    <h4 style="text-align:center;">Parameters and Values</h4>
                                     <!-- 输入参数 -->
 
 
@@ -131,20 +152,40 @@
 
                                     <!---------------------------------- 约束table 注意，约束table的col index 从参数取值col开始 ，index 和 param 的col不计算在内 ---------------------------------------------->
                                     <!-- 选择约束 -->
-                                    <h4 style="text-align:center;">Constraints</h4>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Cithub tools use `<b><i>Forbidden
-                                                tuples</i></b>` to
-                                        represent Constraints.
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click each cell of below table
-                                        to choose every <b><i>invalid combination.</i></b> .
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.Click the `<b><i>Add
-                                                Constraint</i></b>` button to put `<b><i>invalid
-                                                combination</i></b>` into the `<b><i>current Constraints set</i></b>`.
-                                    </p>
+                                    <h3 style="margin:0;text-align:center;">Constraints</h3>
+
+
+                                    <el-popover placement="right" :width="700" trigger="click">
+                                        <template #reference>
+                                            <ArgonButton size="sm"><i class="bi bi-question-circle-fill mx-1"></i>How to
+                                                add Constraints?</ArgonButton>
+                                        </template>
+                                        <div class="row ">
+                                            <img src="../../public/images/Edit Model.gif" alt="Edit Model">
+                                            <hr class="my-3 horizontal white" />
+                                            <p style="text-align:left;color:rgb(0, 0, 0);"><b>Add constraints Steps:</b></p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">1.Cithub tools use
+                                                `<b><i>Forbidden
+                                                        tuples</i></b>` to
+                                                represent Constraints.
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click each cell of below
+                                                table
+                                                to choose every <b><i>invalid combination.</i></b> .
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">3.Click the `<b><i>Add
+                                                        Constraint</i></b>` button to put `<b><i>invalid
+                                                        combination</i></b>` into the `<b><i>current Constraints
+                                                        set</i></b>`.
+                                            </p>
+
+                                        </div>
+
+
+                                    </el-popover>
+
+                                    <hr class="my-3 horizontal white" />
+
 
                                     <el-table :data="constraintsTableData" border style="width: 100%;margin-top:10px"
                                         @cell-dblclick="cellDblclickCons" @cell-click="cellClickCons"
@@ -212,8 +253,16 @@
                             <div style="width:100%;margin-bottom: 5px;text-align: center;">
                                 <argon-button style="margin:5px 5px 5px 5px;float: right" color="success" class="ms-auto"
                                     @click="Generation">Test suite</argon-button>
-                                <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary" class="ms-auto"
-                                    @click="SaveModel">Save Model</argon-button>
+
+                                <el-popconfirm width="300" confirm-button-text="Update" cancel-button-text="No, Thanks"
+                                    @confirm="SaveModel" :icon="InfoFilled" icon-color="#626AEF"
+                                    title="Update Model will clear all testsuites under this model. Are you sure to update?">
+                                    <template #reference>
+                                        <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary"
+                                            class="ms-auto">Update Model</argon-button>
+                                    </template>
+                                </el-popconfirm>
+
 
                                 <ArgonButton style="margin:5px 5px 5px 5px;float: right" class="ms-auto" color="secondary"
                                     @click="goBack">
@@ -796,6 +845,10 @@ onMounted(async () => {
     position: relative;
 }
 
+.el-popover {
+    height: 500px;
+    overflow: auto;
+}
 
 
 
@@ -827,5 +880,4 @@ onMounted(async () => {
     background-color: red;
     color: white;
     /* 设置文本颜色，以确保可见性 */
-}
-</style>
+}</style>

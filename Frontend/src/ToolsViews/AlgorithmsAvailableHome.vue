@@ -201,9 +201,12 @@ onMounted(async () => {
         // 加载工具信息
         LoadToolsInfo()
 
-        moduleStore.CurrentModule = 'Tools'
-        moduleStore.CurrentModuleDetails = 'Algorithms Available'
+        moduleStore.CurrentSubSystem = "Tools"
+        moduleStore.CurrentSubSystemRoute = "Tools_Models"
+        moduleStore.CurrentModule = 'Algorithms Available'
+        moduleStore.CurrentModuleDetails = ''
         moduleStore.CurrentRoute = 'AlgorithmsAvailableHome'
+
         loadingInstance.close()
 
     } catch (error) {

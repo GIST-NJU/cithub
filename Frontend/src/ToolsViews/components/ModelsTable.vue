@@ -26,7 +26,7 @@
 
             <tr class="cardTR" v-for="(model, index) in props.model">
               <td>
-                <p class=" font-weight-bold mb-0 text-center">{{ index+1 }}</p>
+                <p class=" font-weight-bold mb-0 text-center">{{ index + 1 }}</p>
               </td>
 
               <td>
@@ -69,23 +69,24 @@
               <td class="align-middle text-center">
                 <div class="d-flex justify-content-center align-items-center">
                   <div>
-                    <ArgonButton color="primary" variant="gradient"  @click="EnterModels(model,index)">
+                    <ArgonButton color="primary" variant="gradient" @click="EnterModels(model, index)">
                       <span class="fas fa-book-open text-white me-2" />
                       Edit Model
                     </ArgonButton>
                   </div>
                   <div style="margin-left: 10px;">
-                    <ArgonButton color="success" variant="gradient"  
-                      @click="EnterTestSuite(model,index)">
+                    <ArgonButton color="success" variant="gradient" @click="EnterTestSuite(model, index)">
                       <span class="fas fa-print text-white me-2" />
                       TestSuites
                     </ArgonButton>
                   </div>
                   <div style="margin-left: 10px;">
-                    <el-popconfirm title="Are you sure to delete this project?" confirm-button-text="Yes"
-                      @confirm="confirmDelete(model)">
+                    <el-popconfirm width="300"
+                      title="Are you sure to delete this model?  (All testsuites under this model will be deleted CASCADE)"
+                      confirm-button-text="Yes" @confirm="confirmDelete(model)">
                       <template #reference>
-                        <ArgonButton color="danger" variant="gradient"  @click="confirmDelete(model)">
+
+                        <ArgonButton color="danger" variant="gradient">
                           <span class="far fa-trash-alt text-white me-2" />
                           Delete
                         </ArgonButton>
@@ -115,6 +116,8 @@ import { request } from '../../request';
 import { ElNotification } from 'element-plus'
 import { listAllModelsByUserID } from '../../ToolsViews/commonFunction.js'
 import pinia from '../../store/store'
+import { ElLoading } from 'element-plus'
+
 
 const props = defineProps({
   model: Object,
@@ -124,61 +127,80 @@ const router = useRouter()
 const modelStore = useModelsStore(pinia)
 const currentModel = useCurrentModel(pinia)
 
-const EnterModels = (model,index) => {
+const EnterModels = (model, index) => {
   // console.log("EnterModels",model)
   router.push({
     path: '/tools/modelsDetails',
     query:
-      { 
-        modelid: model.modelid,
-        index: index,
-       }
+    {
+      modelid: model.modelid,
+      index: index,
+    }
   })
 }
 
-const EnterTestSuite = (model,index) => {
+const EnterTestSuite = (model, index) => {
   // 记录下当前的model
   router.push(
-      {
-        path: '/tools/TestSuiteDetails',
-        query: {
-          modelid:model.modelid,
-          index:index
-        }
+    {
+      path: '/tools/TestSuiteDetails',
+      query: {
+        modelid: model.modelid,
+        index: index
       }
-    )
+    }
+  )
 
 
 }
 
-const confirmDelete = (model) => {
+const confirmDelete = async (model) => {
+  // console.log("删除Model", model)
+  let loadingInstance = ElLoading.service({ fullscreen: true })
 
-  request({
-    url: '/tools/models/DeleteByModelID',
-    method: 'POST',
-    data: {
-      modelid: model.modelid
-    }
-  }).then((res) => {
-    if (res.DeleteStatus == 'success!') {
 
+  try {
+    const DeleteModelRes = await request({
+      url: '/tools/Delete',
+      method: 'POST',
+      data: {
+        column: "model",
+        modelid: model.modelid
+      }
+    })
+
+    if (DeleteModelRes.DeleteStatus == 'success!') {
       // 实时更新页面数据
-      listAllModelsByUserID()
+      await listAllModelsByUserID()
       ElNotification({
         title: 'Delete Success!',
         message: 'please check the results',
         type: 'success',
       })
+      loadingInstance.close()
+
 
     }
-  }).catch((error) => {
-    // console.log(error)
+
+    else {
+      ElNotification({
+        title: 'Delete Failed!',
+        message: 'please check the results',
+        type: 'error',
+      })
+      loadingInstance.close()
+    }
+  } catch (error) {
+    console.log("error", error)
     ElNotification({
-      title: 'Delete Error!',
+      title: 'Delete Failed!',
       message: 'please check the results',
       type: 'error',
     })
-  })
+    loadingInstance.close()
+
+  }
+
 }
 
 

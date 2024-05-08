@@ -62,6 +62,8 @@ const modelStore = useModelsStore(pinia)
 
 onMounted(async () => {
     let loadingInstance = ElLoading.service({ fullscreen: true })
+
+
     moduleStore.CurrentSubSystem = "Tools"
     moduleStore.CurrentSubSystemRoute = "Tools_Models"
     moduleStore.CurrentModule = 'TestSuites'

@@ -16,6 +16,7 @@
 
                         </div>
 
+                        <!-- New Model  -->
                         <div style="width:100%;margin-bottom: 5px;text-align: center;">
                             <ArgonButton style="float: right;margin-right: 3%;" color="success" variant="gradient"
                                 @click="showdialogNew">
@@ -86,7 +87,7 @@
                                     </el-card>
                                 </div>
                             </div>
-                            <div v-auto-animate>
+                            <div>
                                 <!-- Imported model convert into cithub model -->
                                 <el-form v-if="dialogformNewModel.modeltype == 'Imported'" label-position="right"
                                     label-width="150px">
@@ -334,11 +335,11 @@ const llmFormStore = useLLMmodellingStore(pinia)
 const userStore = useUserStore(pinia)
 
 
-const modelLists = reactive([]);
-const dialogTableVisible = ref(false)
-const dialogFormVisible = ref(false)
-const dateObject_created = ref()
-const dateObject_lastupdated = ref()
+// const modelLists = reactive([]);
+// const dialogTableVisible = ref(false)
+// const dialogFormVisible = ref(false)
+// const dateObject_created = ref()
+// const dateObject_lastupdated = ref()
 
 const ModelConversionForm = reactive({})
 const LLMModellingForm = reactive({
@@ -397,21 +398,21 @@ const LLMmodelOptions = [
 
 
 
-const itemsPerRow = ref(2);
-const chunkedArray = computed(() => {
-    const result = [];
-    for (let i = 0; i < modelStore.modelsList.length; i += itemsPerRow.value) {
-        result.push(modelStore.modelsList.slice(i, i + itemsPerRow.value));
-    }
-    return result;
-});
-const calculateOriginalIndex = (rowIndex, colIndex) => {
-    // 计算原始索引的方法
-    return rowIndex * itemsPerRow.value + colIndex;
-}
-const isLastRow = computed(() => {
-    return rowIndex => rowIndex === chunkedArray.value.length - 1;
-});
+// const itemsPerRow = ref(2);
+// const chunkedArray = computed(() => {
+//     const result = [];
+//     for (let i = 0; i < modelStore.modelsList.length; i += itemsPerRow.value) {
+//         result.push(modelStore.modelsList.slice(i, i + itemsPerRow.value));
+//     }
+//     return result;
+// });
+// const calculateOriginalIndex = (rowIndex, colIndex) => {
+//     // 计算原始索引的方法
+//     return rowIndex * itemsPerRow.value + colIndex;
+// }
+// const isLastRow = computed(() => {
+//     return rowIndex => rowIndex === chunkedArray.value.length - 1;
+// });
 
 
 const dialogFormVisibleNew = ref(false)

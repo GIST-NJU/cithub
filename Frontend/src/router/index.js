@@ -113,13 +113,7 @@ const routes = [
         component: HelpCenter,
         meta: { title: 'HelpCenter' }
       },
-      // {
-      //   // ProjectsHome
-      //   path: "ProjectsHome",
-      //   name: 'ProjectsHome',
-      //   component: ProjectsHome,
-      //   meta: { title: 'ProjectsHome' }
-      // },
+
       {
         // modelsHome
         path: "models",
@@ -151,7 +145,7 @@ const routes = [
       {
         // TestSuiteDetails
         path: "TestSuiteDetails",
-        name: 'TestSuiteDetails',
+        name: 'TestSuite_Details',
         component: TestSuiteDetails,
         meta: { title: 'TestSuiteDetails' }
       },

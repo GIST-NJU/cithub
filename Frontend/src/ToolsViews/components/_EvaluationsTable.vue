@@ -466,7 +466,7 @@ const EnterTestSuiteDetails = (testsuite) => {
   currentTestSuite.currentTestSuites.lastupdatedtimeFortmat = testsuite.lastupdatedtimeFortmat
   router.push(
     {
-      name: 'TestSuiteDetails',
+      name: 'TestSuite_Details',
       query: {
         TestSuiteID: currentTestSuite.currentTestSuites.testsuitesid
       }
