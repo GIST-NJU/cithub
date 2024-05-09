@@ -15,7 +15,11 @@ module.exports = {
         }
       },
 
-    }
+    },
+    client: {
+      overlay: false
+  },
+
   },
   configureWebpack: {
     module: {

@@ -46,6 +46,7 @@
                                 <ArgonButton class="mx-2" size="sm" color="success"> New Model </ArgonButton>
                                 .
                             </p>
+                            <!-- 手动建模 -->
 
                             <div style="display:flex;flex-direction: row;justify-content: space-around;">
                                 <div v-bind:class="{ 'selected-category': selectedModellingType === 'Manual' }"
@@ -62,6 +63,9 @@
                                         </div>
                                     </el-card>
                                 </div>
+
+                                <!-- 导入已有模型 -->
+
                                 <div v-bind:class="{ 'selected-category': selectedModellingType === 'Imported' }"
                                     class="category" @click="chooseModellingType('Imported')">
                                     <el-card class="box-card" style="height: 100%;">
@@ -75,6 +79,8 @@
                                         </div>
                                     </el-card>
                                 </div>
+
+                                <!-- LLM 建模 -->
                                 <div v-bind:class="{ 'selected-category': selectedModellingType === 'LLM' }"
                                     class="category" @click="chooseModellingType('LLM')">
                                     <el-card class="box-card" style="height: 100%;">
@@ -106,23 +112,23 @@
                                     <!-- Acts format reader -->
                                     <div v-if="ImportModelTypeChosed == 'ACTS Format Reader'">
 
-                                        <el-form-item label="Stength: ">
-                                            <el-select clearable style="width: 250px" v-model="ModelConversionForm.strength"
-                                                class="m-2" placeholder="Select a covering strength">
-                                                <el-option v-for="item in StrengthOptions" :key="item.value"
-                                                    :label="item.label" :value="item.value" />
-                                            </el-select>
-                                        </el-form-item>
+
                                         <el-form-item label="ACTS model: ">
                                             <el-input v-model="ModelConversionForm.file" type="textarea"
                                                 :autosize="{ minRows: 10 }" placeholder="Note:
-1.Use `&#` as seperator to seperate each line for your ACTS model.
-(Cithub will convert your ACTS format model into Cithub format)
-2.For example, the model should look like this:
+1.Input an ACTS format model, Cithub will convert it into Cithub format.
+2.For example, ACTS format model should look like this:
 
- `
- [System]&#Name: Phone&#[Parameter]&#emailViewer(boolean): TRUE, FALSE&#textLines(int): 25,26,27,28,29,30&#display(enum): 16MC, 8MC, BW&#[Constraint]&#emailViewer => textLines > 28&#
- `
+[System]
+Name: Phone
+[Parameter]
+emailViewer(boolean): TRUE, FALSE
+textLines(int): 25,26,27,28,29,30
+display(enum): 16MC, 8MC, BW
+[Constraint]
+emailViewer => textLines > 28
+
+
 ">
                                             </el-input>
                                         </el-form-item>
@@ -134,23 +140,19 @@
                                     <!-- PICT format reader -->
                                     <div v-if="ImportModelTypeChosed == 'PICT Format Reader'">
 
-                                        <el-form-item label="Stength: ">
-                                            <el-select clearable style="width: 250px" v-model="ModelConversionForm.strength"
-                                                class="m-2" placeholder="Select a covering strength">
-                                                <el-option v-for="item in StrengthOptions" :key="item.value"
-                                                    :label="item.label" :value="item.value" />
-                                            </el-select>
-                                        </el-form-item>
+
+
                                         <el-form-item label="PICT model: ">
                                             <el-input v-model="ModelConversionForm.model_file" type="textarea"
                                                 :autosize="{ minRows: 10 }" placeholder='Note:
-1.Use `&#` as seperator to seperate each line for your PICT model.
-(Cithub will convert your PICT format model into Cithub format)
-2.For example, the model should look like this:
+1.Cithub will convert your PICT format model into Cithub format
+2.For example, PICT model should look like this:
 
-`
-emailViewer: TRUE, FALSE&#textLines: 25, 26, 27, 28, 29, 30&#display: 16MC, 8MC, BW&#IF [emailViewer] = `"`TRUE" THEN [textLines] > 29
-`
+emailViewer: TRUE, FALSE
+textLines: 25, 26, 27, 28, 29, 30
+display: 16MC, 8MC, BW
+IF [emailViewer] = "TRUE" THEN [textLines] > 29;
+
 '>
                                             </el-input>
                                         </el-form-item>
@@ -163,23 +165,23 @@ emailViewer: TRUE, FALSE&#textLines: 25, 26, 27, 28, 29, 30&#display: 16MC, 8MC,
                                     <!-- CTWedge format reader -->
                                     <div v-if="ImportModelTypeChosed == 'CTWedge Format Reader'">
 
-                                        <el-form-item label="Stength: ">
-                                            <el-select clearable style="width: 250px" v-model="ModelConversionForm.strength"
-                                                class="m-2" placeholder="Select a covering strength">
-                                                <el-option v-for="item in StrengthOptions" :key="item.value"
-                                                    :label="item.label" :value="item.value" />
-                                            </el-select>
-                                        </el-form-item>
+
                                         <el-form-item label="CTWedge model: ">
                                             <el-input v-model="ModelConversionForm.model_file" type="textarea"
                                                 :autosize="{ minRows: 10 }" placeholder='Note:
-1.Use `&#` as seperator to seperate each line for your CTWedge model.
-(Cithub will convert your CTWedge format model into Cithub format)
-2.For example, the model should look like this:
+1.Cithub will convert your CTWedge format model into Cithub format.
+2.For example, CTWedge format model should look like this:
 
-`
-Model Phone&#Parameters:&#Boolean emailViewer;&#Range textLines [25 .. 30];&#Enumerative display {16MC, 8MC, BW};&#end&#Constraints:&# # emailViewer==true => textLines > 28# &#end
-`
+Model Phone
+Parameters:
+Boolean emailViewer;
+Range textLines [25 .. 30];
+Enumerative display {16MC, 8MC, BW};
+end
+Constraints:
+# emailViewer==true => textLines > 28# 
+end
+
 '>
                                             </el-input>
                                         </el-form-item>
@@ -354,32 +356,7 @@ const LLMModellingForm = reactive({
     baseUrl: 'https://api.openai-proxy.org',
 })
 
-const StrengthOptions = [
-    {
-        value: '1',
-        label: '1',
-    },
-    {
-        value: '2',
-        label: '2',
-    },
-    {
-        value: '3',
-        label: '3',
-    },
-    {
-        value: '4',
-        label: '4',
-    },
-    {
-        value: '5',
-        label: '5',
-    },
-    {
-        value: '6',
-        label: '6',
-    },
-]
+
 const LLMmodelOptions = [
     {
         value: 'gpt-3.5-turbo-instruct',
@@ -434,24 +411,28 @@ const showdialogNew = () => {
 }
 
 const confirmNewModel = async () => {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
     if (dialogformNewModel.modeltype == '') {
         ElNotification({
             title: 'New Model Error!',
             message: 'Please choose one of the modelling method.',
             type: 'error',
         })
+        loadingInstance.close()
     } else if (dialogformNewModel.modelname == '') {
         ElNotification({
             title: 'New Model Error!',
             message: 'Model Name can not be empty.',
             type: 'error',
         })
+        loadingInstance.close()
     }
     else {
         // 获取当前时刻的Date对象
         const currentDate = new Date();
         dialogformNewModel.lastupdatedtime = currentDate
         dialogformNewModel.createdtime = currentDate
+        let ModelFile = ''
         switch (dialogformNewModel.modeltype) {
             case 'Manual':
                 try {
@@ -514,8 +495,11 @@ const confirmNewModel = async () => {
                     case 'ACTS Format Reader':
                         // 构造发送给ACTS FORMAT READER的obj
                         let obj_ACTS = {}
-                        obj_ACTS.strength = ModelConversionForm.strength
-                        obj_ACTS.file = ModelConversionForm.file
+                        // 先给一个默认的覆盖强度 2
+                        obj_ACTS.strength = 2
+                        // 对 ModelConversionForm.file 处理 将字符串中的 换行符替换为 &# 再给 ACTS format reader
+                        ModelFile = ModelConversionForm.file.replace(/\n/g, '&#')
+                        obj_ACTS.file = ModelFile
                         // console.log("obj_ACTS", JSON.stringify(obj_ACTS))
                         for (const tool of toolsInfo.RECORDS) {
                             if (tool.title == ImportModelTypeChosed.value) {
@@ -532,16 +516,15 @@ const confirmNewModel = async () => {
                                         data: JSON.stringify(obj_ACTS)
                                     })
                                     // console.log("ACTSRes", ACTSRes)
-                                    let inputString = ModelConversionForm.file.replace(/&#/g, '\n');
+
                                     // console.log("inputString ", inputString)
                                     // 将导入的模型加载到table上
-
 
                                     // 定义一个正则表达式来匹配[Parameter]和[Constraint]之间的内容
                                     const regex = /\[Parameter\]([\s\S]+?)\[Constraint\]/;
 
                                     // 使用正则表达式匹配字符串
-                                    const match = inputString.match(regex);
+                                    const match = ModelConversionForm.file.match(regex);
 
                                     if (match) {
                                         // 获取匹配到的内容
@@ -582,8 +565,7 @@ const confirmNewModel = async () => {
                                             const result = getParameterValue(cons, parameterArray);
 
                                             // 创建包含 Constrain_x 键和结果数组的对象
-                                            const index = consArray.length + 1;
-                                            const key = `Constrain_${index}`;
+                                            const key = `Constraint`;
                                             const resultObject = { [key]: result };
 
                                             // 将对象添加到数组中
@@ -598,66 +580,72 @@ const confirmNewModel = async () => {
                                             return { Parameter, Value };
                                         });
 
-                                        // console.log("parameterArray", parameterArray)
-                                        // console.log("ParameterValuesArray", ParameterValuesArray)
-                                        console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
 
-                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                            const currentDate = new Date();
-                                            const NewModelRes = await request({
-                                                url: '/tools/NewModel',
-                                                method: 'POST',
-                                                data: {
-                                                    userid: userStore.userID,
-                                                    modelname: dialogformNewModel.modelname,
-                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
-                                                    modeltype: dialogformNewModel.modeltype,
-                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                                    createdtime: dialogformNewModel.createdtime,
+                                        // console.log("ParametersAndValues", JSON.stringify(ParameterValuesArray))
+                                        // console.log("Cons", JSON.stringify(consArray))
 
-                                                    strength: ModelConversionForm.strength,
-                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                                    Cons: JSON.stringify(consArray),
+
+                                        // 新建模型
+
+                                        const NewModelRes = await request({
+                                            url: '/tools/New',
+                                            method: 'POST',
+                                            data: {
+
+                                                column: 'model',
+                                                userid: userStore.userID,
+                                                modelname: dialogformNewModel.modelname,
+                                                modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                modeltype: dialogformNewModel.modeltype,
+                                                lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                createdtime: dialogformNewModel.createdtime,
+                                                ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                Cons: JSON.stringify(consArray),
+                                            }
+                                        })
+                                        if (NewModelRes.NewStatus == 'success!') {
+                                            // 更新Models table
+                                            let loadingInstance = ElLoading.service({ fullscreen: true })
+
+                                            await listAllModelsByUserID()
+
+                                            dialogFormVisibleNew.value = false
+
+                                            // 直接跳转至新模型的编辑页面
+                                            router.push({
+                                                path: '/tools/modelsDetails',
+                                                query:
+                                                {
+                                                    modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
+
                                                 }
                                             })
-                                            if (NewModelRes.NewStatus == 'success!') {
-                                                ElNotification({
-                                                    title: 'New Model Success!',
-                                                    type: 'success',
-                                                })
-                                                await listAllModelsByUserID()
-                                                dialogFormVisibleNew.value = false
-                                                currentModel.currentModel.modelid = route.query.modelid
-                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                                currentModel.currentModel.strength = ModelConversionForm.strength
-                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                                currentModel.currentModel.cons = JSON.stringify(consArray)
-                                                currentModel.currentModel.lastupdatedtime = currentDate
+
+                                            loadingInstance.close()
+                                            ElNotification({
+                                                title: 'Import ACTS Model Success!',
+                                                message: 'please Check the Parameters and Constraints',
+                                                type: 'success',
+                                            })
 
 
-                                            }
-                                            else {
-                                                ElNotification({
-                                                    title: 'New Model Failed!',
-                                                    type: 'error',
-                                                })
-                                            }
 
                                         }
                                         else {
                                             ElNotification({
-                                                title: 'New Model Failed!',
-                                                message: 'Must choose a Strength',
+                                                title: 'Import ACTS Model Failed!',
                                                 type: 'error',
                                             })
                                         }
 
 
+
+
+
                                     } else {
                                         console.log('未找到匹配的内容');
                                     }
-
+                                    loadingInstance.close()
 
                                 }
                                 catch (err) {
@@ -666,6 +654,8 @@ const confirmNewModel = async () => {
                                         message: 'check your inputs!',
                                         type: 'error',
                                     })
+
+                                    loadingInstance.close()
                                 }
                             }
                         }
@@ -820,11 +810,11 @@ const confirmNewModel = async () => {
                         break;
 
                     case 'CTWedge Format Reader':
-                        // console.log("CTWedge")
-                        // 构造发送给CTWedge Format Reader的obj
+
                         let obj_ctwedge = {}
-                        obj_ctwedge.strength = ModelConversionForm.strength
-                        obj_ctwedge.model_file = ModelConversionForm.model_file
+                        obj_ctwedge.strength = 2
+                        ModelFile = ModelConversionForm.model_file.replace(/\n/g, '&#')
+                        obj_ctwedge.model_file = ModelFile
                         for (const tool of toolsInfo.RECORDS) {
                             if (tool.title == ImportModelTypeChosed.value) {
                                 try {
@@ -840,14 +830,13 @@ const confirmNewModel = async () => {
                                         data: JSON.stringify(obj_ctwedge)
                                     })
                                     // console.log("CTWedgeRes结果", CTWedgeRes)
-                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
                                     // console.log("inputString是 ", inputString)
                                     // 将导入的模型加载到table上
                                     // 定义一个正则表达式来匹配Parameters:和end之间的内容
                                     const regex = /Parameters:(.*?)(?=end)/s;
 
                                     // 使用正则表达式匹配字符串
-                                    const match = inputString.match(regex);
+                                    const match = ModelConversionForm.model_file.match(regex);
 
                                     if (match) {
                                         // 获取匹配到的内容
@@ -911,8 +900,7 @@ const confirmNewModel = async () => {
                                             const result = getParameterValue(cons, ParameterAndValues);
 
                                             // 创建包含 Constrain_x 键和结果数组的对象
-                                            const index = consArray.length + 1;
-                                            const key = `Constrain_${index}`;
+                                            const key = `Constraint`;
                                             const resultObject = { [key]: result };
 
                                             // 将对象添加到数组中
@@ -929,57 +917,61 @@ const confirmNewModel = async () => {
                                             return { Parameter, Value };
                                         });
                                         // console.log("JSON.stringify(ParameterValuesArray)",JSON.stringify(ParameterValuesArray))
-                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                            const currentDate = new Date();
-                                            const NewModelRes = await request({
-                                                url: '/tools/NewModel',
-                                                method: 'POST',
-                                                data: {
-                                                    userid: userStore.userID,
-                                                    modelname: dialogformNewModel.modelname,
-                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
-                                                    modeltype: dialogformNewModel.modeltype,
-                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                                    createdtime: dialogformNewModel.createdtime,
 
-                                                    strength: ModelConversionForm.strength,
-                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                                    Cons: JSON.stringify(consArray),
+                                        const NewModelRes = await request({
+                                            url: '/tools/New',
+                                            method: 'POST',
+                                            data: {
+
+                                                column: 'model',
+                                                userid: userStore.userID,
+                                                modelname: dialogformNewModel.modelname,
+                                                modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                modeltype: dialogformNewModel.modeltype,
+                                                lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                createdtime: dialogformNewModel.createdtime,
+                                                ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                Cons: JSON.stringify(consArray),
+                                            }
+                                        })
+                                        if (NewModelRes.NewStatus == 'success!') {
+                                            // 更新Models table
+                                            let loadingInstance = ElLoading.service({ fullscreen: true })
+
+                                            await listAllModelsByUserID()
+
+                                            dialogFormVisibleNew.value = false
+
+                                            // 直接跳转至新模型的编辑页面
+                                            router.push({
+                                                path: '/tools/modelsDetails',
+                                                query:
+                                                {
+                                                    modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
+
                                                 }
                                             })
-                                            if (NewModelRes.NewStatus == 'success!') {
-                                                ElNotification({
-                                                    title: 'New Model Success!',
-                                                    type: 'success',
-                                                })
-                                                await listAllModelsByUserID()
-                                                dialogFormVisibleNew.value = false
 
-                                                currentModel.currentModel.modelid = route.query.modelid
-                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                                currentModel.currentModel.strength = ModelConversionForm.strength
-                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                                currentModel.currentModel.cons = JSON.stringify(consArray)
-                                                currentModel.currentModel.lastupdatedtime = currentDate
+                                            loadingInstance.close()
+                                            ElNotification({
+                                                title: 'Import CTWedge Model Success!',
+                                                message: 'please Check the Parameters and Constraints',
+                                                type: 'success',
+                                            })
 
 
-                                            }
-                                            else {
-                                                ElNotification({
-                                                    title: 'New Model Failed!',
-                                                    type: 'error',
-                                                })
-                                            }
+
+
 
                                         }
                                         else {
                                             ElNotification({
-                                                title: 'New Model Failed!',
-                                                message: 'Must choose a Strength',
+                                                title: 'Import CTWedge Model Failed!',
                                                 type: 'error',
                                             })
                                         }
+
+
                                     } else {
                                         console.log('未找到匹配的内容');
                                     }
@@ -1001,8 +993,9 @@ const confirmNewModel = async () => {
                         // console.log("PICT Format Reader")
                         // 构造发送给PICT Format Reader的obj
                         let obj_pict = {}
-                        obj_pict.strength = ModelConversionForm.strength
-                        obj_pict.model_file = ModelConversionForm.model_file
+                        obj_pict.strength = 2
+                        ModelFile = ModelConversionForm.model_file.replace(/\n/g, '&#')
+                        obj_pict.model_file = ModelFile
                         // console.log("obj", JSON.stringify(obj_pict))
                         for (const tool of toolsInfo.RECORDS) {
                             if (tool.title == ImportModelTypeChosed.value) {
@@ -1019,20 +1012,20 @@ const confirmNewModel = async () => {
                                         data: JSON.stringify(obj_pict)
                                     })
                                     // console.log("PICTRes结果", PICTRes)
-                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
-                                    // console.log("inputString是 ", inputString)
+
+
                                     // 将导入的模型加载到table上
                                     // 定义一个正则表达式来匹配Parameters:和end之间的内容
                                     const regexALL = /([^:\n]+:[^:\n]+)/g;
 
                                     // 使用正则表达式匹配字符串
-                                    console.log("inputString", inputString)
-                                    const lines = inputString.match(regexALL);
+
+                                    const lines = ModelConversionForm.model_file.match(regexALL);
                                     if (lines) {
                                         // parameterArray
                                         const parameterArray = [];
                                         // 定义正则表达式
-                                        console.log("lines", lines)
+                                        // console.log("lines", lines)
                                         // 遍历每一行并匹配正则表达式
                                         for (const line of lines) {
                                             let tempArray = line.split(':')
@@ -1044,7 +1037,7 @@ const confirmNewModel = async () => {
                                             tempObj.ValueArray = tempArray[1].split(',')
                                             parameterArray.push(tempObj)
                                         }
-                                        console.log("parameterArray", parameterArray)
+                                        // console.log("parameterArray", parameterArray)
 
                                         // 处理约束部分
                                         const consArray = [];
@@ -1053,8 +1046,8 @@ const confirmNewModel = async () => {
                                             const result = getParameterValue(cons, parameterArray);
 
                                             // 创建包含 Constrain_x 键和结果数组的对象
-                                            const index = consArray.length + 1;
-                                            const key = `Constrain_${index}`;
+
+                                            const key = `Constraint`;
                                             const resultObject = { [key]: result };
 
                                             // 将对象添加到数组中
@@ -1071,63 +1064,65 @@ const confirmNewModel = async () => {
                                         // console.log("consArray",consArray)
                                         // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
 
-                                        if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                            const currentDate = new Date();
-                                            const NewModelRes = await request({
-                                                url: '/tools/NewModel',
-                                                method: 'POST',
-                                                data: {
-                                                    userid: userStore.userID,
-                                                    modelname: dialogformNewModel.modelname,
-                                                    modeldescriptions: dialogformNewModel.modeldescriptions,
-                                                    modeltype: dialogformNewModel.modeltype,
-                                                    lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                                    createdtime: dialogformNewModel.createdtime,
 
-                                                    strength: ModelConversionForm.strength,
-                                                    ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                                    Cons: JSON.stringify(consArray),
+                                        const NewModelRes = await request({
+                                            url: '/tools/New',
+                                            method: 'POST',
+                                            data: {
+
+                                                column: 'model',
+                                                userid: userStore.userID,
+                                                modelname: dialogformNewModel.modelname,
+                                                modeldescriptions: dialogformNewModel.modeldescriptions,
+                                                modeltype: dialogformNewModel.modeltype,
+                                                lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                                createdtime: dialogformNewModel.createdtime,
+                                                ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                                Cons: JSON.stringify(consArray),
+
+                                            }
+                                        })
+                                        if (NewModelRes.NewStatus == 'success!') {
+
+                                            // 更新Models table
+                                            let loadingInstance = ElLoading.service({ fullscreen: true })
+
+                                            await listAllModelsByUserID()
+
+                                            dialogFormVisibleNew.value = false
+
+                                            // 直接跳转至新模型的编辑页面
+                                            router.push({
+                                                path: '/tools/modelsDetails',
+                                                query:
+                                                {
+                                                    modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
+
                                                 }
                                             })
-                                            if (NewModelRes.NewStatus == 'success!') {
-                                                ElNotification({
-                                                    title: 'New Model Success!',
-                                                    type: 'success',
-                                                })
-                                                await listAllModelsByUserID()
-                                                dialogFormVisibleNew.value = false
 
-                                                currentModel.currentModel.modelid = route.query.modelid
-                                                currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                                currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                                currentModel.currentModel.strength = ModelConversionForm.strength
-                                                currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                                currentModel.currentModel.cons = JSON.stringify(consArray)
-                                                currentModel.currentModel.lastupdatedtime = currentDate
-
-
-                                            }
-                                            else {
-                                                ElNotification({
-                                                    title: 'New Model Failed!',
-                                                    type: 'error',
-                                                })
-                                            }
+                                            loadingInstance.close()
+                                            ElNotification({
+                                                title: 'Import PICT Model Success!',
+                                                message: 'please Check the Parameters and Constraints',
+                                                type: 'success',
+                                            })
 
                                         }
                                         else {
                                             ElNotification({
-                                                title: 'New Model Failed!',
-                                                message: 'Must choose a Strength',
+                                                title: 'Import PICT Model Failed!',
                                                 type: 'error',
                                             })
                                         }
+
+
 
                                     }
                                 }
                                 catch (err) {
                                     ElNotification({
-                                        title: 'New Model Failed!',
+                                        title: 'Import PICT Model Failed!',
                                         message: 'check your inputs!',
                                         type: 'error',
                                     })
