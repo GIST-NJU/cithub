@@ -1,5 +1,4 @@
 <template>
-
     <div class="min-height-300 bg-success position-absolute w-100"></div>
     <SideNav></SideNav>
     <main class="main-content position-relative border-radius-lg ">
@@ -35,22 +34,21 @@
                     <div>
                         <div v-if="TestTableListFlag" class="card mb-2">
                             <div v-for="(obj, index) in testSuitesStore.testSuitesList" class="card-body px-0 pt-0 pb-0">
-                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']" :AlgorithmOptions="AlgorithmOptions"
-                                    @scrollToTestSuiteInfo="scrollToTestSuiteInfo">
+                                <TestSuitesTable :testSuites="obj['testSuites']" :model="obj['model']"
+                                    :AlgorithmOptions="AlgorithmOptions" @scrollToTestSuiteInfo="scrollToTestSuiteInfo">
                                 </TestSuitesTable>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card" v-if="!currentTestSuite.currentTestSuites.testsuitesname">
-
+                    <div class="card"
+                        v-if="testSuitesStore.testSuitesList[0] && !currentTestSuite.currentTestSuites.testsuitesname && testSuitesStore.testSuitesList[0].testSuites.length != 0">
                         <div class="card-body pb-0">
                             <div class="row">
                                 <h3 class="text-center">Please Choose one of the testsuites From the above TestSuites List.
                                 </h3>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="row">
@@ -508,17 +506,18 @@
                                     <el-form :model="dialogformNewTestSuites" label-position="left" label-width="150px">
                                         <el-form-item label="Tools of Conversion">
                                             <el-select v-model="AlgorithmChosedConversion" class="m-2"
-                                            @change="handleAlgorithmOptionsConversionChange"
-                                                placeholder="Select a tool for converting test suite into Test Plan." clearable>
+                                                @change="handleAlgorithmOptionsConversionChange"
+                                                placeholder="Select a tool for converting test suite into Test Plan."
+                                                clearable>
                                                 <el-option v-for="item in AlgorithmOptionsConversion" :key="item.value"
                                                     :label="item.label" :value="item.value" />
                                             </el-select>
                                         </el-form-item>
 
                                         <el-form-item label="Description: ">
-                                                <el-input readonly v-model="AlgorithmDescriptionConversion"
-                                                    :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
-                                                    placeholder="The Description of Tool Choosen Will Be Displayed Here" />
+                                            <el-input readonly v-model="AlgorithmDescriptionConversion"
+                                                :autosize="{ minRows: 2, maxRows: 12 }" type="textarea"
+                                                placeholder="The Description of Tool Choosen Will Be Displayed Here" />
                                         </el-form-item>
 
                                         <div v-if="AlgorithmChosedConversion == 'JUnit Test Plan'">
@@ -715,8 +714,10 @@
                                             Operations
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li style="cursor:pointer"><a class="dropdown-item"  @click="ExportTestSuite">Export TestSuite</a></li>
-                                            <li style="cursor:pointer"><a class="dropdown-item" @click="showdialogNewConversion">Convert into Test
+                                            <li style="cursor:pointer"><a class="dropdown-item"
+                                                    @click="ExportTestSuite">Export TestSuite</a></li>
+                                            <li style="cursor:pointer"><a class="dropdown-item"
+                                                    @click="showdialogNewConversion">Convert into Test
                                                     Plan</a></li>
                                         </ul>
                                     </div>
@@ -784,7 +785,7 @@
 
 
 
-                            <el-dialog v-model="DiagnosisNextFlag" width="50%"  @close="CloseDiagnosis()"
+                            <el-dialog v-model="DiagnosisNextFlag" width="50%" @close="CloseDiagnosis()"
                                 :close-on-click-modal="false" title="Please select the result of the following testcases">
                                 <!-- 故障定位过程中 的表格 -->
                                 <div v-if="!DiagnosisTestCases[DiagnosisTestCases.length - 1].hasOwnProperty('testcaseResult')"
@@ -814,24 +815,34 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(row, rowIndex) in DiagnosisTestCases" :key="rowIndex" :class="{
-                                            'table-info': row.status == 'new',
-                                            'table-primary': row.status == 'existed',
+                                            // 'table-info': row.status == 'new',
+                                            // 'table-primary': row.status == 'existed',
                                             'table-success': row.testcaseResult == true,
                                             'table-danger': row.testcaseResult == false
                                         }">
+
+                                            <td class="text-center">
+                                                {{ rowIndex + 1 }}
+                                            </td>
+
                                             <!-- 如果row.status为 new/existed 则在对应的行前显示 new/ existed ，否则显示行号 -->
-                                            <td v-if="row.status != 'new' && row.status != 'existed'" class="text-center">
-                                                {{ rowIndex + 1 }}</td>
+
+                                            <!-- <td v-if="row.status != 'new' && row.status != 'existed'" class="text-center">
+                                                {{ rowIndex + 1 }}
+                                            </td>
+
                                             <td v-if="row.status == 'new'" class="text-center">
                                                 <ArgonBadge color="info"> New </ArgonBadge>
                                             </td>
                                             <td v-if="row.status == 'existed'" class="text-center">
                                                 <ArgonBadge color="primary"> Existed </ArgonBadge>
-                                            </td>
+                                            </td> -->
+
                                             <td v-for="(value, colIndex) in row.testcase" :key="colIndex"
                                                 class="text-center">
                                                 {{ value }}
                                             </td>
+
                                             <td v-if="DignosisRunFlag && DiagnosisNextFlag && row.hasOwnProperty('testcaseResult')"
                                                 class="text-center">
                                                 <div class="row">
@@ -860,7 +871,7 @@
                                 </table>
                                 <template #footer>
                                     <div class="dialog-footer">
-                                        <el-button @click="CloseDiagnosis()">Cancel</el-button>
+                                        <el-button @click="DiagnosisNextFlag = !DiagnosisNextFlag">Cancel</el-button>
                                     </div>
                                 </template>
                             </el-dialog>
@@ -908,7 +919,10 @@ import toolsInfo from "../CustomizedComponents/tools_info.json";
 import * as echarts from 'echarts'
 import { ElLoading } from 'element-plus'
 import { nextTick } from 'vue';
+import { useModuleStore } from '../store/module';
 
+
+const moduleStore = useModuleStore(pinia)
 const testSuitesStore = useTestSuitesStore(pinia)
 const currentModel = useCurrentModel(pinia)
 const currentTestSuite = useCurrentTestSuitesStore(pinia)
@@ -1749,6 +1763,8 @@ const testSuiteTable = ref()
 const TestSuiteInfo = ref()
 // 判断故障定位过程是否结束
 const DignosisRunFlag = ref(false)
+
+
 // 弹出工具执行过程中的 next testcase 的对话框
 const DiagnosisNextFlag = ref(false)
 // 弹出对话框，选择算法。
@@ -1883,9 +1899,10 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                 })
                 // console.log("DiagnosisRes", DiagnosisRes)
                 // console.log("DiagnosisRes Json", JSON.stringify(DiagnosisRes))
+
                 if (DiagnosisRes.finished) {
 
-
+                    // 故障定位完成，将结果转换为最小故障元组
                     let ValuesArray = DiagnosisRes.result.map(FaultTuple => {
                         return IndexesTestCaseToTestCase(currentModel.currentModel.PandVOBJ, FaultTuple);
                     });
@@ -1922,6 +1939,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
 
                         // 故障定位完成 关闭running的提示
                         DignosisRunFlag.value = false
+
                         // 置位为第一次发送请求
                         InitDiagnosisTool.value = true
                         // 关闭定位过程对话框
@@ -1931,12 +1949,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                         // 视窗滚动到显示故障定位的结果
                         TestSuiteInfo.value.scrollIntoView({ behavior: 'smooth' });
 
-                        ElNotification({
-                            title: 'Diagnosis Success!',
-                            type: 'success',
-                            message: 'All the Possible Fault Tuples has Displayed in Table.',
 
-                        })
                         loadingInstance.close()
 
 
@@ -1967,7 +1980,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     // console.log("NextValues 填充Null值后的结果", FillNull(currentModel.currentModel.PandVOBJ, NextValues))
 
 
-                    // 下面想除掉 NextValues 填充Null之后 那些不满足约束的testcase
+                    // 下面想去除掉 NextValues 填充Null之后 那些不满足约束的testcase
                     let ForbiddenTuplesFilled = []
                     // 首先将所有禁止元组填充Null
                     currentModel.currentModel.ForbiddenTuples.forEach(ForbiddenTuple => {
@@ -1980,16 +1993,17 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     });
                     // ForbiddenTuplesFilled = Array.from(new Set(ForbiddenTuplesFilled.map(JSON.stringify)), JSON.parse);
                     // console.log("禁止元组的填充结果为", ForbiddenTuplesFilled)
-                    // NextValues 减去 ForbiddenTuplesFilled
+
+                    // NextValues 减去 ForbiddenTuplesFilled，剩下的即为满足约束的测试用例 NextValuesSat
                     let NextValuesSat = subtractArrays(FillNull(currentModel.currentModel.PandVOBJ, NextValues), ForbiddenTuplesFilled)
                     // console.log("去除不满足约束之后的 NextValuesSat", NextValuesSat)
-
 
 
                     // 根据故障定位表格中的点击情况，动态的更新表格
 
 
-                    // NextValuesSat 出现在覆盖表中的testcase的status标记为 original，未出现在覆盖表中的标记为 new
+                    // NextValuesSat 出现在覆盖表中的testcase的status标记为 existed ，未出现在覆盖表中的标记为 new
+
                     NextValuesSat.forEach(nextTestCase => {
                         let found = false;
                         CoveringArray.value.forEach(CATestCase => {
@@ -2010,8 +2024,10 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                         }
                     });
                     // console.log("区分得到的 DiagnosisTestCases", DiagnosisTestCases)
+
                     // 对DiagnosisTestCases进行排序，已有结果的testcase在最前方，其次是覆盖表中已有的testcase，最后是新的testcase
                     // 提取具有"status"键和没有"status"键的元素
+
                     const TestCasesWithStatus = DiagnosisTestCases.filter(element => element.hasOwnProperty("status"));
                     const TestCasesWithoutStatus = DiagnosisTestCases.filter(element => !element.hasOwnProperty("status"));
 
@@ -2041,7 +2057,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     DiagnosisTestCases.push(...sortedDiagnosisTestCases)
                     // console.log("排序后的 DiagnosisTestCases", DiagnosisTestCases)
 
-                    // 优化DiagnosisTestCases，去掉testcase重复，且已有结果的那些元素
+                    // 优化DiagnosisTestCases，去掉 testcase 重复，且已有结果的那些元素
                     let uniqueTestcases = DiagnosisTestCases.reduce((acc, current) => {
                         // 检查是否已经存在具有相同"testcase"键的元素
                         const existingIndex = acc.findIndex(item => JSON.stringify(item.testcase) === JSON.stringify(current.testcase));
@@ -2052,13 +2068,13 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                                 return acc;
                             } else {
                                 // 若没有，则替换为当前元素
-                                
+
                                 acc.splice(existingIndex, 1, current);
                                 return acc;
                             }
                         }
                         // 如果不存在具有相同"testcase"键的元素，则将当前元素添加到结果数组中。
-                         else {
+                        else {
                             acc.push(current);
                             return acc;
                         }
@@ -2067,6 +2083,23 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     DiagnosisTestCases.push(...uniqueTestcases)
                     // console.log("去重优化后的 DiagnosisTestCases", DiagnosisTestCases)
 
+                    // 新！ existed 和 new 不需要区分了，因为这样给一堆 testcase 会让人 confuse ，给一条就可以了
+                    // 做法是 遍历 DiagnosisTestCases ，有 testcaseResult 这个 key 的元素都保留下来，遇到第一个有 status 这个 key 的元素 保留，然后终止循环
+                    let NewDiagnosisTestCases = []
+                    for (const testcase of DiagnosisTestCases) {
+                        if (testcase.hasOwnProperty('testcaseResult')) {
+                            NewDiagnosisTestCases.push(testcase)
+                        }
+                        if (testcase.hasOwnProperty('status')) {
+                            NewDiagnosisTestCases.push(testcase)
+                            break;
+                        }
+                    }
+
+                    DiagnosisTestCases.length = 0
+                    DiagnosisTestCases.push(...NewDiagnosisTestCases)
+
+                    // console.log("新版本的 DiagnosisTestCases", DiagnosisTestCases)
 
 
                     // 记录下下一次发送的testcase
@@ -2086,12 +2119,25 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
 }
 const CloseDiagnosis = () => {
 
-    ElNotification({
-        title: 'Diagnosis is interrupted.',
-        type: 'warning',
-        message: 'Diagnosis has been cancelled.',
+    // 故障定位完成
+    if (DignosisRunFlag.value == false) {
+        ElNotification({
+            title: 'Diagnosis Success!',
+            type: 'success',
+            message: 'Possible Fault Tuples has Displayed in Table.',
 
-    })
+        })
+    }
+    // 故障定位中断
+    else {
+        ElNotification({
+            title: 'Diagnosis is interrupted.',
+            type: 'warning',
+            message: 'Diagnosis has been cancelled.',
+
+        })
+    }
+
 
     // 关闭running的提示
     DignosisRunFlag.value = false
@@ -2202,16 +2248,6 @@ function arraysAreEqual(arr1, arr2) {
 
 
 
-// 清空数组并将去重后的内容添加到原始数组中
-function updateDiagnosisTestCases(originalArray, uniqueArray) {
-    // 清空原始数组
-    originalArray.splice(0, originalArray.length);
-
-    // 将去重后的数组的内容添加到原始数组中
-    uniqueArray.forEach(item => {
-        originalArray.push(item);
-    });
-}
 
 
 // ------------------------------------------------------------------------
@@ -2370,9 +2406,19 @@ const scrollToTestSuiteInfo = async () => {
 
 onMounted(async () => {
     try {
+        // console.log("testSuitesStore.testSuitesList", testSuitesStore.testSuitesList)
 
         let loadingInstance = ElLoading.service({ fullscreen: true })
+
+        moduleStore.CurrentSubSystem = "Tools"
+        moduleStore.CurrentSubSystemRoute = "Tools_Models"
+        moduleStore.CurrentModule = 'TestSuites'
+        moduleStore.CurrentModuleDetails = 'TestSuite Details'
+        moduleStore.CurrentRoute = 'TestSuites_Home'
+
+
         currentTestSuite.currentTestSuites = {}
+
         // console.log("testsuitesid", route.query.testsuitesid)
         // console.log("modelid", route.query.modelid)
 

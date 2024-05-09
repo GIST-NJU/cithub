@@ -24,24 +24,28 @@
                                 New Model
                             </ArgonButton>
                         </div>
+
                         <el-dialog v-model="dialogFormVisibleNew" title="New Model">
                             <el-form :model="dialogformNewModel" label-position="right" label-width="150px">
 
                                 <el-form-item label="Model Name:">
                                     <el-input v-model="dialogformNewModel.modelname" />
                                 </el-form-item>
+
                                 <el-form-item label="Model Description:">
                                     <el-input autosize type="textarea" v-model="dialogformNewModel.modeldescriptions" />
                                 </el-form-item>
+
                             </el-form>
 
 
                             <hr class="my-3 horizontal white" />
 
                             <p>Cithub currently support 3 methodes of modelling to create CIT model</p>
-                            <p>Please choose one of the following modelling method to<ArgonBadge style="margin-left:3px"
-                                    floating='true' color="success"> New Model</ArgonBadge>
-                                .</p>
+                            <p>Please choose one of the following modelling method to
+                                <ArgonButton class="mx-2" size="sm" color="success"> New Model </ArgonButton>
+                                .
+                            </p>
 
                             <div style="display:flex;flex-direction: row;justify-content: space-around;">
                                 <div v-bind:class="{ 'selected-category': selectedModellingType === 'Manual' }"
@@ -262,10 +266,10 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
 
                             <template #footer>
                                 <span class="dialog-footer">
-                                    <el-button @click="dialogFormVisibleNew = false">Cancel</el-button>
-                                    <el-button type="primary" @click="confirmNewModel">
-                                        Confirm
-                                    </el-button>
+                                    <ArgonButton size="sm" color="secondary" @click="dialogFormVisibleNew = false">Cancel
+                                    </ArgonButton>
+                                    <ArgonButton class="mx-2" size="sm" color="success" @click="confirmNewModel"> New Model
+                                    </ArgonButton>
                                 </span>
                             </template>
                         </el-dialog>
@@ -436,6 +440,12 @@ const confirmNewModel = async () => {
             message: 'Please choose one of the modelling method.',
             type: 'error',
         })
+    } else if (dialogformNewModel.modelname == '') {
+        ElNotification({
+            title: 'New Model Error!',
+            message: 'Model Name can not be empty.',
+            type: 'error',
+        })
     }
     else {
         // 获取当前时刻的Date对象
@@ -448,20 +458,40 @@ const confirmNewModel = async () => {
                     const res = await request({
                         url: '/tools/NewModel',
                         method: 'POST',
-                        data: dialogformNewModel
+                        data: {
+                            column: 'model',
+                            modelname: dialogformNewModel.modelname,
+                            modeldescriptions: dialogformNewModel.modeldescriptions,
+                            modeltype: dialogformNewModel.modeltype,
+                            userid: userStore.userID,
+                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                            createdtime: dialogformNewModel.createdtime,
+                        }
 
                     });
                     if (res.NewStatus == 'success!') {
+                        // 更新Models table
+                        let loadingInstance = ElLoading.service({ fullscreen: true })
 
                         await listAllModelsByUserID()
 
-                        ElNotification({
-                            title: 'New Model Success!',
-                            message: 'please check the results',
-                            type: 'success',
-                        })
                         dialogFormVisibleNew.value = false
 
+                        // 直接跳转至新模型的编辑页面
+                        router.push({
+                            path: '/tools/modelsDetails',
+                            query:
+                            {
+                                modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
+
+                            }
+                        })
+                        loadingInstance.close()
+                        ElNotification({
+                            title: 'New Model Success!',
+                            message: 'please input Parameters and Constraints',
+                            type: 'success',
+                        })
                     }
                     else {
                         ElNotification({
@@ -1229,10 +1259,10 @@ onMounted(async () => {
     let loadingInstance = ElLoading.service({ fullscreen: true })
     // 检查用户登录状态
     await CheckLogin()
-    moduleStore.CurrentSubSystem="Tools"
-    moduleStore.CurrentSubSystemRoute="Tools_Models"
+    moduleStore.CurrentSubSystem = "Tools"
+    moduleStore.CurrentSubSystemRoute = "Tools_Models"
     moduleStore.CurrentModule = 'Models'
-    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentModuleDetails = 'Complete Models List'
     moduleStore.CurrentRoute = 'Tools_Models'
     try {
 

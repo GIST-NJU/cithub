@@ -42,7 +42,7 @@
                                     <el-popover placement="right" :width="600" trigger="click">
                                         <template #reference>
                                             <ArgonButton size="sm"><i class="bi bi-question-circle-fill mx-1"></i>How to
-                                                input Model?</ArgonButton>
+                                                input Parameters and Values?</ArgonButton>
                                         </template>
                                         <div class="row ">
                                             <img src="../../public/images/Edit Model.gif" alt="Edit Model">
@@ -85,7 +85,8 @@
 
 
                                     <el-table :data="tableData" border style="width: 100%;margin-top:10px"
-                                        :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick">
+                                        :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick"
+                                        empty-text="No Parameters Now, Please click the button below to new a Params.">
                                         <!-- 第一列索引列 -->
                                         <el-table-column v-if="columnList.length > 0" type="index" :label="'index'"
                                             :width="80" />
@@ -103,7 +104,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <div>
-                                                        <el-input v-model="row[col.prop]" clearable></el-input>
+                                                        <el-input v-model="row[col.prop]" clearable @keyup.enter="finishEditing(row, col)"></el-input>
                                                         <div style="margin-top: 8px;">
                                                             <ArgonButton size="sm" color="success"
                                                                 @click="finishEditing(row, col)">Change</ArgonButton>
@@ -189,6 +190,7 @@
 
                                     <el-table :data="constraintsTableData" border style="width: 100%;margin-top:10px"
                                         @cell-dblclick="cellDblclickCons" @cell-click="cellClickCons"
+                                        empty-text="No Constraints Now, Please click the button below to new a Cons."
                                         :row-class-name="tableRowClassName">
                                         <!-- 索引列 -->
                                         <el-table-column v-if="columnList.length > 0" type="index" :label="'index'"
@@ -254,12 +256,12 @@
                                 <argon-button style="margin:5px 5px 5px 5px;float: right" color="success" class="ms-auto"
                                     @click="Generation">Test suite</argon-button>
 
-                                <el-popconfirm width="300" confirm-button-text="Update" cancel-button-text="No, Thanks"
+                                <el-popconfirm width="300" confirm-button-text="Save" cancel-button-text="No, Thanks"
                                     @confirm="SaveModel" :icon="InfoFilled" icon-color="#626AEF"
-                                    title="Update Model will clear all testsuites under this model. Are you sure to update?">
+                                    title="Update Model will clear all testsuites under this model. Are you sure to Save?">
                                     <template #reference>
                                         <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary"
-                                            class="ms-auto">Update Model</argon-button>
+                                            class="ms-auto">Save Model</argon-button>
                                     </template>
                                 </el-popconfirm>
 
@@ -300,7 +302,10 @@ import { useCurrentModel } from '../store/ToolsStore/currentModel'
 import { ElLoading } from 'element-plus'
 
 import { ElNotification } from 'element-plus';
+import { useModuleStore } from '../store/module';
 
+
+const moduleStore = useModuleStore(pinia)
 const route = useRoute()
 const router = useRouter()
 const currentModel = useCurrentModel(pinia)
@@ -585,37 +590,55 @@ const getCellValue = (row, column) => {
     return cellValue ? cellValue[column] : '';
 };
 
-// 预览约束
-const consPreview = ref('')
+
 const consArray = ref([])
 
 
 const addCons = () => {
-    // console.log("consArray.value",consArray.value) 
-    let ForbiddenTuple = []
-    for (let i = 0, len = highlightedCells.value.length; i < len; i++) {
-        let tempObj = {}
-        let tempArray = highlightedCells.value[i].row.valueArray
-        let key = highlightedCells.value[i].column
-        for (const obj of tempArray) {
-            if (obj.hasOwnProperty(key)) {
-                let result = obj[key];
-                tempObj.Parameter = highlightedCells.value[i].row.Parameter
-                tempObj.Value = result
-                break; // 找到匹配的键后可以提前结束循环
-            }
-        }
-        // 存储单次的约束
-        ForbiddenTuple.push(tempObj)
+    if (tableData.value.length == 0) {
+        ElNotification({
+            title: 'No Parameters.',
+            message: 'Please input Parameters first! ',
+            type: 'error',
+        })
     }
-    // 存储cons！
-    consArray.value.push({ ["Constraint"]: ForbiddenTuple });
-    consPreview.value = JSON.stringify(consArray.value, null, 6).replace(/"/g, '')
+    else {
+        // console.log("consArray.value",consArray.value) 
+        let ForbiddenTuple = []
+        for (let i = 0, len = highlightedCells.value.length; i < len; i++) {
+            let tempObj = {}
+            let tempArray = highlightedCells.value[i].row.valueArray
+            let key = highlightedCells.value[i].column
+            for (const obj of tempArray) {
+                if (obj.hasOwnProperty(key)) {
+                    let result = obj[key];
+                    tempObj.Parameter = highlightedCells.value[i].row.Parameter
+                    tempObj.Value = result
+                    break; // 找到匹配的键后可以提前结束循环
+                }
+            }
+            // 存储单次的约束
+            ForbiddenTuple.push(tempObj)
+        }
+        // 存储cons！
+        if (ForbiddenTuple.length != 0) {
+            consArray.value.push({ ["Constraint"]: ForbiddenTuple });
+        }
+        else{
+            ElNotification({
+            title: 'Constraint is empty',
+            message: 'Please select a Forbidden Tuple as Constraint.',
+            type: 'error',
+        })
+        }
 
-    // 清空本次的高亮cell
-    highlightedCells.value = [];
 
-    formatData()
+        // 清空本次的高亮cell
+        highlightedCells.value = [];
+
+        formatData()
+
+    }
 
 
 
@@ -624,11 +647,7 @@ const addCons = () => {
 const clearCons = () => {
     highlightedCells.value = [];
     consArray.value = []
-    consPreview.value = ''
     formatData()
-
-
-
 
 }
 
@@ -736,46 +755,47 @@ const SaveModel = async () => {
 
 const loadModelToTable = () => {
     // 解析参数和参数取值的Json字符串
-    const parsedData = JSON.parse(model.paramsvalues)
+    if (model.paramsvalues) {
+        const parsedData = JSON.parse(model.paramsvalues)
 
-    // 移除 row_index 属性
-    const tableDataTmp = parsedData.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
+        // 移除 row_index 属性
+        const tableDataTmp = parsedData.map(item => {
+            const { row_index, ...rest } = item;
+            return rest;
+        });
 
-    // 加载参数和参数取值
-    tableData.value = tableDataTmp;
+        // 加载参数和参数取值
+        tableData.value = tableDataTmp;
 
-    // 加载约束table
-    let tempArray = []
-    let param_count = 0
-    for (let i = 0, len = tableData.value.length; i < len; i++) {
-        if (tableData.value[i].Value != '') { tempArray.push(tableData.value[i].Value.split(',').length) }
-        if (tableData.value[i].Parameter != '') { param_count = param_count + 1 }
+        // 加载约束table
+        let tempArray = []
+        let param_count = 0
+        for (let i = 0, len = tableData.value.length; i < len; i++) {
+            if (tableData.value[i].Value != '') { tempArray.push(tableData.value[i].Value.split(',').length) }
+            if (tableData.value[i].Parameter != '') { param_count = param_count + 1 }
 
+        }
+
+
+
+        // 对 tableData 的数据做处理，转成被constraintsTableData
+        let tempArrayCons = []
+        for (let i = 0, len = tableData.value.length; i < len; i++) {
+            let tempObj = {}
+            tempObj.Parameter = tableData.value[i].Parameter
+            tempObj.valueArray = tableData.value[i].Value.split(',').map((value, index) => ({
+                [`Value${index + 1}`]: value
+            }));
+            tempObj.ValueDomain = tempObj.valueArray.length
+            tempArrayCons.push(tempObj)
+
+        }
+        constraintsTableData.value = tempArrayCons
+
+
+        // 将cons显示在cons Preview区域
+        consArray.value = JSON.parse(model.cons)
     }
-
-
-
-    // 对 tableData 的数据做处理，转成被constraintsTableData
-    let tempArrayCons = []
-    for (let i = 0, len = tableData.value.length; i < len; i++) {
-        let tempObj = {}
-        tempObj.Parameter = tableData.value[i].Parameter
-        tempObj.valueArray = tableData.value[i].Value.split(',').map((value, index) => ({
-            [`Value${index + 1}`]: value
-        }));
-        tempObj.ValueDomain = tempObj.valueArray.length
-        tempArrayCons.push(tempObj)
-
-    }
-    constraintsTableData.value = tempArrayCons
-
-
-    // 将cons显示在cons Preview区域
-    consArray.value = JSON.parse(model.cons)
-    consPreview.value = JSON.stringify(JSON.parse(model.cons), null, 6).replace(/"/g, '')
 
 }
 
@@ -813,6 +833,13 @@ const formatData = () => {
 onMounted(async () => {
 
     let loadingInstance = ElLoading.service({ fullscreen: true })
+    
+    moduleStore.CurrentSubSystem = "Tools"
+    moduleStore.CurrentSubSystemRoute = "Tools_Models"
+    moduleStore.CurrentModule = 'Models'
+    moduleStore.CurrentModuleDetails = 'Model Details'
+    moduleStore.CurrentRoute = 'Tools_Models'
+
     tbContainerRef.value = document.querySelector('.tb-container');
 
     await listModelInfoByModelID(route.query.modelid)
@@ -880,4 +907,5 @@ onMounted(async () => {
     background-color: red;
     color: white;
     /* 设置文本颜色，以确保可见性 */
-}</style>
+}
+</style>

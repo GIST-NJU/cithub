@@ -348,8 +348,8 @@ const confirmGenerateNewTestSuites = async () => {
 
           const TestSuitesRes = await request({
             // 这里记得改回去，在校外无法用校内服务器
-            // url: tool.url,
-            url: 'http://localhost:8300',
+            url: tool.url,
+            // url: 'http://localhost:8300',
             method: 'POST',
             // 注意这里headers一定要加上，不然data末尾会出现莫名其妙的:
             headers: {
@@ -510,7 +510,7 @@ const getActionButtonText = (routeName) => {
   switch (routeName) {
     case 'TestSuites_Home':
       return 'Enter';
-    case 'TestSuiteDetails':
+    case 'TestSuite_Details':
 
       return 'Choose';
     // 更多情况

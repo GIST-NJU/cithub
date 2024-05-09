@@ -67,7 +67,7 @@ onMounted(async () => {
     moduleStore.CurrentSubSystem = "Tools"
     moduleStore.CurrentSubSystemRoute = "Tools_Models"
     moduleStore.CurrentModule = 'TestSuites'
-    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentModuleDetails = 'Complete TestSuites List'
     moduleStore.CurrentRoute = 'TestSuites_Home'
 
     try {

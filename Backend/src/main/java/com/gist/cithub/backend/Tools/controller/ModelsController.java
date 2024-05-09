@@ -116,13 +116,6 @@ public class ModelsController {
         modelsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
         modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
 
-
-//        Object strength = info.get("strength");
-//        if (strength instanceof String) {
-//            modelsEntity.setStrength(Integer.parseInt((String) strength));
-//        } else if (strength instanceof Integer) {
-//            modelsEntity.setStrength((Integer) strength);
-//        }
         modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
         modelsEntity.setCons((String) info.get("Cons"));
 

@@ -532,18 +532,38 @@ public class ToolsController {
         switch (column) {
             // New Model
             case "model":
-                Object modelid = info.get("modelid");
-                QueryWrapper<ModelsEntity> modelsEntityQueryWrapper = new QueryWrapper<>();
+                ModelsEntity modelsEntity = new ModelsEntity();
+                modelsEntity.setModelname((String) info.get("modelname"));
+                modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
+                modelsEntity.setModeltype((String) info.get("modeltype"));
 
-                if (modelid instanceof String) {
-                    modelsEntityQueryWrapper.eq("modelid", Integer.parseInt((String) modelid));
-                } else if (modelid instanceof Integer) {
-                    modelsEntityQueryWrapper.eq("modelid", (Integer) modelid);
+                Object userid = info.get("userid");
+                if (userid instanceof String) {
+                    modelsEntity.setUserid(Integer.parseInt((String) userid));
+                } else if (userid instanceof Integer) {
+                    modelsEntity.setUserid((Integer) userid);
                 }
 
-                Boolean flag = modelsService.remove(modelsEntityQueryWrapper);
-                if (flag) return R.ok().put("DeleteStatus", "success!");
-                else return R.ok().put("DeleteStatus", "failed!");
+//        将时间戳转为Date类型
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                LocalDateTime createTime = LocalDateTime.parse((String) info.get("createdtime"), formatter);
+                LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+
+                modelsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
+                modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
+                modelsEntity.setCons((String) info.get("Cons"));
+
+                modelsEntity.setApikey((String) info.get("apikey"));
+                modelsEntity.setSemantics((String) info.get("semantics"));
+                modelsEntity.setSemanticstype((String) info.get("semanticsType"));
+                modelsEntity.setLlmmodel((String) info.get("LLMmodel"));
+                modelsEntity.setBaseurl((String) info.get("baseUrl"));
+
+                Boolean flag = modelsService.save(modelsEntity);
+                if (flag) return R.ok().put("NewStatus", "success!");
+                else return R.ok().put("NewStatus", "failed!");
 
 //                New TestSuite
             case "testsuite":
@@ -567,17 +587,17 @@ public class ToolsController {
                 }
 
                 //        将时间戳转为Date类型
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
                 Object createdtime = info.get("createdtime");
                 if (createdtime != null) {
-                    LocalDateTime createTime = LocalDateTime.parse((String) createdtime, formatter);
+                    createTime = LocalDateTime.parse((String) createdtime, formatter);
                     testSuitesEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
 
                 }
                 Object lastupdatedtime = info.get("lastupdatedtime");
                 if (lastupdatedtime != null) {
-                    LocalDateTime lastUpdateTime = LocalDateTime.parse((String) lastupdatedtime, formatter);
+                    lastUpdateTime = LocalDateTime.parse((String) lastupdatedtime, formatter);
                     testSuitesEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
                 }
 
@@ -591,7 +611,7 @@ public class ToolsController {
                 }
 
 
-                modelid = info.get("modelid");
+                Object modelid = info.get("modelid");
                 if (modelid instanceof String) {
                     testSuitesEntity.setModelid(Integer.parseInt((String) modelid));
                 } else if (modelid instanceof Integer) {

@@ -99,7 +99,7 @@ const listModelInfoByModelID = async (modelid) => {
                 column: "modelid"
             }
         });
-        // console.log("res ModelInfo",res)
+        // console.log("res ModelInfo", res)
         currentModel.currentModel = {}
         currentModel.currentModel.modelid = res.ModelRES.modelid
         // currentModel.currentModel.strength = res.ModelRES.strength
@@ -113,39 +113,47 @@ const listModelInfoByModelID = async (modelid) => {
         currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
         currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
 
-        // 将约束直接变为禁止元组的形式
-        let ForbiddenTuples = [];
+        if (currentModel.currentModel.ConsOBJ) {
+            // 将约束直接变为禁止元组的形式
+            let ForbiddenTuples = [];
 
-        currentModel.currentModel.ConsOBJ.forEach(constraintObj => {
-            let constraintValues = [];
-    
-            currentModel.currentModel.PandVOBJ.forEach(parameter => {
-                let constraintItem = constraintObj.Constraint.find(item => item.Parameter === parameter.Parameter);
-                constraintValues.push(constraintItem ? constraintItem.Value : null);
+            currentModel.currentModel.ConsOBJ.forEach(constraintObj => {
+                let constraintValues = [];
+
+                currentModel.currentModel.PandVOBJ.forEach(parameter => {
+                    let constraintItem = constraintObj.Constraint.find(item => item.Parameter === parameter.Parameter);
+                    constraintValues.push(constraintItem ? constraintItem.Value : null);
+                });
+
+                ForbiddenTuples.push(constraintValues);
             });
-    
-            ForbiddenTuples.push(constraintValues);
-        });
-    
-
-        currentModel.currentModel.ForbiddenTuples = ForbiddenTuples
 
 
-        currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
-        currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
+            currentModel.currentModel.ForbiddenTuples = ForbiddenTuples
+            currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
+        }
+
+        if (currentModel.currentModel.PandVOBJ) {
+            currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+
+            let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+                // 将逗号分隔的字符串转换为数组
+                const valueArray = item.Value.split(',');
+
+                // 更新对象的Value字段为数组
+                return {
+                    ...item,
+                    Value: valueArray
+                };
+            });
+            currentModel.currentModel.PandVOBJ = transformedData
+
+        }
 
 
-        let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
-            // 将逗号分隔的字符串转换为数组
-            const valueArray = item.Value.split(',');
 
-            // 更新对象的Value字段为数组
-            return {
-                ...item,
-                Value: valueArray
-            };
-        });
-        currentModel.currentModel.PandVOBJ = transformedData
+
+
         // console.log("listModelInfoByModelID currentModel.currentModel", currentModel.currentModel)
 
 
