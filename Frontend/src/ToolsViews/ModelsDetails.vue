@@ -9,6 +9,13 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
+                    <div class="col-2">
+
+                        <ArgonButton full-width class="mb-2" color="secondary" size="sm" @click="goBack">
+                            <span class="ni ni-bold-left  me-1"> Back </span>
+                        </ArgonButton>
+
+                    </div>
                     <div class="card">
 
                         <div class="card-body">
@@ -28,97 +35,104 @@
                             <div>
 
                                 <div class="tb-container" ref="tbContainerRef">
-                                    <h3 style="margin:0;text-align:center;">Model Content</h3>
+                                    <h3 style="margin:0;text-align:center;">Parameters and Values</h3>
+                                    <!-- 这里设置一个按钮，点击之后弹出动图+文字说明 -->
 
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Select a number as covering
-                                        `<b><i>Strength</i></b>`.</p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click the cell of table to input
-                                        `<b><i>Parameter</i></b>`.
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.For Column `<b><i>Value</i></b>`,
-                                        double click the cell to input , and use `<b><i>,</i></b>` to seperate each
-                                        value.</p>
 
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">4.The Model you create will be displayed
-                                        in
-                                        `<b><i>Model Preview</i></b>` area.</p>
+                                    <el-popover placement="right" :width="600" trigger="click">
+                                        <template #reference>
+                                            <ArgonButton size="sm"><i class="bi bi-question-circle-fill mx-1"></i>How to
+                                                input Parameters and Values?</ArgonButton>
+                                        </template>
+                                        <div class="row ">
+                                            <img src="../../public/images/Edit Model.gif" alt="Edit Model">
+                                            <hr class="my-3 horizontal white" />
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);"><b>Input Model Steps:</b></p>
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">1.Click <argon-button
+                                                    color="success" size="sm">
+                                                    <span class="ni ni-fat-add  ni-lg me-1" />
+                                                    New Parameter</argon-button> to New a `<b><i>Parameter</i></b>`.
+                                            </p>
+
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click the cell of
+                                                table to input
+                                                `<b><i>Parameter</i></b>`.
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">3.For Column
+                                                `<b><i>Value</i></b>`,
+                                                double click the cell to input , and use `<b><i>,</i></b>` to seperate
+                                                each
+                                                value.</p>
+
+                                        </div>
+
+
+                                    </el-popover>
+
+
+
                                     <hr class="my-3 horizontal white" />
 
 
 
-
-                                    <!-- 选择Strength -->
-                                    <h4 style="margin:0;">Strength</h4>
-
-                                    <div style="display: flex;">
-                                        <!-- <argon-badge variant="gradient" color="warning"
-                                            style="width:10%;height:50%;margin: 10px 0 0 0 ;">Strength:</argon-badge> -->
-
-                                        <el-select clearable style="margin: 0 0 0 0;padding: 0;width: 250px"
-                                            v-model="strength" class="m-2" placeholder="Select a covering strength">
-                                            <el-option v-for="item in StrengthOptions" :key="item.value" :label="item.label"
-                                                :value="item.value" />
-                                        </el-select>
-                                        <span style="margin: 12px 0 0 0;color: red;" v-if="strength == false">Must choose a
-                                            strength!</span>
-
-                                    </div>
-                                    <hr class="my-3 horizontal white" />
 
 
                                     <!---------------------------------- 参数和参数取值 table，col index 从 参数 col开始 ，index 的col不计算在内 ---------------------------------------------->
 
-                                    <h4 style="text-align:center;">Parameters and Values</h4>
                                     <!-- 输入参数 -->
 
 
-                                    <el-table :data="tableData" border style="width: 100%;margin-top:10px" :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick">
-    <!-- 第一列索引列 -->
-    <el-table-column v-if="columnList.length > 0" type="index" :label="'index'" :width="80" />
+                                    <el-table :data="tableData" border style="width: 100%;margin-top:10px"
+                                        :row-class-name="tableRowClassName" @row-dblclick="handleRowDoubleClick"
+                                        empty-text="No Parameters Now, Please click the button below to new a Params.">
+                                        <!-- 第一列索引列 -->
+                                        <el-table-column v-if="columnList.length > 0" type="index" :label="'index'"
+                                            :width="80" />
 
-    <!-- 参数和参数取值列 -->
-    <el-table-column v-for="(col, idx) in columnList" :key="col.prop" :prop="col.prop" :label="col.label" :index="idx" :width="getColumnWidth(idx)">
-        <template #default="{ row }">
-            <!-- 根据当前单元格是否处于编辑状态显示不同内容 -->
-            <template v-if="!row.editing">
-                <!-- 绑定整个单元格容器的点击事件 -->
-                <div @click="startEditing(row, col)">
-                    <span>{{ row[col.prop] }}</span>
-                </div>
-            </template>
-            <template v-else>
-                <div>
-                    <el-input v-model="row[col.prop]" clearable></el-input>
-                    <div style="margin-top: 8px;">
-                    <ArgonButton   size="sm" color="success" @click="finishEditing(row, col)">Change</ArgonButton>
-                    <ArgonButton  style="margin-left: 5px;" size="sm"  color="danger" @click="cancelEditing(row, col)">Cancel</ArgonButton>
+                                        <!-- 参数和参数取值列 -->
+                                        <el-table-column v-for="(col, idx) in columnList" :key="col.prop" :prop="col.prop"
+                                            :label="col.label" :index="idx" :width="getColumnWidth(idx)">
+                                            <template #default="{ row }">
+                                                <!-- 根据当前单元格是否处于编辑状态显示不同内容 -->
+                                                <template v-if="!row.editing">
+                                                    <!-- 绑定整个单元格容器的点击事件 -->
+                                                    <div @click="startEditing(row, col)">
+                                                        <span>{{ row[col.prop] }}</span>
+                                                    </div>
+                                                </template>
+                                                <template v-else>
+                                                    <div>
+                                                        <el-input v-model="row[col.prop]" clearable @keyup.enter="finishEditing(row, col)"></el-input>
+                                                        <div style="margin-top: 8px;">
+                                                            <ArgonButton size="sm" color="success"
+                                                                @click="finishEditing(row, col)">Change</ArgonButton>
+                                                            <ArgonButton style="margin-left: 5px;" size="sm" color="danger"
+                                                                @click="cancelEditing(row, col)">Cancel</ArgonButton>
 
-                    </div>
+                                                        </div>
 
-                </div>
-            </template>
-        </template>
-    </el-table-column>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </el-table-column>
 
-    <!-- Operation 列 -->
-    <el-table-column label="Operation" :index="2">
-    <template #default="{ row }">
-        <el-popconfirm title="Delete this Param?" @confirm="() => deleteParam(row)">
-            <template #reference>
-                <ArgonButton size="sm" color="danger" variant="gradient"> 
-                <span class="far fa-trash-alt me-2"></span>
-                    Delete Parameter
-                </ArgonButton>
-                <!-- <a class="btn btn-link text-danger text-gradient px-3 mb-0">
-                    <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete Parameter
-                </a> -->
-            </template>
-        </el-popconfirm>
-    </template>
-</el-table-column>
-</el-table>
+                                        <!-- Operation 列 -->
+                                        <el-table-column label="Operation" :index="2">
+                                            <template #default="{ row }">
+                                                <el-popconfirm title="Delete this Param?" @confirm="() => deleteParam(row)">
+                                                    <template #reference>
+                                                        <ArgonButton size="sm" color="danger" variant="gradient">
+                                                            <span class="far fa-trash-alt me-2"></span>
+                                                            Delete Parameter
+                                                        </ArgonButton>
+
+                                                    </template>
+                                                </el-popconfirm>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
 
 
 
@@ -130,32 +144,53 @@
                                         New Parameter</argon-button>
 
 
-           
 
-        
+
+
 
                                     <hr class="my-3 horizontal dark" />
 
 
                                     <!---------------------------------- 约束table 注意，约束table的col index 从参数取值col开始 ，index 和 param 的col不计算在内 ---------------------------------------------->
                                     <!-- 选择约束 -->
-                                    <h4 style="text-align:center;">Constraints</h4>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">Usage Note:
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">1.Cithub tools use `<b><i>Forbidden
-                                                tuples</i></b>` to
-                                        represent Constraints.
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click each cell of below table
-                                        to choose every <b><i>invalid combination.</i></b> .
-                                    </p>
-                                    <p style="text-align:left;color:rgb(0, 0, 0);">3.Click the `<b><i>Add
-                                                Constraint</i></b>` button to put `<b><i>invalid
-                                                combination</i></b>` into the `<b><i>current Constraints set</i></b>`.
-                                    </p>
+                                    <h3 style="margin:0;text-align:center;">Constraints</h3>
+
+
+                                    <el-popover placement="right" :width="700" trigger="click">
+                                        <template #reference>
+                                            <ArgonButton size="sm"><i class="bi bi-question-circle-fill mx-1"></i>How to
+                                                add Constraints?</ArgonButton>
+                                        </template>
+                                        <div class="row ">
+                                            <img src="../../public/images/Edit Model.gif" alt="Edit Model">
+                                            <hr class="my-3 horizontal white" />
+                                            <p style="text-align:left;color:rgb(0, 0, 0);"><b>Add constraints Steps:</b></p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">1.Cithub tools use
+                                                `<b><i>Forbidden
+                                                        tuples</i></b>` to
+                                                represent Constraints.
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">2.Double click each cell of below
+                                                table
+                                                to choose every <b><i>invalid combination.</i></b> .
+                                            </p>
+                                            <p style="text-align:left;color:rgb(0, 0, 0);">3.Click the `<b><i>Add
+                                                        Constraint</i></b>` button to put `<b><i>invalid
+                                                        combination</i></b>` into the `<b><i>current Constraints
+                                                        set</i></b>`.
+                                            </p>
+
+                                        </div>
+
+
+                                    </el-popover>
+
+                                    <hr class="my-3 horizontal white" />
+
 
                                     <el-table :data="constraintsTableData" border style="width: 100%;margin-top:10px"
                                         @cell-dblclick="cellDblclickCons" @cell-click="cellClickCons"
+                                        empty-text="No Constraints Now, Please click the button below to new a Cons."
                                         :row-class-name="tableRowClassName">
                                         <!-- 索引列 -->
                                         <el-table-column v-if="columnList.length > 0" type="index" :label="'index'"
@@ -178,33 +213,38 @@
                                         @click="addCons">
                                         <span class="ni ni-fat-add  ni-lg me-1" />
                                         Add Constraint</argon-button>
-                                    <p style="margin:10px 0px 10px 0px">Current Constraints set: </p>
-                                    <!-- 约束预览 -->
-                                    <el-input disabled v-model="consPreview" autosize type="textarea"
-                                        placeholder="All the constraints will be showed right here" />
+
+
+                                    <!-- 用表格的形式展示禁止元组 -->
+                                    <h5 class="text-center my-3">Constraints Table</h5>
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <!-- 使用 col-auto 类使第一列只占据所需的空间 -->
+                                                <th class="text-center">Constraint Index</th>
+                                                <th class="text-center">Forbidden Tuples</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in formattedData" :key="index">
+                                                <td class="text-center">{{ index + 1 }}</td>
+                                                <td class="text-center">{{ item }}</td>
+                                            </tr>
+
+                                            <tr class="border-0">
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                                     <argon-button style="margin:10px 0px 10px 0px" color="danger" size="sm" full-width
                                         @click="clearCons">
                                         <span class="ni ni-fat-add  ni-lg me-1" />
                                         Clear All ConstraintS</argon-button>
 
-                                    <hr class="horizontal dark" />
-
-                                    <!-- <div>
-                                        <h3 style="text-align:center;">实时数据展示</h3>
-                                        <label>当前目标：</label>
-                                        <p>{{ JSON.stringify(curTargetCons) }}</p>
-                                        <label>表头：</label>
-                                        <p v-for="col in columnList" :key="col.prop">{{ JSON.stringify(col) }}</p>
-                                        <label>数据：</label>
-                                        <p v-for="(data, idx) in testDatas" :key="idx">{{ JSON.stringify(data) }}</p>
-                                    </div> -->
-
-                                    <h3 style="text-align:center;">Model Preview</h3>
 
 
-                                    <!-- 模型预览 -->
-                                    <el-input disabled v-model="modelPreview" autosize type="textarea"
-                                        placeholder="Please input" />
 
 
 
@@ -215,8 +255,21 @@
                             <div style="width:100%;margin-bottom: 5px;text-align: center;">
                                 <argon-button style="margin:5px 5px 5px 5px;float: right" color="success" class="ms-auto"
                                     @click="Generation">Test suite</argon-button>
-                                <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary" class="ms-auto"
-                                    @click="SaveModel">Save Model</argon-button>
+
+                                <el-popconfirm width="300" confirm-button-text="Save" cancel-button-text="No, Thanks"
+                                    @confirm="SaveModel" :icon="InfoFilled" icon-color="#626AEF"
+                                    title="Update Model will clear all testsuites under this model. Are you sure to Save?">
+                                    <template #reference>
+                                        <argon-button style="margin:5px 5px 5px 5px;float: right" color="primary"
+                                            class="ms-auto">Save Model</argon-button>
+                                    </template>
+                                </el-popconfirm>
+
+
+                                <ArgonButton style="margin:5px 5px 5px 5px;float: right" class="ms-auto" color="secondary"
+                                    @click="goBack">
+                                    <span class="ni ni-bold-left  me-1"> Back </span>
+                                </ArgonButton>
 
 
                             </div>
@@ -243,43 +296,21 @@ import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
 import { request } from '../request';
 import { onMounted, reactive, ref, computed, defineProps, watch, onUnmounted, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { listModelInfoByModelID } from './commonFunction.js'
 import pinia from '../store/store'
-import { useCurrentModel } from '../store/currentModel'
-
+import { useCurrentModel } from '../store/ToolsStore/currentModel'
+import { ElLoading } from 'element-plus'
 
 import { ElNotification } from 'element-plus';
+import { useModuleStore } from '../store/module';
 
+
+const moduleStore = useModuleStore(pinia)
 const route = useRoute()
 const router = useRouter()
 const currentModel = useCurrentModel(pinia)
 const tbContainerRef = ref(null);
-const strength = ref(0)
-const StrengthOptions = [
-    {
-        value: '1',
-        label: '1',
-    },
-    {
-        value: '2',
-        label: '2',
-    },
-    {
-        value: '3',
-        label: '3',
-    },
-    {
-        value: '4',
-        label: '4',
-    },
-    {
-        value: '5',
-        label: '5',
-    },
-    {
-        value: '6',
-        label: '6',
-    },
-]
+
 const model = reactive({})
 const columnList = ref([
     { prop: "Parameter", label: 'Parameter' },
@@ -293,7 +324,7 @@ const tableData = ref([]);
 const startEditing = (row, col) => {
     // 如果单元格处于编辑状态，则不做任何操作
     if (row.editing) return;
-    
+
     // 设置该单元格为编辑状态
     row.editing = true;
     // 保存编辑前的值，用于取消编辑时恢复原始值
@@ -317,7 +348,7 @@ const cancelEditing = (row, col) => {
     row.editing = false;
     // 恢复原始值
     row[col.prop] = row.originalValue;
-    
+
     // 如果是新行，设置 isNew 属性为 false
     if (row.isNew) {
         row.isNew = false;
@@ -367,9 +398,9 @@ const updTbCellOrHeader = (val) => {
 };
 
 const handleRowDoubleClick = (row) => {
-    console.log("handleRowDoubleClick",row)
+    console.log("handleRowDoubleClick", row)
     // 检查当前行是否为空行（即 Parameter 和 Value 属性都为空）
-    if (row.Parameter=="") {
+    if (row.Parameter == "") {
         // 如果该行是新行且不处于编辑状态，则启动编辑
         if (!row.editing) {
             startEditing(row, columnList.value[0]); // 这里假设默认编辑第一列
@@ -379,10 +410,10 @@ const handleRowDoubleClick = (row) => {
 
 
 const deleteParam = (row) => {
-    console.log("row",row)
+    console.log("row", row)
     // 找到要删除的行的索引
     const index = tableData.value.findIndex(item => item === row);
-    
+
     // 如果未找到索引，则返回
     if (index === -1) {
         console.error('Row not found in tableData');
@@ -412,20 +443,10 @@ const getColumnWidth = (index) => {
 
 // 对 tableData 的数据做处理，转成被constraintsTableData
 const constraintsTableData = ref()
-const maxValueDomain = ref(0)
-// 预览模型
-const modelPreview = ref('')
 
 
-const modelObject = reactive({
-    system: "",
-    strength: '',
-    parameter: '',
-    values: '',
-    constraints: []
 
-})
-const showMenu = ref(false);
+
 const showEditInput = ref(false);
 
 const curTarget = ref({
@@ -447,42 +468,39 @@ const isCellHighlighted = (row, column) => {
 
 const toggleCellHighlight = (row, column) => {
     const index = highlightedCells.value.findIndex((cell) => cell.row === row && cell.column === column);
-    if (index === -1) {
-        // 如果之前没有高亮，添加高亮
+    // 检查是否已经存在来自同一行的元素
+
+    const hasSameRow = highlightedCells.value.some((cell) => cell.row === row);
+
+    if (index === -1 && !hasSameRow) {
+        // 如果之前没有高亮，并且同一行也没有其他高亮元素，添加高亮
         highlightedCells.value.push({ row, column });
-    } else {
+    } else if (index !== -1) {
         // 如果之前已经高亮，取消高亮
         highlightedCells.value.splice(index, 1);
+    } else {
+        // 如果同一行已经有其他高亮元素，报错
+
+        ElNotification({
+            title: 'Wrong Choice',
+            message: 'Only one Value can be selected for each Parameter',
+            type: 'error',
+        })
+
+        console.error('同一行已经有其他单元格被高亮！');
     }
-    // console.log("highlightedCells", highlightedCells.value)
 };
 
 
 
 
-
+// stopWatch 不能删除！
 const stopWatch = watchEffect(() => {
     // 处理tableData变化的逻辑
     const newTableData = tableData.value; // 使用 .value 获取响应式数据
-    console.log("观察器已触发。newTableData:", newTableData);
+    // console.log("观察器已触发。newTableData:", newTableData);
 
-    let tempArray = [];
-    let param_count = 0;
 
-    for (let i = 0, len = newTableData.length; i < len; i++) {
-        if (typeof newTableData[i].Value === 'string' && newTableData[i].Value !== '') {
-            tempArray.push(newTableData[i].Value.split(',').length);
-        }
-        if (typeof newTableData[i].Parameter === 'string' && newTableData[i].Parameter !== '') {
-            param_count = param_count + 1;
-        }
-    }
-
-    // 统计模型基本数据
-    modelObject.system = model.modelname;
-    modelObject.strength = strength.value;
-    modelObject.parameter = param_count;
-    modelObject.values = JSON.stringify(tempArray);
 
     // 对 tableData 的数据做处理，转成被constraintsTableData
     let tempArrayCons = [];
@@ -503,15 +521,9 @@ const stopWatch = watchEffect(() => {
 
     constraintsTableData.value = tempArrayCons;
 
-    // 得到最大的ValueDomain
-    const maxDomain = constraintsTableData.value.reduce((max, item) => {
-        return Math.max(max, item.ValueDomain);
-    }, -Infinity);
 
-    maxValueDomain.value = maxDomain;
 
-    // 将模型数据显示在Model Preview区域
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '');
+
 
 }, { flush: 'sync' });
 
@@ -527,26 +539,7 @@ const curColumn = computed(() => {
 
 
 
-// 原始的cellDblclick
-const cellDblclick = (row, column, cell, $event) => {
-    console.log("双击！","row:", row, "column:", column, "cell", cell, "$event", $event)
 
-    if (column.index != 2) {
-        showEditInput.value = false;
-        locateMenuOrEditInput('editInput', 300, $event);
-        showEditInput.value = true;
-    }
-
-    if (column.index == null) return;
-
-
-    curTarget.value = {
-        rowIdx: row.row_index,
-        colIdx: column.index,
-        val: row[column.property],
-        isHead: false
-    };
-};
 
 
 
@@ -563,12 +556,9 @@ const cellDblclickCons = (row, column, cell, $event) => {
 
 };
 const cellClickCons = (row, column, cell, $event) => {
-    // console.log("row", row, "column", column, "cell", cell, "$event", $event)
-    // console.log("column.index", column.index)
 
     showEditInput.value = false;
     if (column.index == null) return;
-    locateMenuOrEditInput('editInput', 300, $event);
     curTargetCons.value = {
         rowIdx: row.row_index,
         colIdx: column.index,
@@ -600,83 +590,56 @@ const getCellValue = (row, column) => {
     return cellValue ? cellValue[column] : '';
 };
 
-// 预览约束
-const consPreview = ref('')
+
 const consArray = ref([])
 
-// 返回parameterName在tableData中的索引
-// value在该parameterName中的索引
-const findPosition = (parameterName, value) => {
-    for (let i = 0; i < tableData.value.length; i++) {
-        const parameter = tableData.value[i].Parameter;
-        const values = tableData.value[i].Value.split(',');
 
-        if (parameter === parameterName) {
-            const valueIndex = values.indexOf(value);
-            if (valueIndex !== -1) {
-                return { parameterIndex: i, valueIndex };
-            }
-        }
-    }
-
-    return { parameterIndex: -1, valueIndex: -1 };
-}
 const addCons = () => {
-    // console.log("consArray.value",consArray.value) 
-    let ForbiddenTuple = []
-    for (let i = 0, len = highlightedCells.value.length; i < len; i++) {
-        let tempObj = {}
-        let tempArray = highlightedCells.value[i].row.valueArray
-        let key = highlightedCells.value[i].column
-        for (const obj of tempArray) {
-            if (obj.hasOwnProperty(key)) {
-                let result = obj[key];
-                tempObj.Parameter = highlightedCells.value[i].row.Parameter
-                tempObj.Value = result
-                break; // 找到匹配的键后可以提前结束循环
-            }
-        }
-        // 存储单次的约束
-        ForbiddenTuple.push(tempObj)
+    if (tableData.value.length == 0) {
+        ElNotification({
+            title: 'No Parameters.',
+            message: 'Please input Parameters first! ',
+            type: 'error',
+        })
     }
-    // 存储cons！
-    let cons_count = consArray.value.length + 1
-    consArray.value.push({ ["Constraint_" + cons_count]: ForbiddenTuple });
-    consPreview.value = JSON.stringify(consArray.value, null, 6).replace(/"/g, '')
-
-    // 清空本次的高亮cell
-    highlightedCells.value = [];
-
-    // 预览cons
-
-    // 先将 consArray 转换成cithub格式的cons
-
-    // 对每个约束进行处理，将其转换成 '参数索引'/'取值索引' 的形式
-    let consArrayToAPI = []
-    for (const constraint of consArray.value) {
-        let consArrayTemp = []
-        // 遍历元素中的键值对
-        for (const key in constraint) {
-            if (Object.hasOwnProperty.call(constraint, key)) {
-                const elements = constraint[key];
-                // elements 是一个数组，包含了多个键值对
-                for (const element of elements) {
-                    // 在这里访问 Parameter 和 Value
-                    const parameter = element.Parameter;
-                    const value = element.Value;
-
-                    // 这里可以使用 parameter 和 value 进行其他操作
-                    // console.log(`Key: ${key}, Parameter: ${parameter}, Value: ${value}`);
-                    let constempObj = findPosition(parameter, value)
-                    let consString = `\'${constempObj.parameterIndex}/${constempObj.valueIndex}\'`
-                    consArrayTemp.push(consString)
+    else {
+        // console.log("consArray.value",consArray.value) 
+        let ForbiddenTuple = []
+        for (let i = 0, len = highlightedCells.value.length; i < len; i++) {
+            let tempObj = {}
+            let tempArray = highlightedCells.value[i].row.valueArray
+            let key = highlightedCells.value[i].column
+            for (const obj of tempArray) {
+                if (obj.hasOwnProperty(key)) {
+                    let result = obj[key];
+                    tempObj.Parameter = highlightedCells.value[i].row.Parameter
+                    tempObj.Value = result
+                    break; // 找到匹配的键后可以提前结束循环
                 }
             }
-            consArrayToAPI.push(consArrayTemp)
+            // 存储单次的约束
+            ForbiddenTuple.push(tempObj)
         }
+        // 存储cons！
+        if (ForbiddenTuple.length != 0) {
+            consArray.value.push({ ["Constraint"]: ForbiddenTuple });
+        }
+        else{
+            ElNotification({
+            title: 'Constraint is empty',
+            message: 'Please select a Forbidden Tuple as Constraint.',
+            type: 'error',
+        })
+        }
+
+
+        // 清空本次的高亮cell
+        highlightedCells.value = [];
+
+        formatData()
+
     }
-    modelObject.constraints = consArrayToAPI
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+
 
 
 }
@@ -684,9 +647,7 @@ const addCons = () => {
 const clearCons = () => {
     highlightedCells.value = [];
     consArray.value = []
-    consPreview.value = ''
-    modelObject.constraints = []
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+    formatData()
 
 }
 
@@ -699,158 +660,85 @@ const tableRowClassName = ({ row, rowIndex }) => {
     row.row_index = rowIndex;
 };
 
-const locateMenuOrEditInput = (eleId, eleWidth, $event) => {
-    const { x: tbX, y: tbY } = tbContainerRef.value.getBoundingClientRect();
-    const { x: pX, y: pY } = $event;
-    const ele = document.getElementById(eleId);
-    ele.style.top = pY - tbY - 6 + 'px';
-    ele.style.left = pX - tbX - 6 + 'px';
-    if (window.innerWidth - eleWidth < pX - tbX) {
-        ele.style.left = 'unset';
-        ele.style.right = 0;
-    }
-};
 const SaveModel = async () => {
 
+    // 参数与参数取值，移除无用属性
+    let tempTableData = tableData.value.map(({ Parameter, Value }) => ({
+        Parameter,
+        Value
+    }));
+    tableData.value = tempTableData
+
     if (tableData.value.length != 0) {
-        if (strength.value !== null && strength.value !== 0) {
-            const currentDate = new Date();
 
-            // // 如果没有约束
-            // if (consArray.value.length == 0) {
-            //     const SaveModelContentRes = await request({
-            //         url: '/tools/models/SaveModel',
-            //         method: 'POST',
-            //         data: {
-            //             modelid: route.query.modelid,
-            //             modelname: model.modelname,
-            //             modeldescriptions: model.modeldescriptions,
-            //             strength: strength.value,
-            //             ParametersAndValues: JSON.stringify(tableData.value),
-            //             lastupdatedtime: currentDate
-            //         }
-            //     })
+        const currentDate = new Date();
+        const SaveModelContentRes = await request({
+            url: '/tools/Save',
+            method: 'POST',
+            data: {
+                column: "model",
+                modelid: route.query.modelid,
+                modelname: model.modelname,
+                modeldescriptions: model.modeldescriptions,
+                ParametersAndValues: JSON.stringify(tableData.value),
+                Cons: JSON.stringify(consArray.value),
+                lastupdatedtime: currentDate
+            }
+        })
 
-            //     if (SaveModelContentRes.SaveModelStatus == 'success') {
-
-
-            //         currentModel.currentModel.modelid = route.query.modelid
-            //         currentModel.currentModel.modelname = model.modelname
-            //         currentModel.currentModel.modeldescriptions = model.modeldescriptions
-            //         currentModel.currentModel.strength = strength.value
-            //         currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
-            //         currentModel.currentModel.lastupdatedtime = currentDate
+        if (SaveModelContentRes.SaveModelStatus == 'success') {
+            currentModel.currentModel.modelid = route.query.modelid
+            currentModel.currentModel.modelname = model.modelname
+            currentModel.currentModel.modeldescriptions = model.modeldescriptions
+            currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
+            currentModel.currentModel.cons = JSON.stringify(consArray.value)
+            currentModel.currentModel.lastupdatedtime = currentDate
 
 
-            //         currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+            currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+            currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
+            currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
+            currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
+            let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
+                // 将逗号分隔的字符串转换为数组
+                const valueArray = item.Value.split(',');
 
-            //         currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
-
-            //         let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
-            //             // 将逗号分隔的字符串转换为数组
-            //             const valueArray = item.Value.split(',');
-
-            //             // 更新对象的Value字段为数组
-            //             return {
-            //                 ...item,
-            //                 Value: valueArray
-            //             };
-            //         });
-            //         currentModel.currentModel.PandVOBJ = transformedData
-            //         // 移除 row_index 属性
-            //         let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
-            //             const { row_index, ...rest } = item;
-            //             return rest;
-            //         });
-            //         currentModel.currentModel.PandVOBJ = tableDataTmp
+                // 更新对象的Value字段为数组
+                return {
+                    ...item,
+                    Value: valueArray
+                };
+            });
+            currentModel.currentModel.PandVOBJ = transformedData
 
 
-            //         ElNotification({
-            //             title: 'Save Success!',
-            //             type: 'success',
-            //         })
-            //     }
-            //     else {
-            //         ElNotification({
-            //             title: 'Save fail!',
-            //             type: 'error',
-            //         })
-            //     }
-            // }
-            // 如果有约束
-            // else {
-            const SaveModelContentRes = await request({
-                url: '/tools/models/SaveModel',
-                method: 'POST',
-                data: {
-                    modelid: route.query.modelid,
-                    modelname: model.modelname,
-                    modeldescriptions: model.modeldescriptions,
-                    strength: strength.value,
-                    ParametersAndValues: JSON.stringify(tableData.value),
-                    Cons: JSON.stringify(consArray.value),
-                    lastupdatedtime: currentDate
-                }
+            ElNotification({
+                title: 'Save Success!',
+                type: 'success',
             })
 
-            if (SaveModelContentRes.SaveModelStatus == 'success') {
-                currentModel.currentModel.modelid = route.query.modelid
-                currentModel.currentModel.modelname = model.modelname
-                currentModel.currentModel.modeldescriptions = model.modeldescriptions
-                currentModel.currentModel.strength = strength.value
-                currentModel.currentModel.paramsvalues = JSON.stringify(tableData.value)
-                currentModel.currentModel.cons = JSON.stringify(consArray.value)
-                currentModel.currentModel.lastupdatedtime = currentDate
+            await listModelInfoByModelID(route.query.modelid)
 
 
-                currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
-                currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
-                currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
-                currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
-                let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
-                    // 将逗号分隔的字符串转换为数组
-                    const valueArray = item.Value.split(',');
+            model.modelid = currentModel.currentModel.modelid
+            model.modelname = currentModel.currentModel.modelname
+            model.modeldescriptions = currentModel.currentModel.modeldescriptions
+            model.paramsvalues = currentModel.currentModel.paramsvalues
+            model.cons = currentModel.currentModel.cons
+            model.lastupdatedtime = currentModel.currentModel.lastupdatedtime
+            model.createdtime = currentModel.currentModel.createdtime
 
-                    // 更新对象的Value字段为数组
-                    return {
-                        ...item,
-                        Value: valueArray
-                    };
-                });
-                currentModel.currentModel.PandVOBJ = transformedData
-                // 移除 row_index 属性
-                let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
-                    const { row_index, ...rest } = item;
-                    return rest;
-                });
-                currentModel.currentModel.PandVOBJ = tableDataTmp
-
-                ElNotification({
-                    title: 'Save Success!',
-                    type: 'success',
-                })
-
-                await listModelInfoByModelID()
-            }
-            else {
-                ElNotification({
-                    title: 'Save fail!',
-                    type: 'error',
-                })
-            }
-            // }
-
-
-
-
+            // 加载模型到table
+            loadModelToTable();
         }
         else {
             ElNotification({
                 title: 'Save fail!',
-                message: 'Must choose a Strength',
                 type: 'error',
             })
         }
+        // }
+
     }
     else {
         ElNotification({
@@ -865,188 +753,113 @@ const SaveModel = async () => {
 }
 
 
-const listModelInfoByModelID = async () => {
-    try {
-        const res = await request({
-            url: '/tools/models/info/' + route.query.modelid,
-            method: 'POST'
-        });
+const loadModelToTable = () => {
+    // 解析参数和参数取值的Json字符串
+    if (model.paramsvalues) {
+        const parsedData = JSON.parse(model.paramsvalues)
 
-        model.modelid = res.models.modelid
-        model.strength = res.models.strength
-        strength.value = res.models.strength
-        model.modelname = res.models.modelname
-        model.modeldescriptions = res.models.modeldescriptions
-        model.paramsvalues = res.models.paramsvalues
-        model.cons = res.models.cons
-        model.lastupdatedtime = res.models.lastupdatedtime
-        model.createdtime = res.models.createdtime
-        modelObject.system = model.modelname
-
-
-
-
-        currentModel.currentModel.modelid = res.models.modelid
-        currentModel.currentModel.strength = res.models.strength
-        currentModel.currentModel.modelname = res.models.modelname
-        currentModel.currentModel.modeldescriptions = res.models.modeldescriptions
-        currentModel.currentModel.paramsvalues = res.models.paramsvalues
-        currentModel.currentModel.cons = res.models.cons
-        currentModel.currentModel.lastupdatedtime = res.models.lastupdatedtime
-        currentModel.currentModel.createdtime = res.models.createdtime
-        currentModel.currentModel.PandVOBJ = JSON.parse(model.paramsvalues)
-        currentModel.currentModel.ConsOBJ = JSON.parse(model.cons)
-        currentModel.currentModel.NumofParams = currentModel.currentModel.PandVOBJ.length
-        currentModel.currentModel.NumofCons = currentModel.currentModel.ConsOBJ.length
-
-        let transformedData = currentModel.currentModel.PandVOBJ.map(item => {
-            // 将逗号分隔的字符串转换为数组
-            const valueArray = item.Value.split(',');
-
-            // 更新对象的Value字段为数组
-            return {
-                ...item,
-                Value: valueArray
-            };
-        });
-        currentModel.currentModel.PandVOBJ = transformedData
         // 移除 row_index 属性
-        let tableDataTmp = currentModel.currentModel.PandVOBJ.map(item => {
+        const tableDataTmp = parsedData.map(item => {
             const { row_index, ...rest } = item;
             return rest;
         });
-        currentModel.currentModel.PandVOBJ = tableDataTmp
 
-        // 加载模型到table
-        // 加载模型到预览区
-        loadModel();
-    } catch (err) {
-        console.error(err);
-    }
-}
+        // 加载参数和参数取值
+        tableData.value = tableDataTmp;
 
-const loadModel = () => {
-    // 解析参数和参数取值的Json字符串
-    const parsedData = JSON.parse(model.paramsvalues)
+        // 加载约束table
+        let tempArray = []
+        let param_count = 0
+        for (let i = 0, len = tableData.value.length; i < len; i++) {
+            if (tableData.value[i].Value != '') { tempArray.push(tableData.value[i].Value.split(',').length) }
+            if (tableData.value[i].Parameter != '') { param_count = param_count + 1 }
 
-    // 移除 row_index 属性
-    const tableDataTmp = parsedData.map(item => {
-        const { row_index, ...rest } = item;
-        return rest;
-    });
-
-    // 加载参数和参数取值
-    tableData.value = tableDataTmp;
-
-    // 加载约束table
-    let tempArray = []
-    let param_count = 0
-    for (let i = 0, len = tableData.value.length; i < len; i++) {
-        if (tableData.value[i].Value != '') { tempArray.push(tableData.value[i].Value.split(',').length) }
-        if (tableData.value[i].Parameter != '') { param_count = param_count + 1 }
-
-    }
-    // 统计模型基本数据
-
-    if (model.modelname) { modelObject.system = model.modelname }
-    modelObject.system = model.modelname
-    modelObject.strength = model.strength
-    modelObject.parameter = param_count
-    modelObject.values = JSON.stringify(tempArray)
-
-
-    // 对 tableData 的数据做处理，转成被constraintsTableData
-    let tempArrayCons = []
-    for (let i = 0, len = tableData.value.length; i < len; i++) {
-        let tempObj = {}
-        tempObj.Parameter = tableData.value[i].Parameter
-        tempObj.valueArray = tableData.value[i].Value.split(',').map((value, index) => ({
-            [`Value${index + 1}`]: value
-        }));
-        tempObj.ValueDomain = tempObj.valueArray.length
-        tempArrayCons.push(tempObj)
-
-    }
-    constraintsTableData.value = tempArrayCons
-
-
-    // 得到最大的ValueDomain
-    const maxDomain = constraintsTableData.value.reduce((max, item) => {
-        return Math.max(max, item.ValueDomain);
-    }, -Infinity);
-
-
-    maxValueDomain.value = maxDomain
-
-
-    // 将cons显示在cons Preview区域
-    consArray.value = JSON.parse(model.cons)
-    consPreview.value = JSON.stringify(JSON.parse(model.cons), null, 6).replace(/"/g, '')
-    // 对每个约束进行处理，将其转换成 '参数索引'/'取值索引' 的形式
-    let consArrayToAPI = []
-    for (const constraint of consArray.value) {
-        let consArrayTemp = []
-        // 遍历元素中的键值对
-        for (const key in constraint) {
-            if (Object.hasOwnProperty.call(constraint, key)) {
-                const elements = constraint[key];
-                // elements 是一个数组，包含了多个键值对
-                for (const element of elements) {
-                    // 在这里访问 Parameter 和 Value
-                    const parameter = element.Parameter;
-                    const value = element.Value;
-
-                    // 这里可以使用 parameter 和 value 进行其他操作
-                    // console.log(`Key: ${key}, Parameter: ${parameter}, Value: ${value}`);
-                    let constempObj = findPosition(parameter, value)
-                    let consString = `\'${constempObj.parameterIndex}/${constempObj.valueIndex}\'`
-                    consArrayTemp.push(consString)
-                }
-            }
-            consArrayToAPI.push(consArrayTemp)
         }
-    }
-    modelObject.constraints = consArrayToAPI
 
-    // 将模型数据显示在Model Preview区域
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
-    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
+
+
+        // 对 tableData 的数据做处理，转成被constraintsTableData
+        let tempArrayCons = []
+        for (let i = 0, len = tableData.value.length; i < len; i++) {
+            let tempObj = {}
+            tempObj.Parameter = tableData.value[i].Parameter
+            tempObj.valueArray = tableData.value[i].Value.split(',').map((value, index) => ({
+                [`Value${index + 1}`]: value
+            }));
+            tempObj.ValueDomain = tempObj.valueArray.length
+            tempArrayCons.push(tempObj)
+
+        }
+        constraintsTableData.value = tempArrayCons
+
+
+        // 将cons显示在cons Preview区域
+        consArray.value = JSON.parse(model.cons)
+    }
 
 }
-watch(strength, (newStrength, oldStrength) => {
-    // 处理strength变化的逻辑
-    // console.log('strength changed:', newStrength);
 
-
-    modelObject.system = model.modelname
-    modelObject.strength = strength.value
-
-    // 将模型数据显示在Model Preview区域
-    modelPreview.value = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
-    currentModel.currentModel.modelCithub = JSON.stringify(modelObject, null, 6).replace(/"/g, '')
-
-
-}, { deep: true });
 
 
 
 const Generation = () => {
-    loadModel()
-    router.push({
-        // path: '/tools/TestSuitesHome',
-        path: '/tools/TestSuitesHomeNew',
-        query:
-            { modelid: route.query.modelid }
-    })
+    currentModel.currentModel = {}
+    router.push(
+        {
+            path: '/tools/TestSuiteDetails',
+            query: {
+                modelid: route.query.modelid,
+                index: route.query.index
+            }
+        }
+    )
+}
+const goBack = () => {
+    window.history.back();
 }
 
+// 将约束转化为禁止元组的形式展示
+const formattedData = ref([]);
+
+const formatData = () => {
+    const formatted = consArray.value.map((item, index) => {
+        const tupleStr = item.Constraint.map(constraint => {
+            return `${constraint.Parameter}=${constraint.Value}`;
+        }).join(" , ");
+        return `${tupleStr}`;
+    });
+    formattedData.value = formatted;
+};
 onMounted(async () => {
+
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    
+    moduleStore.CurrentSubSystem = "Tools"
+    moduleStore.CurrentSubSystemRoute = "Tools_Models"
+    moduleStore.CurrentModule = 'Models'
+    moduleStore.CurrentModuleDetails = 'Model Details'
+    moduleStore.CurrentRoute = 'Tools_Models'
 
     tbContainerRef.value = document.querySelector('.tb-container');
 
-    await listModelInfoByModelID()
+    await listModelInfoByModelID(route.query.modelid)
 
 
+    model.modelid = currentModel.currentModel.modelid
+    model.modelname = currentModel.currentModel.modelname
+    model.modeldescriptions = currentModel.currentModel.modeldescriptions
+    model.paramsvalues = currentModel.currentModel.paramsvalues
+    model.cons = currentModel.currentModel.cons
+    model.lastupdatedtime = currentModel.currentModel.lastupdatedtime
+    model.createdtime = currentModel.currentModel.createdtime
+
+    // 加载模型到table
+    loadModelToTable();
+
+    // 加载约束为禁止元组的表格
+    formatData()
+
+    loadingInstance.close()
 
 
 })
@@ -1059,6 +872,10 @@ onMounted(async () => {
     position: relative;
 }
 
+.el-popover {
+    height: 500px;
+    overflow: auto;
+}
 
 
 
@@ -1090,4 +907,5 @@ onMounted(async () => {
     background-color: red;
     color: white;
     /* 设置文本颜色，以确保可见性 */
-}</style>
+}
+</style>

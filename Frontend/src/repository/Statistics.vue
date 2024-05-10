@@ -97,19 +97,22 @@ import SideNav from './components/SideNav.vue';
 import Navbar from '../CustomizedComponents/Navbar.vue';
 import Foot from '../CustomizedComponents/Foot.vue';
 import "echarts/map/js/world.js";
-import { useInstitutionStore } from '../store/institutionStore'
+import { useInstitutionStore } from '../store/RepositoryStore/institutionStore'
 import { onMounted } from 'vue';
 import { ref, computed, reactive } from 'vue';
-import { usePaperInfoStore } from '../store/paperinfoStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import pinia from '../store/store';
 import { ElLoading } from 'element-plus'
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 
 const router = useRouter();
 const PaperInfoStore = usePaperInfoStore(pinia)
 const moduleStore = useModuleStore(pinia)
+
+
 
 // 1. number of publication
 const ChartNumber = ref()

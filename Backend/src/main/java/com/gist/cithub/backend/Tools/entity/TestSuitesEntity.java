@@ -1,5 +1,7 @@
 package com.gist.cithub.backend.Tools.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -31,13 +33,33 @@ public class TestSuitesEntity implements Serializable {
      */
     private String testsuitesdescriptions;
     private String testsuitescontents;
-    private String algorithm;
+
+    private String evaluationcontents;
+
+    private String diagnosiscontents;
+
+    private String generationtool;
+    private String prioritisationtool;
+    private String reductiontool;
+    private String evaluationtool;
+    private String diagnosistool;
+
+    private Integer size;
+    private Integer sizeafterreduction;
+
+    private Integer generationtime;
+    private Integer prioritisationtime;
+    private Integer reductiontime;
+    private Integer evaluationtime;
+
+
+
+
     /**
      *
      */
     private Integer modelid;
-    private Integer size;
-    private Integer time;
+    private Integer strength;
 
     private Date createdtime;
 

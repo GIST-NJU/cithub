@@ -13,14 +13,13 @@ import Repository_PaperInfo from '../repository/components/PaperInformation.vue'
 
 // Tools
 import ToolsRouterView from '../ToolsViews/ToolsRouterView.vue'
-import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
+// import ProjectsHome from '../ToolsViews/ProjectsHome.vue'
 import AlgorithmsAvailableHome from '../ToolsViews/AlgorithmsAvailableHome.vue'
 import HelpCenter from '../ToolsViews/HelpCenter.vue'
 import ModelsHome from '../ToolsViews/ModelsHome.vue'
 import ModelsDetails from '../ToolsViews/ModelsDetails.vue'
 import LLMModelDetails from '../ToolsViews/LLMModelDetails.vue'
 import TestSuitesHome from '../ToolsViews/TestSuitesHome.vue'
-import TestSuitesHomeNew from '../ToolsViews/TestSuiteHomeNew.vue'
 import TestSuiteDetails from '../ToolsViews/TestSuiteDetails.vue'
 
 // Benchmark
@@ -39,7 +38,7 @@ import UserRegister from '../UserViews/Signup.vue'
 const routes = [
   {
     path: "/",
-    name: "CitHub Home",
+    name: "CitHub_Home",
     component: CitHubHome,
     meta: { title: 'CitHub Home' }
   },
@@ -101,7 +100,7 @@ const routes = [
     meta: { title: 'Tools' },
     children: [
       {
-        // ToolsHome
+        // AlgorithmsAvailableHome
         path: "AlgorithmsAvailableHome",
         name: 'AlgorithmsAvailableHome',
         component: AlgorithmsAvailableHome,
@@ -114,17 +113,11 @@ const routes = [
         component: HelpCenter,
         meta: { title: 'HelpCenter' }
       },
-      {
-        // ProjectsHome
-        path: "ProjectsHome",
-        name: 'ProjectsHome',
-        component: ProjectsHome,
-        meta: { title: 'ProjectsHome' }
-      },
+
       {
         // modelsHome
         path: "models",
-        name: 'modelsHome',
+        name: 'Tools_Models',
         component: ModelsHome,
         meta: { title: 'Models' }
       },
@@ -145,24 +138,18 @@ const routes = [
       {
         // TestSuitesHome
         path: "TestSuitesHome",
-        name: 'TestSuitesHome',
+        name: 'TestSuites_Home',
         component: TestSuitesHome,
         meta: { title: 'TestSuitesHome' }
       },
       {
-        // TestSuitesHome
-        path: "TestSuitesHomeNew",
-        name: 'TestSuitesHomeNew',
-        component: TestSuitesHomeNew,
-        meta: { title: 'TestSuitesHomeNew' }
-      },
-      {
         // TestSuiteDetails
         path: "TestSuiteDetails",
-        name: 'TestSuiteDetails',
+        name: 'TestSuite_Details',
         component: TestSuiteDetails,
         meta: { title: 'TestSuiteDetails' }
       },
+
 
 
     ]
@@ -216,13 +203,13 @@ const routes = [
         path: "login",
         name: 'UserLogin',
         component: UserLogin,
-        meta: { title: 'UserLogin' }
+        meta: { title: 'Log In' }
       },
       {
         path: "register",
         name: 'UserRegister',
         component: UserRegister,
-        meta: { title: 'UserRegister' }
+        meta: { title: 'Sign Up' }
       },
 
     ]

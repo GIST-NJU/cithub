@@ -7,6 +7,9 @@
 
     <div class="container-fluid py-4">
 
+
+
+
       <!-- 针对scholars的card，显示scholar的基本信息 -->
       <div v-if="route.query.module == 'Scholars'" class="row">
         <div class="col-12">
@@ -27,12 +30,12 @@
 
                 <div class="col-md-4">
                   <h6>Name</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.name" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.name" type="text" readonly />
                 </div>
 
                 <div class="col-md-3">
                   <h6>Institution Category</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.category" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.category" type="text" readonly />
                 </div>
 
               </div>
@@ -41,13 +44,12 @@
 
                 <div class="col-md-6">
                   <h6>Institution</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.institution" type="text"
-                    :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.institution" type="text" readonly />
                 </div>
 
                 <div class="col-md-4">
                   <h6>Country</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.country" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.country" type="text" readonly />
                 </div>
               </div>
 
@@ -56,12 +58,12 @@
 
                 <div v-if="currentAuthorStore.CurrentAuthor.email != ''" class="col-md-6">
                   <h6>Email</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.email" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.email" type="text" readonly />
                 </div>
 
                 <div v-if="currentAuthorStore.CurrentAuthor.homepage != ''" class="col-md-6">
                   <h6>homepage</h6>
-                  <argon-input v-model="currentAuthorStore.CurrentAuthor.homepage" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="currentAuthorStore.CurrentAuthor.homepage" type="text" readonly />
                 </div>
 
               </div>
@@ -69,7 +71,7 @@
               <div class="row">
                 <div class="col-md-2">
                   <h6>Total Papers: </h6>
-                  <argon-input v-model="PaperInfoStore.total" type="text" :disabled="'disabled'" />
+                  <argon-input v-model="PaperInfoStore.total" type="text" readonly />
                 </div>
 
                 <div class="col-md-6">
@@ -130,6 +132,7 @@
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
+
               <h4 v-if="moduleStore.CurrentModule == 'Complete Paper List'">Complete Paper List</h4>
 
 
@@ -183,7 +186,7 @@
               </div>
 
               <div v-if="route.query.module == 'Benchmark'">
-                <div v-if="moduleStore.CurrentRoute == 'Benchmark_Home'">
+                <div v-if="moduleStore.CurrentRoute == 'Home' && moduleStore.CurrentSubSystem == 'Benchmark'">
                   <h4>Papers related to Benchmark Set <span style="color: #2dce89">{{
                     PaperInfoStore.searchKeyWords }}</span>
                   </h4>
@@ -261,15 +264,15 @@ import Navbar from '../CustomizedComponents/Navbar.vue';
 import Foot from '../CustomizedComponents/Foot.vue';
 import { request } from '../request'
 import { useRoute } from 'vue-router'
-import { usePaperInfoStore } from '../store/paperinfoStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
 import ArgonBadge from './components/ArgonBadge.vue'
 import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
-import { useCurrentAuthorStore } from '../store/currentAuthorStore'
+import { useCurrentAuthorStore } from '../store/RepositoryStore/currentAuthorStore'
 import { useModuleStore } from '../store/module';
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 const PaginationStore = usePaginationStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)
 const moduleStore = useModuleStore(pinia)
@@ -612,7 +615,7 @@ const calculateSymbolSize = (weight) => {
 const goBack = () => {
   window.history.back();
 }
-const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Benchmark','Benchmark Models']
+const DetailedModule = ['Scholars', 'Institutions', 'Country', 'Venues', 'Fields', 'Topics', 'Search', 'Repository', 'Home', 'Benchmark Models']
 onMounted(async () => {
   // console.log("PaperInfoStore", PaperInfoStore)
 

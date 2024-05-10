@@ -65,7 +65,7 @@
 <script setup>
 import { defineProps, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useCurrentPaper } from '../../store/currentPaper'
+import { useCurrentPaper } from '../../store/RepositoryStore/currentPaper'
 import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import pinia from '../../store/store'
 import { useModuleStore } from '../../store/module';

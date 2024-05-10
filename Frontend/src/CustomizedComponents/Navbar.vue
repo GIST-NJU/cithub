@@ -5,8 +5,13 @@
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-          <router-link :to="{ name: 'Cithub' }" class="breadcrumb-item text-sm text-white" aria-current="page">
+          <router-link :to="{ name: 'CitHub_Home' }" class="breadcrumb-item text-sm text-white" aria-current="page">
             CitHub
+          </router-link>
+
+          <router-link :to="{ name: moduleStore.CurrentSubSystemRoute }" @click="handleRouterLinkClick" :exact="true"
+            class="breadcrumb-item text-sm text-white" aria-current="page">
+            {{ moduleStore.CurrentSubSystem }}
           </router-link>
 
           <router-link :to="{ name: moduleStore.CurrentRoute }" @click="handleRouterLinkClick" :exact="true"
@@ -14,7 +19,7 @@
             {{ moduleStore.CurrentModule }}
           </router-link>
 
-  
+          
 
 
           <li v-if="moduleStore.CurrentModuleDetails != ''" class="breadcrumb-item text-sm text-white active"
@@ -35,7 +40,7 @@
           </li>
           <li class="nav-item d-flex align-items-center">
             <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
-              <span @click="SignOut" class="d-sm-inline d-none"> / Sign Out</span>
+              <span @click="SignOut" class="d-sm-inline d-none"> / Log Out</span>
             </a>
           </li>
         </ul>
@@ -83,7 +88,7 @@ const handleRouterLinkClick = () => {
 
 
 onMounted(() => {
-  console.log("route.query.module", route.query.module)
+  // console.log("route.query.module", route.query.module)
   if (typeof route.query.module === 'undefined') {
     if (moduleStore.CurrentModule == 'Repository') { moduleStore.CurrentRoute = 'Repository_Home' }
     if (moduleStore.CurrentModule == 'Complete Paper List') { moduleStore.CurrentRoute = 'Repository_Papers' }

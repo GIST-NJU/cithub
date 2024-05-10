@@ -119,8 +119,8 @@ import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import Model from './components/ModelCard.vue'
 import pinia from '../store/store';
 import { useModuleStore } from '../store/module';
-import { usePaginationStore } from '../store/paginationStore'
-import { useBenchmarkModelsStore } from '../store/BenchmarkModelsStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
+import { useBenchmarkModelsStore } from '../store/BenchmarkStore/BenchmarkModelsStore'
 import { listAllBenchmarkModels, searchModel, clearSearch } from './commonFunction'
 const PaginationStore = usePaginationStore(pinia)
 const BenchmarkModels = useBenchmarkModelsStore(pinia)

@@ -1,59 +1,3 @@
-<script setup>
-import { useModuleStore } from './store/module';
-import { useRouter, useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
-import pinia from './store/store'
-import { useUserStore } from './store/userStore';
-const userStore = useUserStore(pinia)
-const router = useRouter()
-const route = useRoute()
-const moduleStore = useModuleStore(pinia)
-
-const jumpToRepo = () => {
-  moduleStore.CurrentModule = 'Repository'
-  moduleStore.CurrentModuleDetails = ''
-  moduleStore.CurrentRoute = 'Repository_Home'
-  router.push({
-    name: 'Repository_Home'
-  })
-}
-const jumpToTools = () => {
-  moduleStore.CurrentModule = 'Tools'
-  moduleStore.CurrentModuleDetails = ''
-  moduleStore.CurrentRoute = ''
-  router.push({
-    path: '/tools/models'
-  })
-}
-const jumpToBenchmark = () => {
-  moduleStore.CurrentModule = 'Benchmark'
-  moduleStore.CurrentModuleDetails = ''
-      moduleStore.CurrentRoute = 'Benchmark_Home'
-  router.push({
-    path: '/benchmark/home'
-  })
-}
-
-const jumpToUser = (value) => {
-  // console.log(value)
-  if (value === 'login') {
-    router.push({
-      name: 'UserLogin'
-    })
-  }
-  if (value === 'register') {
-    router.push({
-      name: 'UserRegister'
-    })
-  }
-}
-
-
-onMounted(async () => {
-  // await CheckLogin()
-})
-</script>
-
 <template>
   <div class="cit d-flex flex-column h-100">
     <main class="flex-shrink-0">
@@ -63,8 +7,8 @@ onMounted(async () => {
           <a class="cit-navbar-brand" href="https://gist.nju.edu.cn"><span class="fw-bolder text-primary">GIST</span></a>
           <div v-if="userStore.loginFlag === true" class="cit-navbar-collapse">
             <ul class="cit-navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-              <li class="nav-item"><a class="cit-nav-link" href="#">Hello, {{ userStore.name }}</a></li>
-              <li class="nav-item"><a class="cit-nav-link" href="#">Log out</a></li>
+              <li class="nav-item"><a class="cit-nav-link" >Hello, {{ userStore.name }}</a></li>
+              <li class="nav-item"><a class="cit-nav-link" @click="SignOut" style="cursor:pointer">Log out</a></li>
             </ul>
           </div>
         </div>
@@ -117,7 +61,7 @@ onMounted(async () => {
 
             <div class="col-sm-12 col-md-4">
               <div class="icon-box">
-                <a @click="jumpToRepo" href="#">
+                <a @click="jumpToRepo" style="cursor:pointer">
                   <div class="icon"><i class="bi bi-book-half"></i></div>
                   <h4 class="">Repository</h4>
                 </a>
@@ -131,7 +75,7 @@ onMounted(async () => {
 
             <div class="col-sm-12 col-md-4">
               <div class="icon-box">
-                <a @click="jumpToTools" href="#">
+                <a @click="jumpToTools" style="cursor:pointer">
                   <div class="icon"><i class="bi bi-wrench-adjustable-circle-fill"></i></div>
                   <h4 class="">Tools</h4>
                 </a>
@@ -145,7 +89,7 @@ onMounted(async () => {
 
             <div class="col-sm-12 col-md-4">
               <div class="icon-box">
-                <a @click="jumpToBenchmark" href="#">
+                <a @click="jumpToBenchmark" style="cursor:pointer">
                   <div class="icon"><i class="bi bi-stack"></i></div>
                   <h4 class="">Benchmark</h4>
                 </a>
@@ -171,6 +115,85 @@ onMounted(async () => {
     </footer>
   </div>
 </template>
+
+<script setup>
+import { useModuleStore } from './store/module';
+import { useRouter, useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import pinia from './store/store'
+import { useUserStore } from './store/userStore';
+import {CheckLogin} from './request'
+const userStore = useUserStore(pinia)
+const router = useRouter()
+const route = useRoute()
+const moduleStore = useModuleStore(pinia)
+
+const jumpToRepo = () => {
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  moduleStore.CurrentModule = 'Home'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Repository_Home'
+  router.push({
+    name: 'Repository_Home'
+  })
+}
+const jumpToTools = () => {
+  moduleStore.CurrentSubSystem='Tools'
+  moduleStore.CurrentSubSystemRoute='Tools_Models'
+  moduleStore.CurrentModule = 'Home'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Tools_Models'
+  router.push({
+   name:'Tools_Models'
+  })
+}
+const jumpToBenchmark = () => {
+  moduleStore.CurrentSubSystem='Benchmark'
+  moduleStore.CurrentSubSystemRoute='Benchmark_Home'
+  moduleStore.CurrentModule = 'Home'
+  moduleStore.CurrentModuleDetails = ''
+  moduleStore.CurrentRoute = 'Benchmark_Home'
+  router.push({
+    path: '/benchmark/home'
+  })
+}
+
+const jumpToUser = (value) => {
+  // console.log(value)
+  if (value === 'login') {
+    router.push({
+      name: 'UserLogin'
+    })
+  }
+  if (value === 'register') {
+    router.push({
+      name: 'UserRegister'
+    })
+  }
+}
+
+const SignOut = () => {
+  localStorage.setItem("userToken", '')
+  userStore.userID='',
+  userStore.userToken= '',
+  userStore.usertype='',
+  userStore.name='',
+  userStore.email='',
+  userStore.institution='',
+  userStore.loginFlag=false,
+  userStore.account= '',
+  router.push({
+    path: '/'
+  })
+}
+
+onMounted(async () => {
+  await CheckLogin()
+})
+</script>
+
+
 
 <style src="../public/cithub.home.min.css" scoped>
 

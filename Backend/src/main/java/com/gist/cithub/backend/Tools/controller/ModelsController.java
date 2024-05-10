@@ -60,51 +60,37 @@ public class ModelsController {
         else return R.ok().put("DeleteStatus", "failed!");
     }
 
-    @RequestMapping(value = "/SaveModel", method = RequestMethod.POST)
-    public R SaveModel(@RequestBody Map<String, Object> info) {
-        System.out.println("接收到的信息是！");
-        System.out.println(info);
-//        System.out.println(info.get("modelid"));
-        QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("ModelID", info.get("modelid"));
-        ModelsEntity modelsEntity = modelsService.getOne(queryWrapper);
-        modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
-        modelsEntity.setCons((String) info.get("Cons"));
-
-        modelsEntity.setModelname((String) info.get("modelname"));
-        modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
-
-        //        将时间戳转为Date类型
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
-
-        modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
-
-
-        Object strengthValue = info.get("strength");
-        if (strengthValue instanceof Integer) {
-            modelsEntity.setStrength((Integer) strengthValue);
-        } else if (strengthValue instanceof String) {
-            // 如果是字符串，尝试将其转换为整数
-            try {
-                modelsEntity.setStrength(Integer.parseInt((String) strengthValue));
-            } catch (NumberFormatException e) {
-                // 处理转换失败的情况，例如记录日志或抛出异常
-                e.printStackTrace();
-            }
-        } else {
-            // 处理其他类型的情况，例如记录日志或抛出异常
-            System.err.println("Unsupported type for strength: " + strengthValue.getClass());
-        }
-        boolean updateResult = modelsService.updateById(modelsEntity);
-
-        if (updateResult) {
-            return R.ok().put("SaveModelStatus", "success");
-        } else {
-            return R.ok().put("SaveModelStatus", "fail");
-
-        }
-    }
+//    @RequestMapping(value = "/SaveModel", method = RequestMethod.POST)
+//    public R SaveModel(@RequestBody Map<String, Object> info) {
+//        System.out.println("接收到的信息是！");
+//        System.out.println(info);
+////        System.out.println(info.get("modelid"));
+//        QueryWrapper<ModelsEntity> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("ModelID", info.get("modelid"));
+//        ModelsEntity modelsEntity = modelsService.getOne(queryWrapper);
+//        modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
+//        modelsEntity.setCons((String) info.get("Cons"));
+//
+//        modelsEntity.setModelname((String) info.get("modelname"));
+//        modelsEntity.setModeldescriptions((String) info.get("modeldescriptions"));
+//
+//        //        将时间戳转为Date类型
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//        LocalDateTime lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+//
+//        modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+//
+//
+//
+//        boolean updateResult = modelsService.updateById(modelsEntity);
+//
+//        if (updateResult) {
+//            return R.ok().put("SaveModelStatus", "success");
+//        } else {
+//            return R.ok().put("SaveModelStatus", "fail");
+//
+//        }
+//    }
 
     @RequestMapping(value = "/NewModel", method = RequestMethod.POST)
     public R NewModel(@RequestBody Map<String, Object> info) {
@@ -130,13 +116,6 @@ public class ModelsController {
         modelsEntity.setCreatedtime(java.sql.Timestamp.valueOf(createTime));
         modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
 
-
-        Object strength = info.get("strength");
-        if (strength instanceof String) {
-            modelsEntity.setStrength(Integer.parseInt((String) strength));
-        } else if (strength instanceof Integer) {
-            modelsEntity.setStrength((Integer) strength);
-        }
         modelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
         modelsEntity.setCons((String) info.get("Cons"));
 

@@ -14,8 +14,8 @@ export function requestAuth(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    // baseURL: "http://localhost:8090/api",
-    baseURL: "http://210.28.135.32/CitHubAPI",
+    baseURL: "http://localhost:8090/api",
+    // baseURL: "http://210.28.135.32/CitHubAPI",
   })
   // 2.1.请求拦截的作用
   instance.interceptors.request.use(config => {
@@ -116,26 +116,32 @@ export const CheckLogin = async () => {
     userStore.name = userobj.name
     userStore.email = userobj.email
     userStore.institution = userobj.institution
-    userStore.loginFlag=true
+    userStore.loginFlag = true
     // console.log("userStore",userStore)
+  }
+  // console.log("router.currentRoute.value.name ",router.currentRoute.value.name )
+  // 在这里添加条件判断，如果要跳转的页面是 'CitHub_Home' 则执行跳转
+  let PagesArray=['CitHub_Home','TestSuites_Home','Tools_Models','Repository_Home','Benchmark_Home']
+  if (PagesArray.includes(router.currentRoute.value.name)) {
+    router.push({
+      name: router.currentRoute.value.name
+    })
   }
   else {
     console.log("未登录！")
-    router.push(
-      {
-        name: 'UserLogin'
-      }
-    )
-
+    router.push({
+      name: 'UserLogin'
+    })
   }
 }
+
 
 export function request(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     // baseURL: "http://159.75.80.154/api",
-    // baseURL: "http://localhost:8090/api",
-    baseURL: "http://210.28.135.32/CitHubAPI",
+    baseURL: "http://localhost:8090/api",
+    // baseURL: "http://210.28.135.32/CitHubAPI",
 
   })
 

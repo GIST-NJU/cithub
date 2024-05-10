@@ -5,6 +5,9 @@
     <Navbar></Navbar>
 
     <div class="container-fluid py-4">
+
+
+
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
@@ -115,21 +118,23 @@ import SideNav from './components/SideNav.vue';
 import Navbar from '../CustomizedComponents/Navbar.vue';
 import Foot from '../CustomizedComponents/Foot.vue';
 import ArgonBadge from '../CustomizedComponents/ArgonBadge.vue';
+import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import { onMounted } from 'vue';
 import { ref, computed, reactive, watch } from 'vue';
-import { usePaperInfoStore } from '../store/paperinfoStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
 import { request } from '../request';
 import { useRouter } from 'vue-router';
 import pinia from '../store/store';
-import { useAuthorStore } from '../store/authorStore'
+import { useAuthorStore } from '../store/RepositoryStore/authorStore'
 import { listAllScholars, listAllInstitutions, listAllCountry } from './commonFunction';
 import { useModuleStore } from '../store/module';
-import { useInstitutionStore } from '../store/institutionStore'
-import { useCurrentAuthorStore } from '../store/currentAuthorStore'
+import { useInstitutionStore } from '../store/RepositoryStore/institutionStore'
+import { useCurrentAuthorStore } from '../store/RepositoryStore/currentAuthorStore'
 import { ElNotification } from 'element-plus'
-import { useCountryStore } from '../store/CountryStore'
+import { useCountryStore } from '../store/RepositoryStore/CountryStore'
 import { ElLoading } from 'element-plus'
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
+
 const PaginationStore = usePaginationStore(pinia)
 const currentAuthorStore = useCurrentAuthorStore(pinia)
 const moduleStore = useModuleStore(pinia)
@@ -149,7 +154,6 @@ const setActiveTab = (tabName) => {
 watch(activeTab, (newValue, oldValue) => {
   moduleStore.CurrentModule = newValue
 });
-
 
 
 

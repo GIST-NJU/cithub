@@ -41,6 +41,7 @@ public class UsersEntity implements Serializable {
     private String usertype;
 
     private String usertoken;
+    private String country;
 
 
 }

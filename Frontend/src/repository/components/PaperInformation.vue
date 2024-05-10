@@ -196,7 +196,7 @@ import SideNav from '../components/SideNav.vue';
 import Navbar from '../../CustomizedComponents/Navbar.vue';
 import Foot from '../../CustomizedComponents/Foot.vue';
 import pinia from '../../store/store'
-import { useCurrentPaper } from '../../store/currentPaper'
+import { useCurrentPaper } from '../../store/RepositoryStore/currentPaper'
 import { useRoute, useRouter } from 'vue-router';
 import { request } from '../../request'
 import { ElLoading } from 'element-plus'

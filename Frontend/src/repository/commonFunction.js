@@ -1,14 +1,14 @@
 // repository的一些公用的函数
 import pinia from '../store/store'
-import { usePaperInfoStore } from '../store/paperinfoStore'
-import { useAuthorStore } from '../store/authorStore'
-import { useInstitutionStore } from '../store/institutionStore'
-import { useVenueStore } from '../store/venueStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
+import { useAuthorStore } from '../store/RepositoryStore/authorStore'
+import { useInstitutionStore } from '../store/RepositoryStore/institutionStore'
+import { useVenueStore } from '../store/RepositoryStore/venueStore'
 import { useUserStore } from '../store/userStore';
-import { useCountryStore } from '../store/CountryStore'
-import { useTagStore } from '../store/TagStore'
+import { useCountryStore } from '../store/RepositoryStore/CountryStore'
+import { useTagStore } from '../store/RepositoryStore/TagStore'
 import { useModuleStore } from '../store/module';
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 import { request } from '../request';
 const userStore = useUserStore(pinia)
 const moduleStore = useModuleStore(pinia)

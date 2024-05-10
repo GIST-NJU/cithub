@@ -13,7 +13,6 @@ p12:0,1
 p13:0,1
 p14:0,1
 p15:0,1
-
 IF ([p1] = 2 AND [p10] = 0) THEN ([p1] = 0 and not [p1] = 0);
 IF ([p1] = 1 AND [p10] = 0) THEN ([p1] = 0 and not [p1] = 0);
 IF ([p1] = 3 AND [p10] = 0) THEN ([p1] = 0 and not [p1] = 0);

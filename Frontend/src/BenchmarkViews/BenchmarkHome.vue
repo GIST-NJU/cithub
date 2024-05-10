@@ -198,8 +198,8 @@ import SideNav from './components/SideNav.vue'
 import { searchModel } from './commonFunction'
 import { useModuleStore } from '../store/module';
 import { useUserStore } from '../store/userStore';
-import { usePaperInfoStore } from '../store/paperinfoStore'
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 import pinia from '../store/store';
 
 const router = useRouter()
@@ -295,7 +295,7 @@ const BenchmarkDetails = async (benchmarkset) => {
     moduleStore.CurrentModule = 'Benchmark Set'
     PaginationStore.searchkeywords = benchmarkset
     // 精准搜索
-    PaginationStore.column="benchmarkset"
+    PaginationStore.column = "benchmarkset"
     console.log(" PaginationStore.searchkeywords", PaginationStore.searchkeywords)
     try {
         await searchModel();
@@ -317,7 +317,11 @@ onMounted(async () => {
     let loadingInstance = ElLoading.service({ fullscreen: true })
     // 检查用户登录状态
     await CheckLogin()
-    moduleStore.CurrentModule = 'Benchmark'
+
+
+    moduleStore.CurrentSubSystem = 'Benchmark'
+    moduleStore.CurrentSubSystemRoute = 'Benchmark_Home'
+    moduleStore.CurrentModule = 'Home'
     moduleStore.CurrentModuleDetails = ''
     moduleStore.CurrentRoute = 'Benchmark_Home'
     try {

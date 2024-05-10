@@ -28,9 +28,9 @@
                     </a>
                 </li> -->
                 
-                <li class="nav-item" @click="jumpToModels" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveCategory ? 'active' : '']" @mouseover="handleMouseOverCategory"
-                        @mouseout="handleMouseOutCategory">
+                <li class="nav-item" style=" cursor:pointer;">
+                    <a  @click.prevent="jumpToModels" :class="['nav-link', { 'active': isRouteActive('Tools_Models') }]" 
+                        >
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-credit-card text-danger text-lg opacity-10"></i>
@@ -39,14 +39,13 @@
                     </a>
                 </li>
 
-                <li class="nav-item" @click="jumpToTestSuite" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveScholars ? 'active' : '']" @mouseover="handleMouseOverScholars"
-                        @mouseout="handleMouseOutScholars">
+                <li class="nav-item"  style=" cursor:pointer;">
+                    <a  @click.prevent="jumpToTestSuites" :class="['nav-link', { 'active': isRouteActive('TestSuites_Home') }]" >
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-print text-success text-lg opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 p">TestSuite</span>
+                        <span class="nav-link-text ms-1 p">TestSuites</span>
                     </a>
                 </li>
                 <!-- <li class="nav-item" @click="jumpToTestSuitesDetails" style=" cursor:pointer;">
@@ -84,9 +83,9 @@
                     </a>
                 </li> -->
 
-                <li class="nav-item" @click="jumpToAlgorithmsAvailableHome" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveHome ? 'active' : '']" @mouseover="handleMouseOverHome"
-                        @mouseout="handleMouseOutHome">
+                <li class="nav-item"  style=" cursor:pointer;">
+                    <a  @click.prevent="jumpToAlgorithmsAvailableHome" :class="['nav-link', { 'active': isRouteActive('AlgorithmsAvailableHome') }]" 
+                        >
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-tv-2 text-primary text-lg opacity-10"></i>
@@ -95,16 +94,15 @@
                     </a>
                 </li>
 
-                <li class="nav-item" @click="jumpToHelps" style=" cursor:pointer;">
-                    <a :class="['nav-link', isActiveInstitutions ? 'active' : '']" @mouseover="handleMouseOverInstitutions"
-                        @mouseout="handleMouseOutInstitutions">
+                <!-- <li class="nav-item" style=" cursor:pointer;">
+                    <a   @click="jumpToHelps" :class="['nav-link', { 'active': isRouteActive('HelpCenter') }]" >
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-send text-info text-lg opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1 p">Help</span>
                     </a>
-                </li>
+                </li> -->
 
             </ul>
         </div>
@@ -114,114 +112,57 @@
 <script  setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { useCurrentModel } from '../../store/currentModel'
-import { useCurrentProject } from '../../store/currentProject';
-import { useCurrentTestSuitesStore } from '../../store/currentTestSuite';
 import { ElNotification } from 'element-plus'
 import pinia from '../../store/store'
+import { useModuleStore } from '../../store/module';
+
 const router = useRouter();
-const currentProjectStore = useCurrentProject(pinia)
-const currentModel = useCurrentModel(pinia)
-const currentTestSuite = useCurrentTestSuitesStore(pinia)
-const isActiveHome = ref(false)
-const isActivePapers = ref(false)
-const isActiveScholars = ref(false)
-const isActiveInstitutions = ref(false)
-const isActiveCategory = ref(false)
-const isActiveVenue = ref(false)
-const isActiveCharts = ref(false)
+
+const moduleStore = useModuleStore(pinia)
 
 
+const isRouteActive = (routeName) => {
+    return moduleStore.CurrentRoute === routeName;
+}
 
 const jumpToAlgorithmsAvailableHome = () => {
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = 'Algorithms Available'
+    moduleStore.CurrentRoute = 'AlgorithmsAvailableHome'
     router.push({ name: 'AlgorithmsAvailableHome' })
 }
 
-// const jumpToProjects = () => {
-//     router.push({ name: 'ProjectsHome' })
-// }
+
 
 const jumpToModels = () => {
-
-        router.push({ name: 'modelsHome' })
-
-
-}
-
-const jumpToTestSuite = () => {
-
-        router.push({
-            path: '/tools/TestSuitesHomeNew',
-            query:
-                { modelid: currentModel.currentModel.modelid }
-        })
-
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Tools_Models'
+    router.push({ name: 'Tools_Models' })
 
 
 }
-const jumpToTestSuitesDetails = () => {
-    console.log("currentTestSuite.currentTestSuites.testsuitesid", currentTestSuite.currentTestSuites.testsuitesid)
-    if (currentTestSuite.currentTestSuites.testsuitesid) {
-        router.push({
-            path: '/tools/TestSuiteDetails',
-            query: {
-                TestSuiteID: currentTestSuite.currentTestSuites.testsuitesid
-            }
-        })
-    }
-    else {
-        ElNotification({
-            title: 'Need to Choose a TestSuite first',
-            message: 'Please choose a TestSuite to continue.',
-            type: 'error',
-        })
+
+const jumpToTestSuites = () => {
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = ''
+    moduleStore.CurrentRoute = 'Tools_Models'
         router.push({
             path: '/tools/TestSuitesHome',
-            query:
-                { modelid: currentModel.currentModel.modelid }
         })
-    }
+
+
 
 }
 
-
 const jumpToHelps = () => {
+    moduleStore.CurrentModule = 'Tools'
+    moduleStore.CurrentModuleDetails = 'Help'
+    moduleStore.CurrentRoute = 'HelpCenter'
     router.push({ name: 'HelpCenter' })
 }
 
-const jumpToCategory = () => {
-    router.push({ name: 'Category' })
 
-}
-const jumpToVenue = () => {
-    router.push({ name: 'Venue' })
-
-}
-
-const jumpToCharts = () => {
-    router.push({ name: 'Charts' })
-}
-const handleMouseOverHome = () => { isActiveHome.value = true; }
-const handleMouseOutHome = () => { isActiveHome.value = false }
-
-const handleMouseOverPapers = () => { isActivePapers.value = true; }
-const handleMouseOutPapers = () => { isActivePapers.value = false }
-
-
-const handleMouseOverScholars = () => { isActiveScholars.value = true; }
-const handleMouseOutScholars = () => { isActiveScholars.value = false }
-
-const handleMouseOverInstitutions = () => { isActiveInstitutions.value = true; }
-const handleMouseOutInstitutions = () => { isActiveInstitutions.value = false }
-
-const handleMouseOverCategory = () => { isActiveCategory.value = true; }
-const handleMouseOutCategory = () => { isActiveCategory.value = false }
-
-const handleMouseOverVenue = () => { isActiveVenue.value = true; }
-const handleMouseOutVenue = () => { isActiveVenue.value = false }
-
-const handleMouseOverCharts = () => { isActiveCharts.value = true; }
-const handleMouseOutCharts = () => { isActiveCharts.value = false }
 </script>
 
 
