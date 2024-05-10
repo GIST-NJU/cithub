@@ -193,13 +193,13 @@ end
                                         <el-form-item label="CASA model: ">
                                             <el-input v-model="ModelConversionForm.model_file" type="textarea"
                                                 :autosize="{ minRows: 8 }" placeholder='Note:
-1.Use `&#` as seperator to seperate each line for your CASA model.
-(Cithub will convert your CASA format model into Cithub format)
-2.For example, the model should look like this:
+1.Cithub will convert your CASA format model into Cithub format
+2.For example, the CASA format model should look like this:
 
-`
-2 &# 3 &# 2 6 3
-`
+2
+3
+2 6 3
+
 '>
                                             </el-input>
                                         </el-form-item>
@@ -207,13 +207,19 @@ end
                                         <el-form-item label="CASA constraints: ">
                                             <el-input v-model="ModelConversionForm.constraints_file" type="textarea"
                                                 :autosize="{ minRows: 8 }" placeholder='Note:
-1.Use `&#` as seperator to seperate each line for your CASA constraints.
-(Cithub will convert your CTWedge format constraints into Cithub format)
+1.Also the CASA format constraint will be converted.
 2.For example, the constraints should look like this:
 
-`
-4 &# 2 &# - 0 - 2 &# 2 &# - 0 - 3 &# 2&# - 0 - 4 &# 2 &# - 0 - 5
-`
+4 
+2 
+- 0 - 2 
+2 
+- 0 - 3 
+2
+- 0 - 4 
+2 
+- 0 - 5
+
 '>
                                             </el-input>
                                         </el-form-item>
@@ -666,8 +672,12 @@ const confirmNewModel = async () => {
                     case 'CASA Format Reader':
                         // 构造发送给PICT Format Reader的obj
                         let obj_casa = {}
-                        obj_casa.constraints_file = ModelConversionForm.constraints_file
-                        obj_casa.model_file = ModelConversionForm.model_file
+                        let constraints_file=''
+                        let model_file=''
+                        constraints_file=ModelConversionForm.constraints_file.replace(/\n/g, '&#')
+                        model_file=ModelConversionForm.model_file.replace(/\n/g, '&#')
+                        obj_casa.constraints_file = constraints_file
+                        obj_casa.model_file = model_file
                         for (const tool of toolsInfo.RECORDS) {
                             if (tool.title == ImportModelTypeChosed.value) {
                                 try {
@@ -685,13 +695,12 @@ const confirmNewModel = async () => {
                                     // console.log("CASARes结果", CASARes)
 
                                     //由于casa model的特殊性，手动构造其模型
-                                    let inputString = ModelConversionForm.model_file.replace(/&#/g, '\n');
                                     // console.log("inputString", inputString)
 
                                     const regexNumber = /\b(\d+)\b/;
                                     // 获取覆盖强度
-                                    const match = inputString.match(regexNumber);
-                                    // 输出匹配到的第一个数字作为数字类型
+                                    const match = ModelConversionForm.model_file.match(regexNumber);
+                                    // 输出匹配到的第一个数字作为覆盖强度
                                     let strength = 0
                                     if (match) {
                                         strength = parseInt(match[1], 10); // 使用parseInt将字符串转换为数字
@@ -724,9 +733,8 @@ const confirmNewModel = async () => {
                                         const result = getParameterValue(cons, parameterArray);
 
                                         // 创建包含 Constrain_x 键和结果数组的对象
-                                        const index = consArray.length + 1;
-                                        const key = `Constrain_${index}`;
-                                        const resultObject = { [key]: result };
+                                        const key = `Constraint`;
+                                            const resultObject = { [key]: result };
 
                                         // 将对象添加到数组中
                                         consArray.push(resultObject);
@@ -742,56 +750,62 @@ const confirmNewModel = async () => {
                                     // console.log("consArray",consArray)
                                     // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
 
-                                    if (ModelConversionForm.strength != null && ModelConversionForm.strength != 0) {
-                                        const currentDate = new Date();
+                                    
                                         const NewModelRes = await request({
-                                            url: '/tools/NewModel',
+                                            url: '/tools/New',
                                             method: 'POST',
                                             data: {
+
+                                                
+                                                column: 'model',
                                                 userid: userStore.userID,
                                                 modelname: dialogformNewModel.modelname,
                                                 modeldescriptions: dialogformNewModel.modeldescriptions,
                                                 modeltype: dialogformNewModel.modeltype,
                                                 lastupdatedtime: dialogformNewModel.lastupdatedtime,
                                                 createdtime: dialogformNewModel.createdtime,
-
-                                                strength: ModelConversionForm.strength,
                                                 ParametersAndValues: JSON.stringify(ParameterValuesArray),
                                                 Cons: JSON.stringify(consArray),
+
+
                                             }
                                         })
                                         if (NewModelRes.NewStatus == 'success!') {
+                                            // 更新Models table
+                                            let loadingInstance = ElLoading.service({ fullscreen: true })
+
+                                            await listAllModelsByUserID()
+
+                                            dialogFormVisibleNew.value = false
+
+                                            // 直接跳转至新模型的编辑页面
+                                            router.push({
+                                                path: '/tools/modelsDetails',
+                                                query:
+                                                {
+                                                    modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
+
+                                                }
+                                            })
+
+                                            loadingInstance.close()
                                             ElNotification({
-                                                title: 'New Model Success!',
+                                                title: 'Import CASA Model Success!',
+                                                message: 'please Check the Parameters and Constraints',
                                                 type: 'success',
                                             })
-                                            await listAllModelsByUserID()
-                                            dialogFormVisibleNew.value = false
-                                            currentModel.currentModel.modelid = route.query.modelid
-                                            currentModel.currentModel.modelname = dialogformNewModel.modelname
-                                            currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                                            currentModel.currentModel.strength = ModelConversionForm.strength
-                                            currentModel.currentModel.paramsvalues = JSON.stringify(ParameterValuesArray)
-                                            currentModel.currentModel.cons = JSON.stringify(consArray)
-                                            currentModel.currentModel.lastupdatedtime = currentDate
+
 
 
                                         }
                                         else {
                                             ElNotification({
-                                                title: 'New Model Failed!',
+                                                title: 'Import CASA Model Failed!',
                                                 type: 'error',
                                             })
                                         }
 
-                                    }
-                                    else {
-                                        ElNotification({
-                                            title: 'New Model Failed!',
-                                            message: 'check your inputs!',
-                                            type: 'error',
-                                        })
-                                    }
+                                   
 
                                 }
 
@@ -799,7 +813,7 @@ const confirmNewModel = async () => {
 
                                     console.log("err", err)
                                     ElNotification({
-                                        title: 'New Model Failed!',
+                                        title: 'Import CASA Model Failed!',
                                         message: 'check your inputs!',
                                         type: 'error',
                                     })
