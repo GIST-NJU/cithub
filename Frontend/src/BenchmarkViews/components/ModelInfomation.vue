@@ -213,7 +213,7 @@ import { useRoute, useRouter } from 'vue-router';
 import SideNav from './SideNav.vue';
 import Navbar from '../../CustomizedComponents/Navbar.vue';
 import Foot from '../../CustomizedComponents/Foot.vue';
-import { useCurrentPaper } from '../../store/currentPaper'
+import { useCurrentPaper } from '../../store/RepositoryStore/currentPaper'
 import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
 import pinia from '../../store/store'
@@ -222,10 +222,10 @@ import { ElLoading } from 'element-plus'
 import { listModelInfo, getResearchFieldColor, downloadAndZipFiles } from '../commonFunction'
 import { useModuleStore } from '../../store/module';
 import { ElNotification } from 'element-plus'
-import { usePaginationStore } from '../../store/paginationStore'
-import { usePaperInfoStore } from '../../store/paperinfoStore'
-import { useBenchmarkModelsStore } from '../../store/BenchmarkModelsStore'
-import { usecurrentBenchmarkModelStore } from '../../store/currentBenchmarkModelStore'
+import { usePaginationStore } from '../../store/RepositoryStore/paginationStore'
+import { usePaperInfoStore } from '../../store/RepositoryStore/paperinfoStore'
+import { useBenchmarkModelsStore } from '../../store/BenchmarkStore/BenchmarkModelsStore'
+import { usecurrentBenchmarkModelStore } from '../../store/BenchmarkStore/currentBenchmarkModelStore'
 
 const currentBenchmarkModel = usecurrentBenchmarkModelStore(pinia)
 const BenchmarkModels = useBenchmarkModelsStore(pinia)

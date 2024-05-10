@@ -46,7 +46,7 @@
 <script setup>
 import { defineProps, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useCurrentPaper } from '../../store/currentPaper'
+import { useCurrentPaper } from '../../store/RepositoryStore/currentPaper'
 import ArgonButton from '../../CustomizedComponents/ArgonButton.vue';
 import ArgonInput from '../../CustomizedComponents/ArgonInput.vue';
 import pinia from '../../store/store'
@@ -55,8 +55,8 @@ import { ElLoading } from 'element-plus'
 import { useModuleStore } from '../../store/module';
 import {getResearchFieldColor} from '../commonFunction'
 import { ElNotification } from 'element-plus'
-import { usePaginationStore } from '../../store/paginationStore'
-import { usePaperInfoStore } from '../../store/paperinfoStore'
+import { usePaginationStore } from '../../store/RepositoryStore/paginationStore'
+import { usePaperInfoStore } from '../../store/RepositoryStore/paperinfoStore'
 
 
 

@@ -1,9 +1,9 @@
 import { request } from '../request'
 import pinia from '../store/store';
-import { usePaginationStore } from '../store/paginationStore'
-import { useBenchmarkModelsStore } from '../store/BenchmarkModelsStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
+import { useBenchmarkModelsStore } from '../store/BenchmarkStore/BenchmarkModelsStore'
 import { useModuleStore } from '../store/module';
-import { usecurrentBenchmarkModelStore } from '../store/currentBenchmarkModelStore'
+import { usecurrentBenchmarkModelStore } from '../store/BenchmarkStore/currentBenchmarkModelStore'
 import { ElLoading } from 'element-plus'
 import JSZip from "jszip";
 import FileSaver from "file-saver";

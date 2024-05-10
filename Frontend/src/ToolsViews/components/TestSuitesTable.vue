@@ -322,6 +322,19 @@ const showdialogNew = () => {
 
 
 const confirmGenerateNewTestSuites = async () => {
+  let loadingInstance = ElLoading.service({ fullscreen: true })
+  // console.log("model", props.model)
+  if (route.name == 'TestSuites_Home') {
+    // 在 TestSuites_Home 页面，没有  currentModel.currentModel
+    // 当点击 new testsuite 之后，将所点击的testsuite table 的 model 变为  currentModel.currentModel
+
+    for (let key in props.model) {
+      if (props.model.hasOwnProperty(key)) {
+        currentModel.currentModel[key] = props.model[key];
+      }
+    }
+
+  }
   inAPIcall.value = true
   // 获取当前时刻的Date对象
   const currentDate = new Date();
@@ -335,6 +348,9 @@ const confirmGenerateNewTestSuites = async () => {
       message: 'Model Name can not be empty!',
       type: 'error',
     })
+
+    loadingInstance.close()
+
   }
 
   else {
@@ -384,15 +400,15 @@ const confirmGenerateNewTestSuites = async () => {
           if (newTestSuitesRes.NewStatus == 'success!') {
 
             // 实时更新页面数据
-            console.log("当前路由", route.name)
+            // console.log("当前路由", route.name)
             if (route.name == "TestSuite_Details") {
               // 在 TestSuite_Details 页面 更新数据
               await listAllTestSuitesByModelID([currentModel.currentModel])
 
               // 切换至新生成的 TestSuite Info
               // console.log("testSuitesStore.testSuitesList", testSuitesStore.testSuitesList)
-              let CurrentModelTestSuitesLength=testSuitesStore.testSuitesList[0].testSuites.length
-              EnterTestSuiteDetails(testSuitesStore.testSuitesList[0].testSuites[CurrentModelTestSuitesLength-1])
+              let CurrentModelTestSuitesLength = testSuitesStore.testSuitesList[0].testSuites.length
+              EnterTestSuiteDetails(testSuitesStore.testSuitesList[0].testSuites[CurrentModelTestSuitesLength - 1])
             }
             if (route.name == "TestSuites_Home") {
               // 在 TestSuites_Home 页面 更新数据
@@ -409,6 +425,7 @@ const confirmGenerateNewTestSuites = async () => {
             })
             inAPIcall.value = false
             dialogFormVisibleNew.value = false
+            loadingInstance.close()
 
 
 
@@ -420,7 +437,7 @@ const confirmGenerateNewTestSuites = async () => {
               title: 'Generate fail!',
               type: 'error',
             })
-
+            loadingInstance.close()
 
 
           }
@@ -433,7 +450,7 @@ const confirmGenerateNewTestSuites = async () => {
             title: 'Generate fail!',
             type: 'error',
           })
-
+          loadingInstance.close()
 
 
         }
@@ -467,7 +484,7 @@ const confirmDelete = async (testSuites) => {
         // 在 TestSuite_Details 页面 更新数据
         await listAllTestSuitesByModelID([currentModel.currentModel])
         // 清空TestSuite Info 区域的信息
-        currentTestSuite.currentTestSuites={}
+        currentTestSuite.currentTestSuites = {}
       }
       if (route.name == "TestSuites_Home") {
         // 在 TestSuites_Home 页面 更新数据

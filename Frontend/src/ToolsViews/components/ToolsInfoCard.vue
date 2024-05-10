@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header pb-0 px-3">
-      <ArgonBadge :color="color" variant="gradient" size="lg" ><h5 class="mb-0 text-dark">{{ props.toolType }}</h5></ArgonBadge>
+      <ArgonBadge :color="color"  size="lg" ><h5 class="mb-0 text-dark">{{ props.toolType }}</h5></ArgonBadge>
     </div>
     <div class="card-body pt-4 p-3">
       <ul class="list-group">

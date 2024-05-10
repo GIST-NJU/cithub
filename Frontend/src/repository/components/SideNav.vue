@@ -98,8 +98,8 @@ import { ref, reactive, watch } from 'vue';
 import pinia from '../../store/store'
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from '../commonFunction';
 import { useModuleStore } from '../../store/module';
-import { usePaperInfoStore } from '../../store/paperinfoStore'
-import { usePaginationStore } from '../../store/paginationStore'
+import { usePaperInfoStore } from '../../store/RepositoryStore/paperinfoStore'
+import { usePaginationStore } from '../../store/RepositoryStore/paginationStore'
 const PaginationStore = usePaginationStore(pinia)
 const moduleStore = useModuleStore(pinia)
 const PaperInfoStore = usePaperInfoStore(pinia)

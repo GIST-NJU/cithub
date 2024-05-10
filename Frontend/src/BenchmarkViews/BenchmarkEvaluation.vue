@@ -1032,8 +1032,8 @@ import SideNav from './components/SideNav.vue'
 import { searchModel } from './commonFunction'
 import { useModuleStore } from '../store/module';
 import { useUserStore } from '../store/userStore';
-import { usePaperInfoStore } from '../store/paperinfoStore'
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 import pinia from '../store/store';
 
 const router = useRouter()

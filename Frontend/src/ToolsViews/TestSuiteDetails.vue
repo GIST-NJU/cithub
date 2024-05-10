@@ -920,6 +920,7 @@ import * as echarts from 'echarts'
 import { ElLoading } from 'element-plus'
 import { nextTick } from 'vue';
 import { useModuleStore } from '../store/module';
+import { filter } from 'jszip';
 
 
 const moduleStore = useModuleStore(pinia)
@@ -1269,7 +1270,7 @@ const AlgorithmDescriptionReduction = ref('');
 
 const listAllReductionOptions = () => {
     for (const tool of toolsInfo.RECORDS) {
-        if (tool.type == "SelectionReduction") {
+        if (tool.type == "Reduction") {
             AlgorithmOptionsReduction.push({ "value": tool.title, "label": tool.title, "url": tool.url, "description": tool.description })
         }
     }
@@ -1889,7 +1890,8 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
         if (tool.value == AlgorithmChosedDiagnosis.value) {
             try {
                 const DiagnosisRes = await request({
-                    url: tool.url,
+                    // url: tool.url,
+                    url: 'http://127.0.0.1:9977/',
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
@@ -2003,6 +2005,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
 
 
                     // NextValuesSat 出现在覆盖表中的testcase的status标记为 existed ，未出现在覆盖表中的标记为 new
+                    // console.log("覆盖表", CoveringArray.value)
 
                     NextValuesSat.forEach(nextTestCase => {
                         let found = false;
@@ -2013,6 +2016,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                                     "status": "existed"
                                 });
                                 found = true; // 标记为找到匹配的情况
+                                // console.log("相等", nextTestCase, CATestCase)
                             }
                         });
                         // 如果未找到匹配的CATestCase，则将nextTestCase标记为新的测试用例
@@ -2022,8 +2026,11 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                                 "status": "new"
                             });
                         }
+                        // 将 found 重新置为 false，以便下一个测试用例进行判断
+                        found = false;
                     });
-                    // console.log("区分得到的 DiagnosisTestCases", DiagnosisTestCases)
+
+                    // console.log("划分status之后的DiagnosisTestCases", JSON.stringify(DiagnosisTestCases))
 
                     // 对DiagnosisTestCases进行排序，已有结果的testcase在最前方，其次是覆盖表中已有的testcase，最后是新的testcase
                     // 提取具有"status"键和没有"status"键的元素
@@ -2055,20 +2062,26 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     const sortedDiagnosisTestCases = TestCasesWithoutStatus.concat(TestCasesWithStatus);
                     DiagnosisTestCases.length = 0
                     DiagnosisTestCases.push(...sortedDiagnosisTestCases)
-                    // console.log("排序后的 DiagnosisTestCases", DiagnosisTestCases)
+                    // console.log("排序后的 DiagnosisTestCases", JSON.stringify(DiagnosisTestCases))
 
                     // 优化DiagnosisTestCases，去掉 testcase 重复，且已有结果的那些元素
+                    // 这里有个bug，DiagnosisTestCases 去重时 可能会去掉 testcase 相同，但是又有 testcaseResult 和 status 并且 该  testcase 又是唯一一个 有 status 的元素
+                    //  待修复
+
                     let uniqueTestcases = DiagnosisTestCases.reduce((acc, current) => {
                         // 检查是否已经存在具有相同"testcase"键的元素
                         const existingIndex = acc.findIndex(item => JSON.stringify(item.testcase) === JSON.stringify(current.testcase));
                         if (existingIndex !== -1) {
-                            // 如果已经存在，则判断是否已有元素具有"testcaseResult"键，若有，则保留该元素
+                            // 如果已经存在，则判断是否已有元素具有 "testcaseResult" 键，若有，则保留该元素
                             if (acc[existingIndex].hasOwnProperty("testcaseResult")) {
-                                // 保留具有 testcaseResult 这个key 的那个元素
+                                // 如果当前元素是整个数组中唯一一个具有 "status" 这个键的元素，则保留该元素
+                                const hasStatusKey = acc.filter(item => item.hasOwnProperty("status")).length;
+                                if (hasStatusKey === 1 && !current.hasOwnProperty("status")) {
+                                    acc.push(current);
+                                }
                                 return acc;
                             } else {
                                 // 若没有，则替换为当前元素
-
                                 acc.splice(existingIndex, 1, current);
                                 return acc;
                             }
@@ -2081,7 +2094,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     }, []);
                     DiagnosisTestCases.length = 0
                     DiagnosisTestCases.push(...uniqueTestcases)
-                    // console.log("去重优化后的 DiagnosisTestCases", DiagnosisTestCases)
+                    // console.log("去重优化后的 DiagnosisTestCases", JSON.stringify(DiagnosisTestCases))
 
                     // 新！ existed 和 new 不需要区分了，因为这样给一堆 testcase 会让人 confuse ，给一条就可以了
                     // 做法是 遍历 DiagnosisTestCases ，有 testcaseResult 这个 key 的元素都保留下来，遇到第一个有 status 这个 key 的元素 保留，然后终止循环
@@ -2099,7 +2112,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
                     DiagnosisTestCases.length = 0
                     DiagnosisTestCases.push(...NewDiagnosisTestCases)
 
-                    // console.log("新版本的 DiagnosisTestCases", DiagnosisTestCases)
+                    // console.log("新版本的 DiagnosisTestCases", JSON.stringify(DiagnosisTestCases))
 
 
                     // 记录下下一次发送的testcase
@@ -2110,6 +2123,7 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
 
                 }
             } catch (error) {
+                loadingInstance.close()
                 console.log("Diagnosis error", error)
 
             }

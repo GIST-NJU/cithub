@@ -214,13 +214,13 @@ import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import pinia from '../store/store';
 import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
-import { usePaperInfoStore } from '../store/paperinfoStore'
-import { useAuthorStore } from '../store/authorStore'
-import { useInstitutionStore } from '../store/institutionStore'
-import { useVenueStore } from '../store/venueStore'
+import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
+import { useAuthorStore } from '../store/RepositoryStore/authorStore'
+import { useInstitutionStore } from '../store/RepositoryStore/institutionStore'
+import { useVenueStore } from '../store/RepositoryStore/venueStore'
 import { useUserStore } from '../store/userStore';
 import { ElLoading } from 'element-plus'
-import { usePaginationStore } from '../store/paginationStore'
+import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 
 const PaginationStore = usePaginationStore(pinia)
 const userStore = useUserStore(pinia)
