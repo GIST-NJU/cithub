@@ -297,9 +297,22 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                             </div> -->
 
                             <!-- 使用Table显示Models -->
-                            <div class="card-header">
+                            <div v-if="modelStore.modelsList.length != 0" class="card-header">
                                 <ModelsTable :model="modelStore.modelsList"></ModelsTable>
                             </div>
+
+
+
+                            <el-result v-else icon="warning" title="You have No Models Now"
+                                sub-title="Please click the button below to create a Model">
+                                <template #extra>
+                                    <ArgonButton  color="success" variant="gradient"
+                                        @click="showdialogNew">
+                                        <span class="ni ni-fat-add ni-lg me-1" />
+                                        New Model
+                                    </ArgonButton>
+                                </template>
+                            </el-result>
 
                         </div>
 
@@ -672,10 +685,10 @@ const confirmNewModel = async () => {
                     case 'CASA Format Reader':
                         // 构造发送给PICT Format Reader的obj
                         let obj_casa = {}
-                        let constraints_file=''
-                        let model_file=''
-                        constraints_file=ModelConversionForm.constraints_file.replace(/\n/g, '&#')
-                        model_file=ModelConversionForm.model_file.replace(/\n/g, '&#')
+                        let constraints_file = ''
+                        let model_file = ''
+                        constraints_file = ModelConversionForm.constraints_file.replace(/\n/g, '&#')
+                        model_file = ModelConversionForm.model_file.replace(/\n/g, '&#')
                         obj_casa.constraints_file = constraints_file
                         obj_casa.model_file = model_file
                         for (const tool of toolsInfo.RECORDS) {
@@ -734,7 +747,7 @@ const confirmNewModel = async () => {
 
                                         // 创建包含 Constrain_x 键和结果数组的对象
                                         const key = `Constraint`;
-                                            const resultObject = { [key]: result };
+                                        const resultObject = { [key]: result };
 
                                         // 将对象添加到数组中
                                         consArray.push(resultObject);
@@ -750,62 +763,62 @@ const confirmNewModel = async () => {
                                     // console.log("consArray",consArray)
                                     // console.log("JSON.stringify(ParameterValuesArray)", JSON.stringify(ParameterValuesArray))
 
-                                    
-                                        const NewModelRes = await request({
-                                            url: '/tools/New',
-                                            method: 'POST',
-                                            data: {
 
-                                                
-                                                column: 'model',
-                                                userid: userStore.userID,
-                                                modelname: dialogformNewModel.modelname,
-                                                modeldescriptions: dialogformNewModel.modeldescriptions,
-                                                modeltype: dialogformNewModel.modeltype,
-                                                lastupdatedtime: dialogformNewModel.lastupdatedtime,
-                                                createdtime: dialogformNewModel.createdtime,
-                                                ParametersAndValues: JSON.stringify(ParameterValuesArray),
-                                                Cons: JSON.stringify(consArray),
+                                    const NewModelRes = await request({
+                                        url: '/tools/New',
+                                        method: 'POST',
+                                        data: {
 
+
+                                            column: 'model',
+                                            userid: userStore.userID,
+                                            modelname: dialogformNewModel.modelname,
+                                            modeldescriptions: dialogformNewModel.modeldescriptions,
+                                            modeltype: dialogformNewModel.modeltype,
+                                            lastupdatedtime: dialogformNewModel.lastupdatedtime,
+                                            createdtime: dialogformNewModel.createdtime,
+                                            ParametersAndValues: JSON.stringify(ParameterValuesArray),
+                                            Cons: JSON.stringify(consArray),
+
+
+                                        }
+                                    })
+                                    if (NewModelRes.NewStatus == 'success!') {
+                                        // 更新Models table
+                                        let loadingInstance = ElLoading.service({ fullscreen: true })
+
+                                        await listAllModelsByUserID()
+
+                                        dialogFormVisibleNew.value = false
+
+                                        // 直接跳转至新模型的编辑页面
+                                        router.push({
+                                            path: '/tools/modelsDetails',
+                                            query:
+                                            {
+                                                modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
 
                                             }
                                         })
-                                        if (NewModelRes.NewStatus == 'success!') {
-                                            // 更新Models table
-                                            let loadingInstance = ElLoading.service({ fullscreen: true })
 
-                                            await listAllModelsByUserID()
-
-                                            dialogFormVisibleNew.value = false
-
-                                            // 直接跳转至新模型的编辑页面
-                                            router.push({
-                                                path: '/tools/modelsDetails',
-                                                query:
-                                                {
-                                                    modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
-
-                                                }
-                                            })
-
-                                            loadingInstance.close()
-                                            ElNotification({
-                                                title: 'Import CASA Model Success!',
-                                                message: 'please Check the Parameters and Constraints',
-                                                type: 'success',
-                                            })
+                                        loadingInstance.close()
+                                        ElNotification({
+                                            title: 'Import CASA Model Success!',
+                                            message: 'please Check the Parameters and Constraints',
+                                            type: 'success',
+                                        })
 
 
 
-                                        }
-                                        else {
-                                            ElNotification({
-                                                title: 'Import CASA Model Failed!',
-                                                type: 'error',
-                                            })
-                                        }
+                                    }
+                                    else {
+                                        ElNotification({
+                                            title: 'Import CASA Model Failed!',
+                                            type: 'error',
+                                        })
+                                    }
 
-                                   
+
 
                                 }
 

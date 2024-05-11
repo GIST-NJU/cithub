@@ -1890,8 +1890,8 @@ const handleDiagnosisClick = async (testcase, testcaseResult, rowIndex) => {
         if (tool.value == AlgorithmChosedDiagnosis.value) {
             try {
                 const DiagnosisRes = await request({
-                    // url: tool.url,
-                    url: 'http://127.0.0.1:9977/',
+                    url: tool.url,
+                    // url: 'http://127.0.0.1:9977/',
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
