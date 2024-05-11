@@ -3,13 +3,13 @@
     <!-- <div class="card-header pb-0">
       <h5>Models List</h5>
     </div> -->
-    <div class="card-body px-0 pt-0 pb-2">
+    <div v-if="props.model.length != 0" class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
               <th class=" text-secondary   opacity-7 text-center">index </th>
-              <th class=" text-secondary   opacity-7 text-center">Model </th>
+              <th class=" text-secondary   opacity-7 ">Model </th>
               <th class=" text-secondary   opacity-7 text-center">Type </th>
               <!-- <th class=" text-secondary   opacity-7 ">Strength</th> -->
               <th class=" text-secondary   opacity-7 text-center">Num of Params</th>
@@ -30,7 +30,7 @@
               </td>
 
               <td>
-                <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column justify-content-start align-items-start">
                   <div>
                     <h5 class="mb-0">{{ model.modelname }}</h5>
                   </div>
@@ -102,6 +102,9 @@
         </table>
       </div>
     </div>
+
+
+
   </div>
 </template>
 

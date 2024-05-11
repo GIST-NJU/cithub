@@ -2,6 +2,7 @@ package com.gist.cithub.backend.User.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.gist.cithub.backend.Tools.service.ModelsService;
 import com.gist.cithub.backend.common.utils.JWTUtils;
 import com.gist.cithub.backend.common.utils.PageUtils;
 import com.gist.cithub.backend.common.utils.R;
@@ -27,6 +28,9 @@ import static com.gist.cithub.backend.common.utils.JWTUtils.verifyAndgetToken;
 public class UsersController {
     @Autowired
     private UsersService usersService;
+
+
+
 
 
     /**
@@ -92,17 +96,6 @@ public class UsersController {
     @RequestMapping("/RegisterUser")
     public R registerUser(@RequestBody Map<String, Object> frontRequest) {
         Boolean flag = usersService.registerUser(frontRequest);
-//        System.out.println(frontRequest);
-//        frontRequest.remove("password");
-//        frontRequest.remove("passwordagain");
-//        String username=frontRequest.get("username").toString();
-//        String email=frontRequest.get("email").toString();
-//        Map<String,String> mapNew=new HashMap<>();
-//        mapNew.put("username",username);
-//        mapNew.put("email",email);
-//        String token=JWTUtils.createToken(mapNew);
-//        System.out.println("token里的username是:"+verifyAndgetToken(token).getClaim("username"));
-//        System.out.println("token里的email是:"+verifyAndgetToken(token).getClaim("email"));
         if (flag) {
             System.out.println("注册成功！");
             return R.ok().put("res", frontRequest);
