@@ -2,10 +2,8 @@ package com.gist.cithub.backend.Tools.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.gist.cithub.backend.Tools.entity.ProjectsEntity;
 import com.gist.cithub.backend.Tools.entity.TestSuitesEntity;
 import com.gist.cithub.backend.Tools.service.TestSuitesService;
-import com.gist.cithub.backend.common.utils.PageUtils;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Tools.entity.ModelsEntity;
 import com.gist.cithub.backend.Tools.service.ModelsService;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +26,8 @@ public class ToolsController {
 
     @Autowired
     private TestSuitesService testSuitesService;
+
+
 
     @RequestMapping("/listByID")
     public R listBy(@RequestBody Map<String, Object> info) {
@@ -192,6 +192,43 @@ public class ToolsController {
                 modelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
 
                 boolean updateResult = modelsService.updateById(modelsEntity);
+
+                if (updateResult) {
+                    return R.ok().put("SaveModelStatus", "success");
+                } else {
+                    return R.ok().put("SaveModelStatus", "fail");
+
+                }
+
+            case "llmmodel":
+                Object llmmodelid = info.get("modelid");
+                if (llmmodelid instanceof Integer) {
+                    llmmodelid = (Integer) llmmodelid;
+                } else if (llmmodelid instanceof String) {
+                    // 如果是字符串，尝试将其转换为整数
+                    llmmodelid = Integer.parseInt((String) llmmodelid);
+                } else {
+                    // 处理其他类型的情况，例如记录日志或抛出异常
+                    System.err.println("Unsupported type for strength: " + llmmodelid.getClass());
+                    return R.ok().put("msg", "error");
+                }
+
+//                更新 LLM Model 本身的信息
+                QueryWrapper<ModelsEntity> queryWrapperLLMmodel = new QueryWrapper<>();
+                queryWrapperLLMmodel.eq("ModelID", info.get("modelid"));
+                ModelsEntity llmmodelsEntity = modelsService.getOne(queryWrapperLLMmodel);
+                llmmodelsEntity.setParamsvalues((String) info.get("ParametersAndValues"));
+                llmmodelsEntity.setCons((String) info.get("Cons"));
+
+
+
+                //        将时间戳转为Date类型
+                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                 lastUpdateTime = LocalDateTime.parse((String) info.get("lastupdatedtime"), formatter);
+
+                llmmodelsEntity.setLastupdatedtime(java.sql.Timestamp.valueOf(lastUpdateTime));
+
+                updateResult = modelsService.updateById(llmmodelsEntity);
 
                 if (updateResult) {
                     return R.ok().put("SaveModelStatus", "success");
@@ -565,6 +602,8 @@ public class ToolsController {
                 if (flag) return R.ok().put("NewStatus", "success!");
                 else return R.ok().put("NewStatus", "failed!");
 
+
+
 //                New TestSuite
             case "testsuite":
                 TestSuitesEntity testSuitesEntity = new TestSuitesEntity();
@@ -587,7 +626,7 @@ public class ToolsController {
                 }
 
                 //        将时间戳转为Date类型
-                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
                 Object createdtime = info.get("createdtime");
                 if (createdtime != null) {
@@ -617,7 +656,7 @@ public class ToolsController {
                 } else if (modelid instanceof Integer) {
                     testSuitesEntity.setModelid((Integer) modelid);
                 }
-                flag=testSuitesService.save(testSuitesEntity);
+                flag = testSuitesService.save(testSuitesEntity);
                 if (flag) return R.ok().put("NewStatus", "success!");
                 else return R.ok().put("NewStatus", "failed!");
 
@@ -625,4 +664,37 @@ public class ToolsController {
         }
         return R.ok();
     }
+
+    @RequestMapping(value = "/count", method = RequestMethod.POST)
+    public R Count(@RequestBody Map<String, Object> info) {
+        System.out.println("模型id的数组信息");
+        System.out.println(info);
+        // 从info中提取modelidList
+        List<Integer> modelIds = (List<Integer>) info.get("modelidList");
+        System.out.println("modelIds");
+        System.out.println(modelIds);
+        List<Map<String, Object>> results = testSuitesService.getCountByModelIds(modelIds);
+
+        // 对结果进行处理，确保每个modelid都存在统计结果
+        for (Integer modelId : modelIds) {
+            boolean found = false;
+            for (Map<String, Object> result : results) {
+                Integer resultModelId = (Integer) result.get("modelid");
+                if (modelId.equals(resultModelId)) {
+                    found = true;
+                    break;
+                }
+            }
+            // 如果不存在统计结果，则手动添加一个统计结果为0的条目
+            if (!found) {
+                Map<String, Object> zeroCountResult = new HashMap<>();
+                zeroCountResult.put("modelid", modelId);
+                zeroCountResult.put("count", 0);
+                results.add(zeroCountResult);
+            }
+        }
+        return R.ok().put("data", results);
+    }
+
+
 }

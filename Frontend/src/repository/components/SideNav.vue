@@ -96,7 +96,7 @@
 import { useRouter } from 'vue-router';
 import { ref, reactive, watch } from 'vue';
 import pinia from '../../store/store'
-import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from '../commonFunction';
+import { listAllPapers } from '../commonFunction';
 import { useModuleStore } from '../../store/module';
 import { usePaperInfoStore } from '../../store/RepositoryStore/paperinfoStore'
 import { usePaginationStore } from '../../store/RepositoryStore/paginationStore'

@@ -1163,7 +1163,7 @@ const handleAlgorithmOptionsPrioritizationChange = () => {
 let Weight = reactive([])
 const confirmNewPrioritisation = async () => {
 
-    Weight = Array(currentModel.currentModel.PandVOBJ.length).fill(0)
+    // Weight = Array(currentModel.currentModel.PandVOBJ.length).fill(0)
 
     // console.log("currentModel", currentModel.currentModel)
     // console.log("currentTestSuites", currentTestSuite.currentTestSuites)

@@ -23,9 +23,10 @@ const PaginationStore = usePaginationStore(pinia)
 const listAllPapers = async () => {
     try {
         const res = await request({
-            url: '/repo/list/listAllpapers',
+            url: '/repo/list/listAll',
             method: 'POST',
             data: {
+                column:"Papers",
                 pagenum: PaginationStore.pagenum,
                 pagesize: PaginationStore.pagesize
             }
@@ -48,10 +49,10 @@ const listAllScholars = () => {
 
     request(
         {
-            url: 'repo/author/listallauthor',
+            url: '/repo/list/listAll',
             method: 'POST',
             data: {
-                obj: "Combinatorial Testing"
+                column:"Scholars",
             }
 
 
@@ -72,10 +73,10 @@ const listAllInstitutions = () => {
 
     request(
         {
-            url: 'repo/author/listAllInstitutions',
+            url: '/repo/list/listAll',
             method: 'POST',
             data: {
-                obj: "Combinatorial Testing"
+                column:"Institutions",
             }
 
 
@@ -107,50 +108,50 @@ const listAllInstitutions = () => {
 
 }
 
-const listallVenue = () => {
+// const listallVenue = () => {
 
-    request(
-        {
-            url: 'repo/list/listallVenue',
-            method: 'POST',
-            data: {
-                obj: "Combinatorial Testing"
-            }
+//     request(
+//         {
+//             url: '/repo/list/listAll',
+//             method: 'POST',
+//             data: {
+//                 column:"Venues",
+//             }
 
 
-        }
-    ).then((res) => {
+//         }
+//     ).then((res) => {
 
-        let tempArray = []
-        for (let i = 0, len = res.res.length; i < len; i++) {
-            if (res.res[i].abbr == 'Phd' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayPhd.push(res.res[i].booktitle)
-            else if (res.res[i].abbr == 'Book' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayBook.push(res.res[i].booktitle)
-            else if (res.res[i].abbr == 'other' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayOther.push(res.res[i].booktitle)
-            else tempArray.push(res.res[i].abbr)
+//         let tempArray = []
+//         for (let i = 0, len = res.res.length; i < len; i++) {
+//             if (res.res[i].abbr == 'Phd' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayPhd.push(res.res[i].booktitle)
+//             else if (res.res[i].abbr == 'Book' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayBook.push(res.res[i].booktitle)
+//             else if (res.res[i].abbr == 'other' && res.res[i].booktitle.indexOf('not found') == -1) VenueStore.VenueArrayOther.push(res.res[i].booktitle)
+//             else tempArray.push(res.res[i].abbr)
 
-        }
+//         }
 
-        tempArray = Array.from(new Set(tempArray))
-        for (var i = 0; i < tempArray.length; i++) {
-            VenueStore.VenueArray.push(tempArray[i])
-        }
+//         tempArray = Array.from(new Set(tempArray))
+//         for (var i = 0; i < tempArray.length; i++) {
+//             VenueStore.VenueArray.push(tempArray[i])
+//         }
 
-        VenueStore.VenueArray = VenueStore.VenueArray.sort()
-        VenueStore.VenueArrayPhd = VenueStore.VenueArrayPhd.sort().reverse()
-        VenueStore.VenueArrayBook = VenueStore.VenueArrayBook.sort().reverse()
-        VenueStore.VenueArrayOther = VenueStore.VenueArrayOther.sort().reverse()
-    }).catch((error) => { console.log(error) })
+//         VenueStore.VenueArray = VenueStore.VenueArray.sort()
+//         VenueStore.VenueArrayPhd = VenueStore.VenueArrayPhd.sort().reverse()
+//         VenueStore.VenueArrayBook = VenueStore.VenueArrayBook.sort().reverse()
+//         VenueStore.VenueArrayOther = VenueStore.VenueArrayOther.sort().reverse()
+//     }).catch((error) => { console.log(error) })
 
-}
+// }
 
 const listAllCountry = () => {
 
     request(
         {
-            url: 'repo/author/listAllCountry',
+            url: '/repo/list/listAll',
             method: 'POST',
             data: {
-                obj: "Combinatorial Testing"
+                column:"Country",
             }
 
 
@@ -165,36 +166,36 @@ const listAllCountry = () => {
 
 }
 
-const listAllTags = () => {
+// const listAllTags = () => {
 
-    request(
-        {
-            url: 'repo/list/listAllTags',
-            method: 'POST',
-            data: {
-                obj: "Combinatorial Testing"
-            }
-
-
-        }
-    ).then((res) => {
-        console.log("res", res)
-        TagStore.TagArray.length = 0
-        for (let i = 0, len = res.res.length; i < len; i++) {
-            if (res.res[i].tag != null && res.res[i].tag != '') {
-                let tempArray = res.res[i].tag.split(',')
-                TagStore.TagArray.push(...tempArray)
-            }
+//     request(
+//         {
+//             url: '/repo/list/listAll',
+//             method: 'POST',
+//             data: {
+//                 column:"Tags",
+//             }
 
 
-        }
+//         }
+//     ).then((res) => {
+//         console.log("res", res)
+//         TagStore.TagArray.length = 0
+//         for (let i = 0, len = res.res.length; i < len; i++) {
+//             if (res.res[i].tag != null && res.res[i].tag != '') {
+//                 let tempArray = res.res[i].tag.split(',')
+//                 TagStore.TagArray.push(...tempArray)
+//             }
 
-        TagStore.TagArray = [...new Set(TagStore.TagArray)]
-        console.log("TagStore.TagArray", TagStore.TagArray)
 
-    }).catch((error) => { console.log(error) })
+//         }
 
-}
+//         TagStore.TagArray = [...new Set(TagStore.TagArray)]
+//         console.log("TagStore.TagArray", TagStore.TagArray)
+
+//     }).catch((error) => { console.log(error) })
+
+// }
 
 
-export { listAllPapers, listAllScholars, listAllInstitutions, listallVenue, listAllCountry, listAllTags }
+export { listAllPapers, listAllScholars, listAllInstitutions, listAllCountry }

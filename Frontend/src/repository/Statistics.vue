@@ -26,7 +26,7 @@
               <h5>Number of Publications</h5>
               <p class="text-muted">The annual and cumulative number of CIT publications</p>
               <div class="charts">
-                <div class="echarts" id="ChartNumber" ref="ChartNumber" style="height:360%; width:100%"></div>
+                <div class="echarts" id="ChartNumber" ref="ChartNumber" style="height:400%; width:100%"></div>
               </div>
             </div>
           </div>
@@ -134,13 +134,19 @@ let ChartNumberOption = reactive({
     data: ['# cumulative publications', '# annual publications'],
     right: '10',  // 调整图例位置，可根据需要调整
     top: '10',    // 调整图例位置，可根据需要调整
-    orient: 'vertical'  // 设置图例的排列方向为垂直
+    orient: 'vertical', // 设置图例的排列方向为垂直,
+
+    // textStyle: {
+    //   fontSize: 20  // 设置图例字体大小
+    // }
+ 
   },
   xAxis: {
     name: 'year',
     nameLocation: 'center',
     nameTextStyle: {
-      padding: [20, 0, 0, 0]
+      padding: [20, 0, 0, 0],
+      // fontSize: 20  // 设置x轴名称的字体大小
     },
     type: 'category',
     data: [],
@@ -148,13 +154,17 @@ let ChartNumberOption = reactive({
       showMaxLabel: true,
       interval: 0,
       rotate: 40,
+      textStyle: {
+        // fontSize: 15  // 设置x轴标签的字体大小
+      }
     }
   },
   yAxis: {
     name: '# publications',
     nameLocation: 'center',
     nameTextStyle: {
-      padding: [0, 0, 15, 0]
+      padding: [0, 0, 15, 0],
+      // fontSize: 20  // 设置y轴名称的字体大小
     },
     type: 'value',
     interval: 200 // 设置刻度的间隔，可以根据需要调整
@@ -320,7 +330,7 @@ let ChartDevelopFieldOption = reactive({
     top: 'bottom',
     padding: 0,
     textStyle: {
-      fontSize: 12 // 添加字体大小配置
+      fontSize: 15 // 添加字体大小配置
     }
   },
   grid: {
@@ -331,11 +341,16 @@ let ChartDevelopFieldOption = reactive({
   },
   xAxis: {
     type: 'category',
+    name:'year',
     data: [],
     axisLabel: {
       showMaxLabel: true,
       interval: 0,
-      rotate: 15,
+      rotate: 60,
+      // fontSize:15
+    },
+    nameTextStyle: {
+      fontSize: 15,
     }
   },
   yAxis: {
@@ -345,7 +360,7 @@ let ChartDevelopFieldOption = reactive({
     nameLocation: 'middle',
     nameGap: 40,
     nameTextStyle: {
-      fontSize: 14,
+      fontSize: 15,
     }
 
   },
@@ -636,6 +651,11 @@ const initChartDistributionScholars = async () => {
 onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
   
+
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  
+  moduleStore.CurrentRoute = 'Repository_Statistics'
   moduleStore.CurrentModule = 'Statistics'
   await initChartNumber()
   await initChartField()

@@ -39,43 +39,70 @@ const listAllModelsByUserID = async () => {
             modelStore.modelsList[i].createdtimeFormat = dateObject_created.toLocaleString();
             modelStore.modelsList[i].lastupdatedtimeFormat = dateObject_lastupdated.toLocaleString();
 
+            if (modelStore.modelsList[i].paramsvalues) {
+                modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
+                modelStore.modelsList[i].NumofParams = modelStore.modelsList[i].PandVOBJ.length
+            }
+            if (modelStore.modelsList[i].cons) {
+                modelStore.modelsList[i].ConsOBJ = JSON.parse(modelStore.modelsList[i].cons)
+                modelStore.modelsList[i].NumofCons = modelStore.modelsList[i].ConsOBJ.length
+            }
 
-            modelStore.modelsList[i].PandVOBJ = JSON.parse(modelStore.modelsList[i].paramsvalues)
-            modelStore.modelsList[i].ConsOBJ = JSON.parse(modelStore.modelsList[i].cons)
-            modelStore.modelsList[i].NumofParams = modelStore.modelsList[i].PandVOBJ.length
-            modelStore.modelsList[i].NumofCons = modelStore.modelsList[i].ConsOBJ.length
-            let transformedData = modelStore.modelsList[i].PandVOBJ.map(item => {
-                // 将逗号分隔的字符串转换为数组
-                const valueArray = item.Value.split(',');
+            if (modelStore.modelsList[i].PandVOBJ && modelStore.modelsList[i].modeltype!='LLM' ) {
+                let transformedData = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    // 将逗号分隔的字符串转换为数组
+                    const valueArray = item.Value.split(',');
 
-                // 更新对象的Value字段为数组
-                return {
-                    ...item,
-                    Value: valueArray
-                };
-            });
-            modelStore.modelsList[i].PandVOBJ = transformedData
-            // 移除 row_index 属性
-            let tableDataTmp = modelStore.modelsList[i].PandVOBJ.map(item => {
-                const { row_index, ...rest } = item;
-                return rest;
-            });
-            modelStore.modelsList[i].PandVOBJ = tableDataTmp
+                    // 更新对象的Value字段为数组
+                    return {
+                        ...item,
+                        Value: valueArray
+                    };
+                });
+                modelStore.modelsList[i].PandVOBJ = transformedData
+                // 移除 row_index 属性
+                let tableDataTmp = modelStore.modelsList[i].PandVOBJ.map(item => {
+                    const { row_index, ...rest } = item;
+                    return rest;
+                });
+                modelStore.modelsList[i].PandVOBJ = tableDataTmp
+            }
 
 
-            const res = await request({
-                url: '/tools/listByID',
-                method: 'POST',
-                data: {
-                    searchkeywords: modelStore.modelsList[i].modelid,
-                    column: "modelid"
-                }
-            });
 
-            modelStore.modelsList[i].NumOfTestSuites = res.TestSutiesRES.length
 
 
         }
+
+        // 这里要获取每个 model 拥有的 testsuites的数量
+        // 使用 map 方法提取每个对象的 modelid 并汇总到一个新的数组中
+        const modelidList = modelStore.modelsList.map(model => model.modelid);
+        // console.log("modelidList", modelidList)
+        const res = await request({
+            url: '/tools/count',
+            method: 'POST',
+            data: {
+                column: "modelid",
+                modelidList: modelidList
+            }
+        });
+
+        // modelStore.modelsList[i].NumOfTestSuites = res.TestSutiesRES.length
+
+
+        // 遍历统计结果
+        res.data.forEach(result => {
+            let { modelid, count } = result;
+
+            // 遍历模型数组，根据modelid匹配，并赋值count给NumOfTestSuites属性
+            modelStore.modelsList.forEach(model => {
+                if (model.modelid == modelid) {
+                    model.NumOfTestSuites = count;
+                    return; // 匹配到后跳出循环
+                }
+            });
+        });
+        // console.log("modelStore.modelsList", modelStore.modelsList)
 
 
 
@@ -101,17 +128,32 @@ const listModelInfoByModelID = async (modelid) => {
         });
         // console.log("res ModelInfo", res)
         currentModel.currentModel = {}
-        currentModel.currentModel.modelid = res.ModelRES.modelid
-        // currentModel.currentModel.strength = res.ModelRES.strength
-        currentModel.currentModel.modelname = res.ModelRES.modelname
-        currentModel.currentModel.modeldescriptions = res.ModelRES.modeldescriptions
-        currentModel.currentModel.paramsvalues = res.ModelRES.paramsvalues
-        currentModel.currentModel.cons = res.ModelRES.cons
-        currentModel.currentModel.lastupdatedtime = res.ModelRES.lastupdatedtime
-        currentModel.currentModel.createdtime = res.ModelRES.createdtime
+        // currentModel.currentModel.modelid = res.ModelRES.modelid
+        // currentModel.currentModel.modelname = res.ModelRES.modelname
+        // currentModel.currentModel.modeldescriptions = res.ModelRES.modeldescriptions
+        // currentModel.currentModel.paramsvalues = res.ModelRES.paramsvalues
+        // currentModel.currentModel.cons = res.ModelRES.cons
+        // currentModel.currentModel.lastupdatedtime = res.ModelRES.lastupdatedtime
+        // currentModel.currentModel.createdtime = res.ModelRES.createdtime
 
-        currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
-        currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
+        for (let key in res.ModelRES) {
+            if (res.ModelRES.hasOwnProperty(key)) {
+                currentModel.currentModel[key] = res.ModelRES[key];
+            }
+        }
+        if (currentModel.currentModel.paramsvalues) {
+
+            currentModel.currentModel.PandVOBJ = JSON.parse(currentModel.currentModel.paramsvalues)
+
+        }
+        if (currentModel.currentModel.cons) {
+
+            currentModel.currentModel.ConsOBJ = JSON.parse(currentModel.currentModel.cons)
+        }
+
+
+
+
 
         if (currentModel.currentModel.ConsOBJ) {
             // 将约束直接变为禁止元组的形式
