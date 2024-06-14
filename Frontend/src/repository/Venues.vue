@@ -76,7 +76,6 @@ import { request } from '../request';
 import { useRouter } from 'vue-router';
 import pinia from '../store/store';
 import { useModuleStore } from '../store/module';
-import { listallVenue } from './commonFunction';
 import { ElLoading } from 'element-plus'
 import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
@@ -144,9 +143,12 @@ const handleDtClick = async (event) => {
 onMounted(() => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
 
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  
+  moduleStore.CurrentRoute = 'Repository_Venues'
   moduleStore.CurrentModule = 'Venues'
-  // // 获取所有Venue
-  // listallVenue()
+
   loadingInstance.close()
 
 })

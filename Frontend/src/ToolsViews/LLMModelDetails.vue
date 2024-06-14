@@ -13,58 +13,60 @@
                         <div class="card-body">
                             <div class="col-md-3">
                                 <h4> Model Name</h4>
-                                <argon-input v-model="model.modelname" type="text" />
+                                <argon-input v-model="model.modelname" type="text" readonly />
                             </div>
 
                             <div class="col-md-10">
                                 <h4> Model Description</h4>
-                                <argon-input type="text" v-model="model.modeldescriptions" />
+                                <argon-input type="text" v-model="model.modeldescriptions" readonly />
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <h4> API key</h4>
-                                    <argon-input v-model="model.apikey" type="password" />
+                                    <argon-input v-model="model.apikey" type="password" readonly />
                                 </div>
                                 <div class="col-md-3">
                                     <h4> BaseUrl(Proxy)</h4>
-                                    <argon-input v-model="model.baseurl" type="text" />
+                                    <argon-input v-model="model.baseurl" type="text" readonly />
                                 </div>
 
                                 <div class="col-md-3">
                                     <h4> LLM</h4>
-                                    <argon-input v-model="model.llmmodel" type="text" />
+                                    <argon-input v-model="model.llmmodel" type="text" readonly />
                                 </div>
                             </div>
 
 
                             <div class="col-md-10">
-                                <h4> SUT Description:</h4>
-                                <el-input v-model="model.semanticstype" type="textarea" disabled :autosize="{ minRows: 5 }">
+                                <h4> Specification Title (ST):</h4>
+                                <el-input v-model="model.semanticstype" type="textarea" readonly :autosize="{ minRows: 5 }">
                                 </el-input>
                                 <!-- <argon-input v-model="model.semanticstype" type="text" /> -->
                             </div>
 
                             <div class="col-md-10">
-                                <h4> SUT Corpus:</h4>
-                                <el-input v-model="model.semantics" type="textarea" disabled :autosize="{ minRows: 10 }">
+                                <h4> Specification Corpus (SC):</h4>
+                                <el-input v-model="model.semantics" type="textarea" readonly :autosize="{ minRows: 10 }">
                                 </el-input>
                             </div>
 
-                            <div v-if="model.paramsvalues == null" class="col-md-10">
+                            <div v-if="!model.paramsvalues" class="col-md-10">
                                 <hr class="my-3 horizontal white" />
                                 <hr class="my-3 horizontal white" />
-                                <ArgonButton color="success" size="lg" full-width @click="extractCITModel"><span
-                                        class="ni ni-fat-add ni-lg me-1" />Use LLM to extract CIT
-                                    model now!</ArgonButton>
+                                <ArgonButton :color="startExtractingFlag ? 'warning' : 'success'" size="lg" full-width
+                                    @click="extractCITModel"><span class="ni ni-fat-add ni-lg me-1" />{{ startExtractingFlag
+                                        ? 'Re-extract CT Model' : 'Use LLM to extract CT model now!' }}
+                                </ArgonButton>
                             </div>
 
                             <div v-if="startExtractingFlag" class="col-md-10">
                                 <hr class="my-3 horizontal white" />
-                                <div v-if="stopExtractingFlag == false" style="display:flex;margin-bottom: 3px;">
-                                    <div class="spinner-border">
+                                <!-- <div v-if="stopExtractingFlag == false" style="display:flex;margin-bottom: 3px;">
+                                    <div class="spinner-border text-success">
                                     </div>
-                                    <h5 style="margin:3px 0px 0px 5px">Extracting CIT model...(if may takes a few minutes,
-                                        please wait.)</h5>
+                                    <h5 style="margin:3px 0px 0px 5px">LLM is Extracting CIT model, it may take a few
+                                        minutes to get the final result,
+                                        please wait for a while :)</h5>
                                 </div>
 
                                 <div v-if="stopExtractingFlag" style="display:flex;margin-bottom: 3px;">
@@ -84,47 +86,73 @@
                                 <ArgonBadge style="margin-left:5px" color="warning">Total tokens:</ArgonBadge><span
                                     style="margin-left:5px">{{ prompt_tokens + completion_tokens }}</span>
 
-                                <hr class="my-3 horizontal white" />
-                                <el-input v-model="ProcessPreview" type="textarea" disabled
+                                <hr class="my-3 horizontal white" /> -->
+                                
+                                <el-input v-model="ProcessPreview" type="textarea" readonly
                                     :autosize="{ minRows: 10 }"></el-input>
                                 <hr class="my-3 horizontal white" />
 
-                                <div v-if="inExtractingFlag">
+                                <div v-if="stopExtractingFlag == false" style="display:flex;margin-bottom: 3px;">
+                                    <div class="spinner-border text-success">
+                                    </div>
+                                    <h5 style="margin:3px 0px 0px 5px">LLM is Extracting CIT model, it may take a few
+                                        minutes to get the final result,
+                                        please wait for a while :)</h5>
+                                </div>
+
+                                <div v-if="stopExtractingFlag" style="display:flex;margin-bottom: 3px;">
+                                    <ArgonBadge color="danger"
+                                        style="display: flex;justify-content: center;align-items: center;">Error
+                                    </ArgonBadge>
+                                    <h5 style="margin:0px 0px 0px 5px">Extracting CIT model failed...</h5>
+
+                                </div>
+
+
+                                <h6>Real-time tokens consumption</h6>
+                                <ArgonBadge>prompt tokens:</ArgonBadge><span style="margin-left:5px">{{ prompt_tokens
+                                }}</span>
+                                <ArgonBadge style="margin-left:5px" color="info">completion tokens:</ArgonBadge><span
+                                    style="margin-left:5px">{{ completion_tokens }}</span>
+                                <ArgonBadge style="margin-left:5px" color="warning">Total tokens:</ArgonBadge><span
+                                    style="margin-left:5px">{{ prompt_tokens + completion_tokens }}</span>
+
+                                <div v-if="endExtractingFlag">
                                     <h4> Extracted Parameters and Values:</h4>
-                                    <el-input v-model="ParametersExtractedPreview" type="textarea" disabled
+                                    <el-input v-model="ParamsAndValuesPreivew" type="textarea" readonly
                                         :autosize="{ minRows: 10 }"
-                                        :placeholder="inExtractingFlag ? 'Parameters and Values are extracting now, the results of extraction will be displayed here, please wait for them......' : Final_PandV_List_extracted"></el-input>
+                                        :placeholder="inExtractingFlag ? 'Parameters and Values are extracting now, the results of extraction will be displayed here, please wait for them......' : JSON.stringify(Final_PandV_List_extracted)"></el-input>
                                     <hr class="my-3 horizontal white" />
                                     <h4> Extracted Constraints:</h4>
-                                    <el-input v-model="ConsExtractedPreview" type="textarea" disabled
-                                        :autosize="{ minRows: 10 }"
-                                        :placeholder="inExtractingFlag ? 'Constraints are extracting now, the results of extraction will be displayed here, please wait for it......' : Cons_extracted"></el-input>
+                                    <el-input v-model="ConsPreview" type="textarea" readonly :autosize="{ minRows: 10 }"
+                                        :placeholder="inExtractingFlag ? 'Constraints are extracting now, the results of extraction will be displayed here, please wait for it......' : JSON.stringify(Cons_extracted)"></el-input>
                                     <hr class="my-3 horizontal white" />
 
                                     <ArgonButton color="primary" size="lg" @click="SaveModel"><span
                                             class="ni ni-fat-add ni-lg me-1" />Save Extrated Model</ArgonButton>
 
                                     <ArgonButton style="margin-left:5px" color="warning" size="lg" @click="extractCITModel">
-                                        <span class="ni ni-fat-add ni-lg me-1" />Regenerate
+                                        <span class="ni ni-fat-add ni-lg me-1" />Re-extract CT Model
                                     </ArgonButton>
                                 </div>
                             </div>
 
 
                             <div v-if="model.paramsvalues" class="col-md-10">
+
                                 <hr class="my-3 horizontal white" />
                                 <el-divider>
-                                    <h6>Following is the CIT Model extracted by LLM</h6>
+                                    <h6>Following is the CIT Model extracted by LLM {{ model.llmmodel }}</h6>
                                 </el-divider>
 
                                 <hr class="my-3 horizontal white" />
 
                                 <h4>Parametes and Values</h4>
-                                <el-input v-model="ParamsAndValuesPreivew" type="textarea" disabled
+                                <el-input v-model="ParamsAndValuesPreivew" type="textarea" readonly
                                     :autosize="{ minRows: 10 }"></el-input>
                                 <hr class="my-3 horizontal white" />
                                 <h4>Constraints</h4>
-                                <el-input v-model="ConsPreview" type="textarea" disabled
+                                <el-input v-model="ConsPreview" type="textarea" readonly
                                     :autosize="{ minRows: 10 }"></el-input>
                             </div>
 
@@ -156,6 +184,12 @@ import { useLLMmodellingStore } from '../store/ToolsStore/LLMmodellingStore';
 import { useCurrentModel } from '../store/ToolsStore/currentModel';
 import { ElNotification } from 'element-plus'
 import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
+import { ElLoading } from 'element-plus'
+import { listModelInfoByModelID } from './commonFunction.js'
+import { useModuleStore } from '../store/module';
+import OpenAI from "openai";
+
+
 
 import {
     systemContent,
@@ -185,7 +219,7 @@ import {
     prompt_V_ConvertToJson_Enumerated_ListAllSpecifyValues,
     prompt_V_ConvertToJson_Enumerated_Boundary
 } from './Prompts'
-import OpenAI from "openai";
+
 
 
 const route = useRoute()
@@ -193,11 +227,10 @@ const router = useRouter()
 const currentModel = useCurrentModel(pinia)
 const llmFormStore = useLLMmodellingStore(pinia)
 const model = reactive({})
-
+const moduleStore = useModuleStore(pinia)
 const ParamsAndValuesPreivew = ref('')
 const ConsPreview = ref('')
-const ParametersExtractedPreview = ref('')
-const ConsExtractedPreview = ref('')
+
 const ProcessPreview = ref('')
 
 const startExtractingFlag = ref(false)
@@ -205,58 +238,20 @@ const inExtractingFlag = ref(false)
 const endExtractingFlag = ref(false)
 const stopExtractingFlag = ref(false)
 
-const Final_PandV_List_extracted = reactive()
-const Cons_extracted = reactive()
+let Final_PandV_List_extracted = reactive()
+let Cons_extracted = reactive()
 
 
 
 
 
 
-const listModelInfoByModelID = async () => {
-    try {
-        const res = await request({
-            url: '/tools/models/info/' + route.query.modelid,
-            method: 'POST'
-        });
 
-        model.modelid = res.models.modelid
-        model.strength = res.models.strength
-        model.modelname = res.models.modelname
-        model.modeldescriptions = res.models.modeldescriptions
-        model.paramsvalues = res.models.paramsvalues
-        model.cons = res.models.cons
-        model.lastupdatedtime = res.models.lastupdatedtime
-        model.createdtime = res.models.createdtime
-
-        model.apikey = res.models.apikey
-        model.baseurl = res.models.baseurl
-        model.llmmodel = res.models.llmmodel
-        model.semanticstype = res.models.semanticstype
-        model.semantics = res.models.semantics
-
-
-        ParamsAndValuesPreivew.value = JSON.stringify(JSON.parse(model.paramsvalues), null, 6)
-        ConsPreview.value = JSON.stringify(JSON.parse(model.cons), null, 6)
-
-        if (model.paramsvalues == null) {
-            ElNotification({
-                title: 'Everything is ready!',
-                message: 'Hit the button in the bottom to extract CIT model!',
-                type: 'success',
-                duration: 0
-            })
-        }
-
-    } catch (err) {
-        console.error(err);
-    }
-}
 const prompt_tokens = ref(0)
 const completion_tokens = ref(0)
 
 const extractCITModel = async () => {
-    ProcessPreview.value += 'All extracting process will be displayed here, Please waiting a moment for the API calling result..............\n'
+    ProcessPreview.value = 'All extracting process will be displayed here, Please waiting a moment for the API calling result..............\n'
     ProcessPreview.value += '----------------------------------------Extracting Parameters and Values----------------------------------------\n'
     startExtractingFlag.value = true
     inExtractingFlag.value = true
@@ -355,8 +350,18 @@ const extractCITModel = async () => {
             let temp = parameters_list_NoValueType.parameters;
             parameters_list_NoValueType = temp;
         }
+        console.log("parameters_list_NoValueType", parameters_list_NoValueType)
+        console.log(`共识别出 ${parameters_list_NoValueType.length} 个参数，没有参数取值类型，如下：`);
+        console.log("parameters_list_NoValueType", JSON.stringify(parameters_list_NoValueType, null, 6))
+        ProcessPreview.value += `\n共识别出 ${parameters_list_NoValueType.length} 个参数，没有参数取值类型，如下：`
+        ProcessPreview.value += `\n${JSON.stringify(parameters_list_NoValueType, null, 6)}`
+        // for (const param of parameters_list_NoValueType) {
+        //     console.log(param.param)
+        //     ProcessPreview.value += `\n${param.param}`
 
-        console.log(`共识别出 ${parameters_list_NoValueType.length} 个参数，如下：`);
+        // }
+
+        ProcessPreview.value += `\n----------------------------------------现在开始对每一个参数识别参数取值类型----------------------------------------`
 
         //  对list中的每一个param 获得它的valuetype
         let parameters_list_temp = []
@@ -409,14 +414,16 @@ const extractCITModel = async () => {
 
         }
 
-        console.log("共识别出", len(parameters_list), "个参数，如下：")
-        ProcessPreview.value += `\n"共识别出", ${len(parameters_list)}, "个参数，如下："\n${response.choices[0].message.content}\n`;
-        for (const param of parameters_list) {
-            console.log(param)
-            console.log(param.param, param.valuetype)
-            ProcessPreview.value += `\n${param}\n`
-            ProcessPreview.value += `\n${param.param}, ${param.valuetype}\n`
-        }
+        console.log("共识别出", parameters_list.length, "个参数，有参数取值类型，如下：")
+        ProcessPreview.value += `\n"共识别出", ${parameters_list.length}, "个参数，有参数取值类型，如下："\n`;
+        console.log("parameters_list", JSON.stringify(parameters_list, null, 6))
+        ProcessPreview.value += `\n${JSON.stringify(parameters_list, null, 6)}`
+        // for (const param of parameters_list) {
+
+        //     console.log(param.param, param.valuetype)
+
+        //     ProcessPreview.value += `\n${param.param}, ${param.valuetype}\n`
+        // }
 
         // 确定Boolean型参数的取值，直接就是True False
         let PandV_List_Boolean = []
@@ -527,10 +534,10 @@ const extractCITModel = async () => {
                     ProcessPreview.value += `对于enumerated类型的参数 ${param.param}，其参数取值在corpus中都specified了，得到的最终的Json是, ${EnumeratedJsonSpecified}\n`
                     PandV_List_Enumerated.push(EnumeratedJsonSpecified);
 
-                    console.log("\n token使用情况", response2.usage);
+                    console.log("\n token使用情况", response.usage);
                     prompt_tokens.value = prompt_tokens.value + response.usage.prompt_tokens
                     completion_tokens.value = completion_tokens.value + response.usage.completion_tokens
-                    console.log("\n api调用结束原因", response2.choices[0].finish_reason);
+                    console.log("\n api调用结束原因", response.choices[0].finish_reason);
                 }
 
                 // 如果回答是No，该enumerated参数的参数取值没有都在corpus出现
@@ -694,7 +701,7 @@ const extractCITModel = async () => {
 
                             messages_Enumerated.push({
                                 "role": "user",
-                                "content": prompt_V_ConvertToJson_Enumerated_YesBoundary.format(
+                                "content": prompt_V_ConvertToJson_Enumerated_YesBoundary(
                                     param.param,
                                     param.param_reasons,
                                     param.valuetype,
@@ -753,7 +760,7 @@ const extractCITModel = async () => {
 
                             messages_Enumerated.push({
                                 "role": "user",
-                                "content": prompt_V_ConvertToJson_Enumerated_NoBoundary.format(
+                                "content": prompt_V_ConvertToJson_Enumerated_NoBoundary(
                                     param.param,
                                     param.param_reasons,
                                     param.valuetype,
@@ -779,7 +786,7 @@ const extractCITModel = async () => {
                             EnumeratedJsonNoBoundary.Empty = 'Empty';
                             console.log(`对于enumerated类型的参数没有boundary",${param.param},"最终的Json是`)
                             ProcessPreview.value += `\n对于enumerated类型的参数没有boundary",${param.param},"最终的Json是\n`
-                            console.log(EnumeratedJsonNoBoundary)
+                            console.log("EnumeratedJsonNoBoundary", EnumeratedJsonNoBoundary)
                             ProcessPreview.value += `\n${EnumeratedJsonNoBoundary}\n`
                             PandV_List_Enumerated.push(EnumeratedJsonNoBoundary)
                         }
@@ -864,7 +871,7 @@ const extractCITModel = async () => {
 
                     messages_UserInput.push({
                         "role": "user",
-                        "content": prompt_V_ConvertToJson_UserInput_YesBoundary.format(
+                        "content": prompt_V_ConvertToJson_UserInput_YesBoundary(
                             param.param,
                             param.param_reasons,
                             param.valuetype,
@@ -924,7 +931,7 @@ const extractCITModel = async () => {
 
                     messages_UserInput.push({
                         "role": "user",
-                        "content": prompt_V_ConvertToJson_UserInput_NoBoundary.format(
+                        "content": prompt_V_ConvertToJson_UserInput_NoBoundary(
                             param.param,
                             param.param_reasons,
                             param.valuetype,
@@ -949,7 +956,7 @@ const extractCITModel = async () => {
                     console.log("\n token使用情况", response.usage);
                     prompt_tokens.value = prompt_tokens.value + response.usage.prompt_tokens
                     completion_tokens.value = completion_tokens.value + response.usage.completion_tokens
-                    console.log("\n api调用结束原因", response2.choices[0].finish_reason);
+                    console.log("\n api调用结束原因", response.choices[0].finish_reason);
                     PandV_List_UserInput.push(UserInputJsonNoBoundary);
                 }
 
@@ -981,7 +988,7 @@ const extractCITModel = async () => {
         console.log("----------------------------------------------------整合Enumerated----------------------------------------------------------------");
         ProcessPreview.value += `\n----------------------------------------------------整合Enumerated---------------------------------------------------------------- \n`
         for (const enumParam of PandV_List_Enumerated) {
-            console.log(enumParam);
+            console.log("enumParam", enumParam);
             ProcessPreview.value += `\n ${enumParam} \n`
 
             // All values specified
@@ -992,12 +999,12 @@ const extractCITModel = async () => {
             // Yes Boundary
             else if (enumParam.boundary_values) {
                 const values_merged = [
-                    ...enumParam.boundary_values,
-                    ...enumParam.slightly_below_boundary_values,
-                    ...enumParam.slightly_above_boundary_values,
-                    ...enumParam.greater_than_boundary_values,
-                    ...enumParam.less_than_boundary_values,
-                    ...enumParam.Empty
+                    enumParam.boundary_values,
+                    enumParam.slightly_below_boundary_values,
+                    enumParam.slightly_above_boundary_values,
+                    enumParam.greater_than_boundary_values,
+                    enumParam.less_than_boundary_values,
+                    enumParam.Empty
                 ];
                 Final_PandV_List.push({ 'param': enumParam.param, 'valuetype': enumParam.valuetype, 'values': values_merged });
             }
@@ -1005,9 +1012,9 @@ const extractCITModel = async () => {
             // No Boundary
             else if (enumParam.valid_values) {
                 const values_merged = [
-                    ...enumParam.valid_values,
-                    ...enumParam.invalid_values,
-                    ...enumParam.Empty
+                    enumParam.valid_values,
+                    enumParam.invalid_values,
+                    enumParam.Empty
                 ];
                 Final_PandV_List.push({ 'param': enumParam.param, 'valuetype': enumParam.valuetype, 'values': values_merged });
             }
@@ -1023,12 +1030,12 @@ const extractCITModel = async () => {
             // Yes Boundary
             if (userInputParam.boundary_values) {
                 const values_merged = [
-                    ...userInputParam.boundary_values,
-                    ...userInputParam.slightly_below_boundary_values,
-                    ...userInputParam.slightly_above_boundary_values,
-                    ...userInputParam.greater_than_boundary_values,
-                    ...userInputParam.less_than_boundary_values,
-                    ...userInputParam.Empty
+                    userInputParam.boundary_values,
+                    userInputParam.slightly_below_boundary_values,
+                    userInputParam.slightly_above_boundary_values,
+                    userInputParam.greater_than_boundary_values,
+                    userInputParam.less_than_boundary_values,
+                    userInputParam.Empty
                 ];
                 Final_PandV_List.push({ 'param': userInputParam.param, 'valuetype': userInputParam.valuetype, 'values': values_merged });
             }
@@ -1036,9 +1043,9 @@ const extractCITModel = async () => {
             // No Boundary
             else if (userInputParam.valid_values) {
                 const values_merged = [
-                    ...userInputParam.valid_values,
-                    ...userInputParam.invalid_values,
-                    ...userInputParam.Empty
+                    userInputParam.valid_values,
+                    userInputParam.invalid_values,
+                    userInputParam.Empty
                 ];
                 Final_PandV_List.push({ 'param': userInputParam.param, 'valuetype': userInputParam.valuetype, 'values': values_merged });
             }
@@ -1049,12 +1056,13 @@ const extractCITModel = async () => {
 
         console.log("整合后的Param数量是", Final_PandV_List.length);
         ProcessPreview.value += `\n整合后的Param数量是", ${Final_PandV_List.length} \n`
+        console.log(JSON.stringify(Final_PandV_List, null, 6));
+        ProcessPreview.value += `\n ${JSON.stringify(Final_PandV_List, null, 6)}\n`
+        // for (const param of Final_PandV_List) {
+        //     console.log(param);
+        //     ProcessPreview.value += `\n ${param}\n`
 
-        for (const param of Final_PandV_List) {
-            console.log(param);
-            ProcessPreview.value += `\n ${param}\n`
-
-        }
+        // }
 
 
         // 提取约束
@@ -1105,7 +1113,7 @@ const extractCITModel = async () => {
         completion_tokens.value = completion_tokens.value + response.usage.completion_tokens
 
         console.log("\n api调用结束原因", response.choices[0].finish_reason);
-
+        let Cons_list;
         if (AnswerJson.answer === 'done') {
             messages_Cons.push({ "role": "user", "content": prompt_Cons_2(model.semanticstype) });
             response = await openai.chat.completions.create({
@@ -1164,37 +1172,51 @@ const extractCITModel = async () => {
             prompt_tokens.value = prompt_tokens.value + response.usage.prompt_tokens
             completion_tokens.value = completion_tokens.value + response.usage.completion_tokens
             console.log("\n api调用结束原因", response.choices[0].finish_reason);
-            console.log("得到的约束的Json Obj：");
-            ProcessPreview.value += `\n 得到的约束的Json Obj： \n `
 
-            let Cons_list = JSON.parse(response.choices[0].message.content);
-            for (const cons of Cons_list) {
-                console.log(cons);
-                ProcessPreview.value += `\n ${cons} \n `
+            Cons_list = JSON.parse(response.choices[0].message.content);
+            // for (const cons of Cons_list) {
+            //     console.log(cons);
+            //     ProcessPreview.value += `\n ${cons} \n `
 
-            }
+            // }
         }
 
         console.log("--------------------------------PandV List------------------------------------");
         ProcessPreview.value += `\n --------------------------------PandV List------------------------------------ \n `
 
-        for (const param of Final_PandV_List) {
-            console.log(param);
-            ProcessPreview.value += `\n ${param} \n `
+        console.log(JSON.stringify(Final_PandV_List, null, 6));
+        ProcessPreview.value += `\n ${JSON.stringify(Final_PandV_List, null, 6)} \n `
+        // for (const param of Final_PandV_List) {
+        //     console.log(param);
+        //     ProcessPreview.value += `\n ${param} \n `
 
-        }
+        // }
         console.log("--------------------------------Cons-------------------------------------------");
         ProcessPreview.value += `\n  --------------------------------Cons------------------------------------------- \n `
 
-        for (const cons of Cons_list) {
-            console.log(cons);
-            ProcessPreview.value += `\n ${cons} \n `
+        console.log(JSON.stringify(Cons_list, null, 6));
+        ProcessPreview.value += `\n ${JSON.stringify(Cons_list, null, 6)} \n `
 
-        }
+        // for (const cons of Cons_list) {
+        //     console.log(cons);
+        //     ProcessPreview.value += `\n ${cons} \n `
+
+        // }
         inExtractingFlag.value = false
         endExtractingFlag.value = true
         Final_PandV_List_extracted = Final_PandV_List
         Cons_extracted = Cons_list
+        console.log("Final_PandV_List_extracted Json", JSON.stringify(Final_PandV_List_extracted, null, 6))
+        console.log("Cons_extracted Json", JSON.stringify(Cons_extracted, null, 6))
+
+        ParamsAndValuesPreivew.value = JSON.stringify(Final_PandV_List_extracted, null, 6)
+        ConsPreview.value = JSON.stringify(Cons_extracted, null, 6)
+
+        ElNotification({
+            title: 'Extract success!',
+            message: 'Please click the Button to save or re-extract!',
+            type: 'success',
+        });
 
 
     }
@@ -1203,18 +1225,21 @@ const extractCITModel = async () => {
             title: 'Extract Failed!',
             message: 'Please check the reasons!',
             type: 'error',
-            duration: 0
         });
+        inExtractingFlag.value = false
+        endExtractingFlag.value = true
+        startExtractingFlag.value = false
+        inExtractingFlag.value = false
+        stopExtractingFlag.value = true
 
-        stopExtractingFlag.value = true;
         console.log("err", err);
 
         const errorMessage = String(err);
 
         if (errorMessage.includes("Connection error")) {
-            ProcessPreview.value = `Extract Model from SUT corpus failed\nOpenAI ${errorMessage}`;
+            ProcessPreview.value = `Extract Model from SUT corpus failed.\nOpenAI ${errorMessage}`;
         } else {
-            ProcessPreview.value = `Extract Model from SUT corpus failed\n ${errorMessage}`;
+            ProcessPreview.value = `Extract Model from SUT corpus failed.\nError Reason: ${errorMessage}.\n LLM may not return the response in the required Json format, please try to re-extract in a few more times.`;
         }
     }
 
@@ -1222,16 +1247,17 @@ const extractCITModel = async () => {
 }
 
 const SaveModel = async () => {
-    if (endExtractingFlag.value) {
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    try {
         const currentDate = new Date();
         const saveExtractedModel = await request({
-            url: '/tools/models/SaveModel',
+            url: '/tools/Save',
             method: 'POST',
             data: {
-                modelid: route.query.modelid,
+                column: 'llmmodel',
+                modelid: model.modelid,
                 modelname: model.modelname,
                 modeldescriptions: model.modeldescriptions,
-                strength: 0,
                 ParametersAndValues: JSON.stringify(Final_PandV_List_extracted),
                 Cons: JSON.stringify(Cons_extracted),
                 lastupdatedtime: currentDate
@@ -1242,25 +1268,89 @@ const SaveModel = async () => {
 
             ElNotification({
                 title: 'Save Success!',
+                message: 'Save Success!',
                 type: 'success',
             })
-            await listModelInfoByModelID()
+            await listModelInfoByModelID(route.query.modelid)
+
+            for (let key in currentModel.currentModel) {
+                if (currentModel.currentModel.hasOwnProperty(key)) {
+                    model[key] = currentModel.currentModel[key];
+                }
+            }
+
+
+
+            ParamsAndValuesPreivew.value = JSON.stringify(model.paramsvalues, null, 6)
+            ConsPreview.value = JSON.stringify(model.cons, null, 6)
+
+
+            loadingInstance.close()
+
         }
+    } catch (error) {
+        console.log("save model error", error)
+        loadingInstance.close()
 
     }
-    else {
-        ElNotification({
-            title: 'Save Failed!',
-            message: 'Extracting, please wait...',
-            type: 'error',
-            duration: 0
-        })
-    }
+
+
+
 
 }
 
 onMounted(async () => {
-    await listModelInfoByModelID()
+    let loadingInstance = ElLoading.service({ fullscreen: true })
+    await listModelInfoByModelID(route.query.modelid)
+
+    try {
+        moduleStore.CurrentSubSystem = "Tools"
+        moduleStore.CurrentSubSystemRoute = "Tools_Models"
+        moduleStore.CurrentModule = 'LLM Modelling'
+        moduleStore.CurrentModuleDetails = ''
+        moduleStore.CurrentRoute = 'LLMModelDetails'
+
+        for (let key in currentModel.currentModel) {
+            if (currentModel.currentModel.hasOwnProperty(key)) {
+                model[key] = currentModel.currentModel[key];
+            }
+        }
+        // model.modelid = res.models.modelid
+        // model.modelname = res.models.modelname
+        // model.modeldescriptions = res.models.modeldescriptions
+        // model.paramsvalues = res.models.paramsvalues
+        // model.cons = res.models.cons
+        // model.lastupdatedtime = res.models.lastupdatedtime
+        // model.createdtime = res.models.createdtime
+
+        // model.apikey = res.models.apikey
+        // model.baseurl = res.models.baseurl
+        // model.llmmodel = res.models.llmmodel
+        // model.semanticstype = res.models.semanticstype
+        // model.semantics = res.models.semantics
+
+        if (model.paramsvalues) {
+            ParamsAndValuesPreivew.value = JSON.stringify(JSON.parse(model.paramsvalues), null, 6)
+
+        }
+        if (model.cons) {
+            ConsPreview.value = JSON.stringify(JSON.parse(model.cons), null, 6)
+
+        }
+
+        if (!model.paramsvalues) {
+            ElNotification({
+                title: 'Everything is ready!',
+                message: 'Hit the button in the bottom to extract CIT model!',
+                type: 'success',
+            })
+        }
+        loadingInstance.close()
+    } catch (error) {
+        console.log("error", error)
+        loadingInstance.close()
+    }
+    loadingInstance.close()
 
 })
 </script>

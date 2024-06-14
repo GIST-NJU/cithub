@@ -247,7 +247,7 @@ end
                                                 :value="item.value" />
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="SUT Description:">
+                                    <el-form-item label="Spec Title(ST):">
                                         <el-input v-model="LLMModellingForm.semanticsType" type="textarea" clearable
                                             :autosize="{ minRows: 5 }" placeholder="A short description for your SUT corpus.
 For example, for the SUT corpus in the following Input Box, the description of it is:
@@ -256,7 +256,7 @@ The withdrawal case study of a ATM application.
 `">
                                         </el-input>
                                     </el-form-item>
-                                    <el-form-item label="SUT Corpus:">
+                                    <el-form-item label="Spec Corpus(SC):">
                                         <el-input v-model="LLMModellingForm.semantics" type="textarea" clearable
                                             :autosize="{ minRows: 15 }" placeholder="Note:                                           
 1.Cithub will extract parameters, values and constraints from the corpus of SUT you provided ending with a abstract CIT model.
@@ -306,8 +306,7 @@ A withdrawal transaction asks the customer to choose an account type to withdraw
                             <el-result v-else icon="warning" title="You have No Models Now"
                                 sub-title="Please click the button below to create a Model">
                                 <template #extra>
-                                    <ArgonButton  color="success" variant="gradient"
-                                        @click="showdialogNew">
+                                    <ArgonButton color="success" variant="gradient" @click="showdialogNew">
                                         <span class="ni ni-fat-add ni-lg me-1" />
                                         New Model
                                     </ArgonButton>
@@ -356,7 +355,6 @@ const route = useRoute()
 const router = useRouter()
 const modelStore = useModelsStore(pinia)
 const currentModel = useCurrentModel(pinia)
-const llmFormStore = useLLMmodellingStore(pinia)
 const userStore = useUserStore(pinia)
 
 
@@ -372,7 +370,7 @@ const LLMModellingForm = reactive({
     semantics: 'A withdrawal transaction asks the customer to choose an account type to withdraw from savings-account or checking-account, and to choose an amount from a menu of possible amounts. The system verifies that it has sufficient money on hand to satisfy the request before sending the transaction to the bank. If not, the customer is informed and asked to enter different amount. If the transaction is approved by the bank, the appropriate amount of cash is dispensed by the machine before it issues a receipt. The dispensing of cash is also recorded in the ATM’s log. A withdrawal transaction can be cancelled by the customer by pressing the Cancel key any time prior to choosing the amount. The customer cannot withdraw amount greater than 10000 from his savings account in a single transaction.',
     semanticsType: 'The withdrawal feature case study of ATM application',
     LLMmodel: 'gpt-3.5-turbo-0125',
-    baseUrl: 'https://api.openai-proxy.org',
+    baseUrl: 'https://api.openai-proxy.org/v1',
 })
 
 
@@ -1174,19 +1172,19 @@ const confirmNewModel = async () => {
 
                 }
                 else {
-
                     const NewModelRes = await request({
-                        url: '/tools/NewModel',
+                        url: '/tools/New',
                         method: 'POST',
                         data: {
-                            userid: userStore.userID,
+                            column: 'model',
                             modelname: dialogformNewModel.modelname,
                             modeldescriptions: dialogformNewModel.modeldescriptions,
                             modeltype: dialogformNewModel.modeltype,
+                            userid: userStore.userID,
                             lastupdatedtime: dialogformNewModel.lastupdatedtime,
                             createdtime: dialogformNewModel.createdtime,
 
-                            strength: ModelConversionForm.strength,
+
 
                             apikey: LLMModellingForm.apikey,
                             semantics: LLMModellingForm.semantics,
@@ -1196,22 +1194,25 @@ const confirmNewModel = async () => {
                         }
                     })
                     if (NewModelRes.NewStatus == 'success!') {
-                        ElNotification({
-                            title: 'New LLM Model Success!',
-                            type: 'success',
-                        })
+                        // 更新Models table
+                        let loadingInstance = ElLoading.service({ fullscreen: true })
+
                         await listAllModelsByUserID()
+
                         dialogFormVisibleNew.value = false
 
-                        currentModel.currentModel.modelid = route.query.modelid
-                        currentModel.currentModel.modelname = dialogformNewModel.modelname
-                        currentModel.currentModel.modeldescriptions = dialogformNewModel.modeldescriptions
-                        currentModel.currentModel.strength = ''
-                        currentModel.currentModel.paramsvalues = ''
-                        currentModel.currentModel.cons = ''
-                        currentModel.currentModel.lastupdatedtime = currentDate
+                        // 直接跳转至大语言模型建模的界面
+                        router.push({
+                            path: '/tools/LLMModelDetails',
+                            query:
+                            {
+                                modelid: modelStore.modelsList[modelStore.modelsList.length - 1].modelid,
 
-                        llmFormStore.llmForm = LLMModellingForm
+                            }
+                        })
+                        loadingInstance.close()
+         
+
 
 
                     }

@@ -325,40 +325,40 @@ const searchBy = async (value) => {
 //   }
 // }
 
-const searchByCountry = async (country) => {
-  try {
-    moduleStore.CurrentModuleDetails = country
-    PaperInfoStore.paperinfos.length = 0
-    PaperInfoStore.searchKeyWords = country
+// const searchByCountry = async (country) => {
+//   try {
+//     moduleStore.CurrentModuleDetails = country
+//     PaperInfoStore.paperinfos.length = 0
+//     PaperInfoStore.searchKeyWords = country
 
-    const searchByCountryRes = await request({
-      url: 'repo/list/searchByCountry',
-      method: 'POST',
-      data: {
-        searchkeywords: country
-      }
-    })
-    // console.log("searchByCountryRes", searchByCountryRes)
-    PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
-    PaperInfoStore.total = searchByCountryRes.res.length
-
-
-
-    router.push({
-      path: '/repository/papers',
-      query: {
-        paginationActive: '关闭',
-        module: 'Country',
-      }
-    })
+//     const searchByCountryRes = await request({
+//       url: 'repo/list/searchByCountry',
+//       method: 'POST',
+//       data: {
+//         searchkeywords: country
+//       }
+//     })
+//     // console.log("searchByCountryRes", searchByCountryRes)
+//     PaperInfoStore.paperinfos.push(...searchByCountryRes.res)
+//     PaperInfoStore.total = searchByCountryRes.res.length
 
 
 
+//     router.push({
+//       path: '/repository/papers',
+//       query: {
+//         paginationActive: '关闭',
+//         module: 'Country',
+//       }
+//     })
 
-  } catch (error) {
 
-  }
-}
+
+
+//   } catch (error) {
+
+//   }
+// }
 
 const groupNamesByLastWord = (names) => {
   const groupedNames = {};
@@ -416,6 +416,10 @@ const sortedGroupedNames = computed(() => {
 onMounted(async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
 
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  
+  moduleStore.CurrentRoute = 'Repository_Scholars'
   if (moduleStore.CurrentModule == '') {
     moduleStore.CurrentModule = activeTab.value
 

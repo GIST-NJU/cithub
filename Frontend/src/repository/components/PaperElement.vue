@@ -10,19 +10,22 @@
           <p class="mb-0">
             {{ props.item.author }}<br>
             <strong>{{ props.item.title }}</strong><br>
-            <em>{{ props.item.booktitle }}</em>
+            <em>{{ props.item.booktitle +' ' }}</em>
             <template v-if="props.item.type === 'article'">
               <template v-if="props.item.abbr">
                 ({{ props.item.abbr }}),
               </template>
+              <template v-if="props.item.year">
+                {{ ' '+ props.item.year +',' }}
+              </template>
               <template v-if="props.item.vol">
-                {{ props.item.vol }}
+                {{ ' '+props.item.vol  }}
               </template>
               <template v-if="props.item.no">
-                ({{ props.item.no }}):
+                {{ '('+ props.item.no +')'  }}
               </template>
               <template v-if="props.item.pages && props.item.pages != 'not found'">
-                {{ props.item.pages }}
+                {{ ': '+props.item.pages  }}
               </template>
             </template>
 
@@ -34,7 +37,7 @@
                 {{ props.item.year }}
               </template>
               <template v-if="props.item.pages && props.item.pages != 'not found'">
-                :{{ props.item.pages }}
+                {{ ': '+ props.item.pages }}
               </template>
             </template>
           </p>

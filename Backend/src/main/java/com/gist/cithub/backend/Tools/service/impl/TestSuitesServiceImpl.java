@@ -8,6 +8,7 @@ import com.gist.cithub.backend.common.utils.Query;
 import com.gist.cithub.backend.Tools.dao.TestSuitesDao;
 import com.gist.cithub.backend.Tools.entity.TestSuitesEntity;
 import com.gist.cithub.backend.Tools.service.TestSuitesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.Map;
 
 @Service("TestSuitesService")
 public class TestSuitesServiceImpl extends ServiceImpl<TestSuitesDao, TestSuitesEntity> implements TestSuitesService {
+
+    @Autowired
+    private  TestSuitesDao testSuitesDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -33,5 +37,13 @@ public class TestSuitesServiceImpl extends ServiceImpl<TestSuitesDao, TestSuites
         wrapper.eq("ModelID", Modelid);
         return list(wrapper);
     }
+
+    @Override
+    public List<Map<String, Object>> getCountByModelIds(List<Integer> modelIds) {
+        return testSuitesDao.countTestSuitesByModelIds(modelIds);
+    }
+
+
+
 
 }

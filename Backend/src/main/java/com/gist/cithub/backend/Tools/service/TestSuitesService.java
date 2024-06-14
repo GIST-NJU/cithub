@@ -17,7 +17,10 @@ import java.util.Map;
 public interface TestSuitesService extends IService<TestSuitesEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
     List<TestSuitesEntity> listTestSuitesByModelID(Integer Modelid);
+
+    List<Map<String, Object>> getCountByModelIds(List<Integer> modelIds);
 
 }
 

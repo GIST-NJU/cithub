@@ -269,7 +269,7 @@ import ArgonBadge from './components/ArgonBadge.vue'
 import ArgonInput from '../CustomizedComponents/ArgonInput.vue';
 import ArgonButton from '../CustomizedComponents/ArgonButton.vue';
 import pinia from '../store/store';
-import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+import { listAllPapers } from './commonFunction';
 import { useCurrentAuthorStore } from '../store/RepositoryStore/currentAuthorStore'
 import { useModuleStore } from '../store/module';
 import { usePaginationStore } from '../store/RepositoryStore/paginationStore'
@@ -638,7 +638,11 @@ onMounted(async () => {
   }
   else {
     let loadingInstance = ElLoading.service({ fullscreen: true })
-    console.log("设置为Complete Paper List")
+    // console.log("设置为Complete Paper List")
+    moduleStore.CurrentSubSystem = 'Repository'
+    moduleStore.CurrentSubSystemRoute = 'Repository_Home'
+
+
     moduleStore.CurrentModule = 'Complete Paper List'
     moduleStore.CurrentModuleDetails = ''
     moduleStore.CurrentRoute = 'Repository_Papers'

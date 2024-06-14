@@ -1,11 +1,43 @@
+# 选择要激活的配置，本地开发时激活 dev
 spring:
+  profiles:
+    active: dev
+---
+#开发环境的配置，可根据本地环境修改数据库url
+spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     username: root
     password: 123456
     url: jdbc:mysql://localhost:3306/cithub
-#    url: jdbc:mysql://210.28.135.32:9173/cithub
-#    url: jdbc:mysql://159.75.80.154:3306/cithub
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  port: 9172
+---
+#生产环境的配置，在使用docker打包为镜像时会自动启用
+#该部分内容通常不需要修改，如需修改数据库与暴露的端口，请修改和服务器上的数据库和nginx转发端口一致。
+
+spring:
+  config:
+    activate:
+      on-profile: pro
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://210.28.135.32:9173/cithub
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:

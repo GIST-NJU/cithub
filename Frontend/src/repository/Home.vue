@@ -213,7 +213,7 @@ import { request,CheckLogin } from '../request';
 import { useRouter } from 'vue-router';
 import { useModuleStore } from '../store/module';
 import pinia from '../store/store';
-import { listAllPapers, listAllScholars, listAllInstitutions, listallVenue } from './commonFunction';
+
 import { usePaperInfoStore } from '../store/RepositoryStore/paperinfoStore'
 import { useAuthorStore } from '../store/RepositoryStore/authorStore'
 import { useInstitutionStore } from '../store/RepositoryStore/institutionStore'
@@ -302,7 +302,7 @@ const initChart = () => {
     }
 
   }).then((res) => {
-    // console.log("countEachYear",res)
+    console.log("countEachYear",res)
     let tempYear = []
     let tempData = []
     let totalPapers = 0; // 新增一个变量用于累加总篇数
@@ -311,6 +311,8 @@ const initChart = () => {
       totalPapers += res.countEachYear[i].RecordCount; // 累加总篇数
       tempData.push(totalPapers); // 将累加的总篇数添加到tempData中
     }
+    // 累计论文数据
+    console.log("累计论文数据",tempData)
     echartsOptions.xAxis.data = tempYear
     echartsOptions.series[0].data = tempData
 
@@ -334,7 +336,7 @@ const resizeChart = () => {
 
 
 
-
+// 通过输入的关键词模糊搜索
 const searchPapers = async () => {
   let loadingInstance = ElLoading.service({ fullscreen: true })
   PaginationStore.pagenum = 1
@@ -411,43 +413,25 @@ onMounted(async () => {
   initChart()
   resizeChart()
 
-  // 获取papers总数
-  const countTotalPapersRes = await request({
-    url: "repo/list/countTotalPapers",
+  // 获取papers总数 institutions总数 scholars总数
+  const countTotalRes = await request({
+    url: "repo/list/countTotal",
     method: 'POST',
-    data: {
-      typerofPapers: "Combinatorial Testing"
-    }
-  })
-  // console.log("countTotalPapersRes", countTotalPapersRes)
-  totalPapersCount.value = countTotalPapersRes.total
+    data:{}
 
-  // 获取Scholars总数
-  const countTotalScholarsRes = await request({
-    url: "repo/author/countTotalScholars",
-    method: 'POST',
-    data: {
-      typerofPapers: "Combinatorial Testing"
-    }
   })
-  // console.log("countTotalScholarsRes", countTotalScholarsRes)
-  totalScholarsCount.value = countTotalScholarsRes.total
+  // console.log("countTotalRes是", countTotalRes)
+  totalPapersCount.value = countTotalRes.totalPapers
+  totalScholarsCount.value = countTotalRes.totalScholars
+  totalInstitutionsCounth.value = countTotalRes.totalInstitutions
 
-  // 获取Institutions总数
-  const countTotalInstitutionsRes = await request({
-    url: "repo/author/countTotalInstitutions",
-    method: 'POST',
-    data: {
-      typerofPapers: "Combinatorial Testing"
-    }
-  })
-  // console.log("countTotalInstitutionsRes", countTotalInstitutionsRes)
-  totalInstitutionsCounth.value = countTotalInstitutionsRes.total
 
+  // 初始化最新的5篇文章
   await listRecentPapers()
   loadingInstance.close()
     
   } catch (error) {
+  console.log("发生错误",error) 
   loadingInstance.close()
     
   }

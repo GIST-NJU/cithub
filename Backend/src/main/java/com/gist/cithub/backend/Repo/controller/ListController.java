@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gist.cithub.backend.Repo.dao.ListDao;
+import com.gist.cithub.backend.Repo.entity.authorAndscholarEntity;
+import com.gist.cithub.backend.Repo.service.authorAndinstitutionService;
 import com.gist.cithub.backend.Tools.entity.ModelsEntity;
 import com.gist.cithub.backend.common.utils.R;
 import com.gist.cithub.backend.Repo.entity.ListEntity;
@@ -17,10 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -42,47 +42,92 @@ public class ListController {
     @Autowired
     private ListDao listDao;
 
+    @Autowired
+    private authorAndinstitutionService authorAndinstitutionService;
+
 
     /**
      * 列表
      */
 
-//    @RequestMapping(value = "/getAllTypeOfPapers", method = RequestMethod.POST)
-//    public R getAllTypeOfPapers() {
-//        List<Map<String, Object>> res = listService.getAllTypeofPapers();
-////        System.out.println("res是"+res);
-//        return R.ok().put("res", res);
-//    }
 
     //    @Operation(summary = "列出所有文献")
-    @RequestMapping(value = "/listAllpapers", method = RequestMethod.POST)
-    public R listAllpapers(@RequestBody Map<String, Object> pageinfo) {
+    @RequestMapping(value = "/listAll", method = RequestMethod.POST)
+    public R listAll(@RequestBody Map<String, Object> info) {
 /*
 pagenum当前是第几页
 pagesize每页有几项
 * */
-        System.out.println("pageinfo是" + pageinfo);
-        Integer pagenum = (Integer) pageinfo.get("pagenum");
-        Integer pagesize = (Integer) pageinfo.get("pagesize");
-        Page<ListEntity> listEntityPage = listService.listAllPapers(pagenum, pagesize);
+        System.out.println("pageinfo是" + info);
+        String column = (String) info.get("column");
+        switch (column) {
+            case "Papers":
+                Integer pagenum = (Integer) info.get("pagenum");
+                Integer pagesize = (Integer) info.get("pagesize");
+                Page<ListEntity> listEntityPage = listService.listAllPapers(pagenum, pagesize);
 //        System.out.println("success");
-        return R.ok().put("listEntityPage", listEntityPage);
+                return R.ok().put("listEntityPage", listEntityPage);
 
+            case "Scholars":
+                QueryWrapper<authorAndscholarEntity> queryWrapperScholars = new QueryWrapper<>();
+                queryWrapperScholars.select("DISTINCT name");
+                return R.ok().put("authors", authorAndinstitutionService.list(queryWrapperScholars));
+
+            case "Institutions":
+                QueryWrapper<authorAndscholarEntity> queryWrapperInstitutions = new QueryWrapper<>();
+                queryWrapperInstitutions.select("institution", "category").isNotNull("institution");
+
+                List<authorAndscholarEntity> resultList = authorAndinstitutionService.list(queryWrapperInstitutions);
+
+                // 使用 Java 8 Stream API 去重
+                List<authorAndscholarEntity> distinctInstitutions = resultList.stream()
+                        .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(authorAndscholarEntity::getInstitution))),
+                                ArrayList::new));
+
+                return R.ok().put("Institutions", distinctInstitutions);
+
+//            case "Venues":
+//                QueryWrapper queryWrapperVenues = new QueryWrapper<ListEntity>();
+//                return R.ok().put("res", listService.list(queryWrapperVenues));
+
+            case "Country":
+                QueryWrapper<authorAndscholarEntity> queryWrapperCountry = new QueryWrapper<>();
+                queryWrapperCountry.select("DISTINCT country");
+                return R.ok().put("country", authorAndinstitutionService.list(queryWrapperCountry));
+
+//            case "Tags":
+//                QueryWrapper queryWrapperTags = new QueryWrapper<ListEntity>();
+//                queryWrapperTags.isNotNull("tag");
+//                queryWrapperTags.select("DISTINCT tag"); // 添加条件，确保tag字段不为空
+//                return R.ok().put("res", listService.list(queryWrapperTags));
+        }
+        return R.ok();
 
     }
 
-    @RequestMapping(value = "/countTotalPapers", method = RequestMethod.POST)
+    @RequestMapping(value = "/countTotal", method = RequestMethod.POST)
     public R CountPaperTotal(@RequestBody Map<String, Object> pageinfo) {
-        String typeofPaper = (String) pageinfo.get("typerofPapers");
-        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        long total = listService.count(queryWrapper);
-        return R.ok().put("total", total);
+
+//        获取文章总数
+        QueryWrapper<ListEntity> queryWrapperPaper = new QueryWrapper<>();
+        long totalPapers = listService.count(queryWrapperPaper);
+
+//        获取 institutions 总数
+        QueryWrapper<authorAndscholarEntity> queryWrapperInstitution = new QueryWrapper<>();
+        queryWrapperInstitution.select("DISTINCT institution");
+        long totalInstitutions = authorAndinstitutionService.count(queryWrapperInstitution);
+
+//        获取学者总数
+        QueryWrapper<authorAndscholarEntity> queryWrapperScholars = new QueryWrapper<>();
+        queryWrapperScholars.select("DISTINCT name");
+        long totalScholars = authorAndinstitutionService.count(queryWrapperScholars);
+        return R.ok().put("totalPapers", totalPapers).put("totalInstitutions", totalInstitutions).put("totalScholars", totalScholars);
 
     }
 
 
     // @Operation(summary = "通过关键字分页搜索文献")
-
+//通过输入的关键词模糊搜索
     @RequestMapping(value = "/searchPapers", method = RequestMethod.POST)
     public R searchPapers(@RequestBody Map<String, Object> searchinfo) {
         System.out.println(searchinfo);
@@ -92,6 +137,7 @@ pagesize每页有几项
         Page<ListEntity> res = listService.searchByKeywords(pagenum, pagesize, searchkeywords);
         return R.ok().put("res", res);
     }
+
 
     @RequestMapping(value = "/searchBy", method = RequestMethod.POST)
     public R searchBy(@RequestBody Map<String, Object> searchinfo) {
@@ -110,11 +156,15 @@ pagesize每页有几项
             }
 
 //            country和tag是通过自定义的sql语句查询的，特殊处理
-            else if(column.equals(("country")) || column.equals(("tag"))){
-                List<ListEntity> dataList=null;
+            else if (column.equals(("country")) || column.equals(("tag"))) {
+                List<ListEntity> dataList = null;
 
-                if(column.equals(("country"))){ dataList = listDao.searchByCountry(searchkeywords);}
-                if(column.equals(("tag"))){ dataList = listDao.searchByTag(searchkeywords);}
+                if (column.equals(("country"))) {
+                    dataList = listDao.searchByCountry(searchkeywords);
+                }
+                if (column.equals(("tag"))) {
+                    dataList = listDao.searchByTag(searchkeywords);
+                }
 
                 int total = dataList.size(); // 总记录数
                 // 在dataList的基础上执行分页查询，手动分页
@@ -133,9 +183,8 @@ pagesize每页有几项
                 resMap.put("current", pagenum);
 
 
-                return R.ok().put("res",resMap).put("total", total);
-            }
-            else {
+                return R.ok().put("res", resMap).put("total", total);
+            } else {
                 Page<ListEntity> res = listService.searchBy(pagenum, pagesize, searchkeywords, column);
                 return R.ok().put("res", res);
             }
@@ -188,9 +237,6 @@ pagesize每页有几项
         List<ListEntity> pageDataList = dataList.subList(fromIndex, toIndex);
 
         return R.ok().put("res", pageDataList).put("total", total);
-
-
-
 
 
     }
@@ -345,22 +391,9 @@ pagesize每页有几项
         else return R.ok().put("DeleteStatus", "failed!");
     }
 
-    //    @Operation(summary = "列举所有Venue")
-    @RequestMapping(value = "/listallVenue", method = RequestMethod.POST)
-    public R listallVenue(@RequestBody Map<String, Object> infos) {
-        String project = (String) infos.get("obj");
-        QueryWrapper queryWrapper = new QueryWrapper<ListEntity>();
-//        queryWrapper.select("abbr");
-        return R.ok().put("res", listService.list(queryWrapper));
-    }
 
-    @RequestMapping(value = "/listAllTags", method = RequestMethod.POST)
-    public R listAllTags(@RequestBody Map<String, Object> infos) {
-        QueryWrapper queryWrapper = new QueryWrapper<ListEntity>();
-        queryWrapper.isNotNull("tag");
-        queryWrapper.select("DISTINCT tag"); // 添加条件，确保tag字段不为空
-        return R.ok().put("res", listService.list(queryWrapper));
-    }
+
+
 
     //    @Operation(summary = "通过Abbr搜索文献")
     @RequestMapping(value = "/searchByAbbr", method = RequestMethod.POST)
@@ -410,15 +443,15 @@ pagesize每页有几项
     public R countEachYearScholars(@RequestBody Map<String, Object> info) {
         String author = (String) info.get("author");
         QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("author",author);
+        queryWrapper.like("author", author);
         queryWrapper.select("year", "COUNT(*) AS RecordCount").groupBy("year").orderByAsc("year");
         return R.ok().put("res", listService.listMaps(queryWrapper));
     }
 
-//    通过关键词list 出全部符合要求的记录
+    //    通过关键词list 出全部符合要求的记录
     @RequestMapping(value = "/listBy", method = RequestMethod.POST)
     public R listBy(@RequestBody Map<String, Object> info) {
-        System.out.println("info是"+info);
+        System.out.println("info是" + info);
 
         String column = (String) info.get("column");
         String value = (String) info.get("searchkeywords");

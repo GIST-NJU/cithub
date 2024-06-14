@@ -245,9 +245,13 @@ const searchByTag = async (tag) => {
 }
 
 onMounted(async () => {
+  moduleStore.CurrentSubSystem='Repository'
+  moduleStore.CurrentSubSystemRoute='Repository_Home'
+  
+  moduleStore.CurrentRoute = 'Repository_Fields'
   moduleStore.CurrentModule = 'Fields'
 
-  // listAllTags()
+  
 })
 </script>
 

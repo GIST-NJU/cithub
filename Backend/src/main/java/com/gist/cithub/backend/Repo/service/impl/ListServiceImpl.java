@@ -239,14 +239,7 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
 
     }
 
-    @Override
-    public Page<ListEntity> searchBy(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
-        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(column,searchkeywords);
-        queryWrapper.orderByDesc("year");
-        Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
-        return selectPage;
-    }
+
 
     @Override
     public Page<ListEntity> searchByInstitutionPages(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
@@ -282,6 +275,14 @@ public class ListServiceImpl extends ServiceImpl<ListDao, ListEntity> implements
             e.printStackTrace();
             return "保存失败";
         }
+    }
+    @Override
+    public Page<ListEntity> searchBy(Integer pagenum, Integer pagesize, String searchkeywords, String column) {
+        QueryWrapper<ListEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(column,searchkeywords);
+        queryWrapper.orderByDesc("year");
+        Page<ListEntity> selectPage = listDao.selectPage(new Page<>(pagenum, pagesize), queryWrapper);
+        return selectPage;
     }
 
     @Override

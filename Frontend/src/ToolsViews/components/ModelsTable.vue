@@ -71,7 +71,7 @@
                   <div>
                     <ArgonButton color="primary" variant="gradient" @click="EnterModels(model, index)">
                       <span class="fas fa-book-open text-white me-2" />
-                      Edit Model
+                      {{ model.modeltype == 'LLM' ? 'Enter Model' : 'Edit Model' }}
                     </ArgonButton>
                   </div>
                   <div style="margin-left: 10px;">
@@ -131,15 +131,29 @@ const modelStore = useModelsStore(pinia)
 const currentModel = useCurrentModel(pinia)
 
 const EnterModels = (model, index) => {
-  // console.log("EnterModels",model)
-  router.push({
-    path: '/tools/modelsDetails',
-    query:
-    {
-      modelid: model.modelid,
-      index: index,
-    }
-  })
+  console.log("EnterModels", model)
+  if (model.modeltype == 'LLM') {
+    console.log("进入LLM")
+    router.push({
+      path: '/tools/LLMModelDetails',
+      query:
+      {
+        modelid: model.modelid,
+        
+      }
+    })
+  }
+  else {
+    router.push({
+      path: '/tools/modelsDetails',
+      query:
+      {
+        modelid: model.modelid,
+        index: index,
+      }
+    })
+  }
+
 }
 
 const EnterTestSuite = (model, index) => {
